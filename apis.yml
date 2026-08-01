@@ -1,7 +1,31 @@
 aid: pomo
 name: Pomo
-description: Pomo is a company surfaced as a portfolio company of kindred-ventures and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Pomo is an AI marketing platform that runs an always-on AI marketing team,
+  turning continuous market, competitor, brand, and trend intelligence into
+  strategy, creative direction, ad-placement planning, and launch-ready
+  campaign workflows for lean growth, brand, and performance teams. It
+  monitors signals daily, surfaces opportunity and whitespace, drafts
+  approval-ready campaigns, briefs, and creatives, and supports AEO/GEO
+  AI-search visibility and Marketing Mix Modeling. Pomo is also offered as a
+  managed service where in-house marketing experts operate the platform on a
+  customer's behalf. Founded in 2025 and based in Palo Alto, California, Pomo
+  raised a $4.5M seed round led by Kindred Ventures with Databricks Ventures,
+  SV Angel, and angel investors. There is no public developer API; the site
+  publishes a real /llms.txt AI-discovery document but no OpenAPI, docs, or
+  developer surface.
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://usepomo.ai/assets/landing-page/cta-demo.png
 url: https://raw.githubusercontent.com/api-evangelist/pomo/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -11,9 +35,17 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
+- Marketing
+- AI
+- Market Intelligence
+- Competitive Intelligence
+- Marketing Automation
+- Generative AI
+- SaaS
+- Answer Engine Optimization
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -21,5 +53,39 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/pomo-domain-security.yml
 - type: Website
   url: https://usepomo.ai/
+- type: LLMsTxt
+  name: Pomo llms.txt (AI discovery)
+  url: llms/pomo-llms.txt
+- type: WellKnown
+  name: Well-known probe (none real; SPA soft-404s)
+  url: well-known/pomo-well-known.yml
+- type: Blog
+  url: https://usepomo.ai/blog
+- type: Support
+  name: Contact
+  url: https://usepomo.ai/contact
+- type: HelpCenter
+  name: FAQ
+  url: https://usepomo.ai/faq
+- type: Pricing
+  name: Plans and pricing (homepage subscriptions section)
+  url: https://usepomo.ai/
+- type: SignUp
+  url: https://usepomo.ai/signup
+- type: Login
+  url: https://usepomo.ai/login
+- type: TermsOfService
+  url: https://usepomo.ai/pages/terms-of-service.html
+- type: PrivacyPolicy
+  url: https://usepomo.ai/pages/privacy-policy.html
+- type: LinkedIn
+  url: https://www.linkedin.com/company/pomohq/
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 3
+  pass: local-v1

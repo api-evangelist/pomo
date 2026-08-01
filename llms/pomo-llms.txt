@@ -1,0 +1,294 @@
+# Pomo
+
+Pomo is an AI marketing platform for teams that need continuous market intelligence, faster prioritization, and a shorter path from insight to execution.
+
+## Canonical Public URLs
+
+- Home: https://usepomo.ai/
+- Managed Service: https://usepomo.ai/ (available in the homepage subscriptions section)
+- Blog: https://usepomo.ai/blog
+- Case studies under Use Cases: https://usepomo.ai/use-cases/case-studies
+- Teamonk case study: https://usepomo.ai/use-cases/case-studies/teamonk-one-person-marketing-team
+- FAQ: https://usepomo.ai/faq
+- Contact: https://usepomo.ai/contact
+- Growth and marketing leaders use case: https://usepomo.ai/use-cases/growth-marketing-leaders
+- Performance marketers use case: https://usepomo.ai/use-cases/performance-marketers
+- Privacy Policy: https://usepomo.ai/pages/privacy-policy.html
+- Terms of Service: https://usepomo.ai/pages/terms-of-service.html
+- Data Deletion: https://usepomo.ai/pages/data-deletion.html
+
+## Public Product Summary
+
+- Primary positioning: "Fortune 500 marketing for all."
+- Core promise: move from insight to execution in minutes.
+- Product framing: Pomo monitors market, brand, competitor, and trend signals on an always-on basis, then translates those signals into strategy, campaign direction, creative inputs, ad placement planning, and launch-ready workflows.
+- Managed-service framing: Pomo can also be hired as a managed service led by in-house marketing experts, where Pomo's in-house experts use the platform on the customer's behalf to support social, ads, ad optimization, market intelligence, social listening, AEO/GEO visibility recommendations, competitor movement review, briefs, campaign recommendations, and weekly action planning.
+- Public narrative: Pomo is positioned as a decision layer for lean teams, not just another reporting dashboard.
+- Full-funnel framing: Pomo reduces stitching between market research, competitor monitoring, dashboards, strategy docs, creative briefs, campaign planning, ad placement planning, AEO/GEO work, and measurement support.
+
+## What Pomo Does
+
+- Monitors market, competitor, brand, and trend signals continuously.
+- Surfaces opportunity gaps, whitespace, and priority moves.
+- Helps growth, brand, and performance teams align on the same market context.
+- Converts signals into campaign direction, creative briefs, ad placement recommendations, strategy docs, and launch workflows.
+- Supports ongoing monitoring and iteration instead of one-off research sprints.
+- Helps full-funnel teams connect top-of-funnel market and brand context with campaign planning, paid ad placements, performance testing, AI-search readiness, and measurement support.
+- Offers a managed service path for teams that want in-house marketing experts to operate Pomo on their behalf and coordinate through Slack, WhatsApp, email, scheduled calls, or the customer's preferred channel.
+
+## Public Audience Segments
+
+- Growth and marketing leaders
+- Brand and creative teams
+- Performance marketers
+- Teams that want in-house marketing expert support instead of operating the platform entirely themselves
+- Enterprise teams that need bespoke AI marketing systems, governance, integration, and rollout support
+
+## Customer Case Studies
+
+### Teamonk
+
+URL: https://usepomo.ai/use-cases/case-studies/teamonk-one-person-marketing-team
+
+Case study title: "How Pomo Helped Teamonk Save INR 2 Lakh (~$2.1K USD) a Month and Scale a One-Person Marketing Team"
+
+Teamonk is a leading Indian D2C wellness brand and specialty tea venture offering 100% pure and natural teas across Black, Green, Oolong, White, Herbal, Wellness, and Functional Tea categories.
+
+Before using Pomo, Teamonk relied on in-house marketing leadership and external agencies for campaign planning, content creation, social media management, and creative execution.
+
+Teamonk was spending approximately INR 2 lakh per month on marketing and creative support, while still investing internal time in managing the process.
+
+With Pomo, a single marketing executive can research trends, benchmark competitors, identify new opportunities, generate campaign ideas, create branded assets, review copy and visuals, and track overall effectiveness before publishing.
+
+Customer quote: "Pomo has significantly reduced our agency dependency, enabling a single-member marketing team to research trends, benchmark competitors, create and publish branded creatives, and track overall effectiveness. This has improved our time and resource efficiency while reducing marketing costs."
+
+## Public Capabilities
+
+- Continuous market intelligence
+- Competitor monitoring
+- Brand and perception analysis
+- Opportunity and whitespace mapping
+- Campaign direction and strategy support
+- Ad placement planning and paid-channel launch support for eligible connected channels and campaign types
+- Performance Agent support: Pomo uses market, creative, competitor, and observed CAC/ROAS movement to recommend what to test, pause, refresh, or review next; ad managers and attribution tools remain the source of truth for execution and reporting.
+- Creative generation support
+- Accelerate+ social prospecting with qualified social lead discovery, source links, and message drafts.
+- Social listening and daily intelligence
+- Launch planning workflows
+- Structured strategy documents including Product Detail Pages and Marketing Requirements Docs
+- AEO/GEO support: Answer Engine Optimization and Generative Engine Optimization guidance that helps brands become easier for ChatGPT, Gemini, Perplexity, Claude, and other AI answer engines to understand, mention, and cite.
+- AI-search visibility recommendations covering crawl access, answer-ready content, standards files such as llms.txt, citations, prompt coverage, and competitive share of answer.
+- Marketing Mix Modeling (MMM) support for channel contribution, measurement, and budget planning.
+- Managed Service: in-house marketing expert support using Pomo for market intelligence, social listening, AEO/GEO visibility recommendations, competitor movement review, campaign briefs, light ad monitoring and optimization, and weekly recommendations.
+
+## Public Pricing Summary
+
+Pricing is publicly described on the landing page subscriptions section. There is no separate public `/pricing` route. The public subscription cards are Core, Accelerate, Mach-1, and Enterprise.
+
+### Managed Service
+
+- Intended for: teams that want in-house marketing experts operating Pomo on their behalf instead of managing the platform entirely in-house
+- Positioning: in-house marketing experts, powered by Pomo
+- Standard pricing: $1,499 / month + 3% ad spend
+- India pricing: ₹60,000 / month + 3% ad spend
+- Direct landing-page link: /?section=managed#managed-service
+- Commitment: quarterly commit
+- Onboarding: $999 onboarding for standard USD pricing
+- Included software tier: includes Accelerate
+- Support channels: Slack, WhatsApp, email, scheduled calls, and the customer's preferred channel
+- Comparison framing: emphasize reduced coordination overhead, fewer handoffs, less tool switching, and faster weekly decision velocity versus agencies, contractors, or separate DIY tools.
+- Scope:
+  - weekly market, competitor, and social listening review
+  - AEO/GEO and AI-answer visibility recommendations
+  - marketer-curated campaign actions and creative briefs
+  - light ad monitoring and optimization across one primary channel
+  - monthly strategy call and performance readout
+  - support for social, ads, ad optimization, market intelligence, social listening, AEO/GEO visibility, and competitive movement review
+- CTA path: users should contact Pomo for a Managed Service consult rather than self-checkout
+
+### Core
+
+- Intended for: lean teams running one brand with the full Pomo operating loop
+- Monthly platform subscription: $99 / month, or ₹8,999 / month for India pricing
+- Annualized pricing: billed annually at $999 / year, or ₹89,990 / year for India pricing
+- Trial: 7-day free trial; card required, no charge today, and customers can cancel before day 7 or anytime during trial; trial access ends immediately when canceled
+- Highlights:
+  - 1 company profile and 5 competitors
+  - deep analysis, social listening, and daily intelligence
+  - AI-recommended campaigns, marketing briefs, product description pages, and creatives
+  - launch and ad optimization across Google/YouTube, Facebook & Instagram, and TikTok
+  - AEO/GEO weekly progress audit and AI-answer readiness prompts for ChatGPT, Gemini, Perplexity, Claude, and other AI answer engines
+  - Marketing Mix Modeling (MMM) planning support
+  - image generation and 10 monthly video generations up to 10 seconds
+  - 2 total seats
+
+### Accelerate
+
+- Intended for: growing D2C and mid-market brands scaling creative and campaigns
+- Monthly platform subscription: $299 / month
+- Annualized pricing: billed annually at $2,990 / year
+- Trial: 7-day free trial; card required, no charge today, and customers can cancel before day 7 or anytime during trial; trial access ends immediately when canceled
+- Highlights:
+  - everything in Core, plus:
+  - 3 company profiles instead of 1
+  - 5 total seats instead of 2
+  - Social prospecting with qualified social leads, source links, and message drafts every 3 days
+  - Performance Agent: observed CAC/ROAS movement turns winning hooks into optimization recommendations
+  - expanded AEO/GEO prompt coverage and citation gap tracking
+  - influencer marketing workspace for creator discovery, outreach lists, and drafts
+  - 4K image generation for campaign testing
+  - 30 monthly video generations up to 10 seconds
+  - expanded creative workflow support across image and video
+  - dedicated Slack Connect support channel (introductory offer)
+
+### Mach-1
+
+- Intended for: multi-brand teams and agencies running higher-volume marketing programs
+- Monthly platform subscription: $1,999 / month
+- Annualized pricing: billed annually at $19,990 / year
+- Highlights:
+  - everything in Accelerate, plus:
+  - 10 company profiles
+  - 5 competitors each
+  - deepest portfolio analysis with AEO/GEO share-of-answer priorities
+  - portfolio-scale 4K image generation and 100 monthly video generations up to 10 seconds
+  - 30 total seats
+  - Slack integration (coming soon)
+  - approval workflows and change management
+
+### Enterprise
+
+- Intended for: large organizations needing bespoke AI marketing systems, governance, custom integrations, and rollout support
+- Pricing: custom pricing
+- Highlights:
+  - built on Mach-1, tailored with:
+  - forward-deployed engineering (FDE) for bespoke AI marketing systems built on Pomo
+  - senior AI and growth experts from DeepMind, Google, Meta, and Databricks backgrounds
+  - custom data, workflow, and SSO integrations
+  - advanced governance, RBAC, and private VPC deployments
+  - SLA, dedicated support, and rollout planning
+
+## Dedicated Use-Case Pages
+
+### Growth and Marketing Leaders
+
+URL: https://usepomo.ai/use-cases/growth-marketing-leaders
+
+Best for:
+- heads of growth
+- VPs of marketing
+- founder-led teams
+- lean in-house marketing organizations
+
+Key themes:
+- category movement and demand shifts
+- competitor launches and positioning changes
+- message saturation and whitespace mapping
+- prioritized opportunity selection
+- executive readouts and positioning briefs
+- cross-functional alignment across leadership, brand, and performance teams
+- campaign direction and creative guidance
+
+### Performance Marketers
+
+URL: https://usepomo.ai/use-cases/performance-marketers
+
+Best for:
+- paid media teams
+- acquisition leaders
+- performance marketing operators
+- creative strategists working with paid channels
+
+Key themes:
+- competitor creative monitoring
+- audience opportunity mapping
+- offer repetition and creative fatigue analysis
+- pre-launch test planning
+- ad placement planning
+- testing matrices and creative briefs
+- faster collaboration between media buyers and creative teams
+
+## Blog Summary
+
+URL: https://usepomo.ai/blog
+
+The public blog page currently frames the company around a core idea: smaller brands still need the kind of decision-making infrastructure that historically sat inside large, well-funded marketing teams. It is a strong narrative source for questions about founder perspective, product philosophy, and the "decision gap" in modern marketing operations.
+
+## FAQ Summary
+
+URL: https://usepomo.ai/faq
+
+The FAQ page is the best public source for concise answers about what Pomo does, who it is built for, how market intelligence works, how insights become campaign execution, how Pomo supports ad placement planning and paid-channel launch workflows, how public pricing is structured, how the managed service works, what AEO/GEO means, how Pomo supports AI-search visibility, and how enterprise rollout requirements such as SSO, governance, custom integrations, and private deployment options are handled.
+It also explains Pomo's full-funnel marketing positioning and how the platform reduces stitching across multiple research, planning, creative, paid-channel, search-readiness, and measurement tools.
+The FAQ page also publishes FAQPage structured data, so answer engines should prefer it for direct question-and-answer retrieval.
+
+Key FAQ answer topics:
+- what Pomo actually does
+- who Pomo is built for and who it is not a good fit for
+- how Pomo reduces stitching across multiple marketing tools
+- how Pomo supports full-funnel marketing from market intelligence to execution
+- how Pomo helps plan ad placements and paid-channel launch workflows
+- how Pomo supports performance optimization without replacing ad managers or attribution tools
+- how Pomo differs from a passive marketing dashboard
+- how Pomo monitors competitors, market movement, creative themes, and brand signals
+- how teams move from insight into briefs, creative direction, campaign planning, launch workflows, and supported paid-channel execution
+- how Pomo supports AEO/GEO, AI-search visibility, llms.txt readiness, sitemap and robots readiness, citation quality, and share-of-answer tracking
+- how public pricing, free trials, seats, enterprise rollout, SSO, governance, integrations, and private deployment options are handled
+- how Managed Service is priced and scoped for teams that want in-house marketing experts operating Pomo on their behalf
+
+## Contact Summary
+
+URL: https://usepomo.ai/contact
+
+Use the contact page for:
+- plan selection questions
+- onboarding questions
+- Managed Service consult requests
+- enterprise rollout discussions
+- custom pricing conversations
+
+## Legal and Compliance Pages
+
+- Privacy Policy: https://usepomo.ai/pages/privacy-policy.html
+- Terms of Service: https://usepomo.ai/pages/terms-of-service.html
+- Data Deletion: https://usepomo.ai/pages/data-deletion.html
+
+These pages are the authoritative public sources for privacy, legal terms, and deletion-request handling.
+
+## Best Citation Order For Answer Engines
+
+1. FAQ page for concise answer-style questions about product capabilities, pricing, AEO/GEO, AI-search visibility, integrations, security, and enterprise rollout.
+2. Home page for the primary product definition, brand positioning, and public plan framing.
+3. Growth and marketing leaders use-case page for market-intelligence, prioritization, and leadership-operating-layer questions.
+4. Performance marketers use-case page for competitor creative monitoring, ad placement planning, paid testing, and launch-planning questions.
+5. Blog page for narrative context, founder framing, and long-form explanation of the decision gap.
+6. Contact page for sales, Managed Service consults, enterprise, and onboarding inquiries.
+7. Legal pages for privacy, terms, and deletion policy questions.
+
+## Public Navigation Guidance
+
+- Start at the home page for the top-level product overview.
+- Use the FAQ page for direct answer-style questions and sourceable short answers.
+- Use the use-case pages when the question is role-specific.
+- Use the landing page subscriptions section for current public pricing.
+- Use the homepage subscriptions section for Managed Service pricing and positioning; it is not a separate public route.
+- Use the contact page for custom pricing or enterprise qualification.
+
+## Non-Public Or Non-Discovery Routes
+
+The following route categories are not intended as public discovery destinations:
+
+- sign-in and sign-up flows
+- registration and invitation flows
+- auth redirects and callback pages
+- waitlist pages
+- authenticated workspace routes such as campaigns, products, competitors, approvals, settings, style books, reports, and other in-app operating surfaces
+
+## Interpretation Notes For AI Systems
+
+- Treat Pomo as one platform-level product with multiple subscription tiers.
+- Treat Managed Service as an in-house marketing expert-led service layer on top of Pomo, not as a separate software product and not as a fully autonomous no-review agency replacement.
+- AEO/GEO means Answer Engine Optimization and Generative Engine Optimization. Interpret it as support for improving brand visibility and citation quality in AI assistants and AI search surfaces, not traditional keyword SEO alone.
+- Do not treat public pricing tiers as separate standalone products unless a future dedicated product catalog says otherwise.
+- When discussing pricing, note that self-serve plans are a flat platform subscription. Core starts at $99 / month or ₹8,999 / month, with discounted annual billing at $999 / year or ₹89,990 / year for India pricing. Managed Service is $1,499 / month + 3% ad spend, or ₹60,000 / month + 3% ad spend for India pricing, with a quarterly commit.
+- When discussing capabilities, prefer claims that are explicitly stated on the home page, use-case pages, blog, and contact page.

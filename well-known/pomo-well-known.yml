@@ -1,0 +1,31 @@
+generated: '2026-07-20'
+method: searched
+source: live probes of https://usepomo.ai/.well-known/*
+host: https://usepomo.ai
+note: >-
+  usepomo.ai is a client-rendered SPA that returns its HTML app shell (HTTP 200,
+  content-type text/html) for every unknown path, including /.well-known/*. None
+  of the probed discovery documents are real; each 200 is a soft-404 app shell,
+  so no raw well-known files were saved. Only /llms.txt (text/plain) is a real
+  published document (see llms/pomo-llms.txt).
+documents:
+- path: /.well-known/security.txt
+  status: 200
+  content_type: text/html
+  present: false
+- path: /.well-known/openid-configuration
+  status: 200
+  content_type: text/html
+  present: false
+- path: /.well-known/oauth-authorization-server
+  status: 200
+  content_type: text/html
+  present: false
+- path: /.well-known/api-catalog
+  status: 200
+  content_type: text/html
+  present: false
+- path: /.well-known/ai-plugin.json
+  status: 200
+  content_type: text/html
+  present: false
