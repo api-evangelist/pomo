@@ -1,41 +1,42 @@
 aid: pomo
 name: Pomo
-description: >-
-  Pomo is an AI marketing platform that runs an always-on AI marketing team,
-  turning continuous market, competitor, brand, and trend intelligence into
-  strategy, creative direction, ad-placement planning, and launch-ready
-  campaign workflows for lean growth, brand, and performance teams. It
-  monitors signals daily, surfaces opportunity and whitespace, drafts
-  approval-ready campaigns, briefs, and creatives, and supports AEO/GEO
-  AI-search visibility and Marketing Mix Modeling. Pomo is also offered as a
-  managed service where in-house marketing experts operate the platform on a
-  customer's behalf. Founded in 2025 and based in Palo Alto, California, Pomo
-  raised a $4.5M seed round led by Kindred Ventures with Databricks Ventures,
-  SV Angel, and angel investors. There is no public developer API; the site
-  publishes a real /llms.txt AI-discovery document but no OpenAPI, docs, or
-  developer surface.
+description: Pomo is an AI marketing platform that runs an always-on AI marketing team, turning continuous
+  market, competitor, brand, and trend intelligence into strategy, creative direction, ad-placement planning,
+  and launch-ready campaign workflows for lean growth, brand, and performance teams. It monitors signals
+  daily, surfaces opportunity and whitespace, drafts approval-ready campaigns, briefs, and creatives,
+  and supports AEO/GEO AI-search visibility and Marketing Mix Modeling. Pomo is also offered as a managed
+  service where in-house marketing experts operate the platform on a customer's behalf. The platform runs
+  on a public FastAPI backend at api.usepomo.ai that publishes an OpenAPI 3.1 contract covering 924 paths
+  and 994 operations across campaigns, competitor tracking, market intelligence, earned media, influencer
+  discovery, a unified data model, and connectors to Meta, Google, TikTok, LinkedIn, Shopify, Square,
+  Stripe, QuickBooks, Klaviyo, HubSpot, and Slack, plus a bearer-gated programmatic API with self-service
+  API keys and an internal MCP tool broker. The legal entity is MachFlow, Inc. dba Pomo. Founded in 2025
+  and based in Palo Alto, California, Pomo raised a $4.5M seed round led by Kindred Ventures with Databricks
+  Ventures, SV Angel, and angel investors.
 accessModel:
-  pricing: unknown
-  onboarding: unknown
-  trial: false
+  pricing: paid
+  onboarding: self-serve
+  trial: true
   try_now: false
   public: false
-  label: Unknown
-  confidence: low
-  source: []
-  generated: '2026-07-22'
-  method: derived
+  label: Paid self-serve subscription with a 7-day trial; API access requires an account
+  confidence: high
+  source:
+  - https://api.usepomo.ai/api/payment/subscription/plans
+  - https://usepomo.ai/llms.txt
+  generated: '2026-08-13'
+  method: probed
 image: https://usepomo.ai/assets/landing-page/cta-demo.png
 url: https://raw.githubusercontent.com/api-evangelist/pomo/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - kindred-ventures
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: openapi-harvested
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-20'
+modified: '2026-08-13'
 tags:
 - Company
 - Marketing
@@ -46,7 +47,68 @@ tags:
 - Generative AI
 - SaaS
 - Answer Engine Optimization
-apis: []
+- Advertising
+- Social Media
+- Influencer Marketing
+- Campaign Management
+apis:
+- name: Pomo Platform API
+  description: The FastAPI backend behind the Pomo application, published as an OpenAPI 3.1.0 contract
+    at https://api.usepomo.ai/openapi.json with interactive Swagger UI and ReDoc renderings. 924 paths
+    / 994 operations across campaigns, online ad campaigns, agentic teams and tasks, brand workflow, competitor
+    tracking, market intelligence, earned media, influencer discovery and campaigns, a unified data model
+    (UDM), company profiles, organizations and members, credits and payments, and a large external-platform
+    connector surface (Meta, Instagram, Google, Google Analytics, TikTok, LinkedIn, X, Shopify, Square,
+    Stripe, QuickBooks, Klaviyo, HubSpot, Slack, Amazon). Authentication is HTTP bearer (Clerk issued
+    session tokens); a separate programmatic tier under /api/programmatic/v1 authenticates with self-service
+    API keys minted at /api/programmatic-keys. The contract is published without an access program, developer
+    portal, or usage terms — it is the application's own backend, publicly readable rather than a documented
+    developer product.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Marketing
+  - AI
+  - Campaign Management
+  - Market Intelligence
+  - Competitive Intelligence
+  - Advertising
+  - Social Media
+  - Influencer Marketing
+  properties:
+  - type: OpenAPI
+    name: Pomo Platform API OpenAPI 3.1.0 (harvested verbatim)
+    url: openapi/pomo-openapi.yml
+  - type: APIReference
+    name: Swagger UI (FastAPI /docs)
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    name: ReDoc (FastAPI /redoc)
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    name: Idempotency keys and idempotent operations
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Overlay
+    url: overlays/pomo-openapi-overlay.yaml
+  - type: Webhooks
+    name: Event surface — SSE streams and inbound partner webhook receivers
+    url: asyncapi/pomo-event-surface.yml
+  - type: AgentSkill
+    url: skills/_index.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -60,9 +122,12 @@ common:
 - type: LLMsTxt
   name: Pomo llms.txt (AI discovery)
   url: llms/pomo-llms.txt
-- type: WellKnown
-  name: Well-known probe (none real; SPA soft-404s)
-  url: well-known/pomo-well-known.yml
+- type: Plans
+  url: plans/pomo-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/pomo-rate-limits.yml
+- type: AgentSkill
+  url: skills/_index.yml
 - type: Blog
   url: https://usepomo.ai/blog
 - type: Support
@@ -75,9 +140,11 @@ common:
   name: Plans and pricing (homepage subscriptions section)
   url: https://usepomo.ai/
 - type: SignUp
-  url: https://usepomo.ai/signup
+  url: https://usepomo.ai/sign-up
+  name: Sign up (route named in https://usepomo.ai/robots.txt)
 - type: Login
-  url: https://usepomo.ai/login
+  url: https://usepomo.ai/sign-in
+  name: Sign in (route named in https://usepomo.ai/robots.txt)
 - type: TermsOfService
   url: https://usepomo.ai/pages/terms-of-service.html
 - type: PrivacyPolicy
@@ -85,7 +152,7 @@ common:
 - type: LinkedIn
   url: https://www.linkedin.com/company/pomohq/
 x-enrichment:
-  date: '2026-07-20'
+  date: '2026-08-13'
   status: enriched
-  artifacts_added: 3
+  artifacts_added: 19
   pass: local-v1
