@@ -1,0 +1,98 @@
+generated: '2026-08-13'
+method: probed
+source: openapi/pomo-openapi.yml + live probes of https://api.usepomo.ai
+status: internal-facade
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: probed
+note: 'Pomo ships an MCP-SHAPED REST facade, not an MCP server. Seven operations under /api/mcp/* mirror
+  the MCP method names — tools/list, tools/execute, resources/list, resources/read, prompts/list, prompts/{prompt_name},
+  capabilities — but they are ordinary REST endpoints behind an HTTP bearer token, and there is no JSON-RPC
+  transport: POSTing {"jsonrpc":"2.0","method":"tools/list"} to /api/mcp or /api/mcp/ returns HTTP 404.
+  No MCP client can connect to Pomo today, so mode is none and NO MCPServer pointer is wired into apis.yml.
+  This is a broker the Pomo application calls on its own behalf, most likely to drive the agentic-teams
+  surface.'
+facade_operations:
+- operationId: list_tools_api_mcp_tools_list_get
+  method: GET
+  path: /api/mcp/tools/list
+  auth: HTTPBearer
+  probe_status: 401
+  description: List all available MCP tools with their schemas. Returns tool definitions suitable for
+    LLM function calling.
+- operationId: execute_tool_api_mcp_tools_execute_post
+  method: POST
+  path: /api/mcp/tools/execute
+  auth: HTTPBearer
+  probe_status: 401
+  request_schema: ToolExecuteRequest {tool_name, organization_id, company_profile_id, arguments, confirmation_token,
+    conversation_id}
+  response_schema: MCPResponse {success, data, error, metadata}
+- operationId: list_resources_api_mcp_resources_list_post
+  method: POST
+  path: /api/mcp/resources/list
+  auth: HTTPBearer
+  request_schema: ResourceListRequest {resource_type, organization_id, company_profile_id, params}
+- operationId: read_resource_api_mcp_resources_read_post
+  method: POST
+  path: /api/mcp/resources/read
+  auth: HTTPBearer
+  request_schema: ResourceReadRequest {resource_type, resource_id, organization_id, company_profile_id,
+    params}
+- operationId: list_prompt_templates_api_mcp_prompts_list_get
+  method: GET
+  path: /api/mcp/prompts/list
+  auth: HTTPBearer
+- operationId: get_prompt_template_api_mcp_prompts__prompt_name__get
+  method: GET
+  path: /api/mcp/prompts/{prompt_name}
+  auth: HTTPBearer
+- operationId: get_capabilities_api_mcp_capabilities_get
+  method: GET
+  path: /api/mcp/capabilities
+  auth: HTTPBearer
+  probe_status: 401
+tools:
+  inventory: gated
+  count: null
+  known_names:
+  - name: generate_campaign_ideas
+    source: verbatim example in the execute_tool operation description
+  note: The real tool inventory requires an authenticated GET /api/mcp/tools/list. Only one tool name
+    is discoverable anonymously, from the example embedded in the operation description. No tool list
+    is fabricated here.
+agent_safety_signals:
+  confirmation_token: ToolExecuteRequest.confirmation_token — "Confirmation token for write operations",
+    i.e. a human-in-the-loop gate on mutating tool calls.
+  required_context:
+  - organization_id
+  - company_profile_id
+  async: conversation_id routes async job notifications back to a conversation.
+probes:
+- url: https://api.usepomo.ai/api/mcp
+  method: POST jsonrpc tools/list
+  status: 404
+- url: https://api.usepomo.ai/api/mcp/
+  method: POST jsonrpc tools/list
+  status: 404
+- url: https://api.usepomo.ai/mcp
+  method: GET
+  status: 404
+- url: https://usepomo.ai/mcp
+  method: GET
+  status: 200
+  note: SPA HTML shell, not an MCP endpoint.
+- url: https://mcp.usepomo.ai/
+  method: DNS
+  status: NXDOMAIN
+- url: https://api.usepomo.ai/api/mcp/tools/list
+  method: GET
+  status: 401
+registry_search:
+  npm: no @pomo / @usepomo MCP package (npm "pomo" is an unrelated macOS pomodoro HUD)
+  pypi: no pomo MCP package
+  result: none

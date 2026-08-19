@@ -1,0 +1,43 @@
+generated: '2026-08-13'
+method: probed
+source: live unauthenticated responses from https://api.usepomo.ai
+limit_count: 1
+documented: false
+note: Pomo publishes no rate-limit documentation. The limits below were read off live response headers,
+  which are returned on every response including 401 and 404. The window length is not published; X-RateLimit-Reset
+  is a unix epoch timestamp and successive probes showed the same reset second with a decrementing remainder,
+  so the counter is a fixed window.
+response_headers:
+  limit: X-RateLimit-Limit
+  remaining: X-RateLimit-Remaining
+  reset: X-RateLimit-Reset
+  reset_format: unix epoch seconds
+  retry_after: null
+  draft_ietf_headers: false
+exhaustion_status: 429 (inferred; never declared in the OpenAPI and not observed — probing to exhaustion
+  was not attempted)
+rate_limits:
+- scope: per-client, unauthenticated
+  window: unpublished (fixed window)
+  limit: 60
+  burst: null
+  endpoint: all observed paths on api.usepomo.ai
+  evidence:
+  - url: https://api.usepomo.ai/
+    http_status: 200
+    x_ratelimit_limit: 60
+    x_ratelimit_remaining: 58
+  - url: https://api.usepomo.ai/api/mcp/tools/list
+    http_status: 401
+    x_ratelimit_limit: 60
+    x_ratelimit_remaining: 42
+plan_limits:
+  note: Per-plan product limits (company profiles, seats, competitors, AEO/GEO checks, video generations)
+    are published on the pricing surface and are enforced through GET /api/limits/company-profile/{profile_id};
+    they are quota limits, not request-rate limits.
+  artifact: plans/pomo-plans-pricing.yml
+  operationId: get_company_profile_limits_api_limits_company_profile__profile_id__get
+gaps:
+- No published rate-limit policy.
+- No Retry-After and no RFC 9331 RateLimit-* headers.
+- 429 is not declared on any of the 994 operations.

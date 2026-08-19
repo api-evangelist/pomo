@@ -1,0 +1,107 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/pomo-openapi.yml + live response headers observed on https://api.usepomo.ai
+note: Derived from the harvested OpenAPI and from headers observed on live unauthenticated responses.
+  Pomo publishes no written API conventions or developer documentation; everything here is read off the
+  contract and the wire.
+auth:
+  style: HTTP bearer (Clerk session tokens); opaque API keys on /api/programmatic/v1
+  artifact: authentication/pomo-authentication.yml
+idempotency:
+  supported: true
+  mechanism: request-body field, not a header
+  field: idempotency_key
+  coverage: partial — 2 request schemas carry an idempotency_key, and several operations document idempotent
+    semantics in prose
+  schemas:
+  - schema: B2BSaveCandidateRequest
+    constraint: string, maxLength 128, nullable
+  - schema: agentic conversation message request
+    constraint: string, minLength 16, maxLength 200, nullable
+  documented_idempotent_operations:
+  - operationId: register_init_api_auth_register_init_post
+    path: /api/auth/register/init
+    note: 'Idempotent: if already created (phase account_created), returns existing IDs. If already complete,
+      409.'
+  - operationId: register_finalize_api_auth_register_finalize_post
+    path: /api/auth/register/finalize
+    note: 'Idempotent: if already complete, returns success.'
+  - operationId: archive_earned_media_project_api_earned_media_projects__project_id__archive_post
+    path: /api/earned-media/projects/{project_id}/archive
+    note: Idempotent; refused while a generation lease is live.
+  no_idempotency_key_header: true
+  retention: not published
+pagination:
+  styles:
+  - offset/limit
+  - page/page_size
+  - opaque cursor
+  params:
+    limit: 83
+    page: 25
+    offset: 16
+    page_size: 8
+  response_fields:
+  - total
+  - total_pages
+  - has_more
+  - has_next
+  - has_previous
+  - cursor
+  - next_cursor_id
+  - next_cursor_created_at
+  - next_cursor_updated_at
+  - next_cursor_sent_at
+  - next_offset
+  note: Three pagination styles coexist across the surface and are not reconciled; cursor fields are split
+    into separate typed columns (next_cursor_id plus a next_cursor_<timestamp> partner) rather than one
+    opaque token.
+tenancy:
+  headers:
+  - X-Organization-Id
+  - X-Company-Profile-Id
+  query:
+  - organization_id
+  - company_profile_id
+  - allow_inactive_subscription
+  note: company_profile_id is the dominant scoping key (73 schemas, 28 query params, 16 path params).
+request_id_tracing:
+  supported: true
+  response_headers:
+  - X-Request-ID
+  - X-Trace-ID
+  note: Both headers are returned on every response including 401/404; they carry the same UUID.
+  body_field: request_id (present on programmatic responses)
+versioning:
+  style: path segment, partial
+  detail: Only /api/v1/organization/* and /api/programmatic/v1/* are version-pathed; the other 900+ paths
+    are unversioned under /api/. info.version is 0.1.0 and has no release meaning.
+  artifact: lifecycle/pomo-lifecycle.yml
+error_envelope:
+  shape: '{"detail": string} for handled errors, {"detail": [ValidationError]} for 422'
+  rfc9457: false
+  content_type: application/json
+  artifact: errors/pomo-problem-types.yml
+rate_limit_signaling:
+  headers:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  observed_limit: 60
+  reset_format: unix epoch seconds
+  artifact: rate-limits/pomo-rate-limits.yml
+async_and_streaming:
+  job_pattern: POST .../job or /async returns a job id; GET /api/chat/agentic/jobs/{job_id} polls; GET
+    .../stream is Server-Sent Events
+  sse_resume_header: Last-Event-ID
+  artifact: asyncapi/pomo-event-surface.yml
+security_headers_observed:
+- 'content-security-policy: frame-ancestors ''none'''
+- 'x-frame-options: DENY'
+- 'x-content-type-options: nosniff'
+- 'referrer-policy: strict-origin-when-cross-origin'
+- permissions-policy (explicit deny-list)
+gaps:
+- No published conventions, style guide, or developer documentation of any kind.
+- Idempotency is a body field on two schemas, not a cross-cutting header contract.
+- Pagination is inconsistent across the surface.

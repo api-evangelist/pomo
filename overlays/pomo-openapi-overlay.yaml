@@ -1,0 +1,114 @@
+# API Evangelist enrichment overlay for the Pomo Platform API.
+# generated: '2026-08-13'
+# method: generated
+# source: openapi/pomo-openapi.yml (harvested verbatim from https://api.usepomo.ai/openapi.json)
+#
+# This overlay carries OUR enhancements. It never mutates the harvested spec.
+# Every action below records something we established by probing the live API or
+# reading the provider's own published surface — nothing is invented.
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay — Pomo Platform API
+  version: 1.0.0
+extends: ../openapi/pomo-openapi.yml
+actions:
+  - target: $.info
+    description: >-
+      The harvested contract carries the FastAPI scaffold identity ("GPT Backend API", version 0.1.0)
+      with no contact, terms or description. Name the product, point at the provider's own published
+      legal and support surfaces, and record the legal entity named in the Terms of Use.
+    update:
+      title: Pomo Platform API
+      summary: The FastAPI backend behind the Pomo AI marketing platform.
+      description: >-
+        Publicly readable OpenAPI 3.1 contract for the Pomo application backend: 924 paths and 994
+        operations across campaigns, online ad campaigns, agentic teams, brand workflow, competitor
+        tracking, market intelligence, earned media, influencer discovery, a unified data model, and
+        connectors to sixteen external ad and commerce platforms. Pomo publishes no developer portal,
+        no API documentation and no access programme; this contract is the application's own backend,
+        readable rather than offered.
+      termsOfService: https://usepomo.ai/pages/terms-of-service.html
+      contact:
+        name: Pomo (MachFlow, Inc. dba Pomo)
+        url: https://usepomo.ai/contact
+      x-legal-entity: MachFlow, Inc. dba Pomo
+      x-api-evangelist-note: >-
+        info.version 0.1.0 is the FastAPI default and carries no release meaning; see
+        lifecycle/pomo-lifecycle.yml.
+  - target: $
+    description: >-
+      The harvested contract declares no servers block. api.usepomo.ai is the host the spec is served
+      from and the host every probe in this profile was run against.
+    update:
+      servers:
+        - url: https://api.usepomo.ai
+          description: Production (the only host; observed serving /openapi.json, /docs and /redoc)
+  - target: $.components.securitySchemes
+    description: >-
+      The contract declares only HTTPBearer. Live probing shows a second, undeclared credential family
+      on the programmatic tier — GET /api/programmatic/v1/hello answers 401 {"detail":"API key required"}
+      while bearer-protected paths answer 401 {"detail":"Missing authorization token"} with
+      WWW-Authenticate: Bearer. The key is minted at POST /api/programmatic-keys. The transport location
+      of the key (header name) is NOT published, so it is recorded as unknown rather than guessed.
+    update:
+      ProgrammaticApiKey:
+        type: apiKey
+        in: header
+        name: UNPUBLISHED-see-x-api-evangelist-note
+        description: >-
+          API key for the /api/programmatic/v1 tier, created at POST /api/programmatic-keys with an
+          optional scopes array and optional expires_at. Observed only through its 401 behaviour.
+        x-api-evangelist-note: >-
+          Transport location unverified — Pomo publishes no authentication documentation. Do not treat
+          the `name` value above as a real header name.
+        x-status: observed-not-declared
+  - target: $.components.securitySchemes.HTTPBearer
+    description: Record the token issuer established from the provider's own unauthenticated health endpoint.
+    update:
+      description: >-
+        Session bearer token. GET /api/auth/health returns {"clerk_configured":true}, so tokens are
+        issued by Clerk; no OpenID Connect discovery document is served
+        (/.well-known/openid-configuration is 404 on both hosts).
+      bearerFormat: JWT (Clerk-issued)
+      x-issuer: Clerk
+  - target: $.info
+    description: >-
+      Runtime signals every response carries but the contract never declares: rate-limit headers, request
+      tracing headers, and the undeclared 401/429 failure modes. Recorded at the document level because
+      they apply uniformly across all 994 operations.
+    update:
+      x-runtime-headers:
+        rate_limit:
+          X-RateLimit-Limit: observed 60
+          X-RateLimit-Remaining: remaining requests in the current window
+          X-RateLimit-Reset: unix epoch seconds
+          note: >-
+            Returned on every response including 401 and 404. Window length is not published, 429 is not
+            declared on any operation, and no Retry-After is sent. See rate-limits/pomo-rate-limits.yml.
+        tracing:
+          X-Request-ID: per-request UUID
+          X-Trace-ID: same UUID as X-Request-ID on every response observed
+      x-undeclared-responses:
+        '401':
+          description: >-
+            Missing or invalid credentials. {"detail":"Missing authorization token"} with
+            WWW-Authenticate: Bearer on the application surface; {"detail":"API key required"} on
+            /api/programmatic/v1. Declared on zero of 994 operations.
+        '429':
+          description: >-
+            Rate limit exhaustion. Implied by the X-RateLimit-* headers; declared nowhere and not
+            observed (probing to exhaustion was not attempted).
+      x-error-envelope:
+        handled: '{"detail": "<message>"}'
+        validation: '{"detail": [{"loc": [...], "msg": "...", "type": "..."}]}'
+        rfc9457: false
+  - target: $.info
+    description: >-
+      Flag the streaming operations. Twelve operations return Server-Sent Events but none declares
+      text/event-stream in the contract, so a generated client will treat them as ordinary JSON GETs.
+    update:
+      x-streaming-operations:
+        transport: Server-Sent Events over Redis pub/sub
+        resume_header: Last-Event-ID
+        content_type_declared_in_contract: false
+        catalog: asyncapi/pomo-event-surface.yml

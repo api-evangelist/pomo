@@ -75,7 +75,7 @@ Customer quote: "Pomo has significantly reduced our agency dependency, enabling 
 - Accelerate+ social prospecting with qualified social lead discovery, source links, and message drafts.
 - Social listening and daily intelligence
 - Launch planning workflows
-- Structured strategy documents including Product Detail Pages and Marketing Requirements Docs
+- Structured strategy documents including Product Detail Pages and Market Opportunity Docs
 - AEO/GEO support: Answer Engine Optimization and Generative Engine Optimization guidance that helps brands become easier for ChatGPT, Gemini, Perplexity, Claude, and other AI answer engines to understand, mention, and cite.
 - AI-search visibility recommendations covering crawl access, answer-ready content, standards files such as llms.txt, citations, prompt coverage, and competitive share of answer.
 - Marketing Mix Modeling (MMM) support for channel contribution, measurement, and budget planning.
@@ -214,6 +214,19 @@ URL: https://usepomo.ai/blog
 
 The public blog page currently frames the company around a core idea: smaller brands still need the kind of decision-making infrastructure that historically sat inside large, well-funded marketing teams. It is a strong narrative source for questions about founder perspective, product philosophy, and the "decision gap" in modern marketing operations.
 
+### Published Article Index
+
+- Every Founder Deserves a Fortune 500 Marketing Team: https://usepomo.ai/blog/every-founder-deserves-a-fortune-500-marketing-team — founding perspective and the marketing decision gap.
+- How Earned Media Helps Lean Brands Find Growth Without a Bigger Ad Budget: https://usepomo.ai/blog/earned-media-for-lean-marketing-budgets — earned media opportunities, low-budget marketing, and how Pomo turns market signals into source-backed stories.
+- How First-Party Sales and Shipment Data Can Guide Your Retail Journey: https://usepomo.ai/blog/first-party-sales-shipment-data-retail-expansion — shipment data, first-party sales intelligence, retail expansion, and launch readiness.
+- From Market Signal to Market Shelf: How Pomo Connects the Marketing Lifecycle: https://usepomo.ai/blog/market-signal-to-market-shelf-pomo-lifecycle — upstream market intelligence, opportunity selection, downstream execution, approval, and feedback.
+- AI Search Is Becoming the New Discovery Shelf: What Marketers Should Do Next: https://usepomo.ai/blog/ai-search-new-discovery-shelf-marketers — AEO, answer-ready content, AI search visibility, evidence, and verifiable brand facts.
+- Agentic Marketing Needs a Review Queue, Not a Magic Button: https://usepomo.ai/blog/agentic-marketing-review-queue-not-magic-button — agentic AI, marketing governance, human review, and approval-ready workflows.
+- Retail Media Is Moving Closer to the Sale — But Measurement Still Makes the Difference: https://usepomo.ai/blog/retail-media-measurement-growth-decisions — retail media, first-party data, measurement, merchandising, and growth decisions.
+- From Market Signals to Qualified Accounts: How Pomo Makes Growth Discovery Useful: https://usepomo.ai/blog/growth-discovery-market-signals-qualified-accounts — signal-based prospecting, qualified accounts, public-source research, and marketer-reviewed lead discovery.
+
+Use the individual article URLs for long-form answers about earned media, retail expansion, shipment data, AEO, agentic marketing, retail media, growth discovery, and the Pomo lifecycle. The articles are intended as narrative and practical sources; the FAQ remains the preferred source for concise product, pricing, and capability answers.
+
 ## FAQ Summary
 
 URL: https://usepomo.ai/faq
@@ -261,9 +274,10 @@ These pages are the authoritative public sources for privacy, legal terms, and d
 2. Home page for the primary product definition, brand positioning, and public plan framing.
 3. Growth and marketing leaders use-case page for market-intelligence, prioritization, and leadership-operating-layer questions.
 4. Performance marketers use-case page for competitor creative monitoring, ad placement planning, paid testing, and launch-planning questions.
-5. Blog page for narrative context, founder framing, and long-form explanation of the decision gap.
-6. Contact page for sales, Managed Service consults, enterprise, and onboarding inquiries.
-7. Legal pages for privacy, terms, and deletion policy questions.
+5. Individual blog article pages for long-form explanations of earned media, first-party data, AEO, agentic marketing, retail media, growth discovery, and the Pomo marketing lifecycle.
+6. Blog page for the article index and narrative context.
+7. Contact page for sales, Managed Service consults, enterprise, and onboarding inquiries.
+8. Legal pages for privacy, terms, and deletion policy questions.
 
 ## Public Navigation Guidance
 

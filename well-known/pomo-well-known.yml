@@ -1,31 +1,151 @@
-generated: '2026-07-20'
-method: searched
-source: live probes of https://usepomo.ai/.well-known/*
-host: https://usepomo.ai
-note: >-
-  usepomo.ai is a client-rendered SPA that returns its HTML app shell (HTTP 200,
-  content-type text/html) for every unknown path, including /.well-known/*. None
-  of the probed discovery documents are real; each 200 is a soft-404 app shell,
-  so no raw well-known files were saved. Only /llms.txt (text/plain) is a real
-  published document (see llms/pomo-llms.txt).
-documents:
-- path: /.well-known/security.txt
+generated: '2026-08-13'
+method: probed
+source: live probes of https://usepomo.ai/.well-known/* and https://api.usepomo.ai/.well-known/*
+hosts:
+- https://usepomo.ai
+- https://api.usepomo.ai
+documents_found: 0
+note: 'No well-known discovery document is served on either Pomo host. usepomo.ai is a client-rendered
+  SPA that answers HTTP 200 with its HTML app shell for every unknown path — a soft-404, not a document.
+  api.usepomo.ai (FastAPI) answers an honest JSON 404 on all nine paths. Because nothing real was returned,
+  NO WellKnown, SecurityTxt or AgentCard pointer is wired into apis.yml; this file records a verified
+  absence. Two real discovery documents ARE served, just not from /.well-known/: /llms.txt (text/plain,
+  20,111 bytes, served identically from both hosts) and /openapi.json (the 994-operation contract, on
+  the API host).'
+probes:
+- host: https://usepomo.ai
+  path: /.well-known/security.txt
   status: 200
   content_type: text/html
   present: false
-- path: /.well-known/openid-configuration
+  result: soft-404 SPA shell
+- host: https://usepomo.ai
+  path: /.well-known/openid-configuration
   status: 200
   content_type: text/html
   present: false
-- path: /.well-known/oauth-authorization-server
+  result: soft-404 SPA shell
+- host: https://usepomo.ai
+  path: /.well-known/oauth-authorization-server
   status: 200
   content_type: text/html
   present: false
-- path: /.well-known/api-catalog
+  result: soft-404 SPA shell
+- host: https://usepomo.ai
+  path: /.well-known/oauth-protected-resource
   status: 200
   content_type: text/html
   present: false
-- path: /.well-known/ai-plugin.json
+  result: soft-404 SPA shell
+- host: https://usepomo.ai
+  path: /.well-known/api-catalog
   status: 200
   content_type: text/html
   present: false
+  result: soft-404 SPA shell
+- host: https://usepomo.ai
+  path: /.well-known/ai-plugin.json
+  status: 200
+  content_type: text/html
+  present: false
+  result: soft-404 SPA shell
+- host: https://usepomo.ai
+  path: /.well-known/agent-card.json
+  status: 200
+  content_type: text/html
+  present: false
+  result: soft-404 SPA shell
+- host: https://usepomo.ai
+  path: /.well-known/agent.json
+  status: 200
+  content_type: text/html
+  present: false
+  result: soft-404 SPA shell
+- host: https://usepomo.ai
+  path: /.well-known/mcp.json
+  status: 200
+  content_type: text/html
+  present: false
+  result: soft-404 SPA shell
+- host: https://api.usepomo.ai
+  path: /.well-known/security.txt
+  status: 404
+  content_type: application/json
+  present: false
+  result: honest 404
+- host: https://api.usepomo.ai
+  path: /.well-known/openid-configuration
+  status: 404
+  content_type: application/json
+  present: false
+  result: honest 404
+- host: https://api.usepomo.ai
+  path: /.well-known/oauth-authorization-server
+  status: 404
+  content_type: application/json
+  present: false
+  result: honest 404
+- host: https://api.usepomo.ai
+  path: /.well-known/oauth-protected-resource
+  status: 404
+  content_type: application/json
+  present: false
+  result: honest 404
+- host: https://api.usepomo.ai
+  path: /.well-known/api-catalog
+  status: 404
+  content_type: application/json
+  present: false
+  result: honest 404
+- host: https://api.usepomo.ai
+  path: /.well-known/ai-plugin.json
+  status: 404
+  content_type: application/json
+  present: false
+  result: honest 404
+- host: https://api.usepomo.ai
+  path: /.well-known/agent-card.json
+  status: 404
+  content_type: application/json
+  present: false
+  result: honest 404
+- host: https://api.usepomo.ai
+  path: /.well-known/agent.json
+  status: 404
+  content_type: application/json
+  present: false
+  result: honest 404
+- host: https://api.usepomo.ai
+  path: /.well-known/mcp.json
+  status: 404
+  content_type: application/json
+  present: false
+  result: honest 404
+real_documents_elsewhere:
+- path: /llms.txt
+  hosts:
+  - https://usepomo.ai
+  - https://api.usepomo.ai
+  status: 200
+  content_type: text/plain
+  bytes: 20111
+  file: llms/pomo-llms.txt
+- path: /openapi.json
+  hosts:
+  - https://api.usepomo.ai
+  status: 200
+  content_type: application/json
+  bytes: 1606977
+  file: openapi/_original/pomo-openapi.json
+- path: /robots.txt
+  hosts:
+  - https://usepomo.ai
+  - https://api.usepomo.ai
+  status: 200
+  content_type: text/plain
+- path: /sitemap.xml
+  hosts:
+  - https://usepomo.ai
+  - https://api.usepomo.ai
+  status: 200
+  content_type: application/xml

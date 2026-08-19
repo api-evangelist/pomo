@@ -1,0 +1,71 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/pomo-openapi.yml + https://api.usepomo.ai/api/legal/tos/latest + https://api.usepomo.ai/health
+note: Pomo publishes no API versioning policy, no deprecation policy, no changelog and no status page.
+  What follows is what the contract and the live service reveal.
+versioning:
+  scheme: path segment, applied to two areas only
+  info_version: 0.1.0
+  versioned_paths:
+  - /api/v1/organization/*
+  - /api/programmatic/v1/*
+  unversioned_paths: the remaining ~900 paths sit directly under /api/
+  policy_published: false
+  note: info.version is the FastAPI default and carries no release meaning.
+deprecation:
+  policy_published: false
+  deprecated_operations: 0
+  sunset_header: false
+  deprecation_header: false
+  retirement_signals:
+  - status: 410
+    operations:
+    - /api/campaigns/online-ads/google-display/edit-image
+    - /api/campaigns/online-ads/google-display/upload-image
+    - /api/campaigns/online-ads/meta-feed/edit-image
+    - /api/campaigns/online-ads/meta-feed/upload-image
+    note: 'Four operations declare 410 Gone — the only retirement signal in the contract. None is marked
+      deprecated: true.'
+status_page:
+  published: false
+  probed:
+  - url: https://status.usepomo.ai/
+    result: NXDOMAIN
+  health_endpoints:
+  - path: /health
+    status: 200
+    auth: none
+    body_fields:
+    - status
+    - version
+    - timestamp
+    - database
+  - path: /health/live
+    auth: none
+  - path: /health/ready
+    auth: none
+  - path: /health/events
+    status: 200
+    auth: none
+    note: Reports Redis version and uptime, SSE connection counts and utilization, and event-bus pub/sub
+      state.
+  - path: /health/detailed
+    status: 401
+    auth: bearer
+  - path: /health/database
+    auth: bearer
+  note: Unauthenticated health endpoints exist and are the closest thing to a status surface, but there
+    is no hosted status page and no incident history.
+changelog:
+  published: false
+  note: No API changelog. The only dated, versioned document Pomo publishes is its Terms of Use, served
+    as JSON with a version and a content hash at GET /api/legal/tos/latest.
+  tos_version: '2026-07-21'
+  tos_hash: 32e67e82efea879b15df2df0905cc33b75f732d6319b8b378965a973f6a80067
+sla:
+  published: false
+  note: An SLA is named as an Enterprise-tier inclusion but no SLA document is public.
+legal_entity: MachFlow, Inc. dba Pomo
+gaps:
+- No versioning policy, deprecation policy, Sunset/Deprecation headers, changelog, status page or SLA.
+- A publicly readable 994-operation contract with no stability commitment attached to it.

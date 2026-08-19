@@ -1,0 +1,45 @@
+generated: '2026-08-13'
+method: searched
+source: registry.npmjs.org, pypi.org, api.github.com
+package_count: 0
+official_sdk_count: 0
+note: 'Pomo publishes no client libraries. npm and PyPI both carry a package literally named "pomo" but
+  neither is Pomo: the npm one is @arach/pomo, a macOS pomodoro HUD, and the PyPI one is an unrelated
+  pomodoro timer. No @pomo or @usepomo npm scope exists. Two GitHub organizations exist and are plausibly
+  Pomo (PomoHQ matches the LinkedIn handle linkedin.com/company/pomohq; machflow matches the legal entity
+  MachFlow, Inc. dba Pomo named in the Terms of Use) but BOTH have zero public repositories, so neither
+  is wired as a GitHubOrganization pointer — an empty org proves nothing about a code surface.'
+packages: []
+searched_registries:
+- registry: npm
+  queries:
+  - usepomo
+  - pomo
+  - '@pomo/*'
+  - '@usepomo/*'
+  - pomo marketing
+  result: no first-party package
+  false_positive:
+    name: '@arach/pomo'
+    homepage: https://pomo.arach.dev
+    why_not_pomo: macOS pomodoro timer HUD, unrelated company
+- registry: pypi
+  queries:
+  - pomo
+  - usepomo
+  - pomo-sdk
+  - pomo-api
+  result: no first-party package
+  false_positive:
+    name: pomo
+    why_not_pomo: unrelated pomodoro timer
+- registry: github
+  queries:
+  - orgs/usepomo (404)
+  - orgs/pomo-ai (404)
+  - orgs/pomohq (200, 0 public repos)
+  - orgs/machflow (200, 0 public repos)
+  result: two empty orgs, no published code
+gaps:
+- No SDK in any language for a 994-operation API.
+- No published source, no sample code, no Postman collection.

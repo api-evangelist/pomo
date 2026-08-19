@@ -1,0 +1,129 @@
+generated: '2026-08-13'
+method: probed
+source: https://api.usepomo.ai/api/payment/subscription/plans + https://api.usepomo.ai/api/payment/pricing/context
+  (both unauthenticated, HTTP 200) cross-read against https://usepomo.ai/llms.txt
+plan_count: 5
+note: 'Pomo ships a machine-readable pricing catalog: two unauthenticated endpoints return the plan list
+  with Stripe price ids and a country-aware pricing context with monthly/yearly amounts and credit packages.
+  The catalog returns three self-serve tiers; the Enterprise tier and the Managed Service are published
+  only in prose on the site and in /llms.txt, so they are recorded here from that source. There is no
+  /pricing route — the public pricing lives in the homepage subscriptions section.'
+currency_default: USD
+billing_periods:
+- MONTHLY
+- YEARLY
+default_interval: YEARLY
+pricing_context:
+  country_code_observed: US
+  credit_packages:
+  - credits: 50
+    currency: USD
+    display_amount: 50
+  - credits: 500
+    currency: USD
+    display_amount: 500
+  - credits: 2000
+    currency: USD
+    display_amount: 2000
+  note: Ad spend and generation work is metered in credits on top of the subscription; balance, holds,
+    capture and release are exposed under /api/payment/credits/*.
+plans:
+- id: silver
+  name: Core
+  price: 99.0
+  currency: USD
+  period: monthly
+  annual_price: 999.0
+  annual_currency: USD
+  india_price: INR 8999/month, INR 89990/year
+  stripe_price_id: price_1TYZD72YRImAubww5oVI1SZ6
+  method: probed
+  trial: 7-day free trial, card required
+  included:
+  - 1 company profile
+  - 5 competitors
+  - 2 total seats
+  - 'AEO/GEO weekly progress audit: 80 AI-answer checks per week across 4 AI engines'
+  - Marketing Mix Modeling planning support
+  - Image generation for campaign assets
+  - 10 video generations per month, up to 10 seconds
+- id: gold
+  name: Accelerate
+  price: 299.0
+  currency: USD
+  period: monthly
+  annual_price: 2990.0
+  stripe_price_id: price_1SkTRQ2YRImAubww0z9tEYV2
+  method: probed
+  trial: 7-day free trial, card required
+  included:
+  - 3 company profiles
+  - 5 total seats
+  - 'Expanded AEO/GEO coverage: 180 AI-answer checks per week and citation gap tracking'
+  - Influencer marketing workspace
+  - Social prospecting every 3 days
+  - Performance Agent (CAC/ROAS driven recommendations)
+  - 4K image generation
+  - 30 video generations per month, up to 10 seconds
+  - Dedicated Slack Connect support channel (introductory offer)
+- id: platinum
+  name: Mach-1
+  price: 1999.0
+  currency: USD
+  period: monthly
+  annual_price: 19990.0
+  stripe_price_id: price_1SaQFJ2YRImAubww2FLauAOG
+  method: probed
+  included:
+  - 10 company profiles
+  - 5 competitors per profile
+  - 30 total seats
+  - Portfolio-scale 4K image generation
+  - 100 video generations per month, up to 10 seconds
+  - 'Deepest AEO/GEO coverage: 240 AI-answer checks per week and portfolio share-of-answer priorities'
+  - Approval workflows and change management
+  - Slack integration (coming soon)
+- id: enterprise
+  name: Enterprise
+  price: null
+  currency: null
+  period: null
+  method: searched
+  source: https://usepomo.ai/llms.txt
+  note: Custom pricing; not returned by the plans endpoint.
+  included:
+  - Built on Mach-1
+  - Forward-deployed engineering
+  - Custom data, workflow and SSO integrations
+  - Advanced governance, RBAC, private VPC deployments
+  - SLA, dedicated support, rollout planning
+- id: managed-service
+  name: Managed Service
+  price: 1499.0
+  currency: USD
+  period: monthly
+  overage: +3% of ad spend
+  method: searched
+  source: https://usepomo.ai/llms.txt
+  india_price: INR 60000/month + 3% ad spend
+  onboarding_fee: 999.0
+  commitment: quarterly commit
+  note: Service layer operated by Pomo staff on the customer behalf; includes the Accelerate software
+    tier. Not returned by the plans endpoint.
+  included:
+  - Weekly market, competitor and social listening review
+  - AEO/GEO and AI-answer visibility recommendations
+  - Marketer-curated campaign actions and creative briefs
+  - Light ad monitoring and optimization on one primary channel
+  - Monthly strategy call and performance readout
+api_pricing:
+  published: false
+  note: No pricing is published for the /api/programmatic/v1 tier or for API-key usage; API keys are minted
+    from inside a paid account and usage is metered per key at GET /api/programmatic-keys/{api_key_id}/usage.
+evidence:
+- url: https://api.usepomo.ai/api/payment/subscription/plans
+  status: 200
+- url: https://api.usepomo.ai/api/payment/pricing/context
+  status: 200
+- url: https://usepomo.ai/llms.txt
+  status: 200

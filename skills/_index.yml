@@ -1,0 +1,34 @@
+generated: '2026-08-13'
+method: generated
+source: openapi/pomo-openapi.yml (harvested verbatim from https://api.usepomo.ai/openapi.json)
+note: Four packaged Agent Skills for the marquee flows in the Pomo Platform API. Every operationId referenced
+  was grepped out of the harvested contract and verified to exist; none is invented. Pomo publishes no
+  skills, no AGENTS.md and no API documentation of any kind, so these are generated from the contract
+  plus live probe findings (rate-limit headers, 401 shapes, undeclared SSE content type).
+skill_count: 4
+skills:
+- name: pomo-programmatic-campaign-ideas
+  file: skills/pomo-programmatic-campaign-ideas.md
+  summary: Mint an API key on the /api/programmatic/v1 tier, generate campaign ideas, turn them into campaigns.
+  operations: 7
+- name: pomo-competitor-tracking
+  file: skills/pomo-competitor-tracking.md
+  summary: Register competitors on a company profile, scan them, poll scan status, read insights and captured
+    Facebook ad creative.
+  operations: 14
+- name: pomo-market-intelligence
+  file: skills/pomo-market-intelligence.md
+  summary: Generate and read market intelligence reports, pull the multi-platform trend bundle, work social
+    listening and prospecting.
+  operations: 22
+- name: pomo-agentic-jobs
+  file: skills/pomo-agentic-jobs.md
+  summary: Start an async agentic job, stream progress over SSE, poll as fallback, cancel, and reconcile
+    workflow state after a drop.
+  operations: 11
+cross_cutting_rules_applied:
+- rate-limits/pomo-rate-limits.yml
+- errors/pomo-problem-types.yml
+- conventions/pomo-conventions.yml
+- authentication/pomo-authentication.yml
+- asyncapi/pomo-event-surface.yml

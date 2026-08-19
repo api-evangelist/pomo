@@ -1,0 +1,83 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/pomo-openapi.yml + live probes of https://api.usepomo.ai
+format: fastapi-detail
+rfc9457: false
+note: The contract declares FastAPI default error handling. 848 of 994 operations declare a 422 Validation
+  Error carrying HTTPValidationError; 4 operations declare 410 and 2 declare 404. Every other failure
+  mode (401/403/429/5xx) is undeclared in the contract and was read from live responses. No application
+  error-code registry is published.
+envelope:
+  handled: '{"detail": "<human message>"}'
+  validation: '{"detail": [{"loc": [...], "msg": "...", "type": "..."}]}'
+  content_type: application/json
+  schemas:
+  - HTTPValidationError
+  - ValidationError
+declared_in_spec:
+  '200': 927
+  '422': 848
+  '202': 33
+  '201': 25
+  '204': 5
+  '410': 4
+  '404': 2
+problem_types:
+- status: 401
+  title: Missing authorization token
+  declared_in_spec: false
+  method: probed
+  detail: 'Returned with WWW-Authenticate: Bearer on every bearer-protected operation.'
+  evidence: GET https://api.usepomo.ai/api/auth/status -> 401 {"detail":"Missing authorization token"}
+  remediation: Present a Clerk-issued bearer token in the Authorization header.
+- status: 401
+  title: API key required
+  declared_in_spec: false
+  method: probed
+  detail: Returned by the /api/programmatic/v1 tier when no API key is presented. No WWW-Authenticate
+    header.
+  evidence: GET https://api.usepomo.ai/api/programmatic/v1/hello -> 401 {"detail":"API key required"}
+  remediation: Mint a key at POST /api/programmatic-keys; the header name is not published.
+- status: 404
+  title: Not Found
+  declared_in_spec: true
+  method: derived
+  detail: Default FastAPI router miss and two declared operation-level 404s on /api/images/replace and
+    /api/images/replace-upload.
+  evidence: GET https://api.usepomo.ai/api/limits -> 404 {"detail":"Not Found"}
+- status: 410
+  title: Gone
+  declared_in_spec: true
+  method: derived
+  detail: Declared on four online-ad image operations (google-display and meta-feed edit-image / upload-image),
+    signalling a retired code path.
+  operations:
+  - /api/campaigns/online-ads/google-display/edit-image
+  - /api/campaigns/online-ads/google-display/upload-image
+  - /api/campaigns/online-ads/meta-feed/edit-image
+  - /api/campaigns/online-ads/meta-feed/upload-image
+  note: 'These are the only retirement signals anywhere in the contract; no operation carries deprecated:
+    true and no Sunset header is documented.'
+- status: 422
+  title: Validation Error
+  declared_in_spec: true
+  method: derived
+  detail: FastAPI/Pydantic request validation. detail[] carries loc (path to the offending field), msg
+    and type.
+  remediation: Read detail[].loc to locate the field; the type string is the Pydantic error code.
+- status: 429
+  title: Rate limit exceeded
+  declared_in_spec: false
+  method: derived
+  detail: Not declared anywhere in the contract, but X-RateLimit-Limit/Remaining/Reset are returned on
+    every response, so exhaustion behaviour exists and is undocumented.
+  artifact: rate-limits/pomo-rate-limits.yml
+- status: 409
+  title: Conflict
+  declared_in_spec: false
+  method: derived
+  detail: Described in prose on registration and Shopify binding operations ("409 when the shop is not
+    bound to any Pomo profile"), but never declared as a response.
+gaps:
+- No error-code registry, no error reference page, no RFC 9457 problem+json.
+- Only 2 of 994 operations declare a 404 and none declares 401, 403, 409, 429 or 5xx.

@@ -1,0 +1,71 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/pomo-openapi.yml + live probes of api.usepomo.ai + https://usepomo.ai/pages/privacy-policy.html
+note: Pomo publishes no compliance program, trust center, certification list or security policy. Every
+  entry below is asserted from the contract or from a live probe.
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: 'openapi: 3.1.0 served at https://api.usepomo.ai/openapi.json; parses with 924 paths, 994
+    operations, 902 component schemas.'
+- id: json-schema-2020-12
+  conforms: true
+  evidence: OpenAPI 3.1 dialect; component schemas use anyOf/const/prefix-free 2020-12 keywords.
+- id: oauth2
+  conforms: partial
+  evidence: Pomo is an OAuth CLIENT to 16 external platforms (/api/external-platform/*/callback) but declares
+    no OAuth 2.0 securityScheme of its own; /.well-known/oauth-authorization-server returns 404.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on both usepomo.ai (SPA shell) and api.usepomo.ai
+    (JSON 404). Identity is delegated to Clerk but no discovery document is exposed.
+- id: rfc9457
+  conforms: false
+  evidence: 'Errors use the FastAPI {"detail": ...} envelope with application/json; no application/problem+json
+    anywhere in the contract.'
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns an HTML SPA shell on usepomo.ai and a JSON 404 on api.usepomo.ai.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: No Sunset or Deprecation headers; zero operations marked deprecated.
+- id: idempotency
+  conforms: partial
+  evidence: idempotency_key request-body field on 2 schemas plus prose-documented idempotent semantics
+    on 3 operations; no Idempotency-Key header contract.
+- id: pagination
+  conforms: partial
+  evidence: Three coexisting styles (offset/limit, page/page_size, opaque cursor) with no single documented
+    convention.
+- id: sse
+  conforms: true
+  evidence: Server-Sent Events streams under /api/brand-workflow/sse/*, /api/agentic/teams/{team_id}/stream,
+    /api/chat/agentic/jobs/{job_id}/stream, with a Last-Event-ID resume header.
+- id: mcp
+  conforms: false
+  evidence: 'An MCP-shaped REST facade exists at /api/mcp/* (tools/list, tools/execute, resources/list,
+    resources/read, prompts/list, capabilities) but there is no JSON-RPC MCP transport: POST of a jsonrpc
+    tools/list envelope to /api/mcp returns 404. See mcp/pomo-mcp.yml.'
+- id: a2a
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json miss on both hosts (SPA HTML shell
+    on usepomo.ai, JSON 404 on api.usepomo.ai).
+- id: llmstxt
+  conforms: true
+  evidence: A real 20,111-byte /llms.txt is served as text/plain from both usepomo.ai and api.usepomo.ai,
+    with a canonical URL list, capability inventory, pricing summary and an answer-engine citation order.
+- id: gdpr-ccpa
+  conforms: claimed
+  evidence: A data-deletion page (https://usepomo.ai/pages/data-deletion.html), a privacy policy, and
+    a Shopify mandatory privacy webhook receiver (/api/external-platform/shopify/privacy/webhooks) exist;
+    no certification or DPA is published.
+- id: pci-dss
+  conforms: n/a
+  evidence: Card handling is delegated to Stripe (stripe_price_id on the plans catalog, /api/payment/subscription/webhook);
+    Pomo publishes no PCI attestation and does not appear to take card data directly.
+- id: soc2
+  conforms: unknown
+  evidence: No trust center, no certification page; trust.usepomo.ai and security.usepomo.ai are NXDOMAIN.
+certifications: []
+gaps:
+- No compliance or certification program is published anywhere on either host.

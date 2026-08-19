@@ -1,0 +1,70 @@
+generated: '2026-08-13'
+method: probed
+source: https://api.usepomo.ai/openapi.json + live 401 probes of api.usepomo.ai
+note: 'The OpenAPI declares exactly one securityScheme (HTTPBearer, http/bearer) applied to 932 of 994
+  operations. Live probing shows two distinct credential families behind that single declared scheme:
+  session bearer tokens issued by Clerk for the application surface, and opaque API keys for the /api/programmatic/v1
+  tier. The spec does not model the API-key scheme, so it is recorded here from observed 401 behaviour
+  rather than from the contract.'
+summary:
+  types:
+  - http
+  - apiKey
+  declared_in_spec:
+  - http
+  observed_only:
+  - apiKey
+schemes:
+- name: HTTPBearer
+  type: http
+  scheme: bearer
+  declared: true
+  applies_to_operations: 932
+  sources:
+  - openapi/pomo-openapi.yml
+  token_issuer: Clerk
+  evidence:
+  - url: https://api.usepomo.ai/api/auth/health
+    http_status: 200
+    body: '{"status":"healthy","clerk_configured":true,"secret_key_configured":true}'
+  - url: https://api.usepomo.ai/api/auth/status
+    http_status: 401
+    www_authenticate: Bearer
+    body: '{"detail":"Missing authorization token"}'
+- name: ProgrammaticApiKey
+  type: apiKey
+  declared: false
+  in: unknown — header name not published
+  applies_to: /api/programmatic/v1/*
+  lifecycle:
+    create: POST /api/programmatic-keys (create_api_key_for_profile_api_programmatic_keys_post)
+    list: GET /api/programmatic-keys (list_api_keys_api_programmatic_keys_get)
+    revoke: POST /api/programmatic-keys/{api_key_id}/revoke
+    usage: GET /api/programmatic-keys/{api_key_id}/usage
+    scopes_field: ApiKeyCreateRequest.scopes (array of string; no scope vocabulary published)
+    expiry_field: ApiKeyCreateRequest.expires_at (date-time, optional)
+  evidence:
+  - url: https://api.usepomo.ai/api/programmatic/v1/hello
+    http_status: 401
+    body: '{"detail":"API key required"}'
+tenancy:
+  header: X-Organization-Id
+  operations: 59
+  note: Organization scoping is carried as an X-Organization-Id header on 59 operations; most resource
+    operations additionally require company_profile_id.
+  secondary_header: X-Company-Profile-Id
+public_operations:
+  count: 62
+  note: '62 operations declare no security: OAuth callbacks for connected platforms, inbound partner webhooks,
+    health endpoints, public pricing/plans, the latest ToS, social-post platform constraints, and the
+    discovery files (/robots.txt, /llms.txt, /sitemap.xml).'
+anonymous_discovery:
+  oauth_authorization_server: 404
+  oauth_protected_resource: 404
+  openid_configuration: 404
+  note: No RFC 8414 / RFC 9728 metadata is served on either host; see well-known/pomo-well-known.yml.
+gaps:
+- No published authentication documentation, developer portal, or key-issuance guide.
+- The API-key scheme is not declared in the OpenAPI, so an agent reading only the contract cannot authenticate
+  to the programmatic tier.
+- No scope vocabulary is published for the ApiKeyCreateRequest.scopes field.

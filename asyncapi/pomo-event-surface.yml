@@ -1,0 +1,110 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/pomo-openapi.yml
+asyncapi_published: false
+note: 'Pomo publishes no AsyncAPI document. It does operate a real event surface with two very different
+  halves, and they should not be confused. OUTBOUND-TO-CUSTOMER: Server-Sent Event streams that a client
+  holding a bearer token subscribes to. INBOUND-FROM-PARTNER: webhook receivers Pomo exposes so Shopify,
+  Square, Stripe and Slack can call it. There is NO customer-subscribable webhook — a Pomo customer cannot
+  register a callback URL anywhere in the 994-operation contract.'
+customer_subscribable_webhooks: false
+sse_streams:
+- operationId: stream_brand_workflow_events_api_brand_workflow_sse_stream__process_id__get
+  path: /api/brand-workflow/sse/stream/{process_id}
+  auth: bearer
+  description: Brand-generation workflow events for one process.
+- operationId: stream_all_workflow_events_api_brand_workflow_sse_stream_get
+  path: /api/brand-workflow/sse/stream
+  auth: bearer
+  description: All brand-workflow events for the caller.
+- operationId: get_workflow_state_api_brand_workflow_sse_state__process_id__get
+  path: /api/brand-workflow/sse/state/{process_id}
+  auth: bearer
+  description: Point-in-time state, for reconciling after a dropped stream.
+- operationId: get_active_workflow_api_brand_workflow_sse_active_get
+  path: /api/brand-workflow/sse/active
+  auth: bearer
+- operationId: stream_job_progress_api_chat_agentic_jobs__job_id__stream_get
+  path: /api/chat/agentic/jobs/{job_id}/stream
+  auth: bearer
+  description: Progress events for an async agent job.
+- operationId: stream_team_activity_api_agentic_teams__team_id__stream_get
+  path: /api/agentic/teams/{team_id}/stream
+  auth: bearer
+  description: Live agent-team activity.
+- operationId: stream_user_conversation_events_api_agentic_user_conversation_stream_get
+  path: /api/agentic/user/conversation-stream
+  auth: bearer
+  description: Per-user conversation event stream.
+- operationId: competitors_discovery_sse_stream_api_workflow_brand_generation_step3_competitors_sse__workflow_id__get
+  path: /api/workflow/brand-generation/step3/competitors/sse/{workflow_id}
+  auth: bearer
+- operationId: marketing_profile_sse_stream_api_workflow_brand_generation_marketing_profile_sse__workflow_id__get
+  path: /api/workflow/brand-generation/marketing-profile/sse/{workflow_id}
+  auth: bearer
+- operationId: onboarding_view_stream_api_workflow_brand_generation_onboarding_stream__workflow_id__get
+  path: /api/workflow/brand-generation/onboarding/stream/{workflow_id}
+  auth: bearer
+- operationId: stream_influencer_web_discovery_api_influencer_inventory_search_web_discovery_stream_post
+  path: /api/influencer-inventory/search/web-discovery/stream
+  auth: bearer
+- operationId: stream_influencer_inventory_curated_lists_api_influencer_inventory_search_web_discovery_curated_lists_stream_post
+  path: /api/influencer-inventory/search/web-discovery/curated-lists/stream
+  auth: bearer
+sse_transport:
+  resume_header: Last-Event-ID
+  event_bus: Redis pub/sub
+  observed_capacity:
+    source: https://api.usepomo.ai/health/events (HTTP 200, unauthenticated)
+    max_connections: 1000
+    note: The health endpoint publicly reports live SSE connection counts, unique users and utilization.
+  no_content_type_declared: The contract does not declare text/event-stream on any of these operations;
+    the streaming nature is only discoverable from the path and summary.
+inbound_partner_webhooks:
+- path: /api/external-platform/shopify/privacy/webhooks
+  method: POST
+  auth: none (HMAC expected)
+  partner: Shopify
+  description: Shopify mandatory GDPR privacy webhooks.
+- path: /api/external-platform/shopify/webhooks/app-uninstalled
+  method: POST
+  auth: none (HMAC expected)
+  partner: Shopify
+- path: /api/external-platform/square/webhooks
+  method: POST
+  auth: none
+  partner: Square
+- path: /api/payment/subscription/webhook
+  method: POST
+  auth: Stripe-Signature header
+  partner: Stripe
+- path: /api/external-platform/slack/events
+  method: POST
+  auth: none
+  partner: Slack
+  description: Slack Events API receiver; /interactions and /commands sit alongside it.
+oauth_callbacks:
+  count: 16
+  partners:
+  - Instagram
+  - Meta
+  - Google
+  - Google Analytics
+  - Amazon
+  - TikTok
+  - TikTok Social
+  - LinkedIn
+  - Shopify
+  - Stripe
+  - QuickBooks
+  - Square
+  - Klaviyo
+  - Slack
+  - X
+  - Facebook Social
+  - HubSpot
+  note: These are OAuth redirect receivers, not events.
+gaps:
+- No AsyncAPI document.
+- No customer-registerable webhook endpoint anywhere in the contract.
+- SSE operations do not declare text/event-stream in the contract.

@@ -1,0 +1,174 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/pomo-openapi.yml
+note: 'Derived from 902 component schemas and 924 paths. Pomo is a multi-tenant marketing platform: Organization
+  is the billing/membership root, Company Profile is the working tenant that almost every resource hangs
+  off, and Campaign is the dominant work object. Identifiers are UUID strings; there are no typed id prefixes.'
+id_format: UUID string (no type prefix)
+entity_count: 16
+entities:
+- name: Organization
+  id_field: organization_id
+  path_root: /api/v1/organization
+  schema_refs: 40
+  header: X-Organization-Id
+  description: Billing and membership root. Owns members, invites, roles, invite-domain settings and ownership
+    transfer.
+  relationships:
+  - has_many: CompanyProfile
+  - has_many: OrganizationMember
+    via: user_id
+  - has_many: OrganizationInvite
+    via: invite_id
+  - has_one: Subscription
+- name: CompanyProfile
+  id_field: company_profile_id
+  path_root: /api/company-profile
+  schema_refs: 73
+  description: 'The tenant a marketer works inside: brand facts, stylebook, competitive analysis, marketing
+    strategy, files and images. Plan limits are enforced per profile.'
+  relationships:
+  - belongs_to: Organization
+    via: organization_id
+  - has_one: Stylebook
+  - has_many: Competitor
+  - has_many: Campaign
+  - has_many: ProductOffering
+  - has_many: MarketIntelligenceItem
+  - has_many: AgentTeam
+  - has_many: ExternalPlatformAccount
+- name: Campaign
+  id_field: campaign_id
+  path_root: /api/campaigns
+  schema_refs: 55
+  description: The dominant work object — 116 paths. Spans online ad campaigns (Google search/display/video,
+    Meta feed and stories/reels, TikTok video, LinkedIn image/video), social posts, email campaigns, dayparting,
+    geo and budget estimation.
+  relationships:
+  - belongs_to: CompanyProfile
+    via: company_profile_id
+  - has_many: Ad
+    via: ad_id
+  - has_many: CampaignImage
+    via: image_id
+  - has_one: CampaignAnalytics
+  - has_many: ABGroup
+    via: ab_group_id
+- name: Competitor
+  id_field: competitor_id
+  path_root: /api/competitor-tracking
+  schema_refs: 23
+  description: Tracked rival brand with scan status, insights, social handles, Facebook ad library pulls,
+    archive/restore lifecycle.
+  relationships:
+  - belongs_to: CompanyProfile
+  - has_many: CompetitorAd
+  - has_one: CompetitorInsights
+- name: ProductOffering
+  id_field: product_offering_id
+  path_root: /api/product-offerings
+  schema_refs: 17
+  description: A sellable product or service with images, used to ground campaigns and product detail
+    pages.
+  relationships:
+  - belongs_to: CompanyProfile
+  - has_many: ProductOfferingImage
+- name: AgentTeam
+  id_field: team_id
+  path_root: /api/agentic/teams
+  schema_refs: 16
+  description: 'The agentic layer: teams with actions, events, messages, mission feeds, daily summaries,
+    digest emails, approvals and a fleet snapshot.'
+  relationships:
+  - belongs_to: CompanyProfile
+  - has_many: AgentTeamEvent
+  - has_many: AgentTeamAction
+    via: action_id
+  - has_many: Approval
+    via: approval_id
+  - has_many: AgentConversation
+    via: conversation_id
+- name: AgentConversation
+  id_field: conversation_id
+  path_root: /api/agentic/conversations
+  schema_refs: 10
+  description: Chat thread against the agentic layer; carries idempotency_key on message submission and
+    opaque file attachment handles.
+  relationships:
+  - belongs_to: AgentTeam
+  - has_many: AgentJob
+    via: job_id
+- name: AgentJob
+  id_field: job_id
+  path_root: /api/chat/agentic/jobs
+  description: Async execution unit — started, polled, streamed over SSE, cancelled.
+  relationships:
+  - belongs_to: AgentConversation
+- name: MarketIntelligenceItem
+  id_field: intelligence_id
+  path_root: /api/market-intelligence
+  description: Generated intelligence report plus trend bundles (Google, TikTok, Instagram, YouTube, Amazon,
+    Yelp), social listening, social prospecting and evolution history.
+  relationships:
+  - belongs_to: CompanyProfile
+- name: EarnedMediaProject
+  id_field: project_id
+  path_root: /api/earned-media
+  description: Earned-media story project with generation leases and an idempotent archive operation.
+  relationships:
+  - belongs_to: CompanyProfile
+- name: Creator
+  id_field: creator_id
+  path_root: /api/influencer-discovery
+  description: Influencer/creator record from discovery and inventory search, groupable into curated lists.
+  relationships:
+  - has_many: InfluencerCampaign
+    via: campaign_id
+  - belongs_to: CuratedList
+    via: curated_list_id
+- name: ExternalPlatformAccount
+  id_field: account_id
+  path_root: /api/external-platform
+  description: OAuth-connected ad or commerce account (Meta, Instagram, Google, Google Analytics, TikTok,
+    LinkedIn, X, Facebook, Shopify, Square, Stripe, QuickBooks, Klaviyo, HubSpot, Amazon, Slack). 179
+    paths — the single largest surface.
+  relationships:
+  - belongs_to: CompanyProfile
+  - has_many: AdAccount
+    via: ad_account_id
+- name: UnifiedDataModelRecord
+  id_field: entity_id
+  path_root: /api/udm
+  description: The unified data model that normalizes first-party sales, shipment, order and transaction
+    data across connected sources.
+  relationships:
+  - belongs_to: CompanyProfile
+  - has_many: DataSourceOrder
+  - has_many: DataSourceTransaction
+- name: ChangeRequest
+  id_field: change_request_id
+  path_root: /api/change-management
+  description: Approval and change-management workflow over generated artifacts.
+  relationships:
+  - belongs_to: CompanyProfile
+  - has_one: Approval
+- name: ApiKey
+  id_field: api_key_id
+  path_root: /api/programmatic-keys
+  description: Programmatic API credential with name, optional scopes array, optional expiry and per-key
+    usage events.
+  relationships:
+  - belongs_to: CompanyProfile
+  - has_many: ApiKeyUsageEvent
+- name: CreditLedger
+  id_field: null
+  path_root: /api/payment/credits
+  description: Credit balance with hold / capture / release semantics and a transaction history; funds
+    ad spend and generation work.
+  relationships:
+  - belongs_to: Organization
+notes:
+- company_profile_id is the join key across almost the entire surface; an agent that does not carry it
+  can call almost nothing.
+- The UDM (unified data model) is a first-class normalization layer rather than a passthrough.
+- No entity carries a typed id prefix, so ids are not self-describing.
