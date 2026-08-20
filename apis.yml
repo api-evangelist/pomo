@@ -40,6 +40,20 @@ modified: '2026-08-13'
 tags:
 - Company
 - Marketing
+- Artificial Intelligence
+- Market Intelligence
+- Competitive Intelligence
+- Marketing Automation
+- Generative AI
+- Software-as-a-Service
+- Answer Engine Optimization
+- Advertising
+- Social-Media
+- Influencer Marketing
+- Campaign Management
+tags_raw:
+- Company
+- Marketing
 - AI
 - Market Intelligence
 - Competitive Intelligence
@@ -67,6 +81,15 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Marketing
+  - Artificial Intelligence
+  - Campaign Management
+  - Market Intelligence
+  - Competitive Intelligence
+  - Advertising
+  - Social-Media
+  - Influencer Marketing
+  tags_raw:
   - Marketing
   - AI
   - Campaign Management
