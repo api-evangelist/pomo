@@ -66,54 +66,25 @@ tags_raw:
 - Influencer Marketing
 - Campaign Management
 apis:
-- name: Pomo Platform API
-  description: The FastAPI backend behind the Pomo application, published as an OpenAPI 3.1.0 contract
-    at https://api.usepomo.ai/openapi.json with interactive Swagger UI and ReDoc renderings. 924 paths
-    / 994 operations across campaigns, online ad campaigns, agentic teams and tasks, brand workflow, competitor
-    tracking, market intelligence, earned media, influencer discovery and campaigns, a unified data model
-    (UDM), company profiles, organizations and members, credits and payments, and a large external-platform
-    connector surface (Meta, Instagram, Google, Google Analytics, TikTok, LinkedIn, X, Shopify, Square,
-    Stripe, QuickBooks, Klaviyo, HubSpot, Slack, Amazon). Authentication is HTTP bearer (Clerk issued
-    session tokens); a separate programmatic tier under /api/programmatic/v1 authenticates with self-service
-    API keys minted at /api/programmatic-keys. The contract is published without an access program, developer
-    portal, or usage terms — it is the application's own backend, publicly readable rather than a documented
-    developer product.
+- aid: pomo:pomo-ab-groups-api
+  name: Pomo Ab Groups API
+  description: The ab-groups API from Pomo — 6 operation(s) for ab-groups.
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
-  - Marketing
-  - Artificial Intelligence
-  - Campaign Management
-  - Market Intelligence
-  - Competitive Intelligence
-  - Advertising
-  - Social-Media
-  - Influencer Marketing
-  tags_raw:
-  - Marketing
-  - AI
-  - Campaign Management
-  - Market Intelligence
-  - Competitive Intelligence
-  - Advertising
-  - Social Media
-  - Influencer Marketing
+  - ab-groups
   properties:
   - type: OpenAPI
-    name: Pomo Platform API OpenAPI 3.1.0 (harvested verbatim)
-    url: openapi/pomo-openapi.yml
+    url: openapi/pomo-ab-groups-api-openapi.yml
   - type: APIReference
-    name: Swagger UI (FastAPI /docs)
     url: https://api.usepomo.ai/docs
   - type: Documentation
-    name: ReDoc (FastAPI /redoc)
     url: https://api.usepomo.ai/redoc
   - type: Authentication
     url: authentication/pomo-authentication.yml
   - type: Conventions
     url: conventions/pomo-conventions.yml
   - type: Idempotency
-    name: Idempotency keys and idempotent operations
     url: conventions/pomo-conventions.yml
   - type: ErrorCatalog
     url: errors/pomo-problem-types.yml
@@ -125,19 +96,3189 @@ apis:
     url: lifecycle/pomo-lifecycle.yml
   - type: Conformance
     url: conformance/pomo-conformance.yml
-  - type: Overlay
-    url: overlays/pomo-openapi-overlay.yaml
   - type: Webhooks
-    name: Event surface — SSE streams and inbound partner webhook receivers
     url: asyncapi/pomo-event-surface.yml
-  - type: AgentSkill
-    url: skills/_index.yml
+- aid: pomo:pomo-agent-jobs-api
+  name: Pomo Agent Jobs API
+  description: The agent-jobs API from Pomo — 5 operation(s) for agent-jobs.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - agent-jobs
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-agent-jobs-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-agentic-chat-api
+  name: Pomo Agentic Chat API
+  description: The agentic-chat API from Pomo — 3 operation(s) for agentic-chat.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - agentic-chat
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-agentic-chat-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-agentic-conversations-api
+  name: Pomo Agentic Conversations API
+  description: The agentic-conversations API from Pomo — 7 operation(s) for agentic-conversations.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - agentic-conversations
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-agentic-conversations-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-agentic-tasks-api
+  name: Pomo Agentic Tasks API
+  description: The agentic-tasks API from Pomo — 5 operation(s) for agentic-tasks.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - agentic-tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-agentic-tasks-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-agentic-teams-api
+  name: Pomo Agentic Teams API
+  description: The agentic-teams API from Pomo — 49 operation(s) for agentic-teams.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - agentic-teams
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-agentic-teams-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-agentic-user-api
+  name: Pomo Agentic User API
+  description: The agentic-user API from Pomo — 1 operation(s) for agentic-user.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - agentic-user
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-agentic-user-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-ai-campaign-api
+  name: Pomo AI Campaign API
+  description: The ai-campaign API from Pomo — 2 operation(s) for ai-campaign.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - ai-campaign
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-ai-campaign-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-ai-personas-api
+  name: Pomo AI Personas API
+  description: The ai-personas API from Pomo — 5 operation(s) for ai-personas.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - ai-personas
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-ai-personas-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-ai-policy-api
+  name: Pomo AI Policy API
+  description: The ai-policy API from Pomo — 9 operation(s) for ai-policy.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - ai-policy
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-ai-policy-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-ai-product-lab-api
+  name: Pomo AI Product Lab API
+  description: The ai-product-lab API from Pomo — 9 operation(s) for ai-product-lab.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - ai-product-lab
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-ai-product-lab-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-ai-testing-api
+  name: Pomo AI Testing API
+  description: The ai-testing API from Pomo — 15 operation(s) for ai-testing.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - ai-testing
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-ai-testing-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-analytics-api
+  name: Pomo Analytics API
+  description: The analytics API from Pomo — 2 operation(s) for analytics.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-analytics-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-auth-api
+  name: Pomo Auth API
+  description: The auth API from Pomo — 12 operation(s) for auth.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - auth
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-auth-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-brand-workflow-api
+  name: Pomo Brand Workflow API
+  description: The brand-workflow API from Pomo — 29 operation(s) for brand-workflow.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - brand-workflow
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-brand-workflow-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-brand-workflow-sse-api
+  name: Pomo Brand Workflow Sse API
+  description: The brand-workflow-sse API from Pomo — 5 operation(s) for brand-workflow-sse.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - brand-workflow-sse
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-brand-workflow-sse-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-budget-estimate-api
+  name: Pomo Budget Estimate API
+  description: The Budget Estimate API from Pomo — 1 operation(s) for budget estimate.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Budget Estimate
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-budget-estimate-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-campaign-analytics-api
+  name: Pomo Campaign Analytics API
+  description: The campaign-analytics API from Pomo — 4 operation(s) for campaign-analytics.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - campaign-analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-campaign-analytics-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-campaign-geo-api
+  name: Pomo Campaign Geo API
+  description: The Campaign Geo API from Pomo — 2 operation(s) for campaign geo.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Campaign Geo
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-campaign-geo-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-campaign-ideas-api
+  name: Pomo Campaign Ideas API
+  description: The campaign-ideas API from Pomo — 2 operation(s) for campaign-ideas.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - campaign-ideas
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-campaign-ideas-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-campaign-images-api
+  name: Pomo Campaign Images API
+  description: The Campaign Images API from Pomo — 5 operation(s) for campaign images.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Campaign Images
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-campaign-images-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-campaigns-api
+  name: Pomo Campaigns API
+  description: The campaigns API from Pomo — 116 operation(s) for campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-change-management-api
+  name: Pomo Change Management API
+  description: The change-management API from Pomo — 10 operation(s) for change-management.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - change-management
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-change-management-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-chat-api
+  name: Pomo Chat API
+  description: The chat API from Pomo — 5 operation(s) for chat.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - chat
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-chat-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-company-profile-access-api
+  name: Pomo Company Profile Access API
+  description: The company-profile-access API from Pomo — 3 operation(s) for company-profile-access.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - company-profile-access
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-company-profile-access-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-company-profile-api
+  name: Pomo Company Profile API
+  description: The company-profile API from Pomo — 17 operation(s) for company-profile.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - company-profile
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-company-profile-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-competitive-gap-analysis-api
+  name: Pomo Competitive Gap Analysis API
+  description: >-
+    The competitive-gap-analysis API from Pomo — 8 operation(s) for competitive-gap-analysis.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - competitive-gap-analysis
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-competitive-gap-analysis-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-competitor-ad-insights-api
+  name: Pomo Competitor Ad Insights API
+  description: The competitor-ad-insights API from Pomo — 3 operation(s) for competitor-ad-insights.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - competitor-ad-insights
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-competitor-ad-insights-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-competitor-tracking-api
+  name: Pomo Competitor Tracking API
+  description: The competitor-tracking API from Pomo — 23 operation(s) for competitor-tracking.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - competitor-tracking
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-competitor-tracking-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-consumer-group-api
+  name: Pomo Consumer Group API
+  description: The consumer-group API from Pomo — 6 operation(s) for consumer-group.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - consumer-group
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-consumer-group-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-contact-submissions-api
+  name: Pomo Contact Submissions API
+  description: The contact-submissions API from Pomo — 2 operation(s) for contact-submissions.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - contact-submissions
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-contact-submissions-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-content-editing-api
+  name: Pomo Content Editing API
+  description: The content-editing API from Pomo — 3 operation(s) for content-editing.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - content-editing
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-content-editing-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-credits-api
+  name: Pomo Credits API
+  description: The credits API from Pomo — 7 operation(s) for credits.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - credits
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-credits-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-crm-api
+  name: Pomo CRM API
+  description: The crm API from Pomo — 5 operation(s) for crm.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - crm
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-crm-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-crm-b2b-leads-api
+  name: Pomo CRM B2b Leads API
+  description: The crm-b2b-leads API from Pomo — 7 operation(s) for crm-b2b-leads.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - crm-b2b-leads
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-crm-b2b-leads-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-crm-people-api
+  name: Pomo CRM People API
+  description: The crm-people API from Pomo — 6 operation(s) for crm-people.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - crm-people
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-crm-people-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-dayparting-api
+  name: Pomo Dayparting API
+  description: The Dayparting API from Pomo — 6 operation(s) for dayparting.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Dayparting
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-dayparting-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-debug-api
+  name: Pomo Debug API
+  description: The debug API from Pomo — 1 operation(s) for debug.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - debug
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-debug-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-document-jobs-api
+  name: Pomo Document Jobs API
+  description: The document-jobs API from Pomo — 4 operation(s) for document-jobs.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - document-jobs
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-document-jobs-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-earned-media-api
+  name: Pomo Earned Media API
+  description: The earned-media API from Pomo — 17 operation(s) for earned-media.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - earned-media
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-earned-media-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-email-campaigns-api
+  name: Pomo Email Campaigns API
+  description: The Email Campaigns API from Pomo — 14 operation(s) for email campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Email Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-email-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-email-campaigns-v2-api
+  name: Pomo Email Campaigns V2 API
+  description: The Email Campaigns V2 API from Pomo — 8 operation(s) for email campaigns v2.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Email Campaigns V2
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-email-campaigns-v2-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-experiment-packages-api
+  name: Pomo Experiment Packages API
+  description: The experiment-packages API from Pomo — 5 operation(s) for experiment-packages.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - experiment-packages
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-experiment-packages-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-external-platform-api
+  name: Pomo External Platform API
+  description: The external-platform API from Pomo — 175 operation(s) for external-platform.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - external-platform
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-external-platform-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-feedback-api
+  name: Pomo Feedback API
+  description: The feedback API from Pomo — 4 operation(s) for feedback.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - feedback
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-feedback-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-feeling-lucky-api
+  name: Pomo Feeling Lucky API
+  description: The feeling-lucky API from Pomo — 1 operation(s) for feeling-lucky.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - feeling-lucky
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-feeling-lucky-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-first-party-data-api
+  name: Pomo First Party Data API
+  description: The first-party-data API from Pomo — 9 operation(s) for first-party-data.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - first-party-data
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-first-party-data-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-gallery-api
+  name: Pomo Gallery API
+  description: The gallery API from Pomo — 12 operation(s) for gallery.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - gallery
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-gallery-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-gallery-media-api
+  name: Pomo Gallery Media API
+  description: The gallery-media API from Pomo — 1 operation(s) for gallery-media.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - gallery-media
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-gallery-media-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-google-display-campaigns-api
+  name: Pomo Google Display Campaigns API
+  description: >-
+    The google_display_campaigns API from Pomo — 6 operation(s) for google_display_campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - google_display_campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-google-display-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-google-search-campaigns-api
+  name: Pomo Google Search Campaigns API
+  description: The google_search_campaigns API from Pomo — 4 operation(s) for google_search_campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - google_search_campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-google-search-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-google-video-ads-api
+  name: Pomo Google Video Ads API
+  description: The Google Video Ads API from Pomo — 6 operation(s) for google video ads.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Google Video Ads
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-google-video-ads-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-gpt-backend-api-api
+  name: Pomo GPT Backend API
+  description: The GPT Backend API API from Pomo — 1 operation(s) for gpt backend api.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - GPT Backend API
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-gpt-backend-api-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-guided-workflow-api
+  name: Pomo Guided Workflow API
+  description: The guided-workflow API from Pomo — 10 operation(s) for guided-workflow.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - guided-workflow
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-guided-workflow-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-health-api
+  name: Pomo Health API
+  description: The Health API from Pomo — 8 operation(s) for health.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Health
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-health-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-image-operations-api
+  name: Pomo Image Operations API
+  description: The image-operations API from Pomo — 2 operation(s) for image-operations.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - image-operations
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-image-operations-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-images-api
+  name: Pomo Images API
+  description: The images API from Pomo — 2 operation(s) for images.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - images
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-images-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-influencer-campaigns-api
+  name: Pomo Influencer Campaigns API
+  description: The influencer-campaigns API from Pomo — 14 operation(s) for influencer-campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - influencer-campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-influencer-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-influencer-discovery-api
+  name: Pomo Influencer Discovery API
+  description: The influencer-discovery API from Pomo — 35 operation(s) for influencer-discovery.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - influencer-discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-influencer-discovery-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-influencer-inventory-api
+  name: Pomo Influencer Inventory API
+  description: The influencer-inventory API from Pomo — 8 operation(s) for influencer-inventory.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - influencer-inventory
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-influencer-inventory-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-legal-api
+  name: Pomo Legal API
+  description: The legal API from Pomo — 1 operation(s) for legal.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - legal
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-legal-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-limits-api
+  name: Pomo Limits API
+  description: The limits API from Pomo — 1 operation(s) for limits.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - limits
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-limits-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-linkedin-image-campaigns-api
+  name: Pomo Linkedin Image Campaigns API
+  description: >-
+    The linkedin_image_campaigns API from Pomo — 4 operation(s) for linkedin_image_campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - linkedin_image_campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-linkedin-image-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-linkedin-video-campaigns-api
+  name: Pomo Linkedin Video Campaigns API
+  description: >-
+    The linkedin_video_campaigns API from Pomo — 4 operation(s) for linkedin_video_campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - linkedin_video_campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-linkedin-video-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-llms-txt-api
+  name: Pomo Llms.txt API
+  description: The Llms.txt API from Pomo — 1 operation(s) for llms.txt.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Llms.txt
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-llms-txt-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-market-intelligence-api
+  name: Pomo Market Intelligence API
+  description: The market-intelligence API from Pomo — 27 operation(s) for market-intelligence.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - market-intelligence
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-market-intelligence-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-marketing-docs-api
+  name: Pomo Marketing Docs API
+  description: The marketing-docs API from Pomo — 5 operation(s) for marketing-docs.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - marketing-docs
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-marketing-docs-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-marketing-wizard-api
+  name: Pomo Marketing Wizard API
+  description: The marketing-wizard API from Pomo — 5 operation(s) for marketing-wizard.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - marketing-wizard
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-marketing-wizard-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-mcp-api
+  name: Pomo MCP API
+  description: The mcp API from Pomo — 7 operation(s) for mcp.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - mcp
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-mcp-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-meta-feed-campaigns-api
+  name: Pomo Meta Feed Campaigns API
+  description: The meta_feed_campaigns API from Pomo — 7 operation(s) for meta_feed_campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - meta_feed_campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-meta-feed-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-meta-stories-reels-campaigns-api
+  name: Pomo Meta Stories Reels Campaigns API
+  description: >-
+    The meta_stories_reels_campaigns API from Pomo — 5 operation(s) for meta_stories_reels_campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - meta_stories_reels_campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-meta-stories-reels-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-metrics-api
+  name: Pomo Metrics API
+  description: The metrics API from Pomo — 1 operation(s) for metrics.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-metrics-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-notifications-api
+  name: Pomo Notifications API
+  description: The notifications API from Pomo — 7 operation(s) for notifications.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - notifications
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-notifications-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-online-ad-campaigns-api
+  name: Pomo Online Ad Campaigns API
+  description: The Online Ad Campaigns API from Pomo — 53 operation(s) for online ad campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Online Ad Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-online-ad-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-organization-api
+  name: Pomo Organization API
+  description: The organization API from Pomo — 19 operation(s) for organization.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - organization
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-organization-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-overview-api
+  name: Pomo Overview API
+  description: The overview API from Pomo — 1 operation(s) for overview.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - overview
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-overview-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-payment-api
+  name: Pomo Payment API
+  description: The payment API from Pomo — 21 operation(s) for payment.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - payment
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-payment-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-pricing-api
+  name: Pomo Pricing API
+  description: The pricing API from Pomo — 1 operation(s) for pricing.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - pricing
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-pricing-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-product-brainstorm-api
+  name: Pomo Product Brainstorm API
+  description: The Product Brainstorm API from Pomo — 4 operation(s) for product brainstorm.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Product Brainstorm
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-product-brainstorm-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-product-brainstorm-test-api
+  name: Pomo Product Brainstorm Test API
+  description: The Product Brainstorm Test API from Pomo — 5 operation(s) for product brainstorm test.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Product Brainstorm Test
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-product-brainstorm-test-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-product-offerings-api
+  name: Pomo Product Offerings API
+  description: The product-offerings API from Pomo — 21 operation(s) for product-offerings.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - product-offerings
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-product-offerings-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-profile-content-editor-api
+  name: Pomo Profile Content Editor API
+  description: The profile-content-editor API from Pomo — 3 operation(s) for profile-content-editor.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - profile-content-editor
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-profile-content-editor-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-programmatic-api
+  name: Pomo Programmatic API
+  description: The programmatic API from Pomo — 3 operation(s) for programmatic.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - programmatic
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-programmatic-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-programmatic-keys-api
+  name: Pomo Programmatic Keys API
+  description: The programmatic-keys API from Pomo — 3 operation(s) for programmatic-keys.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - programmatic-keys
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-programmatic-keys-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-quickbooks-api
+  name: Pomo Quickbooks API
+  description: The quickbooks API from Pomo — 7 operation(s) for quickbooks.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - quickbooks
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-quickbooks-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-robots-txt-api
+  name: Pomo Robots.txt API
+  description: The Robots.txt API from Pomo — 1 operation(s) for robots.txt.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Robots.txt
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-robots-txt-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-seo-analysis-api
+  name: Pomo SEO Analysis API
+  description: The SEO Analysis API from Pomo — 14 operation(s) for seo analysis.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - SEO Analysis
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-seo-analysis-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-sitemap-xml-api
+  name: Pomo Sitemap.xml API
+  description: The Sitemap.xml API from Pomo — 1 operation(s) for sitemap.xml.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Sitemap.xml
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-sitemap-xml-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-social-platform-api
+  name: Pomo Social Platform API
+  description: The social-platform API from Pomo — 4 operation(s) for social-platform.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - social-platform
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-social-platform-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-social-post-campaigns-api
+  name: Pomo Social Post Campaigns API
+  description: The Social Post Campaigns API from Pomo — 21 operation(s) for social post campaigns.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Social Post Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-social-post-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-social-posts-api
+  name: Pomo Social Posts API
+  description: The social-posts API from Pomo — 7 operation(s) for social-posts.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - social-posts
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-social-posts-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-test-logging-api
+  name: Pomo Test Logging API
+  description: The Test Logging API from Pomo — 1 operation(s) for test logging.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Test Logging
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-test-logging-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-tiktok-video-ads-api
+  name: Pomo TikTok Video Ads API
+  description: The TikTok Video Ads API from Pomo — 6 operation(s) for tiktok video ads.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - TikTok Video Ads
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-tiktok-video-ads-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-udm-api
+  name: Pomo Udm API
+  description: The udm API from Pomo — 45 operation(s) for udm.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - udm
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-udm-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-unified-data-model-api
+  name: Pomo Unified Data Model API
+  description: The Unified Data Model API from Pomo — 45 operation(s) for unified data model.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - Unified Data Model
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-unified-data-model-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-url-shortener-api
+  name: Pomo URL Shortener API
+  description: The url-shortener API from Pomo — 2 operation(s) for url-shortener.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - url-shortener
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-url-shortener-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-usage-api
+  name: Pomo Usage API
+  description: The usage API from Pomo — 2 operation(s) for usage.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - usage
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-usage-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-user-activity-api
+  name: Pomo User Activity API
+  description: The user-activity API from Pomo — 4 operation(s) for user-activity.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - user-activity
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-user-activity-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-user-preferences-api
+  name: Pomo User Preferences API
+  description: The user-preferences API from Pomo — 3 operation(s) for user-preferences.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - user-preferences
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-user-preferences-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
+- aid: pomo:pomo-users-api
+  name: Pomo Users API
+  description: The users API from Pomo — 2 operation(s) for users.
+  humanURL: https://api.usepomo.ai/docs
+  baseURL: https://api.usepomo.ai
+  tags:
+  - users
+  properties:
+  - type: OpenAPI
+    url: openapi/pomo-users-api-openapi.yml
+  - type: APIReference
+    url: https://api.usepomo.ai/docs
+  - type: Documentation
+    url: https://api.usepomo.ai/redoc
+  - type: Authentication
+    url: authentication/pomo-authentication.yml
+  - type: Conventions
+    url: conventions/pomo-conventions.yml
+  - type: Idempotency
+    url: conventions/pomo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pomo-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pomo-rate-limits.yml
+  - type: DataModel
+    url: data-model/pomo-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/pomo-lifecycle.yml
+  - type: Conformance
+    url: conformance/pomo-conformance.yml
+  - type: Webhooks
+    url: asyncapi/pomo-event-surface.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/pomo-openapi-overlay.yaml
 - type: DomainSecurity
   url: security/pomo-domain-security.yml
 - type: Website
