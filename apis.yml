@@ -13,6 +13,18 @@ description: Pomo is an AI marketing platform that runs an always-on AI marketin
   API keys and an internal MCP tool broker. The legal entity is MachFlow, Inc. dba Pomo. Founded in 2025
   and based in Palo Alto, California, Pomo raised a $4.5M seed round led by Kindred Ventures with Databricks
   Ventures, SV Angel, and angel investors.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: self-serve
@@ -3277,6 +3289,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/pomo-capability-edges.yml
+  name: Pomo Business Capability Map
 - type: Overlay
   url: overlays/pomo-openapi-overlay.yaml
 - type: DomainSecurity
