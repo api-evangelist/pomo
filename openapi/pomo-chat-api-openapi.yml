@@ -1,0 +1,530 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Chat API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: chat
+paths:
+  /api/chat/agentic/with-files:
+    post:
+      tags:
+      - chat
+      summary: Agentic Chat With Files
+      description: 'Agentic chat endpoint with file upload support and conversation persistence.
+
+
+        Accepts files alongside the message. Files are processed, analyzed,
+
+        and their content is used to enhance Claude''s response.
+
+
+        - If files are uploaded: Content is extracted and included in context
+
+        - If conversation_id provided: Continues existing conversation
+
+        - Messages are persisted for multi-turn context'
+      operationId: agentic_chat_with_files_api_chat_agentic_with_files_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_agentic_chat_with_files_api_chat_agentic_with_files_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgenticChatWithFilesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/chat/files/{file_id}/share:
+    post:
+      tags:
+      - chat
+      summary: Share Chat File
+      description: 'Share a chat-uploaded file to the gallery/documents.
+
+
+        When a file is shared, it becomes visible in the company''s document library
+
+        and can be accessed by the get_company_documents MCP tool.'
+      operationId: share_chat_file_api_chat_files__file_id__share_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: file_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: File Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareFileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - chat
+      summary: Unshare File
+      description: 'Remove a file from the Knowledge Base (stop sharing).
+
+
+        The file is kept but no longer visible in the shared document library.
+
+        Only the owner can unshare their files.'
+      operationId: unshare_file_api_chat_files__file_id__share_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: file_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: File Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareFileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/chat/files/{file_id}:
+    delete:
+      tags:
+      - chat
+      summary: Delete File
+      description: 'Permanently delete a file.
+
+
+        This removes the file from GCS storage and the database entirely.
+
+        Only the file owner can delete the file.'
+      operationId: delete_file_api_chat_files__file_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: file_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: File Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteFileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/chat/shared-files:
+    get:
+      tags:
+      - chat
+      summary: Get Shared Files
+      description: 'Get list of files for the current company profile (Knowledge Base).
+
+
+        Returns:
+
+        - All shared files (is_shared=True) - visible to everyone
+
+        - Owner''s unshared files (is_shared=False, user_id=current_user) - only visible to owner
+
+
+        This allows owners to see and re-share their unshared files.'
+      operationId: get_shared_files_api_chat_shared_files_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Page
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          title: Limit
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Search
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedFilesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/chat/knowledge-base/upload:
+    post:
+      tags:
+      - chat
+      summary: Upload To Knowledge Base
+      description: 'Upload files directly to the Knowledge Base.
+
+
+        Files are stored in company_analysis_files with is_shared=True,
+
+        making them immediately available in the Knowledge Base tab.
+
+        Summaries are extracted for discoverability.'
+      operationId: upload_to_knowledge_base_api_chat_knowledge_base_upload_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_to_knowledge_base_api_chat_knowledge_base_upload_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeBaseUploadResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AgenticChatWithFilesResponse:
+      properties:
+        response:
+          type: string
+          title: Response
+        ui_tool_calls:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Ui Tool Calls
+        web_citations:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Web Citations
+        tokens_used:
+          type: integer
+          title: Tokens Used
+        turns:
+          type: integer
+          title: Turns
+        uploaded_files:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Uploaded Files
+        conversation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Conversation Id
+        user_message:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: User Message
+        assistant_message:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Assistant Message
+        ai_policy_eval:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Policy Eval
+      type: object
+      required:
+      - response
+      - tokens_used
+      - turns
+      title: AgenticChatWithFilesResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SharedFileItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        filename:
+          type: string
+          title: Filename
+        file_type:
+          type: string
+          title: File Type
+        file_size:
+          type: integer
+          title: File Size
+        file_url:
+          type: string
+          title: File Url
+        summary_preview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Preview
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        owner_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Email
+        is_owner:
+          type: boolean
+          title: Is Owner
+          default: false
+        is_shared:
+          type: boolean
+          title: Is Shared
+          default: true
+      type: object
+      required:
+      - id
+      - filename
+      - file_type
+      - file_size
+      - file_url
+      - created_at
+      title: SharedFileItem
+      description: Schema for a shared file in the knowledge base
+    KnowledgeBaseUploadResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        files:
+          items:
+            $ref: '#/components/schemas/SharedFileItem'
+          type: array
+          title: Files
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - files
+      - message
+      title: KnowledgeBaseUploadResponse
+      description: Response for knowledge base file upload
+    Body_agentic_chat_with_files_api_chat_agentic_with_files_post:
+      properties:
+        message:
+          type: string
+          title: Message
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        organization_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Organization Id
+        conversation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Conversation Id
+        workflow_stage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workflow Stage
+        page_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Context
+        history:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: History
+          default: '[]'
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+          default: []
+      type: object
+      required:
+      - message
+      title: Body_agentic_chat_with_files_api_chat_agentic_with_files_post
+    SharedFilesResponse:
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/SharedFileItem'
+          type: array
+          title: Files
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        total_pages:
+          type: integer
+          title: Total Pages
+      type: object
+      required:
+      - files
+      - total
+      - page
+      - total_pages
+      title: SharedFilesResponse
+      description: Response for shared files list endpoint
+    ShareFileResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        filename:
+          type: string
+          title: Filename
+        is_shared:
+          type: boolean
+          title: Is Shared
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - filename
+      - is_shared
+      - message
+      title: ShareFileResponse
+    Body_upload_to_knowledge_base_api_chat_knowledge_base_upload_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+      type: object
+      required:
+      - files
+      title: Body_upload_to_knowledge_base_api_chat_knowledge_base_upload_post
+    DeleteFileResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        filename:
+          type: string
+          title: Filename
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - filename
+      - message
+      title: DeleteFileResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,136 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend URL Shortener API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: url-shortener
+paths:
+  /api/url-shortener/shorten/:
+    post:
+      tags:
+      - url-shortener
+      summary: Create Shortened Url
+      description: "Creates a new shortened URL.\n\nArgs:\n    url (ShortenedURLCreate): URL creation data with long_url and campaign_id\n    request (Request): FastAPI request object\n    db (Session, optional): Database session. Defaults from dependency.\n    current_user (User, optional): The current authenticated user. Defaults from dependency.\n\nReturns:\n    ShortenedURLSchema: The created shortened URL data\n\nRaises:\n    HTTPException: If there is an error creating the shortened URL"
+      operationId: create_shortened_url_api_url_shortener_shorten__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShortenedURLCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortenedURL'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/url-shortener/s/{short_code}:
+    get:
+      tags:
+      - url-shortener
+      summary: Redirect To Long Url
+      description: "Redirects to the original long URL based on the short code.\n\nArgs:\n    short_code (str): The short code to redirect from\n    db (Session, optional): Database session. Defaults from dependency.\n    request (Request, optional): FastAPI request object. Defaults to None.\n\nReturns:\n    RedirectResponse: Redirect to the original URL\n\nRaises:\n    HTTPException: If the short URL is not found"
+      operationId: redirect_to_long_url_api_url_shortener_s__short_code__get
+      parameters:
+      - name: short_code
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Short Code
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ShortenedURL:
+      properties:
+        long_url:
+          type: string
+          title: Long Url
+        campaign_id:
+          type: string
+          title: Campaign Id
+        short_code:
+          type: string
+          title: Short Code
+        short_url:
+          type: string
+          title: Short Url
+      type: object
+      required:
+      - long_url
+      - campaign_id
+      - short_code
+      - short_url
+      title: ShortenedURL
+      description: Full shortened URL model
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ShortenedURLCreate:
+      properties:
+        long_url:
+          type: string
+          title: Long Url
+        campaign_id:
+          type: string
+          title: Campaign Id
+      type: object
+      required:
+      - long_url
+      - campaign_id
+      title: ShortenedURLCreate
+      description: Schema for creating a shortened URL
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

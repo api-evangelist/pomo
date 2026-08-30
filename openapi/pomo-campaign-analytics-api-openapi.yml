@@ -1,0 +1,505 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Campaign Analytics API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: campaign-analytics
+paths:
+  /api/campaign-analytics/dashboard-summary:
+    get:
+      tags:
+      - campaign-analytics
+      summary: Get Dashboard Summary
+      description: 'Get campaign analytics summary for dashboard display.
+
+        Returns aggregated metrics for all active campaigns.'
+      operationId: get_dashboard_summary_api_campaign_analytics_dashboard_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Number of days to look back
+          default: 30
+          title: Days
+        description: Number of days to look back
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignAnalyticsSummary'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaign-analytics/campaigns/{campaign_id}:
+    get:
+      tags:
+      - campaign-analytics
+      summary: Get Campaign Analytics
+      description: Get detailed analytics for a specific campaign.
+      operationId: get_campaign_analytics_api_campaign_analytics_campaigns__campaign_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignAnalyticsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaign-analytics/refresh:
+    post:
+      tags:
+      - campaign-analytics
+      summary: Refresh Campaign Analytics
+      description: 'Refresh analytics data from integrated platforms.
+
+        This will fetch the latest data from Google, Meta, Amazon, etc.'
+      operationId: refresh_campaign_analytics_api_campaign_analytics_refresh_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshAnalyticsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaign-analytics/platform-integration:
+    post:
+      tags:
+      - campaign-analytics
+      summary: Setup Platform Integration
+      description: Set up or update platform integration for fetching analytics.
+      operationId: setup_platform_integration_api_campaign_analytics_platform_integration_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlatformIntegrationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CampaignAnalyticsResponse:
+      properties:
+        impressions:
+          type: integer
+          minimum: 0.0
+          title: Impressions
+          default: 0
+        clicks:
+          type: integer
+          minimum: 0.0
+          title: Clicks
+          default: 0
+        conversions:
+          type: integer
+          minimum: 0.0
+          title: Conversions
+          default: 0
+        leads:
+          type: integer
+          minimum: 0.0
+          title: Leads
+          default: 0
+        spend:
+          type: number
+          minimum: 0.0
+          title: Spend
+          default: 0.0
+        revenue:
+          type: number
+          minimum: 0.0
+          title: Revenue
+          default: 0.0
+        ctr:
+          type: number
+          minimum: 0.0
+          title: Ctr
+          default: 0.0
+        conversion_rate:
+          type: number
+          minimum: 0.0
+          title: Conversion Rate
+          default: 0.0
+        cpc:
+          type: number
+          minimum: 0.0
+          title: Cpc
+          default: 0.0
+        cpa:
+          type: number
+          minimum: 0.0
+          title: Cpa
+          default: 0.0
+        roas:
+          type: number
+          minimum: 0.0
+          title: Roas
+          default: 0.0
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign_type:
+          type: string
+          title: Campaign Type
+        platform:
+          type: string
+          title: Platform
+        platform_campaign_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Campaign Id
+        platform_ad_set_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Ad Set Id
+        platform_ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Ad Id
+        additional_metrics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Additional Metrics
+        last_synced_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Synced At
+        sync_status:
+          type: string
+          title: Sync Status
+          default: pending
+        sync_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sync Error
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - company_profile_id
+      - campaign_id
+      - campaign_type
+      - platform
+      - created_at
+      - updated_at
+      title: CampaignAnalyticsResponse
+      description: Response schema for campaign analytics
+    ChannelTrendData:
+      properties:
+        date:
+          type: string
+          title: Date
+        channel:
+          type: string
+          title: Channel
+        impressions:
+          type: integer
+          title: Impressions
+        clicks:
+          type: integer
+          title: Clicks
+      type: object
+      required:
+      - date
+      - channel
+      - impressions
+      - clicks
+      title: ChannelTrendData
+      description: Daily trend data by channel/platform
+    RefreshAnalyticsRequest:
+      properties:
+        platforms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Platforms
+          description: Platforms to refresh. If None, refresh all.
+        campaign_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Ids
+          description: Specific campaign IDs to refresh
+        force:
+          type: boolean
+          title: Force
+          description: Force refresh even if recently synced
+          default: false
+      type: object
+      title: RefreshAnalyticsRequest
+      description: Request schema for refreshing analytics
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PlatformIntegrationRequest:
+      properties:
+        platform:
+          type: string
+          pattern: ^(google|meta|amazon)$
+          title: Platform
+        credentials:
+          additionalProperties: true
+          type: object
+          title: Credentials
+          description: Platform-specific credentials
+        account_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Account Ids
+          description: List of account IDs to sync
+        sync_frequency:
+          anyOf:
+          - type: string
+            pattern: ^(hourly|daily|weekly)$
+          - type: 'null'
+          title: Sync Frequency
+          default: daily
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+          description: Whether the integration is active
+          default: true
+      type: object
+      required:
+      - platform
+      - credentials
+      title: PlatformIntegrationRequest
+      description: Request schema for setting up platform integration
+    CampaignAnalyticsSummary:
+      properties:
+        total_impressions:
+          type: integer
+          title: Total Impressions
+        total_clicks:
+          type: integer
+          title: Total Clicks
+        total_conversions:
+          type: integer
+          title: Total Conversions
+        total_spend:
+          type: number
+          title: Total Spend
+        total_revenue:
+          type: number
+          title: Total Revenue
+        overall_ctr:
+          type: number
+          title: Overall Ctr
+        overall_conversion_rate:
+          type: number
+          title: Overall Conversion Rate
+        overall_roas:
+          type: number
+          title: Overall Roas
+        campaign_types:
+          additionalProperties:
+            $ref: '#/components/schemas/CampaignTypeMetrics'
+          type: object
+          title: Campaign Types
+        trends:
+          items:
+            $ref: '#/components/schemas/TrendData'
+          type: array
+          title: Trends
+        trends_by_channel:
+          items:
+            $ref: '#/components/schemas/ChannelTrendData'
+          type: array
+          title: Trends By Channel
+          default: []
+        channel_labels:
+          additionalProperties:
+            type: string
+          type: object
+          title: Channel Labels
+          default: {}
+        last_updated:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Updated
+      type: object
+      required:
+      - total_impressions
+      - total_clicks
+      - total_conversions
+      - total_spend
+      - total_revenue
+      - overall_ctr
+      - overall_conversion_rate
+      - overall_roas
+      - campaign_types
+      - trends
+      title: CampaignAnalyticsSummary
+      description: Dashboard summary of all campaign analytics
+    CampaignTypeMetrics:
+      properties:
+        impressions:
+          type: integer
+          title: Impressions
+          default: 0
+        clicks:
+          type: integer
+          title: Clicks
+          default: 0
+        conversions:
+          type: integer
+          title: Conversions
+          default: 0
+        spend:
+          type: number
+          title: Spend
+          default: 0.0
+        revenue:
+          type: number
+          title: Revenue
+          default: 0.0
+        campaigns:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Campaigns
+          default: []
+      type: object
+      title: CampaignTypeMetrics
+      description: Metrics aggregated by campaign type
+    TrendData:
+      properties:
+        date:
+          type: string
+          title: Date
+        impressions:
+          type: integer
+          title: Impressions
+        clicks:
+          type: integer
+          title: Clicks
+        conversions:
+          type: integer
+          title: Conversions
+      type: object
+      required:
+      - date
+      - impressions
+      - clicks
+      - conversions
+      title: TrendData
+      description: Daily trend data
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

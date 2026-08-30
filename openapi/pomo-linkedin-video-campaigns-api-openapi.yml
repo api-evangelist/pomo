@@ -1,0 +1,639 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Linkedin Video Campaigns API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: linkedin_video_campaigns
+paths:
+  /api/campaigns/online-ads/linkedin-video-campaigns:
+    get:
+      tags:
+      - linkedin_video_campaigns
+      summary: Get Linkedin Video Campaigns
+      operationId: get_linkedin_video_campaigns_api_campaigns_online_ads_linkedin_video_campaigns_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Page
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/online-ads/linkedin-video/{campaign_id}:
+    get:
+      tags:
+      - linkedin_video_campaigns
+      summary: Get Linkedin Video Campaign
+      operationId: get_linkedin_video_campaign_api_campaigns_online_ads_linkedin_video__campaign_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/online-ads/linkedin-video-campaign/{campaign_id}:
+    get:
+      tags:
+      - linkedin_video_campaigns
+      summary: Get Linkedin Video Campaign
+      operationId: get_linkedin_video_campaign_api_campaigns_online_ads_linkedin_video_campaign__campaign_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/online-ads/linkedin-video/update-campaign:
+    put:
+      tags:
+      - linkedin_video_campaigns
+      summary: Update Linkedin Video Campaign
+      operationId: update_linkedin_video_campaign_api_campaigns_online_ads_linkedin_video_update_campaign_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdsCampaignUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdsCampaignUpdateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    CampaignResponse:
+      properties:
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        name:
+          type: string
+          title: Name
+        target_platforms:
+          items:
+            type: string
+          type: array
+          title: Target Platforms
+        target_audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Audience
+        user_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Prompt
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+        last_modified:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Modified
+        deployed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deployed At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+        creation_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Source
+      type: object
+      required:
+      - campaign_id
+      - name
+      - target_platforms
+      title: CampaignResponse
+      description: Base class for campaign metadata response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    KeywordWithCpc:
+      properties:
+        keyword:
+          type: string
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
+      type: object
+      required:
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
+    CampaignMediaOperation:
+      properties:
+        action:
+          type: string
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Action
+        media_type:
+          type: string
+          enum:
+          - image
+          - video
+          title: Media Type
+        selected_url:
+          type: string
+          title: Selected Url
+        previous_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous Url
+        source_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Source Index
+      type: object
+      required:
+      - action
+      - media_type
+      - selected_url
+      title: CampaignMediaOperation
+      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AdsCampaignUpdateRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline
+        long_headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Long Headline
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        ad_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Name
+        call_to_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Call To Action
+        keywords:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - items:
+              $ref: '#/components/schemas/KeywordWithCpc'
+            type: array
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Keywords
+        negative_keywords:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - items:
+              $ref: '#/components/schemas/KeywordWithCpc'
+            type: array
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Negative Keywords
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        recommended_daily_budget:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Recommended Daily Budget
+        total_budget:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Budget
+        duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration
+        target_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Platform
+        start_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
+        business_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Name
+        final_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Final Url
+        headlines:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Headlines
+        descriptions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Descriptions
+        format_setting:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Format Setting
+        primary_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Text
+        destination_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Destination Url
+        ad_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Format
+        placements:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Placements
+        introductory_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Introductory Text
+        alt_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alt Text
+        aspect_ratio:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aspect Ratio
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        linkedin_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Linkedin Lead Form Config
+        google_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Google Lead Form Config
+        meta_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta Lead Form Config
+        asin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asin
+        sku:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sku
+        targeting_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Targeting Type
+        bidding_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bidding Strategy
+        default_bid:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Default Bid
+        brand_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Brand Name
+        landing_page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Landing Page Url
+        showcase_products:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Showcase Products
+        targeting_products:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Targeting Products
+        audience_segments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Audience Segments
+        interests:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Interests
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+        bid_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bid Strategy
+        max_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Cpc
+        ad_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Text
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        objective_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Objective Type
+        video_length:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Length
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: string
+          - type: 'null'
+          title: Dayparting Config
+        media_operations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CampaignMediaOperation'
+            type: array
+          - type: 'null'
+          title: Media Operations
+      type: object
+      required:
+      - campaign_id
+      title: AdsCampaignUpdateRequest
+      description: Request model for updating ad campaign data
+    AdsCampaignUpdateResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign:
+          anyOf:
+          - $ref: '#/components/schemas/CampaignResponse'
+          - type: 'null'
+        ad:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Ad
+      type: object
+      required:
+      - status
+      - message
+      - campaign_id
+      title: AdsCampaignUpdateResponse
+      description: Standardized response for ad update operations within a campaign.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

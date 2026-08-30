@@ -1,0 +1,350 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Dayparting API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Dayparting
+paths:
+  /api/campaigns/dayparting/campaigns/{campaign_id}/configure:
+    post:
+      tags:
+      - Dayparting
+      summary: Configure Campaign Dayparting
+      operationId: configure_campaign_dayparting_api_campaigns_dayparting_campaigns__campaign_id__configure_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignDaypartingRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/dayparting/campaigns/{campaign_id}/status:
+    get:
+      tags:
+      - Dayparting
+      summary: Get Dayparting Status
+      operationId: get_dayparting_status_api_campaigns_dayparting_campaigns__campaign_id__status_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/dayparting/campaigns/{campaign_id}/disable:
+    delete:
+      tags:
+      - Dayparting
+      summary: Disable Dayparting
+      operationId: disable_dayparting_api_campaigns_dayparting_campaigns__campaign_id__disable_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/dayparting/meta/{ad_id}/health:
+    get:
+      tags:
+      - Dayparting
+      summary: Check Meta Rules Health
+      operationId: check_meta_rules_health_api_campaigns_dayparting_meta__ad_id__health_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ad_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ad Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaypartingHealthResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/dayparting/meta/{ad_id}/cleanup:
+    delete:
+      tags:
+      - Dayparting
+      summary: Cleanup Meta Rules
+      operationId: cleanup_meta_rules_api_campaigns_dayparting_meta__ad_id__cleanup_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ad_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ad Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/dayparting/performance/{campaign_id}:
+    get:
+      tags:
+      - Dayparting
+      summary: Get Dayparting Performance
+      operationId: get_dayparting_performance_api_campaigns_dayparting_performance__campaign_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      - name: platform
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CampaignDaypartingRequest:
+      properties:
+        campaign_id:
+          type: string
+          format: uuid
+          title: Campaign Id
+        platform_configs:
+          additionalProperties:
+            $ref: '#/components/schemas/PlatformDaypartingConfig'
+          type: object
+          title: Platform Configs
+      type: object
+      required:
+      - campaign_id
+      - platform_configs
+      title: CampaignDaypartingRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DaypartingHealthResponse:
+      properties:
+        ad_id:
+          type: string
+          title: Ad Id
+        total_rules:
+          type: integer
+          title: Total Rules
+        healthy_rules:
+          items:
+            type: string
+          type: array
+          title: Healthy Rules
+        unhealthy_rules:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Unhealthy Rules
+        missing_rules:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Missing Rules
+        health_score:
+          type: number
+          title: Health Score
+      type: object
+      required:
+      - ad_id
+      - total_rules
+      - healthy_rules
+      - unhealthy_rules
+      - missing_rules
+      - health_score
+      title: DaypartingHealthResponse
+    DaypartingSlot:
+      properties:
+        day:
+          type: string
+          title: Day
+          description: Day of week (MONDAY, TUESDAY, etc.)
+        start_hour:
+          type: integer
+          maximum: 23.0
+          minimum: 0.0
+          title: Start Hour
+        start_minute:
+          type: integer
+          maximum: 59.0
+          minimum: 0.0
+          title: Start Minute
+        end_hour:
+          type: integer
+          maximum: 23.0
+          minimum: 0.0
+          title: End Hour
+        end_minute:
+          type: integer
+          maximum: 59.0
+          minimum: 0.0
+          title: End Minute
+        bid_modifier:
+          anyOf:
+          - type: number
+            maximum: 10.0
+            minimum: 0.1
+          - type: 'null'
+          title: Bid Modifier
+          default: 1.0
+      type: object
+      required:
+      - day
+      - start_hour
+      - start_minute
+      - end_hour
+      - end_minute
+      title: DaypartingSlot
+    PlatformDaypartingConfig:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        timezone:
+          type: string
+          title: Timezone
+        schedule:
+          items:
+            $ref: '#/components/schemas/DaypartingSlot'
+          type: array
+          title: Schedule
+        bid_adjustments:
+          anyOf:
+          - additionalProperties:
+              type: number
+            type: object
+          - type: 'null'
+          title: Bid Adjustments
+      type: object
+      required:
+      - enabled
+      - timezone
+      - schedule
+      title: PlatformDaypartingConfig
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

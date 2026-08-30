@@ -1,0 +1,189 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Campaign Geo API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Campaign Geo
+paths:
+  /api/campaigns/geo/reverse-geocode:
+    get:
+      tags:
+      - Campaign Geo
+      summary: Reverse Geocode Campaign Pin
+      description: Resolve a map pin into postal/city/region fields for launch adapters.
+      operationId: reverse_geocode_campaign_pin_api_campaigns_geo_reverse_geocode_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: latitude
+        in: query
+        required: true
+        schema:
+          type: number
+          maximum: 90
+          minimum: -90
+          title: Latitude
+      - name: longitude
+        in: query
+        required: true
+        schema:
+          type: number
+          maximum: 180
+          minimum: -180
+          title: Longitude
+      - name: country_code
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 0
+          maxLength: 2
+          default: ''
+          title: Country Code
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignReverseGeocodeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/geo/postal-code:
+    get:
+      tags:
+      - Campaign Geo
+      summary: Resolve Campaign Postal Code
+      description: Resolve a typed postal code for map preview and platform fallback labels.
+      operationId: resolve_campaign_postal_code_api_campaigns_geo_postal_code_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: postal_code
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 16
+          title: Postal Code
+      - name: country_code
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 0
+          maxLength: 2
+          default: ''
+          title: Country Code
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignReverseGeocodeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CampaignReverseGeocodeResponse:
+      properties:
+        postal_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Postal Code
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region
+        region_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region Code
+        country_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Code
+        country_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Name
+        display_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Label
+        latitude:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Latitude
+        longitude:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Longitude
+        geojson:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Geojson
+      type: object
+      title: CampaignReverseGeocodeResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

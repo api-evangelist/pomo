@@ -1,0 +1,304 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Programmatic Keys API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: programmatic-keys
+paths:
+  /api/programmatic-keys:
+    get:
+      tags:
+      - programmatic-keys
+      summary: List Api Keys
+      operationId: list_api_keys_api_programmatic_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyListResponse'
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - programmatic-keys
+      summary: Create Api Key For Profile
+      operationId: create_api_key_for_profile_api_programmatic_keys_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyCreateRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/programmatic-keys/{api_key_id}/revoke:
+    post:
+      tags:
+      - programmatic-keys
+      summary: Revoke Api Key
+      operationId: revoke_api_key_api_programmatic_keys__api_key_id__revoke_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: api_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Api Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyRevokeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/programmatic-keys/{api_key_id}/usage:
+    get:
+      tags:
+      - programmatic-keys
+      summary: List Api Key Usage
+      operationId: list_api_key_usage_api_programmatic_keys__api_key_id__usage_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: api_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Api Key Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyUsageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ApiKeyUsageEvent:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        action:
+          type: string
+          title: Action
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        ip:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ip
+        user_agent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Agent
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - id
+      - action
+      - timestamp
+      title: ApiKeyUsageEvent
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ApiKeyUsageResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/ApiKeyUsageEvent'
+          type: array
+          title: Events
+      type: object
+      required:
+      - events
+      title: ApiKeyUsageResponse
+    ApiKeyCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        scopes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Scopes
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+      type: object
+      required:
+      - name
+      title: ApiKeyCreateRequest
+    ApiKeyRevokeResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        key:
+          $ref: '#/components/schemas/ApiKeyListItem'
+      type: object
+      required:
+      - success
+      - key
+      title: ApiKeyRevokeResponse
+    ApiKeyListResponse:
+      properties:
+        keys:
+          items:
+            $ref: '#/components/schemas/ApiKeyListItem'
+          type: array
+          title: Keys
+      type: object
+      required:
+      - keys
+      title: ApiKeyListResponse
+    ApiKeyCreateResponse:
+      properties:
+        api_key:
+          type: string
+          title: Api Key
+        key:
+          $ref: '#/components/schemas/ApiKeyListItem'
+      type: object
+      required:
+      - api_key
+      - key
+      title: ApiKeyCreateResponse
+    ApiKeyListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        key_prefix:
+          type: string
+          title: Key Prefix
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+        status:
+          type: string
+          title: Status
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        last_used_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Used At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - name
+      - key_prefix
+      - scopes
+      - status
+      - created_at
+      title: ApiKeyListItem
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

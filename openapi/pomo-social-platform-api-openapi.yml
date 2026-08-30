@@ -1,0 +1,129 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Social Platform API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: social-platform
+paths:
+  /api/external-platform/x-social/auth:
+    get:
+      tags:
+      - social-platform
+      summary: X Auth
+      description: Initiate X (Twitter) OAuth for social posts.
+      operationId: x_auth_api_external_platform_x_social_auth_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/external-platform/x-social/callback:
+    get:
+      tags:
+      - social-platform
+      summary: X Callback
+      description: Handle X (Twitter) OAuth callback.
+      operationId: x_callback_api_external_platform_x_social_callback_get
+      parameters:
+      - name: code
+        in: query
+        required: false
+        schema:
+          type: string
+          title: Code
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+          title: State
+      - name: error
+        in: query
+        required: false
+        schema:
+          type: string
+          title: Error
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/external-platform/x-social/status:
+    get:
+      tags:
+      - social-platform
+      summary: Get X Status
+      description: Check X connection status.
+      operationId: get_x_status_api_external_platform_x_social_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/external-platform/x-social/disconnect:
+    post:
+      tags:
+      - social-platform
+      summary: Disconnect X
+      description: Disconnect X integration.
+      operationId: disconnect_x_api_external_platform_x_social_disconnect_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,530 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Credits API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: credits
+paths:
+  /api/payment/credits/purchase:
+    post:
+      tags:
+      - credits
+      summary: Purchase Credits
+      description: 'Create Stripe Payment Intent for credit purchase.
+
+        CRITICAL: This only initiates payment. Credits are added via webhook.'
+      operationId: purchase_credits_api_payment_credits_purchase_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditPurchaseRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditPurchaseResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/credits/balance:
+    get:
+      tags:
+      - credits
+      summary: Get Credit Balance
+      description: Get current credit balance for an organization.
+      operationId: get_credit_balance_api_payment_credits_balance_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Organization ID
+          title: Organization Id
+        description: Organization ID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditBalanceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/credits/calculate-charge:
+    post:
+      tags:
+      - credits
+      summary: Calculate Ad Charge
+      description: 'Calculate charge for an ad campaign including commission.
+
+        Shows what will be charged based on current tier.'
+      operationId: calculate_ad_charge_api_payment_credits_calculate_charge_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateChargeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculateChargeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/credits/transactions:
+    get:
+      tags:
+      - credits
+      summary: Get Credit Transactions
+      description: 'Get credit transaction history for an organization.
+
+        Supports pagination and filtering by transaction type.'
+      operationId: get_credit_transactions_api_payment_credits_transactions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Organization ID
+          title: Organization Id
+        description: Organization ID
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          description: Number of transactions to return
+          default: 50
+          title: Limit
+        description: Number of transactions to return
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of transactions to skip
+          default: 0
+          title: Offset
+        description: Number of transactions to skip
+      - name: transaction_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by transaction type
+          title: Transaction Type
+        description: Filter by transaction type
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionHistoryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/credits/hold:
+    post:
+      tags:
+      - credits
+      summary: Create Credit Hold
+      description: 'Create a credit hold for ad campaign launch.
+
+        CRITICAL: This immediately reserves funds for up to 30 minutes.'
+      operationId: create_credit_hold_api_payment_credits_hold_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditHoldRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditHoldResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/credits/capture:
+    post:
+      tags:
+      - credits
+      summary: Capture Credit Hold
+      description: 'Capture a credit hold after successful campaign launch.
+
+        CRITICAL: This finalizes the charge - cannot be reversed except by manual refund.'
+      operationId: capture_credit_hold_api_payment_credits_capture_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditCaptureRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Capture Credit Hold Api Payment Credits Capture Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/credits/release:
+    post:
+      tags:
+      - credits
+      summary: Release Credit Hold
+      description: 'Release a credit hold and refund.
+
+        Used when campaign launch fails or is cancelled.'
+      operationId: release_credit_hold_api_payment_credits_release_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditReleaseRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Release Credit Hold Api Payment Credits Release Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    TransactionHistoryResponse:
+      properties:
+        transactions:
+          items: {}
+          type: array
+          title: Transactions
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - transactions
+      - total
+      - limit
+      - offset
+      title: TransactionHistoryResponse
+      description: Credit transaction history response.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CreditReleaseRequest:
+      properties:
+        hold_id:
+          type: string
+          title: Hold Id
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - hold_id
+      - reason
+      title: CreditReleaseRequest
+      description: Request to release a credit hold.
+    CreditBalanceResponse:
+      properties:
+        balance:
+          type: number
+          title: Balance
+        currency:
+          type: string
+          title: Currency
+          default: USD
+        last_updated:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Updated
+      type: object
+      required:
+      - balance
+      - last_updated
+      title: CreditBalanceResponse
+      description: Current credit balance response.
+    CalculateChargeResponse:
+      properties:
+        ad_spend:
+          type: number
+          title: Ad Spend
+        commission_rate:
+          type: number
+          title: Commission Rate
+        commission_amount:
+          type: number
+          title: Commission Amount
+        total_charge:
+          type: number
+          title: Total Charge
+        tier_used:
+          type: string
+          title: Tier Used
+        current_balance:
+          type: number
+          title: Current Balance
+        has_sufficient_credits:
+          type: boolean
+          title: Has Sufficient Credits
+        currency:
+          type: string
+          title: Currency
+          default: USD
+        billing_currency:
+          type: string
+          title: Billing Currency
+          default: USD
+        fx_rate_to_usd:
+          type: number
+          title: Fx Rate To Usd
+      type: object
+      required:
+      - ad_spend
+      - commission_rate
+      - commission_amount
+      - total_charge
+      - tier_used
+      - current_balance
+      - has_sufficient_credits
+      - fx_rate_to_usd
+      title: CalculateChargeResponse
+      description: Response with calculated charges.
+    CalculateChargeRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        daily_budget:
+          type: number
+          title: Daily Budget
+        campaign_days:
+          type: integer
+          title: Campaign Days
+        currency:
+          type: string
+          title: Currency
+          description: Currency code for display (e.g., USD, INR)
+        ad_account_currency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Account Currency
+          description: Currency code used by the selected ad account
+      type: object
+      required:
+      - organization_id
+      - daily_budget
+      - campaign_days
+      - currency
+      title: CalculateChargeRequest
+      description: Request to calculate charge for ad campaign.
+    CreditPurchaseResponse:
+      properties:
+        client_secret:
+          type: string
+          title: Client Secret
+        payment_intent_id:
+          type: string
+          title: Payment Intent Id
+        amount:
+          type: number
+          title: Amount
+        currency:
+          type: string
+          title: Currency
+          default: USD
+      type: object
+      required:
+      - client_secret
+      - payment_intent_id
+      - amount
+      title: CreditPurchaseResponse
+      description: Response with Stripe payment intent details.
+    CreditHoldResponse:
+      properties:
+        hold_id:
+          type: string
+          title: Hold Id
+        amount:
+          type: number
+          title: Amount
+        expires_at:
+          type: string
+          format: date-time
+          title: Expires At
+        status:
+          type: string
+          title: Status
+          default: success
+      type: object
+      required:
+      - hold_id
+      - amount
+      - expires_at
+      title: CreditHoldResponse
+      description: Response from credit hold creation.
+    CreditHoldRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        amount:
+          type: number
+          title: Amount
+        description:
+          type: string
+          title: Description
+        platform_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Type
+          description: 'Platform type: google_search, google_display, etc'
+      type: object
+      required:
+      - organization_id
+      - amount
+      - description
+      title: CreditHoldRequest
+      description: Request to create a credit hold.
+    CreditPurchaseRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        amount:
+          type: number
+          title: Amount
+      type: object
+      required:
+      - organization_id
+      - amount
+      title: CreditPurchaseRequest
+      description: Request to purchase credits.
+    CreditCaptureRequest:
+      properties:
+        hold_id:
+          type: string
+          title: Hold Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        final_charge:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Final Charge
+          description: Final charge if different from hold
+      type: object
+      required:
+      - hold_id
+      - campaign_id
+      title: CreditCaptureRequest
+      description: Request to capture a credit hold.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

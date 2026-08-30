@@ -1,0 +1,2622 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Market Intelligence API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: market-intelligence
+paths:
+  /api/market-intelligence/intelligence:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Market Intelligence
+      description: Get market intelligence data with filters.
+      operationId: get_market_intelligence_api_market_intelligence_intelligence_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: intelligence_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter by type: trend, competitor, opportunity, threat'
+          title: Intelligence Type
+        description: 'Filter by type: trend, competitor, opportunity, threat'
+      - name: impact_level
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter by impact level: low, medium, high, critical'
+          title: Impact Level
+        description: 'Filter by impact level: low, medium, high, critical'
+      - name: category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by product offering ID (None = company-wide)
+          title: Product Offering Id
+        description: Filter by product offering ID (None = company-wide)
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to look back
+          default: 30
+          title: Days
+        description: Number of days to look back
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Start date for filtering (YYYY-MM-DD)
+          title: Start Date
+        description: Start date for filtering (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: End date for filtering (YYYY-MM-DD)
+          title: End Date
+        description: End date for filtering (YYYY-MM-DD)
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MarketIntelligenceResponse'
+                title: Response Get Market Intelligence Api Market Intelligence Intelligence Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/intelligence/report-dates:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Intelligence Report Dates
+      description: Get distinct dates when intelligence reports were generated.
+      operationId: get_intelligence_report_dates_api_market_intelligence_intelligence_report_dates_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Product offering ID (None = company-wide)
+          title: Product Offering Id
+        description: Product offering ID (None = company-wide)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/google-trends:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Google Trends Analysis
+      description: Fetch Google Trends analysis rows for the active company profile within the requested window.
+      operationId: get_google_trends_analysis_api_market_intelligence_google_trends_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to look back (ignored when start_date is supplied)
+          default: 14
+          title: Days
+        description: Number of days to look back (ignored when start_date is supplied)
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional start date (YYYY-MM-DD or ISO8601)
+          title: Start Date
+        description: Optional start date (YYYY-MM-DD or ISO8601)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional end date (YYYY-MM-DD or ISO8601)
+          title: End Date
+        description: Optional end date (YYYY-MM-DD or ISO8601)
+      - name: include_details
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return detailed fields (analysis, notable changes, recommendations, news)
+          default: true
+          title: Include Details
+        description: Return detailed fields (analysis, notable changes, recommendations, news)
+      - name: include_meta
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include preview metadata for tier-limited responses
+          default: false
+          title: Include Meta
+        description: Include preview metadata for tier-limited responses
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/google-news/thumbnail:
+    get:
+      tags:
+      - market-intelligence
+      summary: Proxy Google News Thumbnail
+      description: Proxy Google News thumbnail images to avoid CORS issues in the browser.
+      operationId: proxy_google_news_thumbnail_api_market_intelligence_google_news_thumbnail_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: url
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Direct URL to the news thumbnail image
+          title: Url
+        description: Direct URL to the news thumbnail image
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/tiktok-video/thumbnail:
+    get:
+      tags:
+      - market-intelligence
+      summary: Proxy Tiktok Video Thumbnail
+      description: Resolve a TikTok video URL to an oEmbed thumbnail and proxy the image to avoid browser CORS failures.
+      operationId: proxy_tiktok_video_thumbnail_api_market_intelligence_tiktok_video_thumbnail_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: url
+        in: query
+        required: true
+        schema:
+          type: string
+          description: TikTok video URL used to resolve the oEmbed thumbnail
+          title: Url
+        description: TikTok video URL used to resolve the oEmbed thumbnail
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/trends-bundle:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Trends Bundle
+      description: Fetch the Trends page data in a single cached backend request.
+      operationId: get_trends_bundle_api_market_intelligence_trends_bundle_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to look back (ignored when start_date is supplied)
+          default: 14
+          title: Days
+        description: Number of days to look back (ignored when start_date is supplied)
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional start date (YYYY-MM-DD or ISO8601)
+          title: Start Date
+        description: Optional start date (YYYY-MM-DD or ISO8601)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional end date (YYYY-MM-DD or ISO8601)
+          title: End Date
+        description: Optional end date (YYYY-MM-DD or ISO8601)
+      - name: include_details
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return detailed trend fields for each platform
+          default: true
+          title: Include Details
+        description: Return detailed trend fields for each platform
+      - name: include_meta
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include preview metadata for tier-limited responses
+          default: false
+          title: Include Meta
+        description: Include preview metadata for tier-limited responses
+      - name: include_social_mentions
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include the legacy social-mentions section in the aggregate response
+          default: true
+          title: Include Social Mentions
+        description: Include the legacy social-mentions section in the aggregate response
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/yelp-trends:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Yelp Trends Analysis
+      description: Fetch Yelp trends analysis rows for the active company profile within the requested window.
+      operationId: get_yelp_trends_analysis_api_market_intelligence_yelp_trends_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to look back (ignored when start_date is supplied)
+          default: 14
+          title: Days
+        description: Number of days to look back (ignored when start_date is supplied)
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional start date (YYYY-MM-DD or ISO8601)
+          title: Start Date
+        description: Optional start date (YYYY-MM-DD or ISO8601)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional end date (YYYY-MM-DD or ISO8601)
+          title: End Date
+        description: Optional end date (YYYY-MM-DD or ISO8601)
+      - name: include_details
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return detailed fields (analysis, notable changes, recommendations, search results)
+          default: true
+          title: Include Details
+        description: Return detailed fields (analysis, notable changes, recommendations, search results)
+      - name: include_meta
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include preview metadata for tier-limited responses
+          default: false
+          title: Include Meta
+        description: Include preview metadata for tier-limited responses
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/amazon-trends:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Amazon Trends Analysis
+      description: Fetch Amazon trends analysis rows for the active company profile within the requested window.
+      operationId: get_amazon_trends_analysis_api_market_intelligence_amazon_trends_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to look back (ignored when start_date is supplied)
+          default: 14
+          title: Days
+        description: Number of days to look back (ignored when start_date is supplied)
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional start date (YYYY-MM-DD or ISO8601)
+          title: Start Date
+        description: Optional start date (YYYY-MM-DD or ISO8601)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional end date (YYYY-MM-DD or ISO8601)
+          title: End Date
+        description: Optional end date (YYYY-MM-DD or ISO8601)
+      - name: include_details
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return detailed fields (analysis, notable changes, recommendations, best sellers)
+          default: true
+          title: Include Details
+        description: Return detailed fields (analysis, notable changes, recommendations, best sellers)
+      - name: include_meta
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include preview metadata for tier-limited responses
+          default: false
+          title: Include Meta
+        description: Include preview metadata for tier-limited responses
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/youtube-trends:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Youtube Trends Analysis
+      description: Fetch YouTube trends analysis rows for the active company profile within the requested window.
+      operationId: get_youtube_trends_analysis_api_market_intelligence_youtube_trends_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to look back (ignored when start_date is supplied)
+          default: 14
+          title: Days
+        description: Number of days to look back (ignored when start_date is supplied)
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional start date (YYYY-MM-DD or ISO8601)
+          title: Start Date
+        description: Optional start date (YYYY-MM-DD or ISO8601)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional end date (YYYY-MM-DD or ISO8601)
+          title: End Date
+        description: Optional end date (YYYY-MM-DD or ISO8601)
+      - name: include_details
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return detailed fields (analysis, notable changes, recommendations, videos)
+          default: true
+          title: Include Details
+        description: Return detailed fields (analysis, notable changes, recommendations, videos)
+      - name: include_meta
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include preview metadata for tier-limited responses
+          default: false
+          title: Include Meta
+        description: Include preview metadata for tier-limited responses
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/ads-winners:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Ads Winners
+      description: Fetch TikTok top ads selected by company matching results.
+      operationId: get_ads_winners_api_market_intelligence_ads_winners_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: search_mode
+        in: query
+        required: false
+        schema:
+          enum:
+          - general
+          - precise
+          type: string
+          description: general uses candidate_video_ids; precise uses related_tiktok_topads
+          default: general
+          title: Search Mode
+        description: general uses candidate_video_ids; precise uses related_tiktok_topads
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdsWinnerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/competitive-intelligence:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Competitive Intelligence
+      description: Fetch business intelligence snapshots for the active company profile.
+      operationId: get_competitive_intelligence_api_market_intelligence_competitive_intelligence_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to look back
+          default: 90
+          title: Days
+        description: Number of days to look back
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Start date for filtering (YYYY-MM-DD)
+          title: Start Date
+        description: Start date for filtering (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: End date for filtering (YYYY-MM-DD)
+          title: End Date
+        description: End date for filtering (YYYY-MM-DD)
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          default: 25
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompetitiveIntelligenceRecord'
+                title: Response Get Competitive Intelligence Api Market Intelligence Competitive Intelligence Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/tiktok-trends:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Tiktok Trends Analysis
+      description: Fetch TikTok trends analysis rows for the active company profile within the requested window.
+      operationId: get_tiktok_trends_analysis_api_market_intelligence_tiktok_trends_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to look back (ignored when start_date is supplied)
+          default: 14
+          title: Days
+        description: Number of days to look back (ignored when start_date is supplied)
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional start date (YYYY-MM-DD or ISO8601)
+          title: Start Date
+        description: Optional start date (YYYY-MM-DD or ISO8601)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional end date (YYYY-MM-DD or ISO8601)
+          title: End Date
+        description: Optional end date (YYYY-MM-DD or ISO8601)
+      - name: include_details
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return detailed fields (analysis, notable changes, recommendations, videos)
+          default: true
+          title: Include Details
+        description: Return detailed fields (analysis, notable changes, recommendations, videos)
+      - name: include_meta
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include preview metadata for tier-limited responses
+          default: false
+          title: Include Meta
+        description: Include preview metadata for tier-limited responses
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/instagram-trends:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Instagram Trends Analysis
+      description: Fetch Instagram trends analysis rows for the active company profile within the requested window.
+      operationId: get_instagram_trends_analysis_api_market_intelligence_instagram_trends_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to look back (ignored when start_date is supplied)
+          default: 14
+          title: Days
+        description: Number of days to look back (ignored when start_date is supplied)
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional start date (YYYY-MM-DD or ISO8601)
+          title: Start Date
+        description: Optional start date (YYYY-MM-DD or ISO8601)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional end date (YYYY-MM-DD or ISO8601)
+          title: End Date
+        description: Optional end date (YYYY-MM-DD or ISO8601)
+      - name: include_details
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return detailed fields (analysis, notable changes, recommendations, posts)
+          default: true
+          title: Include Details
+        description: Return detailed fields (analysis, notable changes, recommendations, posts)
+      - name: include_meta
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include preview metadata for tier-limited responses
+          default: false
+          title: Include Meta
+        description: Include preview metadata for tier-limited responses
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/trend-suppressions:
+    put:
+      tags:
+      - market-intelligence
+      summary: Upsert Trend Suppression
+      operationId: upsert_trend_suppression_api_market_intelligence_trend_suppressions_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrendSuppressionUpsertRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrendSuppressionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/market-intelligence/social-listening-mentions:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Social Listening Mentions
+      description: 'Fetch recent social listening mentions ordered by created_datetime.
+
+        Optionally filter to a specific competitor.'
+      operationId: get_social_listening_mentions_api_market_intelligence_social_listening_mentions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 365
+            minimum: 1
+          - type: 'null'
+          description: Number of days to look back
+          title: Days
+        description: Number of days to look back
+      - name: include_meta
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include preview metadata for tier-limited responses
+          default: false
+          title: Include Meta
+        description: Include preview metadata for tier-limited responses
+      - name: competitor_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by competitor ID
+          title: Competitor Id
+        description: Filter by competitor ID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/social-listening-dashboard:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Social Listening Dashboard
+      description: Fetch the v2 social listening command-center payload for the active company.
+      operationId: get_social_listening_dashboard_api_market_intelligence_social_listening_dashboard_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Company profile ID
+          title: Company Profile Id
+        description: Company profile ID
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 365
+            minimum: 1
+          - type: 'null'
+          description: Optional dashboard lookback override
+          title: Days
+        description: Optional dashboard lookback override
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/social-listening-summary:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Social Listening Summary
+      description: 'Fetch the latest pipeline-generated social-listening summary for the company profile.
+
+        The v2 ingestion job owns summary generation; this route does not run a one-off AI summary.'
+      operationId: get_social_listening_summary_api_market_intelligence_social_listening_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Company profile ID
+          title: Company Profile Id
+        description: Company profile ID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialListeningSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/social-listening-settings:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Social Listening Settings
+      description: Fetch company-level social listening scan settings.
+      operationId: get_social_listening_settings_api_market_intelligence_social_listening_settings_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Company profile ID
+          title: Company Profile Id
+        description: Company profile ID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialListeningSettingsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - market-intelligence
+      summary: Update Social Listening Settings
+      description: Update company-level social listening scan settings.
+      operationId: update_social_listening_settings_api_market_intelligence_social_listening_settings_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Company profile ID
+          title: Company Profile Id
+        description: Company profile ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialListeningSettingsUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialListeningSettingsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/social-prospecting:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Social Prospecting
+      description: Fetch the Social Prospecting Analyst inbox for the active company profile.
+      operationId: get_social_prospecting_api_market_intelligence_social_prospecting_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Company profile ID
+          title: Company Profile Id
+        description: Company profile ID
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          description: Prospect candidates per page
+          default: 15
+          title: Limit
+        description: Prospect candidates per page
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Zero-based candidate offset
+          default: 0
+          title: Offset
+        description: Zero-based candidate offset
+      - name: generated
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Generated-date filter
+          default: last_7_days
+          title: Generated
+        description: Generated-date filter
+      - name: platform
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Platform filter
+          default: all
+          title: Platform
+        description: Platform filter
+      - name: lead_type
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Lead type filter
+          default: all
+          title: Lead Type
+        description: Lead type filter
+      - name: next_step
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Next-step filter
+          default: active
+          title: Next Step
+        description: Next-step filter
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          description: Search text
+          title: Search
+        description: Search text
+      - name: sort_key
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort key
+          default: score
+          title: Sort Key
+        description: Sort key
+      - name: sort_direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort direction
+          default: desc
+          title: Sort Direction
+        description: Sort direction
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialProspectingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/social-prospecting/export:
+    get:
+      tags:
+      - market-intelligence
+      summary: Export Social Prospecting
+      description: Return every prospect matching the active inbox query for CSV export.
+      operationId: export_social_prospecting_api_market_intelligence_social_prospecting_export_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Company profile ID
+          title: Company Profile Id
+        description: Company profile ID
+      - name: generated
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Generated-date filter
+          default: last_7_days
+          title: Generated
+        description: Generated-date filter
+      - name: platform
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Platform filter
+          default: all
+          title: Platform
+        description: Platform filter
+      - name: lead_type
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Lead type filter
+          default: all
+          title: Lead Type
+        description: Lead type filter
+      - name: next_step
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Next-step filter
+          default: active
+          title: Next Step
+        description: Next-step filter
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          description: Search text
+          title: Search
+        description: Search text
+      - name: sort_key
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort key
+          default: score
+          title: Sort Key
+        description: Sort key
+      - name: sort_direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort direction
+          default: desc
+          title: Sort Direction
+        description: Sort direction
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialProspectingExportResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/social-prospecting-settings:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Social Prospecting Settings
+      description: Fetch Social Prospecting Analyst settings and plan access metadata.
+      operationId: get_social_prospecting_settings_api_market_intelligence_social_prospecting_settings_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Company profile ID
+          title: Company Profile Id
+        description: Company profile ID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - market-intelligence
+      summary: Update Social Prospecting Settings
+      description: Update Social Prospecting Analyst settings. Manual reruns are not exposed in V0.
+      operationId: update_social_prospecting_settings_api_market_intelligence_social_prospecting_settings_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Company profile ID
+          title: Company Profile Id
+        description: Company profile ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialProspectingSettingsUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/social-prospecting-candidates/{candidate_id}:
+    patch:
+      tags:
+      - market-intelligence
+      summary: Update Social Prospecting Candidate Status
+      description: Update prospect inbox status. This is review workflow only; it does not send messages.
+      operationId: update_social_prospecting_candidate_status_api_market_intelligence_social_prospecting_candidates__candidate_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: candidate_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Candidate Id
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Company profile ID
+          title: Company Profile Id
+        description: Company profile ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialProspectingCandidateStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/intelligence/generate:
+    post:
+      tags:
+      - market-intelligence
+      summary: Generate Market Intelligence
+      description: Start asynchronous market intelligence generation so clients can poll or stream progress.
+      operationId: generate_market_intelligence_api_market_intelligence_intelligence_generate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Product offering ID (None = company-wide intelligence)
+          title: Product Offering Id
+        description: Product offering ID (None = company-wide intelligence)
+      - name: include_evolution
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Run evolution analysis after generation
+          default: true
+          title: Include Evolution
+        description: Run evolution analysis after generation
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/intelligence/{intelligence_id}:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Intelligence Item
+      description: Get a specific market intelligence item.
+      operationId: get_intelligence_item_api_market_intelligence_intelligence__intelligence_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Intelligence Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketIntelligenceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - market-intelligence
+      summary: Update Intelligence Item
+      description: Update a market intelligence item (mark as inactive, update expiry, etc.).
+      operationId: update_intelligence_item_api_market_intelligence_intelligence__intelligence_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Intelligence Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketIntelligenceUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketIntelligenceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/intelligence/refresh:
+    post:
+      tags:
+      - market-intelligence
+      summary: Refresh Market Intelligence
+      description: Refresh market intelligence data via the async job system.
+      operationId: refresh_market_intelligence_api_market_intelligence_intelligence_refresh_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: force
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Force refresh even if recent data exists
+          default: false
+          title: Force
+        description: Force refresh even if recent data exists
+      - name: include_evolution
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Run evolution analysis after generation
+          default: true
+          title: Include Evolution
+        description: Run evolution analysis after generation
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/intelligence/evolution/analyze:
+    post:
+      tags:
+      - market-intelligence
+      summary: Analyze Market Evolution
+      description: "Analyze market trend evolution.\nSame endpoint for initial analysis and refresh.\n\nArgs:\n    product_offering_id: Optional product offering to analyze\n    force_refresh: Force re-analysis even if recent evolution exists"
+      operationId: analyze_market_evolution_api_market_intelligence_intelligence_evolution_analyze_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Force Refresh
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/market-intelligence/intelligence/evolution/history:
+    get:
+      tags:
+      - market-intelligence
+      summary: Get Evolution History
+      description: Get historical evolution data with snapshots.
+      operationId: get_evolution_history_api_market_intelligence_intelligence_evolution_history_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 90
+          title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SocialListeningSummaryCitationResponse:
+      properties:
+        citation_id:
+          type: string
+          title: Citation Id
+        mention_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mention Id
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+        content_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Id
+        platform_post_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Post Id
+        platform_comment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Comment Id
+        canonical_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Canonical Url
+        permalink:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Permalink
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        author:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author
+        community_prefixed:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Community Prefixed
+        target_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Type
+        target_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Name
+        competitor_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Competitor Name
+        product_offering_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Offering Name
+        created_datetime:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created Datetime
+        engagement_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Engagement Count
+      type: object
+      required:
+      - citation_id
+      title: SocialListeningSummaryCitationResponse
+    SocialProspectingSettingsUpdateRequest:
+      properties:
+        enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Enabled
+        platforms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Platforms
+        custom_keywords:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Custom Keywords
+        source_keywords:
+          anyOf:
+          - additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+          - type: 'null'
+          title: Source Keywords
+        excluded_keywords:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Excluded Keywords
+        target_moments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Moments
+        seed_lookback_days:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Seed Lookback Days
+        incremental_lookback_days:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Incremental Lookback Days
+        min_score:
+          anyOf:
+          - type: integer
+            maximum: 95.0
+            minimum: 50.0
+          - type: 'null'
+          title: Min Score
+        max_mentions_per_run:
+          anyOf:
+          - type: integer
+            maximum: 300.0
+            minimum: 20.0
+          - type: 'null'
+          title: Max Mentions Per Run
+        dm_tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dm Tone
+      type: object
+      title: SocialProspectingSettingsUpdateRequest
+    CompetitiveIntelligenceRecord:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        company_profile_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Name
+        snapshot_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Snapshot Date
+        analysis:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analysis
+        judgement:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Judgement
+        actions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CompetitiveIntelligenceAction'
+            type: array
+          - type: 'null'
+          title: Actions
+        evidence:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CompetitiveIntelligenceEvidence'
+            type: array
+          - type: 'null'
+          title: Evidence
+        confidence_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Confidence Score
+        model_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model Name
+        created_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created Date
+        updated_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated Date
+      type: object
+      title: CompetitiveIntelligenceRecord
+    SocialListeningSettingsUpdateRequest:
+      properties:
+        lookback_days:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Lookback Days
+        custom_query_terms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Custom Query Terms
+        target_query_overrides:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Target Query Overrides
+      type: object
+      title: SocialListeningSettingsUpdateRequest
+    SocialListeningSummaryAnalysisItemResponse:
+      properties:
+        theme_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Theme Key
+        title:
+          type: string
+          title: Title
+        analysis:
+          type: string
+          title: Analysis
+        recommendation:
+          type: string
+          title: Recommendation
+        drivers:
+          items:
+            type: string
+          type: array
+          title: Drivers
+        citations:
+          items:
+            $ref: '#/components/schemas/SocialListeningSummaryCitationResponse'
+          type: array
+          title: Citations
+        citation_mention_ids:
+          items:
+            type: string
+          type: array
+          title: Citation Mention Ids
+        group_citation_ids:
+          items:
+            type: string
+          type: array
+          title: Group Citation Ids
+        group_mention_ids:
+          items:
+            type: string
+          type: array
+          title: Group Mention Ids
+        group_metrics:
+          additionalProperties: true
+          type: object
+          title: Group Metrics
+        theme_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Theme Type
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        sentiment_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sentiment Label
+      type: object
+      required:
+      - title
+      - analysis
+      - recommendation
+      title: SocialListeningSummaryAnalysisItemResponse
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    SocialProspectingResponse:
+      properties:
+        access:
+          additionalProperties: true
+          type: object
+          title: Access
+        summary:
+          additionalProperties: true
+          type: object
+          title: Summary
+        candidates:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Candidates
+        pagination:
+          additionalProperties: true
+          type: object
+          title: Pagination
+        filters:
+          additionalProperties: true
+          type: object
+          title: Filters
+      type: object
+      required:
+      - access
+      - summary
+      title: SocialProspectingResponse
+    SocialListeningSummaryResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        summary_markdown:
+          type: string
+          title: Summary Markdown
+        analysis_items:
+          items:
+            $ref: '#/components/schemas/SocialListeningSummaryAnalysisItemResponse'
+          type: array
+          title: Analysis Items
+        model_name:
+          type: string
+          title: Model Name
+        mention_count:
+          type: integer
+          title: Mention Count
+        lookback_days:
+          type: integer
+          title: Lookback Days
+        latest_mention_created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Mention Created At
+        generated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generated At
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        is_cached:
+          type: boolean
+          title: Is Cached
+        summary_metadata:
+          additionalProperties: true
+          type: object
+          title: Summary Metadata
+      type: object
+      required:
+      - summary_markdown
+      - model_name
+      - mention_count
+      - lookback_days
+      - is_cached
+      title: SocialListeningSummaryResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SocialProspectingExportResponse:
+      properties:
+        candidates:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Candidates
+        total:
+          type: integer
+          title: Total
+          default: 0
+      type: object
+      title: SocialProspectingExportResponse
+    AdsWinnerResponse:
+      properties:
+        search_mode:
+          type: string
+          enum:
+          - general
+          - precise
+          title: Search Mode
+          default: general
+        industry_ids:
+          items:
+            type: string
+          type: array
+          title: Industry Ids
+        sub_industries:
+          items:
+            type: string
+          type: array
+          title: Sub Industries
+        items:
+          items:
+            $ref: '#/components/schemas/AdsWinnerItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - industry_ids
+      - sub_industries
+      - items
+      title: AdsWinnerResponse
+    SocialProspectingCandidateStatusUpdateRequest:
+      properties:
+        status:
+          anyOf:
+          - type: string
+            pattern: ^(new|reviewed|saved|dismissed)$
+          - type: 'null'
+          title: Status
+        handoff_status:
+          anyOf:
+          - type: string
+            pattern: ^(not_ready|ready|copied|exported|contacted|replied|converted|disqualified)$
+          - type: 'null'
+          title: Handoff Status
+        block_account:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Block Account
+          default: false
+        feedback_reason:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Feedback Reason
+        handoff_note:
+          anyOf:
+          - type: string
+            maxLength: 600
+          - type: 'null'
+          title: Handoff Note
+      type: object
+      title: SocialProspectingCandidateStatusUpdateRequest
+    TrendSuppressionUpsertRequest:
+      properties:
+        platform:
+          type: string
+          enum:
+          - google
+          - tiktok
+          - youtube
+          - yelp
+          - amazon
+          title: Platform
+        source_record_id:
+          type: string
+          minLength: 1
+          title: Source Record Id
+        reason:
+          type: string
+          enum:
+          - not_interested
+          - irrelevant
+          - duplicate
+          title: Reason
+      type: object
+      required:
+      - platform
+      - source_record_id
+      - reason
+      title: TrendSuppressionUpsertRequest
+    MarketIntelligenceUpdate:
+      properties:
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+      type: object
+      title: MarketIntelligenceUpdate
+    AdsWinnerItem:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        industry_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Industry Id
+        industry:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Industry
+        sub_industry_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sub Industry Id
+        sub_industry:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sub Industry
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+        ad_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Title
+        analysis:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analysis
+        brand_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Brand Name
+        like:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Like
+        cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cost
+        ctr:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Ctr
+        video_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Id
+        video_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Url
+        thumbnail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail
+        created_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created Date
+        updated_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated Date
+      type: object
+      title: AdsWinnerItem
+    CompetitiveIntelligenceEvidence:
+      properties:
+        evidence_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Evidence Id
+        signal_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signal Type
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        source_table:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Table
+        source_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Source Urls
+      type: object
+      title: CompetitiveIntelligenceEvidence
+    TrendSuppressionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        acted_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Acted By User Id
+        platform:
+          type: string
+          enum:
+          - google
+          - tiktok
+          - youtube
+          - yelp
+          - amazon
+          title: Platform
+        source_record_id:
+          type: string
+          title: Source Record Id
+        reason:
+          type: string
+          enum:
+          - not_interested
+          - irrelevant
+          - duplicate
+          title: Reason
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - company_profile_id
+      - platform
+      - source_record_id
+      - reason
+      title: TrendSuppressionResponse
+    CompetitiveIntelligenceAction:
+      properties:
+        action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Action
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        timeframe:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timeframe
+        evidence_refs:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Evidence Refs
+        expected_impact:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Impact
+      type: object
+      title: CompetitiveIntelligenceAction
+    SocialListeningSettingsResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        lookback_days:
+          type: integer
+          title: Lookback Days
+        allowed_lookback_days:
+          items:
+            type: integer
+          type: array
+          title: Allowed Lookback Days
+        custom_query_terms:
+          items:
+            type: string
+          type: array
+          title: Custom Query Terms
+        excluded_query_terms:
+          items:
+            type: string
+          type: array
+          title: Excluded Query Terms
+        source_scope:
+          items:
+            type: string
+          type: array
+          title: Source Scope
+        include_company_targets:
+          type: boolean
+          title: Include Company Targets
+          default: true
+        include_competitor_targets:
+          type: boolean
+          title: Include Competitor Targets
+          default: true
+        include_product_targets:
+          type: boolean
+          title: Include Product Targets
+          default: true
+        max_custom_query_terms:
+          type: integer
+          title: Max Custom Query Terms
+        max_query_term_length:
+          type: integer
+          title: Max Query Term Length
+        available_query_platforms:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type: array
+          title: Available Query Platforms
+        active_target_query_terms:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Active Target Query Terms
+        target_query_overrides:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Target Query Overrides
+        metadata_json:
+          additionalProperties: true
+          type: object
+          title: Metadata Json
+        updated_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated By User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - company_profile_id
+      - lookback_days
+      - max_custom_query_terms
+      - max_query_term_length
+      title: SocialListeningSettingsResponse
+    MarketIntelligenceResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        intelligence_type:
+          type: string
+          title: Intelligence Type
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        insights:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Insights
+        metrics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metrics
+        recommendations:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recommendations
+        data_sources:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Data Sources
+        confidence_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Confidence Score
+        impact_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+        is_active:
+          type: boolean
+          title: Is Active
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - intelligence_type
+      - title
+      - description
+      - insights
+      - metrics
+      - recommendations
+      - data_sources
+      - confidence_score
+      - impact_level
+      - category
+      - tags
+      - is_active
+      - expires_at
+      - created_at
+      - updated_at
+      title: MarketIntelligenceResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

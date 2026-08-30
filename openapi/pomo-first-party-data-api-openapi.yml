@@ -1,0 +1,1287 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend First Party Data API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: first-party-data
+paths:
+  /api/first-party-data/profile:
+    post:
+      tags:
+      - first-party-data
+      summary: Profile First Party Data File
+      description: Profile headers/sample rows and return a confirmable mapping proposal.
+      operationId: profile_first_party_data_file_api_first_party_data_profile_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_profile_first_party_data_file_api_first_party_data_profile_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Profile First Party Data File Api First Party Data Profile Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/first-party-data/uploads:
+    get:
+      tags:
+      - first-party-data
+      summary: List First Party Data Uploads
+      operationId: list_first_party_data_uploads_api_first_party_data_uploads_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List First Party Data Uploads Api First Party Data Uploads Get
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - first-party-data
+      summary: Create First Party Data Upload
+      description: Persist an analyzed upload snapshot after the user confirms mapping.
+      operationId: create_first_party_data_upload_api_first_party_data_uploads_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_first_party_data_upload_api_first_party_data_uploads_post'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Create First Party Data Upload Api First Party Data Uploads Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/first-party-data/uploads/async:
+    post:
+      tags:
+      - first-party-data
+      summary: Create First Party Data Upload Async Job
+      description: Persist the parsed workspace immediately and finish AI enrichment in the background.
+      operationId: create_first_party_data_upload_async_job_api_first_party_data_uploads_async_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_first_party_data_upload_async_job_api_first_party_data_uploads_async_post'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Create First Party Data Upload Async Job Api First Party Data Uploads Async Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/first-party-data/uploads/{upload_id}:
+    delete:
+      tags:
+      - first-party-data
+      summary: Delete First Party Data Upload
+      operationId: delete_first_party_data_upload_api_first_party_data_uploads__upload_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: upload_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Upload Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Delete First Party Data Upload Api First Party Data Uploads  Upload Id  Delete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - first-party-data
+      summary: Get First Party Data Upload
+      operationId: get_first_party_data_upload_api_first_party_data_uploads__upload_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: upload_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Upload Id
+      - name: view
+        in: query
+        required: false
+        schema:
+          type: string
+          default: full
+          title: View
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get First Party Data Upload Api First Party Data Uploads  Upload Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/first-party-data/uploads/{upload_id}/coverage-policy:
+    put:
+      tags:
+      - first-party-data
+      summary: Update First Party Coverage Policy
+      description: Persist retailer coverage thresholds and recompute WOS alert states.
+      operationId: update_first_party_coverage_policy_api_first_party_data_uploads__upload_id__coverage_policy_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: upload_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Upload Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirstPartyCoveragePolicyRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update First Party Coverage Policy Api First Party Data Uploads  Upload Id  Coverage Policy Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/first-party-data/uploads/{upload_id}/buyer-target:
+    put:
+      tags:
+      - first-party-data
+      summary: Update First Party Buyer Target
+      description: 'Persist the velocity the retail buyer expects, with where it came from.
+
+
+        Send `unit_per_store_per_week: null` to clear it. `source` is required
+
+        whenever a value is sent; see the note on the request model.'
+      operationId: update_first_party_buyer_target_api_first_party_data_uploads__upload_id__buyer_target_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: upload_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Upload Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirstPartyBuyerTargetRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update First Party Buyer Target Api First Party Data Uploads  Upload Id  Buyer Target Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/first-party-data/uploads/{upload_id}/experiment-package:
+    post:
+      tags:
+      - first-party-data
+      summary: Prepare First Party Experiment Package
+      description: Recompute the experiment package preview with user-entered budget, duration, and variant states.
+      operationId: prepare_first_party_experiment_package_api_first_party_data_uploads__upload_id__experiment_package_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: upload_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Upload Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirstPartyExperimentPackageRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Prepare First Party Experiment Package Api First Party Data Uploads  Upload Id  Experiment Package Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/first-party-data/uploads/{upload_id}/sku-performance:
+    get:
+      tags:
+      - first-party-data
+      summary: List First Party Sku Performance
+      operationId: list_first_party_sku_performance_api_first_party_data_uploads__upload_id__sku_performance_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: upload_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Upload Id
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 200
+          default: ''
+          title: Search
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 24
+          title: Page Size
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 40
+          default: priority
+          title: Sort
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirstPartySkuListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/first-party-data/uploads/{upload_id}/sku-performance/{sku_key}:
+    get:
+      tags:
+      - first-party-data
+      summary: Get First Party Sku Performance
+      operationId: get_first_party_sku_performance_api_first_party_data_uploads__upload_id__sku_performance__sku_key__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: upload_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Upload Id
+      - name: sku_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Sku Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirstPartySkuDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FirstPartyExperimentVariantState:
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Id
+        locked:
+          type: boolean
+          title: Locked
+          default: false
+        alternate_index:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Alternate Index
+          default: 0
+      type: object
+      required:
+      - id
+      title: FirstPartyExperimentVariantState
+      description: Client-held state for one preview variant.
+    FirstPartySkuShipmentPoint:
+      properties:
+        period_start:
+          type: string
+          format: date
+          title: Period Start
+        period_end:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Period End
+        period_grain:
+          type: string
+          title: Period Grain
+        period_label:
+          type: string
+          title: Period Label
+        shipped_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Shipped Units
+        open_order_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Open Order Units
+        other_order_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Other Order Units
+      type: object
+      required:
+      - period_start
+      - period_grain
+      - period_label
+      title: FirstPartySkuShipmentPoint
+    FirstPartySkuBreakdownItem:
+      properties:
+        label:
+          type: string
+          title: Label
+        total_revenue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Total Revenue
+        sold_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sold Units
+        transactions:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Transactions
+        shipped_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Shipped Units
+        open_order_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Open Order Units
+        other_order_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Other Order Units
+        on_hand_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: On Hand Units
+        share_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Share Pct
+      type: object
+      required:
+      - label
+      title: FirstPartySkuBreakdownItem
+    Body_create_first_party_data_upload_async_job_api_first_party_data_uploads_async_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+        mapping_overrides:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mapping Overrides
+        product_mapping:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Mapping
+        analysis_layer_preferences:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analysis Layer Preferences
+        workspace_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspace Name
+        import_upload_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Import Upload Id
+        allow_duplicate:
+          type: boolean
+          title: Allow Duplicate
+          default: false
+      type: object
+      required:
+      - file
+      title: Body_create_first_party_data_upload_async_job_api_first_party_data_uploads_async_post
+    FirstPartyExperimentVariantAsset:
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Id
+        image_url:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          title: Image Url
+        media_type:
+          type: string
+          maxLength: 24
+          title: Media Type
+          default: image
+        asset_source:
+          type: string
+          maxLength: 24
+          title: Asset Source
+          default: generated
+        width:
+          anyOf:
+          - type: integer
+            maximum: 20000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+            maximum: 20000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Height
+      type: object
+      required:
+      - id
+      - image_url
+      title: FirstPartyExperimentVariantAsset
+      description: 'Client-chosen creative image for one preview variant.
+
+
+        Sent as a DELTA keyed by the stable variant id: the server rebuilds the plan
+
+        from the stored upload on every recompute/persist, so the chosen (generated,
+
+        uploaded, or edited) image must be merged back onto the matching variant.'
+    FirstPartyExperimentPackageRequest:
+      properties:
+        opportunity_id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Opportunity Id
+        budget_cap:
+          anyOf:
+          - type: number
+            maximum: 1000000.0
+            minimum: 50.0
+          - type: 'null'
+          title: Budget Cap
+        duration_days:
+          anyOf:
+          - type: integer
+            maximum: 30.0
+            minimum: 7.0
+          - type: 'null'
+          title: Duration Days
+        variant_count:
+          anyOf:
+          - type: integer
+            maximum: 3.0
+            minimum: 1.0
+          - type: 'null'
+          title: Variant Count
+        gross_margin:
+          anyOf:
+          - type: number
+            maximum: 0.95
+            minimum: 0.1
+          - type: 'null'
+          title: Gross Margin
+        variant_states:
+          items:
+            $ref: '#/components/schemas/FirstPartyExperimentVariantState'
+          type: array
+          maxItems: 10
+          title: Variant States
+        removed_variant_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 10
+          title: Removed Variant Ids
+        variant_assets:
+          items:
+            $ref: '#/components/schemas/FirstPartyExperimentVariantAsset'
+          type: array
+          maxItems: 10
+          title: Variant Assets
+        regenerate:
+          type: boolean
+          title: Regenerate
+          default: false
+      type: object
+      required:
+      - opportunity_id
+      title: FirstPartyExperimentPackageRequest
+      description: Full desired state for a stateless experiment-package recompute.
+    FirstPartySkuListResponse:
+      properties:
+        upload_id:
+          type: string
+          title: Upload Id
+        dataset_category:
+          type: string
+          title: Dataset Category
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+        total:
+          type: integer
+          title: Total
+        items:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuListItem'
+          type: array
+          title: Items
+        legacy_data_unavailable:
+          type: boolean
+          title: Legacy Data Unavailable
+          default: false
+        legacy_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legacy Reason
+      type: object
+      required:
+      - upload_id
+      - dataset_category
+      - page
+      - page_size
+      - total
+      title: FirstPartySkuListResponse
+      description: Paginated SKU 360 directory for one workspace context.
+    FirstPartyBuyerTargetRequest:
+      properties:
+        unit_per_store_per_week:
+          anyOf:
+          - type: number
+            maximum: 100000.0
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Unit Per Store Per Week
+        source:
+          anyOf:
+          - type: string
+            maxLength: 240
+            minLength: 2
+          - type: 'null'
+          title: Source
+        as_of:
+          anyOf:
+          - type: string
+            maxLength: 32
+          - type: 'null'
+          title: As Of
+      type: object
+      title: FirstPartyBuyerTargetRequest
+      description: 'The velocity a retail buyer actually expects, as stated by the marketer.
+
+
+        This is the one number on the sales surface that no file contains and no
+
+        model can infer. A buyer''s hurdle rate is a commercial term one retailer
+
+        imposed on one brand in one review cycle, so it arrives by being typed, and
+
+        every figure downstream of it is only as good as its provenance.
+
+
+        `source` is therefore REQUIRED and not defaulted. A target with no stated
+
+        origin is indistinguishable, three months later, from a number somebody
+
+        guessed, and it drives the gap and the size of the prize on a screen a
+
+        marketer quotes to that same buyer.
+
+
+        Send `unit_per_store_per_week: null` to clear the target and fall back to
+
+        the modelled percentile.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    FirstPartySkuInventoryDetail:
+      properties:
+        on_hand_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: On Hand Units
+        weeks_of_supply:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Weeks Of Supply
+        as_of_start:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: As Of Start
+        as_of_end:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: As Of End
+        as_of_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: As Of Date
+        reorder_trigger_weeks:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Reorder Trigger Weeks
+        target_weeks:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Target Weeks
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - inventory_needed
+            - run_rate_needed
+            - below_minimum
+            - reorder_now
+            - covered
+            - above_target
+          - type: 'null'
+          title: Status
+        coverage_policy_source:
+          type: string
+          enum:
+          - configured
+          - default_reference
+          title: Coverage Policy Source
+        top_retailers:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuBreakdownItem'
+          type: array
+          title: Top Retailers
+      type: object
+      required:
+      - coverage_policy_source
+      title: FirstPartySkuInventoryDetail
+    FirstPartySkuPosDetail:
+      properties:
+        total_revenue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Total Revenue
+        sold_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sold Units
+        transactions:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Transactions
+        average_units_per_week:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Average Units Per Week
+        units_per_store_week:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Units Per Store Week
+        revenue_share_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Revenue Share Pct
+        units_share_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Units Share Pct
+        weekly_trend:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuTrendPoint'
+          type: array
+          title: Weekly Trend
+        top_markets:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuBreakdownItem'
+          type: array
+          title: Top Markets
+        top_stores:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuBreakdownItem'
+          type: array
+          title: Top Stores
+      type: object
+      title: FirstPartySkuPosDetail
+    Body_profile_first_party_data_file_api_first_party_data_profile_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_profile_first_party_data_file_api_first_party_data_profile_post
+    FirstPartySkuListItem:
+      properties:
+        sku_key:
+          type: string
+          title: Sku Key
+        sku:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sku
+        product_name:
+          type: string
+          title: Product Name
+        offering_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Offering Id
+        offering_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Offering Name
+        source_types:
+          items:
+            type: string
+          type: array
+          title: Source Types
+        available_metrics:
+          items:
+            type: string
+          type: array
+          title: Available Metrics
+        total_revenue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Total Revenue
+        sold_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sold Units
+        units_per_store_week:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Units Per Store Week
+        shipped_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Shipped Units
+        open_order_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Open Order Units
+        on_hand_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: On Hand Units
+        latest_period:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Latest Period
+        revenue_share_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Revenue Share Pct
+        units_share_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Units Share Pct
+      type: object
+      required:
+      - sku_key
+      - product_name
+      title: FirstPartySkuListItem
+      description: Compact SKU 360 row returned by the paginated workspace endpoint.
+    FirstPartySkuDetailResponse:
+      properties:
+        upload_id:
+          type: string
+          title: Upload Id
+        sku_key:
+          type: string
+          title: Sku Key
+        sku:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sku
+        product_name:
+          type: string
+          title: Product Name
+        offering_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Offering Id
+        offering_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Offering Name
+        source_types:
+          items:
+            type: string
+          type: array
+          title: Source Types
+        available_metrics:
+          items:
+            type: string
+          type: array
+          title: Available Metrics
+        total_revenue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Total Revenue
+        sold_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sold Units
+        units_per_store_week:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Units Per Store Week
+        shipped_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Shipped Units
+        open_order_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Open Order Units
+        on_hand_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: On Hand Units
+        latest_period:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Latest Period
+        revenue_share_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Revenue Share Pct
+        units_share_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Units Share Pct
+        pos:
+          anyOf:
+          - $ref: '#/components/schemas/FirstPartySkuPosDetail'
+          - type: 'null'
+        shipments:
+          anyOf:
+          - $ref: '#/components/schemas/FirstPartySkuShipmentDetail'
+          - type: 'null'
+        inventory:
+          anyOf:
+          - $ref: '#/components/schemas/FirstPartySkuInventoryDetail'
+          - type: 'null'
+        linked_sources:
+          items:
+            type: string
+          type: array
+          title: Linked Sources
+        evidence:
+          additionalProperties: true
+          type: object
+          title: Evidence
+        legacy_data_unavailable:
+          type: boolean
+          title: Legacy Data Unavailable
+          default: false
+        legacy_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legacy Reason
+      type: object
+      required:
+      - upload_id
+      - sku_key
+      - product_name
+      title: FirstPartySkuDetailResponse
+      description: Evidence-labelled SKU 360 view assembled from eligible profile uploads.
+    FirstPartyCoveragePolicyRequest:
+      properties:
+        minimum_weeks:
+          type: number
+          maximum: 52.0
+          minimum: 0.5
+          title: Minimum Weeks
+          default: 5.0
+        reorder_trigger_weeks:
+          type: number
+          maximum: 52.0
+          minimum: 0.5
+          title: Reorder Trigger Weeks
+          default: 6.0
+        target_weeks:
+          type: number
+          maximum: 104.0
+          minimum: 0.5
+          title: Target Weeks
+          default: 8.0
+        run_rate_window_weeks:
+          type: integer
+          maximum: 13.0
+          minimum: 1.0
+          title: Run Rate Window Weeks
+          default: 4
+        consumption_upload_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Consumption Upload Id
+        inventory_upload_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Inventory Upload Id
+        shipment_upload_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Shipment Upload Id
+        retailer_account:
+          anyOf:
+          - type: string
+            maxLength: 240
+          - type: 'null'
+          title: Retailer Account
+        shipment_customer:
+          anyOf:
+          - type: string
+            maxLength: 240
+          - type: 'null'
+          title: Shipment Customer
+      type: object
+      title: FirstPartyCoveragePolicyRequest
+      description: Retail coverage thresholds applied to a POS + inventory workspace.
+    FirstPartySkuShipmentDetail:
+      properties:
+        shipped_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Shipped Units
+        open_order_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Open Order Units
+        other_order_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Other Order Units
+        grain:
+          type: string
+          title: Grain
+        period_flow:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuShipmentPoint'
+          type: array
+          title: Period Flow
+        top_customers:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuBreakdownItem'
+          type: array
+          title: Top Customers
+      type: object
+      required:
+      - grain
+      title: FirstPartySkuShipmentDetail
+    FirstPartySkuTrendPoint:
+      properties:
+        period_start:
+          type: string
+          format: date
+          title: Period Start
+        period_end:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Period End
+        period_grain:
+          type: string
+          title: Period Grain
+        period_label:
+          type: string
+          title: Period Label
+        revenue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Revenue
+        sold_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sold Units
+        transactions:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Transactions
+      type: object
+      required:
+      - period_start
+      - period_grain
+      - period_label
+      title: FirstPartySkuTrendPoint
+    Body_create_first_party_data_upload_api_first_party_data_uploads_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+        mapping_overrides:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mapping Overrides
+        product_mapping:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Mapping
+        analysis_layer_preferences:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analysis Layer Preferences
+        workspace_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspace Name
+        import_upload_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Import Upload Id
+        allow_duplicate:
+          type: boolean
+          title: Allow Duplicate
+          default: false
+      type: object
+      required:
+      - file
+      title: Body_create_first_party_data_upload_api_first_party_data_uploads_post
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

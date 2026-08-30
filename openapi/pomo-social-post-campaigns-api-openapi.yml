@@ -1,0 +1,1444 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Social Post Campaigns API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Social Post Campaigns
+paths:
+  /api/campaigns/social-post/edit-content:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Edit Social Post Content
+      description: 'Edit social post content based on current company profile instructions.
+
+        The edited content will replace the existing content for the social post.
+
+
+        The current company profile provides a text description of the changes they want, and the
+
+        AI will generate an edited version of the content based on those instructions.'
+      operationId: edit_social_post_content_api_campaigns_social_post_edit_content_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_edit_social_post_content_api_campaigns_social_post_edit_content_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/social-post/direct-edit-social-post:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Direct Edit Social Post
+      description: 'Directly edit a social post''s content without AI assistance.
+
+        This endpoint allows direct updates to a social post''s name, caption, hashtags and other fields for the current company profile.'
+      operationId: direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/social-post/delete-social-post:
+    delete:
+      tags:
+      - Social Post Campaigns
+      summary: Delete Social Post
+      description: 'Delete a social media post.
+
+        Only the current company profile who created the post can delete it.
+
+        The post will be removed from the database and chat message metadata.
+
+        Any associated images will also be deleted from the database.
+
+
+        Query parameters:
+
+        - campaign_id: Campaign ID of the post to delete
+
+        - idea_number: Post idea number'
+      operationId: delete_social_post_api_campaigns_social_post_delete_social_post_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      - name: idea_number
+        in: query
+        required: true
+        schema:
+          type: integer
+          title: Idea Number
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/edit-social-post-image:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Edit Social Post Image
+      description: 'Edits a specific social post image using AI, updates GCS and campaign meta_data for the current company profile.
+
+        Also updates the corresponding chat message metadata.'
+      operationId: edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/social-post/upload-social-post-image:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Upload Social Post Image
+      description: 'Upload an image for a social post campaign and update database records for the current company profile.
+
+        This is used for initial creation of campaigns or updating existing ones.
+
+
+        Parameters:
+
+        - file: The image file to upload
+
+        - campaign_id: ID of the campaign
+
+        - idea_number: Idea number of the campaign
+
+        - current_image_url: URL of the current image (used for lookup when replace is True)
+
+        - replace: If True, replace existing image; if False, append as a new image'
+      operationId: upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/social-post/social-post-campaigns:
+    get:
+      tags:
+      - Social Post Campaigns
+      summary: Fetch All Social Post Campaigns
+      description: 'Fetch all social post campaigns for the current company profile.
+
+
+        This endpoint retrieves all the social post campaigns created by the current company profile,
+
+        supporting pagination and the option to include variations.
+
+
+        Query parameters:
+
+        - page: The page number (0-indexed) for pagination
+
+        - limit: The number of items per page
+
+        - include_variations: Whether to include variations of the original posts
+
+
+        Returns a list of campaigns with their associated images, metadata, and posting status information,
+
+        along with pagination information.'
+      operationId: fetch_all_social_post_campaigns_api_campaigns_social_post_social_post_campaigns_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Page
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      - name: include_variations
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Include Variations
+      - name: campaign_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: If provided, only campaigns matching this campaign_id are returned
+          title: Campaign Id
+        description: If provided, only campaigns matching this campaign_id are returned
+      - name: platform_scope
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional social platform family filter
+          title: Platform Scope
+        description: Optional social platform family filter
+      - name: status_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional normalized social status filter
+          title: Status Filter
+        description: Optional normalized social status filter
+      - name: source_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional creation source filter
+          title: Source Filter
+        description: Optional creation source filter
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional search text
+          title: Search
+        description: Optional search text
+      - name: dashboard_mode
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Dashboard Mode
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/social-post-campaign/{campaign_id}:
+    delete:
+      tags:
+      - Social Post Campaigns
+      summary: Delete Social Post Campaign
+      description: 'Delete an entire social post campaign for the current company profile.
+
+        This will remove the campaign and all associated images from the database.'
+      operationId: delete_social_post_campaign_api_campaigns_social_post_social_post_campaign__campaign_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/social-post-campaign/{campaign_id}/idea/{idea_number}:
+    delete:
+      tags:
+      - Social Post Campaigns
+      summary: Delete Social Post Campaign Idea
+      description: 'Delete a specific idea from a social post campaign for the current company profile.
+
+        This will remove the idea and all associated images from the database.
+
+        If this was the last idea in the campaign, the entire campaign will be removed.'
+      operationId: delete_social_post_campaign_idea_api_campaigns_social_post_social_post_campaign__campaign_id__idea__idea_number__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      - name: idea_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Idea Number
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/social-post-campaigns-count:
+    get:
+      tags:
+      - Social Post Campaigns
+      summary: Get Social Post Campaigns Count
+      description: 'Get the count of social post campaigns for the current company profile.
+
+        Returns the total number of social post campaigns owned by the company profile.'
+      operationId: get_social_post_campaigns_count_api_campaigns_social_post_social_post_campaigns_count_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/campaigns/social-post/{campaign_id}/{idea_number}/posts:
+    get:
+      tags:
+      - Social Post Campaigns
+      summary: Get Campaign Posts
+      description: Get posts for a specific campaign idea for the current company profile, optionally filtered by platform and variation.
+      operationId: get_campaign_posts_api_campaigns_social_post__campaign_id___idea_number__posts_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      - name: idea_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Idea Number
+      - name: platform
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+      - name: variation
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Variation
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignPostsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/generate-variation:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Generate Social Post Variation
+      description: "Generate a variation of an existing social post for the current company profile.\nThis endpoint creates a new variation by generating new text and images based on the original post.\n\nArgs:\n    request: Social post variation request containing campaign_id and idea_number\n    company_profile: Current company profile\n    db: Database session\n\nReturns:\n    dict: Response with the new campaign variation details"
+      operationId: generate_social_post_variation_api_campaigns_social_post_generate_variation_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialPostVariationRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/social-post:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Create Social Post Campaign
+      description: 'Create a new social post campaign using the dedicated SocialPostCampaign model for the current company profile.
+
+        This endpoint provides a direct REST API method for creating campaigns
+
+        instead of using the workflow approach.'
+      operationId: create_social_post_campaign_api_campaigns_social_post_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialPostCampaignCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialPostCampaignResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/social-post/schedule/preflight:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Preflight Social Post Schedule
+      operationId: preflight_social_post_schedule_api_campaigns_social_post_schedule_preflight_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialScheduleUpsertRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/social-post/schedule:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Upsert Social Post Schedule
+      operationId: upsert_social_post_schedule_api_campaigns_social_post_schedule_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialScheduleUpsertRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/social-post/schedule/{campaign_id}/{idea_number}/{variation}:
+    get:
+      tags:
+      - Social Post Campaigns
+      summary: Get Social Post Schedule
+      operationId: get_social_post_schedule_api_campaigns_social_post_schedule__campaign_id___idea_number___variation__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      - name: idea_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Idea Number
+      - name: variation
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Variation
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/schedule/{schedule_id}:
+    delete:
+      tags:
+      - Social Post Campaigns
+      summary: Cancel Social Post Schedule
+      operationId: cancel_social_post_schedule_api_campaigns_social_post_schedule__schedule_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: schedule_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Schedule Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/list-schedules:
+    get:
+      tags:
+      - Social Post Campaigns
+      summary: List Social Post Schedules
+      operationId: list_social_post_schedules_api_campaigns_social_post_list_schedules_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: scheduled_from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheduled From
+      - name: scheduled_to
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheduled To
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Page
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/schedule/dispatch-due:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Dispatch Due Social Post Schedules For Company
+      operationId: dispatch_due_social_post_schedules_for_company_api_campaigns_social_post_schedule_dispatch_due_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 25
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/schedule-campaign/{campaign_id}/{idea_number}:
+    post:
+      tags:
+      - Social Post Campaigns
+      summary: Schedule Social Post Campaign
+      operationId: schedule_social_post_campaign_api_campaigns_social_post_schedule_campaign__campaign_id___idea_number__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      - name: idea_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Idea Number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Schedule Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/campaign-schedule/{campaign_id}/{idea_number}:
+    get:
+      tags:
+      - Social Post Campaigns
+      summary: Get Social Post Campaign Schedule
+      operationId: get_social_post_campaign_schedule_api_campaigns_social_post_campaign_schedule__campaign_id___idea_number__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      - name: idea_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Idea Number
+      - name: variation
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Variation
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/social-post/cancel-schedule/{schedule_id}:
+    delete:
+      tags:
+      - Social Post Campaigns
+      summary: Cancel Social Post Campaign Schedule
+      operationId: cancel_social_post_campaign_schedule_api_campaigns_social_post_cancel_schedule__schedule_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: schedule_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Schedule Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SocialPostCampaignCreate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        caption:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caption
+        hashtags:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Hashtags
+        target_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Platform
+        post_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Type
+        media_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Type
+        platform_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Platform Config
+        target_audience:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Target Audience
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        post_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Id
+        post_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Url
+        posted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Posted At
+        scheduled_for:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled For
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        post_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Post Metadata
+        auto_rating:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Auto Rating
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        variation:
+          type: integer
+          title: Variation
+          default: 0
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      title: SocialPostCampaignCreate
+    SocialSchedulePostingIdentity:
+      properties:
+        instagram_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Account Id
+        instagram_auth_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Auth Method
+        instagram_account_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Account Name
+        instagram_username:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Username
+        facebook_page_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Facebook Page Id
+        facebook_page_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Facebook Page Name
+      type: object
+      title: SocialSchedulePostingIdentity
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Body_direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID of the social post to edit
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Social post idea number
+        variation:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Variation
+          description: Social post variation being edited
+        updated_post:
+          additionalProperties: true
+          type: object
+          title: Updated Post
+          description: Updated post content with name, caption, hashtags, etc.
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - updated_post
+      title: Body_direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post
+    Body_edit_social_post_content_api_campaigns_social_post_edit_content_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID of the social post to edit
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Social post idea number
+        content:
+          type: string
+          title: Content
+          description: Existing content as JSON string (title, caption and hashtags)
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+          description: Instructions for editing the social post content
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - content
+      - edit_prompt
+      title: Body_edit_social_post_content_api_campaigns_social_post_edit_content_post
+    SocialPostCampaignResponse:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        caption:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caption
+        hashtags:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Hashtags
+        target_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Platform
+        post_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Type
+        media_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Type
+        platform_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Platform Config
+        target_audience:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Target Audience
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        post_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Id
+        post_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Url
+        posted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Posted At
+        scheduled_for:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheduled For
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        post_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Post Metadata
+        auto_rating:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Auto Rating
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        variation:
+          type: integer
+          title: Variation
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+        last_modified:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Modified
+        media:
+          items:
+            $ref: '#/components/schemas/SocialPostCampaignMediaResponse'
+          type: array
+          title: Media
+          default: []
+      type: object
+      required:
+      - id
+      - company_profile_id
+      - campaign_id
+      - idea_number
+      - variation
+      - creation_date
+      - last_modified
+      title: SocialPostCampaignResponse
+    PostModel:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        platform:
+          type: string
+          title: Platform
+        variation:
+          type: integer
+          title: Variation
+          default: 0
+        post_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Id
+        post_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Url
+        posted_at:
+          type: string
+          format: date-time
+          title: Posted At
+        status:
+          type: string
+          title: Status
+        post_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Post Metadata
+      type: object
+      required:
+      - id
+      - campaign_id
+      - idea_number
+      - platform
+      - posted_at
+      - status
+      title: PostModel
+    Body_upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+          description: Image file to upload
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        current_image_url:
+          type: string
+          title: Current Image Url
+          description: URL of the current image (required if replace is True)
+        replace:
+          type: boolean
+          title: Replace
+          description: Whether to replace existing image (True) or append as new image (False)
+          default: true
+      type: object
+      required:
+      - file
+      - campaign_id
+      - idea_number
+      title: Body_upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post
+    Body_edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        image_url:
+          type: string
+          title: Image Url
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - image_url
+      - edit_prompt
+      title: Body_edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post
+    SocialPostVariationRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: ID of the campaign to create variations for
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Idea number within the campaign
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      title: SocialPostVariationRequest
+    SocialScheduleUpsertRequest:
+      properties:
+        schedule_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Schedule Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        variation:
+          type: integer
+          title: Variation
+          default: 0
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        scheduled_local_date:
+          type: string
+          title: Scheduled Local Date
+        scheduled_local_time:
+          type: string
+          title: Scheduled Local Time
+        schedule_timezone:
+          type: string
+          title: Schedule Timezone
+          default: UTC
+        posting_identity:
+          $ref: '#/components/schemas/SocialSchedulePostingIdentity'
+        validate_only:
+          type: boolean
+          title: Validate Only
+          default: false
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - scheduled_local_date
+      - scheduled_local_time
+      - posting_identity
+      title: SocialScheduleUpsertRequest
+    CampaignPostsResponse:
+      properties:
+        posts:
+          items:
+            $ref: '#/components/schemas/PostModel'
+          type: array
+          title: Posts
+      type: object
+      required:
+      - posts
+      title: CampaignPostsResponse
+    SocialPostCampaignMediaResponse:
+      properties:
+        media_type:
+          type: string
+          title: Media Type
+        media_url:
+          type: string
+          title: Media Url
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        video_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Url
+        original_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Original Prompt
+        enhanced_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Enhanced Prompt
+        width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Height
+        duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration
+        file_size:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: File Size
+        media_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Media Metadata
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+          default: 0
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        social_post_campaign_id:
+          type: string
+          format: uuid
+          title: Social Post Campaign Id
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+      type: object
+      required:
+      - media_type
+      - media_url
+      - id
+      - social_post_campaign_id
+      - creation_date
+      title: SocialPostCampaignMediaResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

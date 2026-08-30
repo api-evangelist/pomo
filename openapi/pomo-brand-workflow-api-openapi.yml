@@ -1,0 +1,1345 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Brand Workflow API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: brand-workflow
+paths:
+  /api/workflow/brand-generation/step1/preflight-url:
+    post:
+      tags:
+      - brand-workflow
+      summary: Preflight Company Url
+      operationId: preflight_company_url_api_workflow_brand_generation_step1_preflight_url_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyUrlPreflightRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/status:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Workflow Status
+      operationId: get_workflow_status_api_workflow_brand_generation_status_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_url
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Company Url
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: workflow_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/step1/upload-files:
+    post:
+      tags:
+      - brand-workflow
+      summary: Upload Analysis Files
+      operationId: upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/step1/files:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Workflow Files
+      operationId: get_workflow_files_api_workflow_brand_generation_step1_files_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_url
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Company Url
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/step1/extract:
+    post:
+      tags:
+      - brand-workflow
+      summary: Extract Company Info
+      description: Extract company information using async pipeline with real-time SSE updates.
+      operationId: extract_company_info_api_workflow_brand_generation_step1_extract_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Step1ExtractRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/step1/confirm:
+    post:
+      tags:
+      - brand-workflow
+      summary: Confirm Company Info
+      description: Confirm company information and proceed to step 2.
+      operationId: confirm_company_info_api_workflow_brand_generation_step1_confirm_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Step1ConfirmRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/step2/discover:
+    post:
+      tags:
+      - brand-workflow
+      summary: Discover Product Offerings
+      operationId: discover_product_offerings_api_workflow_brand_generation_step2_discover_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Step2DiscoverRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/step2/confirm:
+    post:
+      tags:
+      - brand-workflow
+      summary: Confirm Product Lines
+      description: Confirm SKUs and save to step2_data.
+      operationId: confirm_product_lines_api_workflow_brand_generation_step2_confirm_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Step2ConfirmRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/{workflow_id}/product-offerings:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Workflow Product Offerings
+      operationId: get_workflow_product_offerings_api_workflow_brand_generation__workflow_id__product_offerings_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/product-offerings/inventory:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Available Inventory Offerings
+      operationId: get_available_inventory_offerings_api_workflow_brand_generation_product_offerings_inventory_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/product-offerings/augment:
+    post:
+      tags:
+      - brand-workflow
+      summary: Augment Product Offerings Route
+      operationId: augment_product_offerings_route_api_workflow_brand_generation_product_offerings_augment_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductOfferingAugmentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/product-offerings/extract-url:
+    post:
+      tags:
+      - brand-workflow
+      summary: Extract Product Offerings From Url Route
+      operationId: extract_product_offerings_from_url_route_api_workflow_brand_generation_product_offerings_extract_url_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductOfferingExtractUrlRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/product-offerings/{offering_id}/restart:
+    post:
+      tags:
+      - brand-workflow
+      summary: Restart Product Offering Analysis
+      operationId: restart_product_offering_analysis_api_workflow_brand_generation_product_offerings__offering_id__restart_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Offering Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/step3/competitors-status/{workflow_id}:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Competitors Discovery Status
+      operationId: get_competitors_discovery_status_api_workflow_brand_generation_step3_competitors_status__workflow_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/step3/competitors/sse/{workflow_id}:
+    get:
+      tags:
+      - brand-workflow
+      summary: Competitors Discovery Sse Stream
+      operationId: competitors_discovery_sse_stream_api_workflow_brand_generation_step3_competitors_sse__workflow_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/step3/regenerate-competitors:
+    post:
+      tags:
+      - brand-workflow
+      summary: Regenerate Competitors
+      operationId: regenerate_competitors_api_workflow_brand_generation_step3_regenerate_competitors_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompetitorRegenerateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/step3/confirm-competitors:
+    post:
+      tags:
+      - brand-workflow
+      summary: Confirm Competitors Workflow Id
+      description: Confirm selected competitors and continue workflow processing.
+      operationId: confirm_competitors_workflow_id_api_workflow_brand_generation_step3_confirm_competitors_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmCompetitorsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/step3/validate-competitor:
+    post:
+      tags:
+      - brand-workflow
+      summary: Validate Competitor Url
+      operationId: validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/onboarding/runs:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Onboarding Runs
+      operationId: get_onboarding_runs_api_workflow_brand_generation_onboarding_runs_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/onboarding/view/{workflow_id}:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Onboarding View
+      operationId: get_onboarding_view_api_workflow_brand_generation_onboarding_view__workflow_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/onboarding/stream/{workflow_id}:
+    get:
+      tags:
+      - brand-workflow
+      summary: Onboarding View Stream
+      operationId: onboarding_view_stream_api_workflow_brand_generation_onboarding_stream__workflow_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      - name: last_event_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Event Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/recent:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Recent Workflows
+      operationId: get_recent_workflows_api_workflow_brand_generation_recent_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/recent/status:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Recent Workflows Status
+      operationId: get_recent_workflows_status_api_workflow_brand_generation_recent_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/workflow/brand-generation/marketing-profile/sse/{workflow_id}:
+    get:
+      tags:
+      - brand-workflow
+      summary: Marketing Profile Sse Stream
+      operationId: marketing_profile_sse_stream_api_workflow_brand_generation_marketing_profile_sse__workflow_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/marketing-profile/state/{workflow_id}:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Marketing Profile State Route
+      operationId: get_marketing_profile_state_route_api_workflow_brand_generation_marketing_profile_state__workflow_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/marketing-profile/generate/{workflow_id}:
+    post:
+      tags:
+      - brand-workflow
+      summary: Generate Marketing Profile Route
+      operationId: generate_marketing_profile_route_api_workflow_brand_generation_marketing_profile_generate__workflow_id__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      - name: force_restart
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Force Restart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/MarketingProfileGenerationRequest'
+              - type: 'null'
+              title: Request Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/marketing-profile/{workflow_id}:
+    get:
+      tags:
+      - brand-workflow
+      summary: Get Marketing Profile
+      operationId: get_marketing_profile_api_workflow_brand_generation_marketing_profile__workflow_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/onboarding/narrative/{workflow_id}:
+    post:
+      tags:
+      - brand-workflow
+      summary: Summarize Onboarding Narrative Route
+      operationId: summarize_onboarding_narrative_route_api_workflow_brand_generation_onboarding_narrative__workflow_id__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingNarrativeRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/workflow/brand-generation/agent-mode/start:
+    post:
+      tags:
+      - brand-workflow
+      summary: Start Agent Mode
+      description: 'Enable agent mode for a brand workflow and start a background task to
+
+        auto-advance the workflow where possible.'
+      operationId: start_agent_mode_api_workflow_brand_generation_agent_mode_start_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentModeStartRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    OnboardingNarrativeRequest:
+      properties:
+        stage:
+          type: string
+          enum:
+          - assessment
+          - competitors
+          - gaps
+          - ads
+          - insights
+          title: Stage
+        context:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Context
+        force_refresh:
+          type: boolean
+          title: Force Refresh
+          default: false
+      type: object
+      required:
+      - stage
+      title: OnboardingNarrativeRequest
+    MarketingProfileGenerationRequest:
+      properties:
+        scope_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Key
+      type: object
+      title: MarketingProfileGenerationRequest
+    CompetitorRegenerateRequest:
+      properties:
+        workflow_id:
+          type: string
+          format: uuid
+          title: Workflow Id
+        scope_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Key
+      type: object
+      required:
+      - workflow_id
+      title: CompetitorRegenerateRequest
+    ConfirmCompetitorsRequest:
+      properties:
+        workflow_id:
+          type: string
+          format: uuid
+          title: Workflow Id
+        selected_competitors:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Selected Competitors
+      type: object
+      required:
+      - workflow_id
+      - selected_competitors
+      title: ConfirmCompetitorsRequest
+    Step2DiscoverRequest:
+      properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      title: Step2DiscoverRequest
+    Step1ConfirmRequest:
+      properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        company_info:
+          $ref: '#/components/schemas/CompanyInfo'
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      - company_info
+      title: Step1ConfirmRequest
+    CompanyUrlPreflightRequest:
+      properties:
+        company_url:
+          type: string
+          title: Company Url
+      type: object
+      required:
+      - company_url
+      title: CompanyUrlPreflightRequest
+    ProductOfferingExtractUrlRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        page_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Page Url
+        workflow_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+        force_recrawl:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Force Recrawl
+          default: false
+      type: object
+      required:
+      - company_profile_id
+      - page_url
+      title: ProductOfferingExtractUrlRequest
+    Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+        company_url:
+          type: string
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      type: object
+      required:
+      - files
+      - company_url
+      - company_profile_id
+      title: Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CompanyInfo:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        industry:
+          type: string
+          title: Industry
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+        company_size:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Size
+        target_market:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Market
+        unique_selling_proposition:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Unique Selling Proposition
+        primary_business_model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Business Model
+        secondary_business_models:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Secondary Business Models
+        business_model_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Business Model Metadata
+        marketing_goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Marketing Goal
+        average_monthly_campaign_budget:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Average Monthly Campaign Budget
+        average_monthly_campaign_budget_currency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Average Monthly Campaign Budget Currency
+        operating_cities:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Operating Cities
+      additionalProperties: true
+      type: object
+      required:
+      - name
+      - description
+      - industry
+      title: CompanyInfo
+    Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post:
+      properties:
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - url
+      title: Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post
+    Step1ExtractRequest:
+      properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      title: Step1ExtractRequest
+    ProductOfferingAugmentItem:
+      properties:
+        source:
+          type: string
+          enum:
+          - inventory
+          - custom
+          title: Source
+        inventory_offering_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Inventory Offering Id
+        custom_offering:
+          anyOf:
+          - $ref: '#/components/schemas/SKU'
+          - type: 'null'
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      type: object
+      required:
+      - source
+      title: ProductOfferingAugmentItem
+    AgentModeStartRequest:
+      properties:
+        company_url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: string
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        keep_existing_images:
+          type: boolean
+          title: Keep Existing Images
+          default: false
+        force_restart:
+          type: boolean
+          title: Force Restart
+          default: false
+        social_overrides:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Social Overrides
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      title: AgentModeStartRequest
+      description: Request payload for starting agent mode on a brand workflow.
+    SKU:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        target_audience:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Audience
+          default: []
+        key_features:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Key Features
+          default: []
+        sku_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Sku Urls
+          default: []
+        images:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Images
+          default: []
+        primary_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Category
+          default: ''
+        subcategories:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Subcategories
+          default: []
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+          default: []
+        attributes:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Attributes
+          default: {}
+        source_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Source Urls
+          default: []
+        business_characteristics:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Business Characteristics
+          default: []
+        offering_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Offering Type
+          default: primary
+        price_list:
+          anyOf:
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Price List
+          default: []
+      type: object
+      required:
+      - name
+      - description
+      title: SKU
+    Step2ConfirmRequest:
+      properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        skus:
+          items:
+            $ref: '#/components/schemas/SKU'
+          type: array
+          title: Skus
+        force_competitor_refresh:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Force Competitor Refresh
+          default: false
+        scope_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Key
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      - skus
+      title: Step2ConfirmRequest
+    ProductOfferingAugmentRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        items:
+          items:
+            $ref: '#/components/schemas/ProductOfferingAugmentItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - company_profile_id
+      - items
+      title: ProductOfferingAugmentRequest
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

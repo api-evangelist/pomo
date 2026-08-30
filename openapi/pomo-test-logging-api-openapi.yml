@@ -1,0 +1,32 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Test Logging API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Test Logging
+paths:
+  /test-logging:
+    get:
+      summary: Test Logging
+      description: 'Test endpoint to verify request ID logging is working.
+
+        This will log messages with the request ID and user ID.'
+      operationId: test_logging_test_logging_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+      tags:
+      - Test Logging
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

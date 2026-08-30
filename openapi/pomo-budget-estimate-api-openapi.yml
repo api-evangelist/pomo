@@ -1,0 +1,294 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Budget Estimate API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Budget Estimate
+paths:
+  /api/campaigns/budget-estimate:
+    post:
+      tags:
+      - Budget Estimate
+      summary: Budget Estimate
+      description: Generate a budget estimate for campaign scope settings.
+      operationId: budget_estimate_api_campaigns_budget_estimate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetEstimateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetEstimateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BudgetEstimateRequest:
+      properties:
+        goal:
+          type: string
+          title: Goal
+          description: User's marketing goal
+        currency:
+          type: string
+          title: Currency
+          description: Currency code (e.g., USD)
+        locations:
+          items:
+            $ref: '#/components/schemas/LocationItem'
+          type: array
+          title: Locations
+          description: List of target locations
+        product_offering_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Offering Id
+          description: Optional product offering identifier
+        start_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Date
+          description: Optional start date in ISO format (YYYY-MM-DD)
+        end_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
+          description: Optional end date in ISO format (YYYY-MM-DD)
+      type: object
+      required:
+      - goal
+      - currency
+      title: BudgetEstimateRequest
+      description: Input payload for budget estimation.
+    BudgetRecommendationRange:
+      properties:
+        min_value:
+          type: number
+          title: Min Value
+          description: Absolute minimum viable daily budget
+        max_value:
+          type: number
+          title: Max Value
+          description: Maximum efficient daily budget before diminishing returns
+        suggested_value:
+          type: number
+          title: Suggested Value
+          description: Recommended starting daily budget
+      type: object
+      required:
+      - min_value
+      - max_value
+      - suggested_value
+      title: BudgetRecommendationRange
+      description: Recommended daily budget range.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    BudgetEstimateResponse:
+      properties:
+        currency:
+          type: string
+          title: Currency
+          description: ISO currency code (e.g., TWD, USD)
+        budget_recommendation:
+          $ref: '#/components/schemas/BudgetRecommendationRange'
+          description: Recommended budget range
+        duration_days:
+          type: integer
+          title: Duration Days
+          description: Recommended duration in days
+        reasoning:
+          type: string
+          title: Reasoning
+          description: Concise explanation for recommendation
+      type: object
+      required:
+      - currency
+      - budget_recommendation
+      - duration_days
+      - reasoning
+      title: BudgetEstimateResponse
+      description: Structured response for budget estimate.
+    LocationItem:
+      properties:
+        level:
+          type: string
+          enum:
+          - country
+          - region
+          - state
+          - province
+          - city
+          - postal_code
+          - proximity
+          title: Level
+          description: Granularity level
+        name:
+          type: string
+          title: Name
+          description: Display name of the location, such as California, San Francisco, or 10001 + 10 mi
+        country_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Code
+          description: ISO 3166-1 alpha-2 country code, such as US
+        country_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country Name
+          description: Display country name from reverse geocoding, if available
+        code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Code
+          description: Platform or ISO subdivision code if known, such as US-CA
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+          description: Nearest city/town from reverse geocoding, if available
+        region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region
+          description: Nearest state/region/province from reverse geocoding, if available
+        region_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region Code
+          description: State/region code from reverse geocoding, if available
+        postal_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Postal Code
+          description: Postal or ZIP code for exact postal-code targeting
+        included_postal_codes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Included Postal Codes
+          description: Postal/PIN codes represented by a proximity pin when available
+        expanded_postal_codes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Expanded Postal Codes
+          description: Expanded postal/PIN codes for a radius, if available
+        latitude:
+          anyOf:
+          - type: number
+            maximum: 90.0
+            minimum: -90.0
+          - type: 'null'
+          title: Latitude
+          description: Latitude for map-pin or radius targeting
+        longitude:
+          anyOf:
+          - type: number
+            maximum: 180.0
+            minimum: -180.0
+          - type: 'null'
+          title: Longitude
+          description: Longitude for map-pin or radius targeting
+        radius_miles:
+          anyOf:
+          - type: number
+            maximum: 250.0
+            minimum: 1.0
+          - type: 'null'
+          title: Radius Miles
+          description: Radius in miles for proximity targeting
+        radius_km:
+          anyOf:
+          - type: number
+            maximum: 400.0
+            minimum: 1.0
+          - type: 'null'
+          title: Radius Km
+          description: Radius in kilometers for proximity targeting
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+          description: How the location was selected, such as zip, address, map_pin, city, or state
+        platform_ids:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Platform Ids
+          description: Resolved platform-specific geo identifiers
+        resolution_status:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Resolution Status
+          description: Per-platform resolution or support status
+      type: object
+      required:
+      - level
+      - name
+      title: LocationItem
+      description: Canonical location input for multi-geo campaigns with one shared budget.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

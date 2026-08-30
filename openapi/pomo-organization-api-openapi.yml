@@ -1,0 +1,1657 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Organization API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: organization
+paths:
+  /api/v1/organization/data-download:
+    get:
+      tags:
+      - organization
+      summary: Download Organization Data
+      description: 'Download a restricted export bundle for the authenticated admin/owner.
+
+
+        Scope is intentionally limited to the current authenticated user and the
+
+        currently selected company profile within the active organization.'
+      operationId: download_organization_data_api_v1_organization_data_download_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization:
+    get:
+      tags:
+      - organization
+      summary: Get Organization
+      description: 'Get current user''s organization information including all members.
+
+
+        Requires: Organization owner or admin role in the active organization (from X-Organization-Id header)
+
+
+        Returns sensitive data:
+
+        - Invite token (for inviting new members)
+
+        - Full members list with roles'
+      operationId: get_organization_api_v1_organization_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/billing-metadata:
+    get:
+      tags:
+      - organization
+      summary: Get Organization Billing Metadata
+      description: 'Get the minimal organization billing metadata required by recovery surfaces.
+
+
+        Unlike the full organization detail route, this excludes invite tokens,
+
+        member lists, and other admin-only organization management data.'
+      operationId: get_organization_billing_metadata_api_v1_organization_billing_metadata_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationBillingMetadataResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/list:
+    get:
+      tags:
+      - organization
+      summary: List User Organizations
+      description: 'Get all organizations the current user belongs to.
+
+
+        Returns a lightweight list of organizations with:
+
+        - Organization basic info
+
+        - User''s role in each organization
+
+        - Member count (not full member list)
+
+
+        This is used for organization selection/switching in multi-org UI.'
+      operationId: list_user_organizations_api_v1_organization_list_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationListItemResponse'
+                title: Response List User Organizations Api V1 Organization List Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/invites:
+    get:
+      tags:
+      - organization
+      summary: List Organization Invites
+      description: List organization invites. Defaults to pending invites only.
+      operationId: list_organization_invites_api_v1_organization_invites_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: status_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Filter
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInviteListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - organization
+      summary: Create Organization Invites
+      description: Create email-based organization invites.
+      operationId: create_organization_invites_api_v1_organization_invites_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationInvitesRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrganizationInvitesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/invite-domain-settings:
+    get:
+      tags:
+      - organization
+      summary: Get Invite Domain Settings Endpoint
+      operationId: get_invite_domain_settings_endpoint_api_v1_organization_invite_domain_settings_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteDomainRestrictionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - organization
+      summary: Update Invite Domain Settings Endpoint
+      operationId: update_invite_domain_settings_endpoint_api_v1_organization_invite_domain_settings_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteDomainRestrictionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteDomainRestrictionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/invites/link:
+    post:
+      tags:
+      - organization
+      summary: Create Invite Link
+      operationId: create_invite_link_api_v1_organization_invites_link_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationInviteLinkRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInviteLinkResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - organization
+      summary: Disable Invite Link
+      description: Disable the current open invite link.
+      operationId: disable_invite_link_api_v1_organization_invites_link_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInviteActionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/invites/{invite_id}/resend:
+    post:
+      tags:
+      - organization
+      summary: Resend Invite
+      operationId: resend_invite_api_v1_organization_invites__invite_id__resend_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: invite_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invite Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInviteActionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/invites/{invite_id}/revoke:
+    post:
+      tags:
+      - organization
+      summary: Revoke Invite
+      operationId: revoke_invite_api_v1_organization_invites__invite_id__revoke_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: invite_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invite Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInviteActionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/generate-invite-token:
+    post:
+      tags:
+      - organization
+      summary: Generate Invite Token
+      operationId: generate_invite_token_api_v1_organization_generate_invite_token_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateInviteTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/invite-info:
+    get:
+      tags:
+      - organization
+      summary: Get Invite Info
+      operationId: get_invite_info_api_v1_organization_invite_info_get
+      parameters:
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInviteInfoResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/join:
+    post:
+      tags:
+      - organization
+      summary: Join Organization
+      operationId: join_organization_api_v1_organization_join_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinOrganizationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoinOrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organization/members:
+    get:
+      tags:
+      - organization
+      summary: Get Organization Members
+      description: Get list of all members in the active organization (from X-Organization-Id header).
+      operationId: get_organization_members_api_v1_organization_members_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationMemberResponse'
+                title: Response Get Organization Members Api V1 Organization Members Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/invite/email:
+    post:
+      tags:
+      - organization
+      summary: Send Invite Email
+      operationId: send_invite_email_api_v1_organization_invite_email_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendOrganizationInviteEmailRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendOrganizationInviteEmailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/members/{user_id}/role:
+    put:
+      tags:
+      - organization
+      summary: Update Member Role
+      description: 'Update a member''s organization role.
+
+        Only owners can update roles (assign admin or change admin back to member).
+
+        Users cannot modify their own role.'
+      operationId: update_member_role_api_v1_organization_members__user_id__role_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationRoleUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/members/{user_id}:
+    delete:
+      tags:
+      - organization
+      summary: Remove Member
+      description: 'Remove a member from the organization.
+
+        Only owners and admins can remove members.
+
+        Cannot remove the organization owner or yourself.'
+      operationId: remove_member_api_v1_organization_members__user_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/members/{user_id}/status:
+    put:
+      tags:
+      - organization
+      summary: Update Member Status
+      description: 'Suspend or activate a member.
+
+        Only owners and admins can change member status.
+
+        Cannot suspend owner or yourself.'
+      operationId: update_member_status_api_v1_organization_members__user_id__status_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/transfer-ownership:
+    post:
+      tags:
+      - organization
+      summary: Transfer Ownership
+      description: 'Transfer organization ownership to another user.
+
+        Only the current owner can transfer ownership.'
+      operationId: transfer_ownership_api_v1_organization_transfer_ownership_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferOwnershipRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organization/members/{user_id}/permissions:
+    get:
+      tags:
+      - organization
+      summary: Get Member Permissions
+      description: 'Get a summary of a user''s permissions within the active organization.
+
+        Only admins/owners can view other users'' permissions.
+
+        Users can view their own permissions.'
+      operationId: get_member_permissions_api_v1_organization_members__user_id__permissions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionSummary'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    GenerateInviteTokenResponse:
+      properties:
+        invite_token:
+          type: string
+          title: Invite Token
+      type: object
+      required:
+      - invite_token
+      title: GenerateInviteTokenResponse
+      description: Response model for invite token generation.
+    OrganizationInviteResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        email:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: Email
+        role:
+          type: string
+          title: Role
+        status:
+          type: string
+          title: Status
+        invite_type:
+          type: string
+          title: Invite Type
+        invited_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invited By
+        created_at:
+          type: string
+          title: Created At
+        expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expires At
+        last_sent_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Sent At
+        accepted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accepted At
+        invite_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invite Url
+        use_count:
+          type: integer
+          title: Use Count
+          default: 0
+        last_used_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Used At
+        company_profile_access:
+          items:
+            $ref: '#/components/schemas/OrganizationInviteProfileAccessResponse'
+          type: array
+          title: Company Profile Access
+          default: []
+      type: object
+      required:
+      - id
+      - role
+      - status
+      - invite_type
+      - created_at
+      title: OrganizationInviteResponse
+      description: Response model for a single organization invite.
+    JoinOrganizationRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+        tos_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tos Hash
+        tos_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tos Version
+      type: object
+      required:
+      - token
+      title: JoinOrganizationRequest
+      description: Request model for joining an organization.
+    UserPermissionSummary:
+      properties:
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        user_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Name
+        user_email:
+          type: string
+          title: User Email
+        organization_role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Role
+        has_approval_access:
+          type: boolean
+          title: Has Approval Access
+          default: false
+        accessible_projects:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Accessible Projects
+          description: List of projects user has access to with their roles
+      type: object
+      required:
+      - user_id
+      - user_email
+      title: UserPermissionSummary
+      description: Summary of a user's permissions in the organization.
+    MemberStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          title: Status
+          description: 'New status: ''active'' or ''suspended'''
+      type: object
+      required:
+      - status
+      title: MemberStatusUpdateRequest
+      description: Request to update a member's status (suspend/activate).
+    OrganizationRoleUpdateRequest:
+      properties:
+        role:
+          $ref: '#/components/schemas/OrganizationRoleEnum'
+          description: New role to assign
+      type: object
+      required:
+      - role
+      title: OrganizationRoleUpdateRequest
+      description: Request to update a user's organization role.
+    OrganizationListItemResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        name:
+          type: string
+          title: Name
+        member_count:
+          type: integer
+          title: Member Count
+        user_role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Role
+        is_owner:
+          type: boolean
+          title: Is Owner
+        subscription_active:
+          type: boolean
+          title: Subscription Active
+          default: false
+        subscription_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subscription Status
+        subscription_plan:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subscription Plan
+        subscription_last_reconciled_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subscription Last Reconciled At
+        created_at:
+          type: string
+          title: Created At
+        updated_at:
+          type: string
+          title: Updated At
+      type: object
+      required:
+      - id
+      - name
+      - member_count
+      - is_owner
+      - created_at
+      - updated_at
+      title: OrganizationListItemResponse
+      description: Response model for organization list item (lightweight, no full member list).
+    OrganizationInviteLinkResponse:
+      properties:
+        invite:
+          $ref: '#/components/schemas/OrganizationInviteResponse'
+      type: object
+      required:
+      - invite
+      title: OrganizationInviteLinkResponse
+      description: Response payload for open invite link creation.
+    OrganizationBillingMetadataResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        name:
+          type: string
+          title: Name
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        gstin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gstin
+        gstin_company_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gstin Company Name
+        stripe_tax_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stripe Tax Id
+      type: object
+      required:
+      - id
+      - name
+      title: OrganizationBillingMetadataResponse
+      description: Recovery-safe organization billing fields required by checkout flows.
+    OrganizationInviteLinkRequest:
+      properties:
+        role:
+          $ref: '#/components/schemas/OrganizationRoleEnum'
+          default: member
+        company_profile_access:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/OrganizationInviteProfileAccessRequest'
+            type: array
+          - type: 'null'
+          title: Company Profile Access
+        expires_in_days:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Expires In Days
+      type: object
+      title: OrganizationInviteLinkRequest
+      description: Request payload for creating an open invite link.
+    OrganizationRoleEnum:
+      type: string
+      enum:
+      - owner
+      - admin
+      - member
+      title: OrganizationRoleEnum
+      description: Organization-level role options.
+    InviteDomainRestrictionRequest:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          title: Allowed Domains
+          default: []
+      type: object
+      required:
+      - enabled
+      title: InviteDomainRestrictionRequest
+      description: Request payload for invite domain restrictions.
+    OrganizationInviteProfileAccessRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+      type: object
+      required:
+      - company_profile_id
+      - role
+      title: OrganizationInviteProfileAccessRequest
+      description: Request payload for default company profile access on invite acceptance.
+    SendOrganizationInviteEmailResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - message
+      title: SendOrganizationInviteEmailResponse
+      description: Response returned after attempting to send an invite email.
+    CreateOrganizationInvitesResponse:
+      properties:
+        invites:
+          items:
+            $ref: '#/components/schemas/OrganizationInviteResponse'
+          type: array
+          title: Invites
+        failed:
+          items:
+            $ref: '#/components/schemas/OrganizationInviteFailure'
+          type: array
+          title: Failed
+          default: []
+      type: object
+      required:
+      - invites
+      title: CreateOrganizationInvitesResponse
+      description: Response payload for invite creation.
+    OrganizationInviteFailure:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - email
+      - reason
+      title: OrganizationInviteFailure
+      description: Error details for failed invite operations.
+    CreateOrganizationInvitesRequest:
+      properties:
+        emails:
+          items:
+            type: string
+            format: email
+          type: array
+          title: Emails
+        role:
+          $ref: '#/components/schemas/OrganizationRoleEnum'
+          default: member
+        company_profile_access:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/OrganizationInviteProfileAccessRequest'
+            type: array
+          - type: 'null'
+          title: Company Profile Access
+        expires_in_days:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Expires In Days
+      type: object
+      required:
+      - emails
+      title: CreateOrganizationInvitesRequest
+      description: Request payload for creating email-based invites.
+    OrganizationInviteActionResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - message
+      title: OrganizationInviteActionResponse
+      description: Response for invite resend/revoke actions.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    OrganizationResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        name:
+          type: string
+          title: Name
+        invite_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invite Token
+        members:
+          items:
+            $ref: '#/components/schemas/OrganizationMemberResponse'
+          type: array
+          title: Members
+        member_count:
+          type: integer
+          title: Member Count
+        created_at:
+          type: string
+          title: Created At
+        updated_at:
+          type: string
+          title: Updated At
+      type: object
+      required:
+      - id
+      - name
+      - invite_token
+      - members
+      - member_count
+      - created_at
+      - updated_at
+      title: OrganizationResponse
+      description: Response model for organization details with all members.
+    OrganizationInviteProfileAccessResponse:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        company_profile_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Name
+        role:
+          type: string
+          title: Role
+      type: object
+      required:
+      - company_profile_id
+      - role
+      title: OrganizationInviteProfileAccessResponse
+      description: Response model for invite profile access summary.
+    ProjectRoleEnum:
+      type: string
+      enum:
+      - admin
+      - contributor
+      - observer
+      title: ProjectRoleEnum
+      description: Project-level role options (for company profiles).
+    InviteDomainRestrictionResponse:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          title: Allowed Domains
+          default: []
+        non_matching_member_count:
+          type: integer
+          title: Non Matching Member Count
+          default: 0
+        total_members:
+          type: integer
+          title: Total Members
+          default: 0
+      type: object
+      required:
+      - enabled
+      title: InviteDomainRestrictionResponse
+      description: Response payload for invite domain restrictions.
+    TransferOwnershipRequest:
+      properties:
+        new_owner_user_id:
+          type: string
+          format: uuid
+          title: New Owner User Id
+          description: User ID of the new owner
+        confirmation:
+          type: boolean
+          title: Confirmation
+          description: Confirmation flag (must be True)
+      type: object
+      required:
+      - new_owner_user_id
+      - confirmation
+      title: TransferOwnershipRequest
+      description: Request to transfer organization ownership.
+    OrganizationMemberResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        name:
+          type: string
+          title: Name
+        email:
+          type: string
+          title: Email
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+        is_owner:
+          type: boolean
+          title: Is Owner
+        joined_at:
+          type: string
+          title: Joined At
+      type: object
+      required:
+      - id
+      - user_id
+      - name
+      - email
+      - is_owner
+      - joined_at
+      title: OrganizationMemberResponse
+      description: Response model for organization member information.
+    JoinOrganizationResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+      type: object
+      required:
+      - success
+      - message
+      - organization_id
+      title: JoinOrganizationResponse
+      description: Response model for organization join operation.
+    OrganizationInviteInfoResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        name:
+          type: string
+          title: Name
+        member_count:
+          type: integer
+          title: Member Count
+        valid:
+          type: boolean
+          title: Valid
+      type: object
+      required:
+      - id
+      - name
+      - member_count
+      - valid
+      title: OrganizationInviteInfoResponse
+      description: Response model for organization invitation preview (public endpoint).
+    SendOrganizationInviteEmailRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+      type: object
+      required:
+      - email
+      title: SendOrganizationInviteEmailRequest
+      description: Request payload for sending an invite email to a prospective member.
+    OrganizationInviteListResponse:
+      properties:
+        invites:
+          items:
+            $ref: '#/components/schemas/OrganizationInviteResponse'
+          type: array
+          title: Invites
+      type: object
+      required:
+      - invites
+      title: OrganizationInviteListResponse
+      description: Response payload for listing invites.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

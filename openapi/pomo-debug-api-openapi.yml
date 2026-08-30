@@ -1,0 +1,30 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Debug API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: debug
+paths:
+  /api/debug/signed-urls-config:
+    get:
+      tags:
+      - debug
+      summary: Check Signed Urls Config
+      description: Check if signed URLs are properly configured
+      operationId: check_signed_urls_config_api_debug_signed_urls_config_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

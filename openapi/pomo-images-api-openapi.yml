@@ -1,0 +1,142 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Images API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: images
+paths:
+  /api/images/replace:
+    post:
+      tags:
+      - images
+      summary: Replace Image
+      description: "Replace an existing image in GCS with new image data.\n\nArgs:\n    request: Request object containing URL and image data\n\nReturns:\n    JSONResponse with result"
+      operationId: replace_image_api_images_replace_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplaceImageRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/images/replace-upload:
+    post:
+      tags:
+      - images
+      summary: Replace Image Upload
+      description: "Replace an existing image in GCS with a new uploaded file.\n\nArgs:\n    url: GCS URL of the image to replace\n    file: New image file to upload\n    content_type: Optional MIME type override\n\nReturns:\n    JSONResponse with result"
+      operationId: replace_image_upload_api_images_replace_upload_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_replace_image_upload_api_images_replace_upload_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ReplaceImageRequest:
+      properties:
+        url:
+          type: string
+          title: Url
+        image_data:
+          type: string
+          title: Image Data
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+      type: object
+      required:
+      - url
+      - image_data
+      title: ReplaceImageRequest
+      description: Request model for replacing an image.
+    Body_replace_image_upload_api_images_replace_upload_post:
+      properties:
+        url:
+          type: string
+          title: Url
+        file:
+          type: string
+          format: binary
+          title: File
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+      type: object
+      required:
+      - url
+      - file
+      title: Body_replace_image_upload_api_images_replace_upload_post
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

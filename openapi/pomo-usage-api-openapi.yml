@@ -1,0 +1,130 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Usage API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: usage
+paths:
+  /api/payment/usage/usage-stats:
+    get:
+      tags:
+      - usage
+      summary: Get Usage Stats
+      description: 'Get usage statistics for the authenticated user.
+
+        Returns current usage counts and limits based on subscription tier.'
+      operationId: get_usage_stats_api_payment_usage_usage_stats_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Usage Stats Api Payment Usage Usage Stats Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/usage/usage-percentage:
+    get:
+      tags:
+      - usage
+      summary: Get Usage Percentage
+      description: 'Get a simple usage percentage for dashboard display.
+
+        Returns overall usage percentage based on subscription tier.'
+      operationId: get_usage_percentage_api_payment_usage_usage_percentage_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Usage Percentage Api Payment Usage Usage Percentage Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,2003 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Influencer Campaigns API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: influencer-campaigns
+paths:
+  /api/influencer-campaigns/active:
+    get:
+      tags:
+      - influencer-campaigns
+      summary: Get Active Influencer Campaign
+      operationId: get_active_influencer_campaign_api_influencer_campaigns_active_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignActiveResponse'
+      security:
+      - HTTPBearer: []
+  /api/influencer-campaigns/active/summaries:
+    get:
+      tags:
+      - influencer-campaigns
+      summary: List Active Influencer Campaign Summaries
+      operationId: list_active_influencer_campaign_summaries_api_influencer_campaigns_active_summaries_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignSummaryPageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/{campaign_id}:
+    get:
+      tags:
+      - influencer-campaigns
+      summary: Get Influencer Campaign Detail
+      operationId: get_influencer_campaign_detail_api_influencer_campaigns__campaign_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - influencer-campaigns
+      summary: Update Influencer Campaign
+      operationId: update_influencer_campaign_api_influencer_campaigns__campaign_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignUpsertRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - influencer-campaigns
+      summary: Delete Influencer Campaign
+      operationId: delete_influencer_campaign_api_influencer_campaigns__campaign_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignDeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns:
+    post:
+      tags:
+      - influencer-campaigns
+      summary: Create Influencer Campaign
+      operationId: create_influencer_campaign_api_influencer_campaigns_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignUpsertRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/influencer-campaigns/from-creator-list/{list_id}:
+    post:
+      tags:
+      - influencer-campaigns
+      summary: Create Influencer Campaign From Creator List
+      operationId: create_influencer_campaign_from_creator_list_api_influencer_campaigns_from_creator_list__list_id__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: List Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignFromCreatorListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/{campaign_id}/source-list-sync:
+    post:
+      tags:
+      - influencer-campaigns
+      summary: Sync Influencer Campaign From Source Creator List
+      operationId: sync_influencer_campaign_from_source_creator_list_api_influencer_campaigns__campaign_id__source_list_sync_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignSourceListSyncRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/{campaign_id}/collection-creators:
+    post:
+      tags:
+      - influencer-campaigns
+      summary: Add Influencer Campaign Collection Creators
+      operationId: add_influencer_campaign_collection_creators_api_influencer_campaigns__campaign_id__collection_creators_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignCollectionAddCreatorsRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignCollectionAddCreatorsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/{campaign_id}/collection:
+    patch:
+      tags:
+      - influencer-campaigns
+      summary: Update Influencer Campaign Collection
+      operationId: update_influencer_campaign_collection_api_influencer_campaigns__campaign_id__collection_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignCollectionUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/{campaign_id}/archive:
+    post:
+      tags:
+      - influencer-campaigns
+      summary: Archive Influencer Campaign
+      operationId: archive_influencer_campaign_api_influencer_campaigns__campaign_id__archive_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignArchiveResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/curated-lists/{curated_list_id}/save:
+    post:
+      tags:
+      - influencer-campaigns
+      summary: Save Influencer Campaign Curated List
+      operationId: save_influencer_campaign_curated_list_api_influencer_campaigns_curated_lists__curated_list_id__save_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: curated_list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Curated List Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignCuratedListSaveResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/curated-lists/{curated_list_id}/roles:
+    patch:
+      tags:
+      - influencer-campaigns
+      summary: Update Influencer Campaign Creator Groups
+      operationId: update_influencer_campaign_creator_groups_api_influencer_campaigns_curated_lists__curated_list_id__roles_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: curated_list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Curated List Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignRoleEditsRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignCuratedListMutationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/curated-lists/{curated_list_id}/report:
+    patch:
+      tags:
+      - influencer-campaigns
+      summary: Update Influencer Campaign Report
+      operationId: update_influencer_campaign_report_api_influencer_campaigns_curated_lists__curated_list_id__report_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: curated_list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Curated List Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignReportUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignCuratedListMutationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/curated-lists/{curated_list_id}/creators/{creator_id}/replacement-candidates:
+    post:
+      tags:
+      - influencer-campaigns
+      summary: Find Influencer Campaign Replacement Candidates
+      operationId: find_influencer_campaign_replacement_candidates_api_influencer_campaigns_curated_lists__curated_list_id__creators__creator_id__replacement_candidates_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: curated_list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Curated List Id
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Creator Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignReplacementCandidatesRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignReplacementCandidatesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-campaigns/curated-lists/{curated_list_id}/creators/{creator_id}/replace:
+    post:
+      tags:
+      - influencer-campaigns
+      summary: Replace Influencer Campaign Creator
+      operationId: replace_influencer_campaign_creator_api_influencer_campaigns_curated_lists__curated_list_id__creators__creator_id__replace_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: curated_list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Curated List Id
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Creator Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerCampaignReplaceCreatorRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerCampaignReplaceCreatorResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    InfluencerCampaignCuratedListSaveResponse:
+      properties:
+        curated_list:
+          $ref: '#/components/schemas/InfluencerCampaignCuratedListResponse'
+      type: object
+      required:
+      - curated_list
+      title: InfluencerCampaignCuratedListSaveResponse
+    InfluencerCampaignCuratedListResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        title:
+          type: string
+          title: Title
+        persona:
+          type: string
+          title: Persona
+        query:
+          type: string
+          title: Query
+        rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rationale
+        position:
+          type: integer
+          title: Position
+        weight:
+          type: number
+          title: Weight
+        total_creator_count:
+          type: integer
+          title: Total Creator Count
+        platforms:
+          items:
+            type: string
+          type: array
+          title: Platforms
+        target_markets:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Target Markets
+        role_mix:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Role Mix
+        size_mix:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Size Mix
+        orchestra_timeline:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Orchestra Timeline
+        budget_allocation:
+          additionalProperties: true
+          type: object
+          title: Budget Allocation
+        deliverables:
+          additionalProperties: true
+          type: object
+          title: Deliverables
+        brand_context_snapshot:
+          additionalProperties: true
+          type: object
+          title: Brand Context Snapshot
+        planning_assumptions:
+          additionalProperties: true
+          type: object
+          title: Planning Assumptions
+        leadership_report:
+          additionalProperties: true
+          type: object
+          title: Leadership Report
+        generation_version:
+          type: integer
+          title: Generation Version
+        source_creator_list_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Creator List Id
+        planning_status:
+          type: string
+          title: Planning Status
+          default: ready
+        roster_revision:
+          type: integer
+          title: Roster Revision
+          default: 1
+        roster_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Roster Hash
+        is_saved:
+          type: boolean
+          title: Is Saved
+        saved_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Saved At
+        saved_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Saved By User Id
+        snapshot:
+          additionalProperties: true
+          type: object
+          title: Snapshot
+        creators:
+          items:
+            $ref: '#/components/schemas/InfluencerCampaignCreatorResponse'
+          type: array
+          title: Creators
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - campaign_id
+      - title
+      - persona
+      - query
+      - position
+      - weight
+      - total_creator_count
+      - generation_version
+      - is_saved
+      title: InfluencerCampaignCuratedListResponse
+    InfluencerCampaignArchiveResponse:
+      properties:
+        archived:
+          type: boolean
+          title: Archived
+        campaign:
+          $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+      type: object
+      required:
+      - archived
+      - campaign
+      title: InfluencerCampaignArchiveResponse
+    InfluencerCampaignSummaryResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        organization_id:
+          type: string
+          title: Organization Id
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        objective:
+          type: string
+          title: Objective
+        objectives:
+          items:
+            type: string
+          type: array
+          title: Objectives
+        budget_min:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Budget Min
+        budget_max:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Budget Max
+        budget_currency:
+          type: string
+          title: Budget Currency
+          default: USD
+        budget_usd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Budget Usd
+        target_markets:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Target Markets
+        platforms:
+          items:
+            type: string
+          type: array
+          title: Platforms
+        posting_time_mode:
+          type: string
+          title: Posting Time Mode
+        posting_time:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Posting Time
+        launch_start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launch Start
+        launch_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launch End
+        status:
+          type: string
+          title: Status
+        generation_version:
+          type: integer
+          title: Generation Version
+        plan_origin:
+          type: string
+          title: Plan Origin
+          default: campaign_workflow
+        source_creator_list_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Creator List Id
+        planning_status:
+          type: string
+          title: Planning Status
+          default: ready
+        roster_revision:
+          type: integer
+          title: Roster Revision
+          default: 1
+        roster_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Roster Hash
+        recommended_budget_usd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Recommended Budget Usd
+        collection_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Collection Name
+        collection_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Collection Description
+        is_pinned:
+          type: boolean
+          title: Is Pinned
+          default: false
+        pinned_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pinned By User Id
+        pinned_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pinned At
+        archived_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Archived By User Id
+        archived_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Archived At
+        deleted_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deleted By User Id
+        deleted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deleted At
+        settings:
+          additionalProperties: true
+          type: object
+          title: Settings
+        curated_lists:
+          items:
+            $ref: '#/components/schemas/InfluencerCampaignCuratedListSummaryResponse'
+          type: array
+          title: Curated Lists
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - company_profile_id
+      - objective
+      - posting_time_mode
+      - status
+      - generation_version
+      title: InfluencerCampaignSummaryResponse
+    InfluencerCampaignReplacementCandidatesRequest:
+      properties:
+        query:
+          type: string
+          maxLength: 500
+          title: Query
+          default: ''
+        limit:
+          type: integer
+          maximum: 20.0
+          minimum: 1.0
+          title: Limit
+          default: 8
+        creator_type_includes:
+          items:
+            type: string
+          type: array
+          maxItems: 12
+          title: Creator Type Includes
+        creator_type_excludes:
+          items:
+            type: string
+          type: array
+          maxItems: 12
+          title: Creator Type Excludes
+        min_followers:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Min Followers
+        max_followers:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Max Followers
+        location_filters:
+          items:
+            type: string
+          type: array
+          maxItems: 12
+          title: Location Filters
+      type: object
+      title: InfluencerCampaignReplacementCandidatesRequest
+    InfluencerCampaignRoleEdit:
+      properties:
+        role:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Role
+        label:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Label
+        budget_share_pct:
+          type: number
+          maximum: 100.0
+          minimum: 0.0
+          title: Budget Share Pct
+        contact_day_offset:
+          type: integer
+          maximum: 365.0
+          minimum: -365.0
+          title: Contact Day Offset
+        post_day_offset:
+          type: integer
+          maximum: 365.0
+          minimum: -365.0
+          title: Post Day Offset
+      type: object
+      required:
+      - role
+      - label
+      - budget_share_pct
+      - contact_day_offset
+      - post_day_offset
+      title: InfluencerCampaignRoleEdit
+    InfluencerCampaignReportUpdateRequest:
+      properties:
+        business_inputs:
+          $ref: '#/components/schemas/InfluencerCampaignReportBusinessInputs'
+        refresh_ai:
+          type: boolean
+          title: Refresh Ai
+          default: true
+      type: object
+      required:
+      - business_inputs
+      title: InfluencerCampaignReportUpdateRequest
+    InfluencerCampaignCreatorResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        curated_list_id:
+          type: string
+          title: Curated List Id
+        position:
+          type: integer
+          title: Position
+        creator_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creator Id
+        creator_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creator Account Id
+        company_profile_creator_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Creator Id
+        source_list_membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source List Membership Id
+        role:
+          type: string
+          title: Role
+        slate_status:
+          type: string
+          title: Slate Status
+        target_market:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Market
+        platform:
+          type: string
+          title: Platform
+        inventory_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Inventory Account Id
+        platform_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Account Id
+        handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Handle
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        profile_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Profile Url
+        avatar_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Avatar Url
+        follower_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Follower Count
+        avg_views:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Avg Views
+        engagement_rate:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Engagement Rate
+        estimated_price_min:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Price Min
+        estimated_price_max:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Price Max
+        reply_risk:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reply Risk
+        fit_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fit Summary
+        phase:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phase
+        contact_day_offset:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Contact Day Offset
+        post_day_offset:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Post Day Offset
+        budget_weight:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Budget Weight
+        allocated_budget_min:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Allocated Budget Min
+        allocated_budget_max:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Allocated Budget Max
+        budget_fit_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Budget Fit Status
+        deliverables:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Deliverables
+        brand_fit_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Brand Fit Score
+        brand_fit_reasons:
+          items:
+            type: string
+          type: array
+          title: Brand Fit Reasons
+        selection_rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selection Rationale
+        orchestra_slot_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Orchestra Slot Key
+        canonical_creator:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Canonical Creator
+        accounts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Accounts
+        contacts:
+          additionalProperties: true
+          type: object
+          title: Contacts
+        metrics:
+          additionalProperties: true
+          type: object
+          title: Metrics
+        source_payload:
+          additionalProperties: true
+          type: object
+          title: Source Payload
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - curated_list_id
+      - position
+      - role
+      - slate_status
+      - platform
+      title: InfluencerCampaignCreatorResponse
+    InfluencerCampaignUpsertRequest:
+      properties:
+        objective:
+          anyOf:
+          - type: string
+            enum:
+            - distribution
+            - brand_recall
+            - sales
+            - launch
+            - category_launch
+          - type: 'null'
+          title: Objective
+        objectives:
+          items:
+            type: string
+            enum:
+            - distribution
+            - brand_recall
+            - sales
+            - launch
+            - category_launch
+          type: array
+          maxItems: 5
+          title: Objectives
+        budget_min:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Budget Min
+        budget_max:
+          anyOf:
+          - type: number
+            minimum: 1.0
+          - type: 'null'
+          title: Budget Max
+        budget_currency:
+          type: string
+          enum:
+          - USD
+          - INR
+          title: Budget Currency
+          default: USD
+        budget_usd:
+          anyOf:
+          - type: number
+            minimum: 1.0
+          - type: 'null'
+          title: Budget Usd
+        target_markets:
+          items:
+            $ref: '#/components/schemas/InfluencerCampaignTargetMarket'
+          type: array
+          maxItems: 8
+          minItems: 1
+          title: Target Markets
+        platforms:
+          items:
+            type: string
+            enum:
+            - INST
+            - YT
+            - TT
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Platforms
+        posting_time_mode:
+          type: string
+          enum:
+          - pomo_optimizes
+          - manual
+          title: Posting Time Mode
+          default: pomo_optimizes
+        posting_time:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Posting Time
+        creator_type_includes:
+          items:
+            type: string
+            enum:
+            - individual
+            - celebrity
+            - brand
+            - publisher
+            - community
+            - unknown
+          type: array
+          maxItems: 6
+          title: Creator Type Includes
+        creator_type_excludes:
+          items:
+            type: string
+            enum:
+            - individual
+            - celebrity
+            - brand
+            - publisher
+            - community
+            - unknown
+          type: array
+          maxItems: 6
+          title: Creator Type Excludes
+        launch_start:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Launch Start
+        launch_end:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Launch End
+        settings:
+          additionalProperties: true
+          type: object
+          title: Settings
+        refresh_cohort:
+          type: boolean
+          title: Refresh Cohort
+          default: true
+      type: object
+      required:
+      - target_markets
+      - platforms
+      title: InfluencerCampaignUpsertRequest
+    InfluencerCampaignReplaceCreatorRequest:
+      properties:
+        candidate:
+          additionalProperties: true
+          type: object
+          title: Candidate
+        allow_over_budget:
+          type: boolean
+          title: Allow Over Budget
+          default: false
+      type: object
+      required:
+      - candidate
+      title: InfluencerCampaignReplaceCreatorRequest
+    InfluencerCampaignSourceListSyncRequest:
+      properties:
+        refresh_ai:
+          type: boolean
+          title: Refresh Ai
+          default: true
+      type: object
+      title: InfluencerCampaignSourceListSyncRequest
+    InfluencerCampaignReplacementCandidatesResponse:
+      properties:
+        current_creator:
+          $ref: '#/components/schemas/InfluencerCampaignCreatorResponse'
+        candidates:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Candidates
+        applied_query:
+          type: string
+          title: Applied Query
+        can_override_budget:
+          type: boolean
+          title: Can Override Budget
+          default: false
+      type: object
+      required:
+      - current_creator
+      - applied_query
+      title: InfluencerCampaignReplacementCandidatesResponse
+    InfluencerCampaignReplaceCreatorResponse:
+      properties:
+        curated_list:
+          $ref: '#/components/schemas/InfluencerCampaignCuratedListResponse'
+        replaced_creator:
+          $ref: '#/components/schemas/InfluencerCampaignCreatorResponse'
+        budget_warning:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Budget Warning
+      type: object
+      required:
+      - curated_list
+      - replaced_creator
+      title: InfluencerCampaignReplaceCreatorResponse
+    InfluencerCampaignFromCreatorListRequest:
+      properties:
+        objective:
+          anyOf:
+          - type: string
+            enum:
+            - distribution
+            - brand_recall
+            - sales
+            - launch
+            - category_launch
+          - type: 'null'
+          title: Objective
+          default: launch
+        objectives:
+          items:
+            type: string
+            enum:
+            - distribution
+            - brand_recall
+            - sales
+            - launch
+            - category_launch
+          type: array
+          maxItems: 5
+          title: Objectives
+        campaign_name:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Campaign Name
+        campaign_goal:
+          anyOf:
+          - type: string
+            maxLength: 700
+          - type: 'null'
+          title: Campaign Goal
+        budget_min:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Budget Min
+        budget_max:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Budget Max
+        budget_currency:
+          type: string
+          enum:
+          - USD
+          - INR
+          title: Budget Currency
+          default: USD
+        budget_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Budget Usd
+        target_markets:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/InfluencerCampaignTargetMarket'
+            type: array
+            maxItems: 8
+          - type: 'null'
+          title: Target Markets
+        platforms:
+          anyOf:
+          - items:
+              type: string
+              enum:
+              - INST
+              - YT
+              - TT
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Platforms
+        posting_time_mode:
+          type: string
+          enum:
+          - pomo_optimizes
+          - manual
+          title: Posting Time Mode
+          default: pomo_optimizes
+        posting_time:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Posting Time
+        launch_start:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Launch Start
+        launch_end:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Launch End
+        refresh_ai:
+          type: boolean
+          title: Refresh Ai
+          default: true
+        settings:
+          additionalProperties: true
+          type: object
+          title: Settings
+      type: object
+      title: InfluencerCampaignFromCreatorListRequest
+    InfluencerCampaignPlanResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        organization_id:
+          type: string
+          title: Organization Id
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        created_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By User Id
+        updated_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated By User Id
+        objective:
+          type: string
+          title: Objective
+        objectives:
+          items:
+            type: string
+          type: array
+          title: Objectives
+        budget_min:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Budget Min
+        budget_max:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Budget Max
+        budget_currency:
+          type: string
+          title: Budget Currency
+          default: USD
+        budget_usd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Budget Usd
+        target_markets:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Target Markets
+        platforms:
+          items:
+            type: string
+          type: array
+          title: Platforms
+        posting_time_mode:
+          type: string
+          title: Posting Time Mode
+        posting_time:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Posting Time
+        launch_start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launch Start
+        launch_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launch End
+        status:
+          type: string
+          title: Status
+        generation_version:
+          type: integer
+          title: Generation Version
+        plan_origin:
+          type: string
+          title: Plan Origin
+          default: campaign_workflow
+        source_creator_list_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Creator List Id
+        planning_status:
+          type: string
+          title: Planning Status
+          default: ready
+        roster_revision:
+          type: integer
+          title: Roster Revision
+          default: 1
+        roster_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Roster Hash
+        recommended_budget_usd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Recommended Budget Usd
+        collection_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Collection Name
+        collection_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Collection Description
+        is_pinned:
+          type: boolean
+          title: Is Pinned
+          default: false
+        pinned_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pinned By User Id
+        pinned_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pinned At
+        archived_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Archived By User Id
+        archived_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Archived At
+        deleted_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deleted By User Id
+        deleted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deleted At
+        strategy_summary:
+          additionalProperties: true
+          type: object
+          title: Strategy Summary
+        settings:
+          additionalProperties: true
+          type: object
+          title: Settings
+        curated_lists:
+          items:
+            $ref: '#/components/schemas/InfluencerCampaignCuratedListResponse'
+          type: array
+          title: Curated Lists
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - company_profile_id
+      - objective
+      - posting_time_mode
+      - status
+      - generation_version
+      title: InfluencerCampaignPlanResponse
+    InfluencerCampaignDeleteResponse:
+      properties:
+        deleted:
+          type: boolean
+          title: Deleted
+        campaign:
+          $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+      type: object
+      required:
+      - deleted
+      - campaign
+      title: InfluencerCampaignDeleteResponse
+    InfluencerCampaignCollectionUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Description
+        is_pinned:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Pinned
+      type: object
+      title: InfluencerCampaignCollectionUpdateRequest
+    InfluencerCampaignCollectionAddCreatorsRequest:
+      properties:
+        creator_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          maxItems: 50
+          minItems: 1
+          title: Creator Ids
+        refresh_ai:
+          type: boolean
+          title: Refresh Ai
+          default: false
+      type: object
+      required:
+      - creator_ids
+      title: InfluencerCampaignCollectionAddCreatorsRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    InfluencerCampaignTargetMarket:
+      properties:
+        country_code:
+          type: string
+          maxLength: 16
+          minLength: 2
+          title: Country Code
+        country_name:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Country Name
+        weight:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Weight
+      type: object
+      required:
+      - country_code
+      - weight
+      title: InfluencerCampaignTargetMarket
+    InfluencerCampaignCollectionAddCreatorsResponse:
+      properties:
+        campaign:
+          $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+        added:
+          type: integer
+          title: Added
+        unchanged:
+          type: integer
+          title: Unchanged
+        source_creator_list_id:
+          type: string
+          title: Source Creator List Id
+        plan_updated:
+          type: boolean
+          title: Plan Updated
+        updated_plan_sections:
+          items:
+            type: string
+          type: array
+          title: Updated Plan Sections
+      type: object
+      required:
+      - campaign
+      - added
+      - unchanged
+      - source_creator_list_id
+      - plan_updated
+      title: InfluencerCampaignCollectionAddCreatorsResponse
+    InfluencerCampaignActiveResponse:
+      properties:
+        campaign:
+          anyOf:
+          - $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+          - type: 'null'
+        campaigns:
+          items:
+            $ref: '#/components/schemas/InfluencerCampaignPlanResponse'
+          type: array
+          title: Campaigns
+        saved_curated_lists:
+          items:
+            $ref: '#/components/schemas/InfluencerCampaignCuratedListResponse'
+          type: array
+          title: Saved Curated Lists
+      type: object
+      title: InfluencerCampaignActiveResponse
+    InfluencerCampaignReportBusinessInputs:
+      properties:
+        campaign_cost:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Campaign Cost
+        selling_price:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Selling Price
+        product_cost:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Product Cost
+        other_cost_per_sale:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Other Cost Per Sale
+          default: 0
+        profit_target_pct:
+          type: number
+          maximum: 1000.0
+          minimum: 0.0
+          title: Profit Target Pct
+          default: 20
+        confirmed_creator_fees:
+          additionalProperties:
+            type: number
+          type: object
+          maxProperties: 30
+          title: Confirmed Creator Fees
+        additional_context:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Additional Context
+      type: object
+      title: InfluencerCampaignReportBusinessInputs
+    InfluencerCampaignRoleEditsRequest:
+      properties:
+        roles:
+          items:
+            $ref: '#/components/schemas/InfluencerCampaignRoleEdit'
+          type: array
+          maxItems: 8
+          minItems: 1
+          title: Roles
+      type: object
+      required:
+      - roles
+      title: InfluencerCampaignRoleEditsRequest
+    InfluencerCampaignSummaryPageResponse:
+      properties:
+        campaigns:
+          items:
+            $ref: '#/components/schemas/InfluencerCampaignSummaryResponse'
+          type: array
+          title: Campaigns
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        has_more:
+          type: boolean
+          title: Has More
+      type: object
+      required:
+      - count
+      - limit
+      - offset
+      - has_more
+      title: InfluencerCampaignSummaryPageResponse
+    InfluencerCampaignCuratedListSummaryResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        title:
+          type: string
+          title: Title
+        persona:
+          type: string
+          title: Persona
+        position:
+          type: integer
+          title: Position
+        total_creator_count:
+          type: integer
+          title: Total Creator Count
+        platforms:
+          items:
+            type: string
+          type: array
+          title: Platforms
+        generation_version:
+          type: integer
+          title: Generation Version
+        source_creator_list_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Creator List Id
+        planning_status:
+          type: string
+          title: Planning Status
+          default: ready
+        roster_revision:
+          type: integer
+          title: Roster Revision
+          default: 1
+        roster_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Roster Hash
+        is_saved:
+          type: boolean
+          title: Is Saved
+        saved_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Saved At
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - campaign_id
+      - title
+      - persona
+      - position
+      - total_creator_count
+      - generation_version
+      - is_saved
+      title: InfluencerCampaignCuratedListSummaryResponse
+    InfluencerCampaignCuratedListMutationResponse:
+      properties:
+        curated_list:
+          $ref: '#/components/schemas/InfluencerCampaignCuratedListResponse'
+      type: object
+      required:
+      - curated_list
+      title: InfluencerCampaignCuratedListMutationResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

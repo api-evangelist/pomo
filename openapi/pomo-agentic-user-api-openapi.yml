@@ -1,0 +1,78 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Agentic User API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: agentic-user
+paths:
+  /api/agentic/user/conversation-stream:
+    get:
+      tags:
+      - agentic-user
+      summary: Stream User Conversation Events
+      description: "Single SSE stream for all conversation updates for a user.\n\nPublishes events when:\n- New messages are added to any of the user's conversations (e.g., campaign completion)\n\nEvent payload:\n{\n    \"type\": \"message_added\",\n    \"conversation_id\": \"<uuid>\",\n    \"message\": {\n        \"id\": \"<uuid>\",\n        \"role\": \"assistant\",\n        \"content\": \"...\",\n        \"created_at\": \"...\"\n    }\n}\n\nSupports reconnection via last_event_id for delta fetch."
+      operationId: stream_user_conversation_events_api_agentic_user_conversation_stream_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: last_event_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Last event ID for replay on reconnection
+          title: Last Event Id
+        description: Last event ID for replay on reconnection
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

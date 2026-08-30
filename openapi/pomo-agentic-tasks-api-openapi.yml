@@ -1,0 +1,736 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Agentic Tasks API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: agentic-tasks
+paths:
+  /api/agentic/tasks/capability-check:
+    post:
+      tags:
+      - agentic-tasks
+      summary: Capability Check
+      operationId: capability_check_api_agentic_tasks_capability_check_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Request
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTaskCapabilityResult'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/agentic/tasks:
+    post:
+      tags:
+      - agentic-tasks
+      summary: Create Agent Task
+      operationId: create_agent_task_api_agentic_tasks_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTaskCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - agentic-tasks
+      summary: List Agent Tasks
+      operationId: list_agent_tasks_api_agentic_tasks_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organization Id
+      - name: company_profile_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+      - name: conversation_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Conversation Id
+      - name: include_paused
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Include Paused
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTaskListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/tasks/{task_id}:
+    patch:
+      tags:
+      - agentic-tasks
+      summary: Patch Agent Task
+      operationId: patch_agent_task_api_agentic_tasks__task_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTaskUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - agentic-tasks
+      summary: Delete Agent Task
+      operationId: delete_agent_task_api_agentic_tasks__task_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/tasks/{task_id}/run-now:
+    post:
+      tags:
+      - agentic-tasks
+      summary: Run Task Now
+      operationId: run_task_now_api_agentic_tasks__task_id__run_now_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTaskRunNowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/tasks/{task_id}/runs:
+    get:
+      tags:
+      - agentic-tasks
+      summary: List Task Runs
+      operationId: list_task_runs_api_agentic_tasks__task_id__runs_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTaskRunListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AgentTaskRunListResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/AgentTaskRunResponse'
+          type: array
+          title: Runs
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - runs
+      - total
+      title: AgentTaskRunListResponse
+    AgentTaskScheduleInput:
+      properties:
+        interval_minutes:
+          type: integer
+          maximum: 10080.0
+          minimum: 5.0
+          title: Interval Minutes
+          description: Run interval in minutes
+          default: 1440
+      type: object
+      title: AgentTaskScheduleInput
+      description: Simple interval schedule (minutes).
+    AgentTaskUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - active
+            - paused
+            - error
+            - deleted
+          - type: 'null'
+          title: Status
+        no_change_behavior:
+          anyOf:
+          - type: string
+            enum:
+            - silent
+            - notify_no_change
+          - type: 'null'
+          title: No Change Behavior
+        delivery_mode:
+          anyOf:
+          - type: string
+            enum:
+            - immediate
+            - digest
+          - type: 'null'
+          title: Delivery Mode
+        delivery_destination:
+          anyOf:
+          - type: string
+            enum:
+            - thread
+            - slack
+            - both
+          - type: 'null'
+          title: Delivery Destination
+        schedule:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTaskScheduleInput'
+          - type: 'null'
+        thresholds:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thresholds
+        quiet_hours:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Quiet Hours
+      type: object
+      title: AgentTaskUpdate
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AgentTaskCapabilityResult:
+      properties:
+        supported:
+          type: boolean
+          title: Supported
+        task_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Type
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+        suggestions:
+          items:
+            type: string
+          type: array
+          title: Suggestions
+      type: object
+      required:
+      - supported
+      title: AgentTaskCapabilityResult
+    AgentTaskListResponse:
+      properties:
+        tasks:
+          items:
+            $ref: '#/components/schemas/AgentTaskResponse'
+          type: array
+          title: Tasks
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - tasks
+      - total
+      title: AgentTaskListResponse
+    AgentTaskRunNowResponse:
+      properties:
+        task:
+          $ref: '#/components/schemas/AgentTaskResponse'
+        run:
+          $ref: '#/components/schemas/AgentTaskRunResponse'
+      type: object
+      required:
+      - task
+      - run
+      title: AgentTaskRunNowResponse
+    AgentTaskResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        name:
+          type: string
+          title: Name
+        objective_nl:
+          type: string
+          title: Objective Nl
+        objective_structured_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Objective Structured Json
+        task_type:
+          type: string
+          title: Task Type
+        tool_profile:
+          type: string
+          title: Tool Profile
+        schedule_type:
+          type: string
+          title: Schedule Type
+        schedule_expression:
+          type: string
+          title: Schedule Expression
+        timezone:
+          type: string
+          title: Timezone
+        status:
+          type: string
+          title: Status
+        no_change_behavior:
+          type: string
+          title: No Change Behavior
+        delivery_mode:
+          type: string
+          title: Delivery Mode
+        delivery_destination:
+          type: string
+          title: Delivery Destination
+        quiet_hours_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Quiet Hours Json
+        thresholds_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thresholds Json
+        next_run_at:
+          type: string
+          format: date-time
+          title: Next Run At
+        last_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Run At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        last_result_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Result Summary
+        run_count:
+          type: integer
+          title: Run Count
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - user_id
+      - company_profile_id
+      - conversation_id
+      - name
+      - objective_nl
+      - task_type
+      - tool_profile
+      - schedule_type
+      - schedule_expression
+      - timezone
+      - status
+      - no_change_behavior
+      - delivery_mode
+      - delivery_destination
+      - next_run_at
+      - created_at
+      - updated_at
+      title: AgentTaskResponse
+    AgentTaskRunResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        task_id:
+          type: string
+          format: uuid
+          title: Task Id
+        run_key:
+          type: string
+          title: Run Key
+        status:
+          type: string
+          title: Status
+        scheduled_at:
+          type: string
+          format: date-time
+          title: Scheduled At
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        summary_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Summary Json
+        source_refs_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Source Refs Json
+        alert_emitted:
+          type: boolean
+          title: Alert Emitted
+        emitted_message_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Emitted Message Id
+        error_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Text
+        retry_count:
+          type: integer
+          title: Retry Count
+        attempt:
+          type: integer
+          title: Attempt
+        lease_expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lease Expires At
+        heartbeat_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Heartbeat At
+        worker_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Worker Id
+        recovery_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recovery Reason
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - task_id
+      - run_key
+      - status
+      - scheduled_at
+      - alert_emitted
+      - retry_count
+      - attempt
+      - created_at
+      - updated_at
+      title: AgentTaskRunResponse
+    AgentTaskCreate:
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        objective_nl:
+          type: string
+          maxLength: 2000
+          minLength: 6
+          title: Objective Nl
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        task_type:
+          anyOf:
+          - type: string
+            enum:
+            - competitor_new_ads
+            - competitor_top_ads
+            - campaign_metrics
+            - market_trends_changes
+            - industry_intel_digest
+            - social_mentions
+            - campaign_ideas_lucky
+          - type: 'null'
+          title: Task Type
+        no_change_behavior:
+          type: string
+          enum:
+          - silent
+          - notify_no_change
+          title: No Change Behavior
+          default: silent
+        delivery_mode:
+          type: string
+          enum:
+          - immediate
+          - digest
+          title: Delivery Mode
+          default: immediate
+        delivery_destination:
+          type: string
+          enum:
+          - thread
+          - slack
+          - both
+          title: Delivery Destination
+          default: thread
+        schedule:
+          $ref: '#/components/schemas/AgentTaskScheduleInput'
+        thresholds:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thresholds
+        quiet_hours:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Quiet Hours
+      type: object
+      required:
+      - organization_id
+      - company_profile_id
+      - conversation_id
+      - objective_nl
+      title: AgentTaskCreate
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

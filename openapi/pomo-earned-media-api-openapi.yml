@@ -1,0 +1,1635 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Earned Media API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: earned-media
+paths:
+  /api/earned-media/projects:
+    get:
+      tags:
+      - earned-media
+      summary: List Earned Media Projects
+      operationId: list_earned_media_projects_api_earned_media_projects_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - enum:
+            - draft
+            - generating
+            - ready
+            - needs_review
+            - failed
+            - archived
+            type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Earned Media Projects Api Earned Media Projects Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - earned-media
+      summary: Create Earned Media Project
+      operationId: create_earned_media_project_api_earned_media_projects_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaProjectCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Create Earned Media Project Api Earned Media Projects Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}:
+    get:
+      tags:
+      - earned-media
+      summary: Get Earned Media Project
+      operationId: get_earned_media_project_api_earned_media_projects__project_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Earned Media Project Api Earned Media Projects  Project Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - earned-media
+      summary: Update Earned Media Project
+      operationId: update_earned_media_project_api_earned_media_projects__project_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaProjectUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Earned Media Project Api Earned Media Projects  Project Id  Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/archive:
+    post:
+      tags:
+      - earned-media
+      summary: Archive Earned Media Project
+      description: Retire a story. Idempotent; refused while a generation lease is live.
+      operationId: archive_earned_media_project_api_earned_media_projects__project_id__archive_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Archive Earned Media Project Api Earned Media Projects  Project Id  Archive Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/generate:
+    post:
+      tags:
+      - earned-media
+      summary: Generate Earned Media Project
+      operationId: generate_earned_media_project_api_earned_media_projects__project_id__generate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaGenerateRequest'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Generate Earned Media Project Api Earned Media Projects  Project Id  Generate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/refresh-research:
+    post:
+      tags:
+      - earned-media
+      summary: Refresh Earned Media Research
+      operationId: refresh_earned_media_research_api_earned_media_projects__project_id__refresh_research_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaRefreshResearchRequest'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Refresh Earned Media Research Api Earned Media Projects  Project Id  Refresh Research Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/drafts/{draft_id}:
+    put:
+      tags:
+      - earned-media
+      summary: Save Earned Media Draft
+      operationId: save_earned_media_draft_api_earned_media_projects__project_id__drafts__draft_id__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaDraftSaveRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Save Earned Media Draft Api Earned Media Projects  Project Id  Drafts  Draft Id  Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/drafts/{draft_id}/export:
+    get:
+      tags:
+      - earned-media
+      summary: Export Earned Media Draft
+      description: Download the current saved draft as a recipient-ready PDF or HTML file.
+      operationId: export_earned_media_draft_api_earned_media_projects__project_id__drafts__draft_id__export_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      - name: format
+        in: query
+        required: false
+        schema:
+          enum:
+          - pdf
+          - html
+          type: string
+          default: pdf
+          title: Format
+      - name: timezone
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Timezone
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/drafts/{draft_id}/rewrite:
+    post:
+      tags:
+      - earned-media
+      summary: Rewrite Earned Media Draft
+      description: 'Claim the project for a rewrite, then hand the model call to the worker.
+
+
+        The rewrite waits on one model call with nothing to stream, so the request
+
+        is idle for its whole duration and the proxy closes it before the model
+
+        answers. The client then sees a gateway error for work the server went on
+
+        to finish. The project row carries the run the studio already polls, so the
+
+        claim happens here and the call happens there.'
+      operationId: rewrite_earned_media_draft_api_earned_media_projects__project_id__drafts__draft_id__rewrite_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaDraftRewriteRequest'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Rewrite Earned Media Draft Api Earned Media Projects  Project Id  Drafts  Draft Id  Rewrite Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/drafts/{draft_id}/versions:
+    get:
+      tags:
+      - earned-media
+      summary: List Earned Media Draft Versions
+      operationId: list_earned_media_draft_versions_api_earned_media_projects__project_id__drafts__draft_id__versions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Earned Media Draft Versions Api Earned Media Projects  Project Id  Drafts  Draft Id  Versions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/drafts/{draft_id}/versions/{version_number}/restore:
+    post:
+      tags:
+      - earned-media
+      summary: Restore Earned Media Draft Version
+      operationId: restore_earned_media_draft_version_api_earned_media_projects__project_id__drafts__draft_id__versions__version_number__restore_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      - name: version_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version Number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaVersionRestoreRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Restore Earned Media Draft Version Api Earned Media Projects  Project Id  Drafts  Draft Id  Versions  Version Number  Restore Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/targets/{target_id}/enrich-contact:
+    post:
+      tags:
+      - earned-media
+      summary: Enrich Earned Media Target Contact
+      description: Look up the outlet's published press contact route via live web search.
+      operationId: enrich_earned_media_target_contact_api_earned_media_projects__project_id__targets__target_id__enrich_contact_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      - name: target_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Target Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Enrich Earned Media Target Contact Api Earned Media Projects  Project Id  Targets  Target Id  Enrich Contact Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/targets/{target_id}/pitch:
+    post:
+      tags:
+      - earned-media
+      summary: Draft Earned Media Target Pitch
+      description: Draft an outlet-specific pitch email from the story's verified material.
+      operationId: draft_earned_media_target_pitch_api_earned_media_projects__project_id__targets__target_id__pitch_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      - name: target_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Target Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Draft Earned Media Target Pitch Api Earned Media Projects  Project Id  Targets  Target Id  Pitch Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/projects/{project_id}/targets/{target_id}:
+    patch:
+      tags:
+      - earned-media
+      summary: Update Earned Media Target
+      operationId: update_earned_media_target_api_earned_media_projects__project_id__targets__target_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Project Id
+      - name: target_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Target Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaTargetUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Earned Media Target Api Earned Media Projects  Project Id  Targets  Target Id  Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/earned-media/press-room:
+    get:
+      tags:
+      - earned-media
+      summary: Get Earned Media Press Room
+      operationId: get_earned_media_press_room_api_earned_media_press_room_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Earned Media Press Room Api Earned Media Press Room Get
+      security:
+      - HTTPBearer: []
+    put:
+      tags:
+      - earned-media
+      summary: Save Earned Media Press Room
+      operationId: save_earned_media_press_room_api_earned_media_press_room_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaPressRoomSaveRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Save Earned Media Press Room Api Earned Media Press Room Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/earned-media/press-room/generate:
+    post:
+      tags:
+      - earned-media
+      summary: Generate Earned Media Press Room
+      operationId: generate_earned_media_press_room_api_earned_media_press_room_generate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaPressRoomGenerateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Generate Earned Media Press Room Api Earned Media Press Room Generate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/earned-media/press-room/coverage:
+    post:
+      tags:
+      - earned-media
+      summary: Discover Earned Media Press Coverage
+      description: Claim the press room for a coverage sweep, then hand it to the worker.
+      operationId: discover_earned_media_press_coverage_api_earned_media_press_room_coverage_post
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Discover Earned Media Press Coverage Api Earned Media Press Room Coverage Post
+      security:
+      - HTTPBearer: []
+  /api/earned-media/press-room/coverage/url:
+    post:
+      tags:
+      - earned-media
+      summary: Add Earned Media Press Coverage Url
+      description: Add one page the user already knows about.
+      operationId: add_earned_media_press_coverage_url_api_earned_media_press_room_coverage_url_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EarnedMediaCoverageUrlRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Add Earned Media Press Coverage Url Api Earned Media Press Room Coverage Url Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    EarnedMediaTargetUpdateRequest:
+      properties:
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - recommended
+            - shortlisted
+            - dismissed
+          - type: 'null'
+          title: Status
+        outreach_status:
+          anyOf:
+          - type: string
+            enum:
+            - not_started
+            - pitch_ready
+            - contacted
+            - follow_up_due
+            - replied
+            - interview
+            - published
+            - not_pursuing
+          - type: 'null'
+          title: Outreach Status
+        last_contacted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Contacted At
+        next_follow_up_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Follow Up At
+        coverage_url:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Coverage Url
+        notes:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Notes
+      additionalProperties: false
+      type: object
+      title: EarnedMediaTargetUpdateRequest
+    EarnedMediaPressCoverageItem:
+      properties:
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Id
+        url:
+          type: string
+          maxLength: 2000
+          minLength: 8
+          title: Url
+        title:
+          type: string
+          maxLength: 320
+          minLength: 1
+          title: Title
+        outlet:
+          type: string
+          maxLength: 220
+          title: Outlet
+          default: ''
+        summary:
+          type: string
+          maxLength: 600
+          title: Summary
+          default: ''
+        published_on:
+          type: string
+          maxLength: 40
+          title: Published On
+          default: ''
+        source_category:
+          type: string
+          maxLength: 64
+          title: Source Category
+          default: unknown
+        independence:
+          type: string
+          maxLength: 32
+          title: Independence
+          default: unknown
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        discovered_at:
+          type: string
+          maxLength: 40
+          title: Discovered At
+          default: ''
+        added_by:
+          type: string
+          maxLength: 16
+          title: Added By
+          default: ''
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - url
+      - title
+      title: EarnedMediaPressCoverageItem
+      description: A page that already exists about this brand.
+    EarnedMediaPressRoom:
+      properties:
+        approved_for_publication:
+          type: boolean
+          title: Approved For Publication
+          default: false
+        announcement_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Announcement Date
+        dateline_city:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Dateline City
+        verified_facts:
+          items:
+            type: string
+            maxLength: 1200
+            minLength: 3
+          type: array
+          maxItems: 20
+          title: Verified Facts
+        quotes:
+          items:
+            $ref: '#/components/schemas/EarnedMediaPressQuote'
+          type: array
+          maxItems: 8
+          title: Quotes
+        boilerplate:
+          anyOf:
+          - type: string
+            maxLength: 2500
+          - type: 'null'
+          title: Boilerplate
+        media_contact:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaContact'
+          - type: 'null'
+        assets:
+          items:
+            $ref: '#/components/schemas/EarnedMediaPressAsset'
+          type: array
+          maxItems: 12
+          title: Assets
+        verification_note:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Verification Note
+      additionalProperties: false
+      type: object
+      title: EarnedMediaPressRoom
+      description: Brand-approved facts and assets kept out of public web search.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EarnedMediaContact:
+      properties:
+        name:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Name
+        title:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Title
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+        phone:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Phone
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: EarnedMediaContact
+    EarnedMediaPressQuote:
+      properties:
+        speaker_name:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Speaker Name
+        speaker_title:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Speaker Title
+        quote:
+          type: string
+          maxLength: 2000
+          minLength: 20
+          title: Quote
+        approved_for_publication:
+          type: boolean
+          title: Approved For Publication
+          default: true
+        source_label:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Source Label
+      additionalProperties: false
+      type: object
+      required:
+      - speaker_name
+      - quote
+      title: EarnedMediaPressQuote
+      description: A quote explicitly cleared by the brand for external publication.
+    EarnedMediaProjectUpdateRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 220
+            minLength: 3
+          - type: 'null'
+          title: Title
+        story_format:
+          anyOf:
+          - type: string
+            enum:
+            - press_release
+            - bylined_article
+            - journalist_pitch
+            - local_story
+          - type: 'null'
+          title: Story Format
+        objective:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Objective
+        audience:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Audience
+        market:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Market
+        primary_angle:
+          anyOf:
+          - type: string
+            maxLength: 2500
+          - type: 'null'
+          title: Primary Angle
+        source_context:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaSourceContext'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      title: EarnedMediaProjectUpdateRequest
+    EarnedMediaPressRoomSource:
+      properties:
+        label:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Label
+        reference:
+          type: string
+          maxLength: 300
+          minLength: 1
+          title: Reference
+        url:
+          anyOf:
+          - type: string
+            maxLength: 2000
+            minLength: 8
+          - type: 'null'
+          title: Url
+      additionalProperties: false
+      type: object
+      required:
+      - label
+      - reference
+      title: EarnedMediaPressRoomSource
+    EarnedMediaPressRoomSaveRequest:
+      properties:
+        content:
+          $ref: '#/components/schemas/EarnedMediaPressRoomProfileContent'
+        base_updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Base Updated At
+      additionalProperties: false
+      type: object
+      required:
+      - content
+      title: EarnedMediaPressRoomSaveRequest
+    EarnedMediaGenerateRequest:
+      properties:
+        draft_count:
+          type: integer
+          enum:
+          - 1
+          - 2
+          title: Draft Count
+          default: 2
+        instruction:
+          anyOf:
+          - type: string
+            maxLength: 2500
+          - type: 'null'
+          title: Instruction
+      additionalProperties: false
+      type: object
+      title: EarnedMediaGenerateRequest
+    EarnedMediaCoverageUrlRequest:
+      properties:
+        url:
+          type: string
+          maxLength: 2000
+          minLength: 8
+          title: Url
+      additionalProperties: false
+      type: object
+      required:
+      - url
+      title: EarnedMediaCoverageUrlRequest
+      description: One page a person already knows about.
+    EarnedMediaPressRoomQuoteItem:
+      properties:
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Id
+        speaker_name:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Speaker Name
+        speaker_title:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Speaker Title
+        quote:
+          type: string
+          maxLength: 2000
+          minLength: 20
+          title: Quote
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - speaker_name
+      - quote
+      title: EarnedMediaPressRoomQuoteItem
+    EarnedMediaPressRoomGenerateRequest:
+      properties:
+        refresh:
+          type: boolean
+          title: Refresh
+          default: false
+      additionalProperties: false
+      type: object
+      title: EarnedMediaPressRoomGenerateRequest
+    EarnedMediaDraftRewriteRequest:
+      properties:
+        base_version:
+          type: integer
+          minimum: 1.0
+          title: Base Version
+        instruction:
+          type: string
+          maxLength: 2500
+          minLength: 3
+          title: Instruction
+        scope:
+          type: string
+          enum:
+          - full
+          - section
+          - selection
+          title: Scope
+          default: full
+        selected_text:
+          anyOf:
+          - type: string
+            maxLength: 12000
+          - type: 'null'
+          title: Selected Text
+        section:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Section
+        additional_evidence_ids:
+          items:
+            type: string
+            maxLength: 200
+            minLength: 1
+          type: array
+          maxItems: 40
+          title: Additional Evidence Ids
+      additionalProperties: false
+      type: object
+      required:
+      - base_version
+      - instruction
+      title: EarnedMediaDraftRewriteRequest
+    EarnedMediaSelectedProduct:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Name
+      type: object
+      required:
+      - id
+      - name
+      title: EarnedMediaSelectedProduct
+      description: Server-verified display snapshot for a selected product.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EarnedMediaPressRoomDateItem:
+      properties:
+        value:
+          type: string
+          format: date
+          title: Value
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - value
+      title: EarnedMediaPressRoomDateItem
+    EarnedMediaPressRoomFactItem:
+      properties:
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Id
+        text:
+          type: string
+          maxLength: 1200
+          minLength: 3
+          title: Text
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - text
+      title: EarnedMediaPressRoomFactItem
+    EarnedMediaPressRoomContactItem:
+      properties:
+        name:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Name
+        title:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Title
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+        phone:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Phone
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: EarnedMediaPressRoomContactItem
+    EarnedMediaRefreshResearchRequest:
+      properties:
+        instruction:
+          anyOf:
+          - type: string
+            maxLength: 2500
+          - type: 'null'
+          title: Instruction
+        operation:
+          type: string
+          enum:
+          - research_refresh
+          - outlet_discovery
+          title: Operation
+          default: research_refresh
+        outlet_focus:
+          anyOf:
+          - type: string
+            enum:
+            - general
+            - trade
+            - byline
+          - type: 'null'
+          title: Outlet Focus
+      additionalProperties: false
+      type: object
+      title: EarnedMediaRefreshResearchRequest
+    EarnedMediaPressRoomAssetItem:
+      properties:
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Id
+        label:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Label
+        url:
+          type: string
+          maxLength: 2000
+          minLength: 8
+          title: Url
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - label
+      - url
+      title: EarnedMediaPressRoomAssetItem
+    EarnedMediaVersionRestoreRequest:
+      properties:
+        base_version:
+          type: integer
+          minimum: 1.0
+          title: Base Version
+      additionalProperties: false
+      type: object
+      required:
+      - base_version
+      title: EarnedMediaVersionRestoreRequest
+    EarnedMediaDraftSaveRequest:
+      properties:
+        base_version:
+          type: integer
+          minimum: 1.0
+          title: Base Version
+        headline:
+          type: string
+          maxLength: 320
+          minLength: 1
+          title: Headline
+        dek:
+          anyOf:
+          - type: string
+            maxLength: 1200
+          - type: 'null'
+          title: Dek
+        body_markdown:
+          type: string
+          maxLength: 80000
+          minLength: 1
+          title: Body Markdown
+        locked_fields:
+          additionalProperties: true
+          type: object
+          title: Locked Fields
+        change_summary:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Change Summary
+      additionalProperties: false
+      type: object
+      required:
+      - base_version
+      - headline
+      - body_markdown
+      title: EarnedMediaDraftSaveRequest
+    EarnedMediaPressRoomTextItem:
+      properties:
+        text:
+          type: string
+          maxLength: 2500
+          minLength: 1
+          title: Text
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - text
+      title: EarnedMediaPressRoomTextItem
+    EarnedMediaSourceContext:
+      properties:
+        article_scope:
+          type: string
+          enum:
+          - company
+          - single_product
+          - product_portfolio
+          title: Article Scope
+          default: company
+        product_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          maxItems: 8
+          title: Product Ids
+        selected_products:
+          items:
+            $ref: '#/components/schemas/EarnedMediaSelectedProduct'
+          type: array
+          maxItems: 8
+          title: Selected Products
+        press_room:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoom'
+          - type: 'null'
+      additionalProperties: true
+      type: object
+      title: EarnedMediaSourceContext
+      description: Typed article grounding while retaining existing workspace context keys.
+    EarnedMediaPressAsset:
+      properties:
+        label:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Label
+        url:
+          type: string
+          maxLength: 2000
+          minLength: 8
+          title: Url
+      additionalProperties: false
+      type: object
+      required:
+      - label
+      - url
+      title: EarnedMediaPressAsset
+    EarnedMediaPressRoomProfileContent:
+      properties:
+        facts:
+          items:
+            $ref: '#/components/schemas/EarnedMediaPressRoomFactItem'
+          type: array
+          maxItems: 20
+          title: Facts
+        quotes:
+          items:
+            $ref: '#/components/schemas/EarnedMediaPressRoomQuoteItem'
+          type: array
+          maxItems: 8
+          title: Quotes
+        coverage:
+          items:
+            $ref: '#/components/schemas/EarnedMediaPressCoverageItem'
+          type: array
+          maxItems: 24
+          title: Coverage
+        boilerplate:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomTextItem'
+          - type: 'null'
+        media_contact:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomContactItem'
+          - type: 'null'
+        assets:
+          items:
+            $ref: '#/components/schemas/EarnedMediaPressRoomAssetItem'
+          type: array
+          maxItems: 12
+          title: Assets
+        announcement_date:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomDateItem'
+          - type: 'null'
+        dateline_city:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomTextItem'
+          - type: 'null'
+        verification_note:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Verification Note
+      additionalProperties: false
+      type: object
+      title: EarnedMediaPressRoomProfileContent
+      description: Editable profile-level facts; only approved entries enter generated copy.
+    EarnedMediaProjectCreateRequest:
+      properties:
+        title:
+          type: string
+          maxLength: 220
+          minLength: 3
+          title: Title
+        story_format:
+          type: string
+          enum:
+          - press_release
+          - bylined_article
+          - journalist_pitch
+          - local_story
+          title: Story Format
+          default: bylined_article
+        objective:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Objective
+        audience:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Audience
+        market:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Market
+        primary_angle:
+          anyOf:
+          - type: string
+            maxLength: 2500
+          - type: 'null'
+          title: Primary Angle
+        source_context:
+          $ref: '#/components/schemas/EarnedMediaSourceContext'
+      additionalProperties: false
+      type: object
+      required:
+      - title
+      title: EarnedMediaProjectCreateRequest
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

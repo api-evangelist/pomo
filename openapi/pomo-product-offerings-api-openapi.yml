@@ -1,0 +1,1311 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Product Offerings API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: product-offerings
+paths:
+  /api/product-offerings/audiences/save:
+    post:
+      tags:
+      - product-offerings
+      summary: Save Target Audiences
+      description: 'Persist edited target audiences for the company or a specific product offering.
+
+
+        Keeps the same cache key format used by the generation service so the detail view
+
+        can read the latest values without regeneration.'
+      operationId: save_target_audiences_api_product_offerings_audiences_save_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Payload
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/product-offerings/status:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Product Offering Statuses
+      description: 'Return minimal status for active product offerings for polling.
+
+
+        If `ids` are provided, only return statuses for those offerings; otherwise return all.'
+      operationId: get_product_offering_statuses_api_product_offerings_status_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ids
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+              format: uuid
+          - type: 'null'
+          title: Ids
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Get Product Offering Statuses Api Product Offerings Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{offering_id}/status:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Single Product Offering Status
+      description: Return minimal status for a single product offering, ensuring tenant isolation.
+      operationId: get_single_product_offering_status_api_product_offerings__offering_id__status_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Offering Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Single Product Offering Status Api Product Offerings  Offering Id  Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/company/details:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Company Offering Details
+      description: Company-wide view aligned with the product offering detail shape.
+      operationId: get_company_offering_details_api_product_offerings_company_details_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Company Offering Details Api Product Offerings Company Details Get
+      security:
+      - HTTPBearer: []
+  /api/product-offerings/{offering_id}/details:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Product Offering Details
+      description: Get a rich view of a single product offering, including strategy and intelligence.
+      operationId: get_product_offering_details_api_product_offerings__offering_id__details_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Offering Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Product Offering Details Api Product Offerings  Offering Id  Details Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}/refresh-preview:
+    post:
+      tags:
+      - product-offerings
+      summary: Preview Product Refresh
+      description: Queue a product refresh preview job and return polling details.
+      operationId: preview_product_refresh_api_product_offerings__product_offering_id__refresh_preview_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRefreshPreviewRequest'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}/refresh-apply:
+    post:
+      tags:
+      - product-offerings
+      summary: Apply Product Refresh Route
+      description: Persist selected product refresh changes and source page preferences.
+      operationId: apply_product_refresh_route_api_product_offerings__product_offering_id__refresh_apply_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRefreshApplyRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Apply Product Refresh Route Api Product Offerings  Product Offering Id  Refresh Apply Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/summary:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Product Offerings Summary
+      description: Get lightweight product offering data for list/grid pages.
+      operationId: get_product_offerings_summary_api_product_offerings_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          default: active
+          title: Status
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Product Offerings Summary Api Product Offerings Summary Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/company-with-offerings:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Company With Offerings
+      description: Get company profile with all product offerings.
+      operationId: get_company_with_offerings_api_product_offerings_company_with_offerings_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Company With Offerings Api Product Offerings Company With Offerings Get
+      security:
+      - HTTPBearer: []
+  /api/product-offerings/list:
+    get:
+      tags:
+      - product-offerings
+      summary: List Product Offerings
+      description: Get product offerings for AI Product Lab dropdown.
+      operationId: list_product_offerings_api_product_offerings_list_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties: true
+                  type: object
+                type: array
+                title: Response List Product Offerings Api Product Offerings List Get
+      security:
+      - HTTPBearer: []
+  /api/product-offerings/ai-ready:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Ai Ready Offerings
+      description: Get offerings with enough data for AI generation.
+      operationId: get_ai_ready_offerings_api_product_offerings_ai_ready_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties: true
+                  type: object
+                type: array
+                title: Response Get Ai Ready Offerings Api Product Offerings Ai Ready Get
+      security:
+      - HTTPBearer: []
+  /api/product-offerings/{offering_id}/ads:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Product Offering Ads
+      description: Get ad data for a single product offering without loading the full portfolio payload.
+      operationId: get_product_offering_ads_api_product_offerings__offering_id__ads_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Offering Id
+      - name: competitor_limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 24
+          title: Competitor Limit
+      - name: competitor_offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Competitor Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Product Offering Ads Api Product Offerings  Offering Id  Ads Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/with-ads:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Product Offerings With Ads
+      description: Get all product offerings/SKUs for the company with competing ads count.
+      operationId: get_product_offerings_with_ads_api_product_offerings_with_ads_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          default: active
+          title: Status
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}/archive:
+    post:
+      tags:
+      - product-offerings
+      summary: Archive Product Offering
+      description: Archive (soft delete) a product offering by toggling is_active to False.
+      operationId: archive_product_offering_api_product_offerings__product_offering_id__archive_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Archive Product Offering Api Product Offerings  Product Offering Id  Archive Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}/restore:
+    post:
+      tags:
+      - product-offerings
+      summary: Restore Product Offering
+      description: Restore a previously archived product offering by toggling is_active to True.
+      operationId: restore_product_offering_api_product_offerings__product_offering_id__restore_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Restore Product Offering Api Product Offerings  Product Offering Id  Restore Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}/competitive-analysis:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Product Competitive Analysis
+      description: Get competitive analysis for a specific product offering.
+      operationId: get_product_competitive_analysis_api_product_offerings__product_offering_id__competitive_analysis_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Product Competitive Analysis Api Product Offerings  Product Offering Id  Competitive Analysis Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}:
+    get:
+      tags:
+      - product-offerings
+      summary: Get Product Offering
+      description: Get a specific product offering.
+      operationId: get_product_offering_api_product_offerings__product_offering_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Product Offering Api Product Offerings  Product Offering Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - product-offerings
+      summary: Update Product Offering
+      description: Partially update a product offering owned by the active company profile.
+      operationId: update_product_offering_api_product_offerings__product_offering_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductOfferingUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Product Offering Api Product Offerings  Product Offering Id  Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}/current-price:
+    patch:
+      tags:
+      - product-offerings
+      summary: Update Product Offering Current Price
+      description: Update only the current public price for a product offering.
+      operationId: update_product_offering_current_price_api_product_offerings__product_offering_id__current_price_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductOfferingCurrentPriceUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Product Offering Current Price Api Product Offerings  Product Offering Id  Current Price Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}/images/upload:
+    post:
+      tags:
+      - product-offerings
+      summary: Upload Product Offering Images
+      description: Upload product images directly onto an offering and mirror them into product-scoped gallery storage.
+      operationId: upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductOfferingUploadImagesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}/images/delete:
+    post:
+      tags:
+      - product-offerings
+      summary: Delete Product Offering Image
+      description: Delete a product image from product records and matching gallery assets.
+      operationId: delete_product_offering_image_api_product_offerings__product_offering_id__images_delete_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductOfferingDeleteImageRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Delete Product Offering Image Api Product Offerings  Product Offering Id  Images Delete Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/product-offerings/{product_offering_id}/rewrite-copy:
+    post:
+      tags:
+      - product-offerings
+      summary: Rewrite Product Offering Copy
+      description: Rewrite product detail copy with AI and persist the result.
+      operationId: rewrite_product_offering_copy_api_product_offerings__product_offering_id__rewrite_copy_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductOfferingRewriteRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Rewrite Product Offering Copy Api Product Offerings  Product Offering Id  Rewrite Copy Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProductOfferingDeleteImageRequest:
+      properties:
+        image_url:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Image Url
+      type: object
+      required:
+      - image_url
+      title: ProductOfferingDeleteImageRequest
+    Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+        titles:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          - type: 'null'
+          title: Titles
+        descriptions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          - type: 'null'
+          title: Descriptions
+        tags:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tags
+      type: object
+      required:
+      - files
+      title: Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post
+    ProductRefreshPreviewRequest:
+      properties:
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+        refresh_urls:
+          items:
+            type: string
+          type: array
+          title: Refresh Urls
+      type: object
+      title: ProductRefreshPreviewRequest
+    ProductOfferingUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        primary_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Category
+        subcategories:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Subcategories
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+        key_features:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Key Features
+        source_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Source Urls
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - active
+            - inactive
+            - draft
+          - type: 'null'
+          title: Status
+      type: object
+      title: ProductOfferingUpdateRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProductOfferingRewriteRequest:
+      properties:
+        field:
+          type: string
+          enum:
+          - description
+          - key_features
+          title: Field
+        instructions:
+          anyOf:
+          - type: string
+            maxLength: 1500
+          - type: 'null'
+          title: Instructions
+      type: object
+      required:
+      - field
+      title: ProductOfferingRewriteRequest
+    ProductOfferingCurrentPriceUpdateRequest:
+      properties:
+        price:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Price
+        unit:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Unit
+      type: object
+      required:
+      - price
+      title: ProductOfferingCurrentPriceUpdateRequest
+    ExternalAdMetadata:
+      properties:
+        platform:
+          type: string
+          title: Platform
+        native_type:
+          type: string
+          title: Native Type
+        performance_tier:
+          type: string
+          title: Performance Tier
+        performance_reason:
+          type: string
+          title: Performance Reason
+        attribution_scope:
+          type: string
+          title: Attribution Scope
+        currency_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Currency Code
+        metrics:
+          additionalProperties: true
+          type: object
+          title: Metrics
+        benchmark:
+          additionalProperties: true
+          type: object
+          title: Benchmark
+        usage_count:
+          type: integer
+          title: Usage Count
+        current_usage_count:
+          type: integer
+          title: Current Usage Count
+          default: 0
+        historical_usage_count:
+          type: integer
+          title: Historical Usage Count
+          default: 0
+        usages:
+          items:
+            $ref: '#/components/schemas/ExternalAdUsageMetadata'
+          type: array
+          title: Usages
+        analysis:
+          additionalProperties: true
+          type: object
+          title: Analysis
+      type: object
+      required:
+      - platform
+      - native_type
+      - performance_tier
+      - performance_reason
+      - attribution_scope
+      - usage_count
+      title: ExternalAdMetadata
+    ProductRefreshApplyRequest:
+      properties:
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+        refresh_urls:
+          items:
+            type: string
+          type: array
+          title: Refresh Urls
+        selected_fields:
+          items:
+            type: string
+            enum:
+            - name
+            - description
+            - primary_category
+            - subcategories
+            - tags
+            - key_features
+            - price_list
+            - images
+            - pricing_analysis
+            - feature_comparison
+            - swot_analysis
+          type: array
+          title: Selected Fields
+        preview_patch:
+          additionalProperties: true
+          type: object
+          title: Preview Patch
+      type: object
+      title: ProductRefreshApplyRequest
+    ProductOfferingUploadImagesResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        uploaded_images:
+          items:
+            $ref: '#/components/schemas/GalleryImageResponse'
+          type: array
+          title: Uploaded Images
+        total:
+          type: integer
+          title: Total
+          default: 0
+        offering:
+          additionalProperties: true
+          type: object
+          title: Offering
+      type: object
+      required:
+      - success
+      - offering
+      title: ProductOfferingUploadImagesResponse
+    ExternalAdUsageMetadata:
+      properties:
+        observation_id:
+          type: string
+          title: Observation Id
+        platform:
+          type: string
+          title: Platform
+        native_type:
+          type: string
+          title: Native Type
+        account_id:
+          type: string
+          title: Account Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign_name:
+          type: string
+          title: Campaign Name
+        currency_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Currency Code
+        ad_group_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Group Id
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+        creative_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creative Id
+        creative_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creative Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        inventory_state:
+          type: string
+          title: Inventory State
+          default: current
+        media_role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Role
+        provider_asset_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Asset Id
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        performance_tier:
+          type: string
+          title: Performance Tier
+        performance_reason:
+          type: string
+          title: Performance Reason
+        attribution_scope:
+          type: string
+          title: Attribution Scope
+        metrics:
+          additionalProperties: true
+          type: object
+          title: Metrics
+        benchmark:
+          additionalProperties: true
+          type: object
+          title: Benchmark
+        metric_window:
+          additionalProperties: true
+          type: object
+          title: Metric Window
+        analysis:
+          additionalProperties: true
+          type: object
+          title: Analysis
+      type: object
+      required:
+      - observation_id
+      - platform
+      - native_type
+      - account_id
+      - campaign_id
+      - campaign_name
+      - performance_tier
+      - performance_reason
+      - attribution_scope
+      title: ExternalAdUsageMetadata
+    GalleryImageResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        media_url:
+          type: string
+          title: Media Url
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        media_type:
+          type: string
+          title: Media Type
+        file_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: File Format
+        category:
+          type: string
+          title: Category
+        subcategory:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subcategory
+        source_type:
+          type: string
+          title: Source Type
+        source_campaign_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Campaign Id
+        source_campaign_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Campaign Type
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+        width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Height
+        duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration
+        file_size:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: File Size
+        generation_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generation Prompt
+        generation_model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generation Model
+        edit_history:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Edit History
+        is_visible:
+          type: boolean
+          title: Is Visible
+          default: true
+        is_favorite:
+          type: boolean
+          title: Is Favorite
+          default: false
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        external_ad_metadata:
+          anyOf:
+          - $ref: '#/components/schemas/ExternalAdMetadata'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      - company_profile_id
+      - media_url
+      - media_type
+      - category
+      - source_type
+      title: GalleryImageResponse
+      description: Response schema for gallery images with signed URL support
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

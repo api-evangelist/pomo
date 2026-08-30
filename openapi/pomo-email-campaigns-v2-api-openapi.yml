@@ -1,0 +1,404 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Email Campaigns V2 API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Email Campaigns V2
+paths:
+  /api/email-campaigns/v2/preview:
+    post:
+      tags:
+      - Email Campaigns V2
+      summary: Preview Campaign
+      description: Generate preview of email campaign with sample personalization
+      operationId: preview_campaign_api_email_campaigns_v2_preview_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreviewRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/email-campaigns/v2/test:
+    post:
+      tags:
+      - Email Campaigns V2
+      summary: Send Test Emails
+      description: Send test emails to specified addresses
+      operationId: send_test_emails_api_email_campaigns_v2_test_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestEmailRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/email-campaigns/v2/send:
+    post:
+      tags:
+      - Email Campaigns V2
+      summary: Send Campaign
+      description: Send campaign to recipients or schedule for later
+      operationId: send_campaign_api_email_campaigns_v2_send_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendCampaignRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/email-campaigns/v2/workflow-status:
+    put:
+      tags:
+      - Email Campaigns V2
+      summary: Update Workflow Status
+      description: Update campaign workflow status
+      operationId: update_workflow_status_api_email_campaigns_v2_workflow_status_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/email-campaigns/v2/validate-personalization:
+    post:
+      tags:
+      - Email Campaigns V2
+      summary: Validate Personalization
+      description: Validate personalization template and get available variables
+      operationId: validate_personalization_api_email_campaigns_v2_validate_personalization_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalizationValidateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/email-campaigns/v2/{campaign_id}/performance:
+    get:
+      tags:
+      - Email Campaigns V2
+      summary: Get Campaign Performance
+      description: Get campaign performance metrics
+      operationId: get_campaign_performance_api_email_campaigns_v2__campaign_id__performance_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/email-campaigns/v2/{campaign_id}/insights:
+    get:
+      tags:
+      - Email Campaigns V2
+      summary: Get Campaign Insights
+      description: Get AI-generated insights and recommendations
+      operationId: get_campaign_insights_api_email_campaigns_v2__campaign_id__insights_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/email-campaigns/v2/{campaign_id}/complete-ab-test:
+    post:
+      tags:
+      - Email Campaigns V2
+      summary: Complete Ab Test
+      description: Complete A/B test and send winning variant to holdout
+      operationId: complete_ab_test_api_email_campaigns_v2__campaign_id__complete_ab_test_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    WorkflowUpdateRequest:
+      properties:
+        campaign_id:
+          type: integer
+          title: Campaign Id
+        new_status:
+          type: string
+          pattern: ^(draft|review|approved|scheduled|sending|sent|failed)$
+          title: New Status
+      type: object
+      required:
+      - campaign_id
+      - new_status
+      title: WorkflowUpdateRequest
+      description: Request to update workflow status
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PersonalizationValidateRequest:
+      properties:
+        template:
+          type: string
+          title: Template
+        consumer_group_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Consumer Group Id
+      type: object
+      required:
+      - template
+      title: PersonalizationValidateRequest
+      description: Request to validate personalization template
+    TestEmailRequest:
+      properties:
+        campaign_id:
+          type: integer
+          title: Campaign Id
+        test_emails:
+          items:
+            type: string
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Test Emails
+      type: object
+      required:
+      - campaign_id
+      - test_emails
+      title: TestEmailRequest
+      description: Request to send test emails
+    ABTestConfig:
+      properties:
+        test_type:
+          type: string
+          pattern: ^(subject_line|content|send_time|from_name|multivariate)$
+          title: Test Type
+        test_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Test Name
+        test_size:
+          type: number
+          maximum: 50.0
+          minimum: 5.0
+          title: Test Size
+          default: 20.0
+        winner_metric:
+          type: string
+          pattern: ^(open_rate|click_rate|conversion_rate)$
+          title: Winner Metric
+          default: click_rate
+        duration_hours:
+          type: integer
+          maximum: 168.0
+          minimum: 1.0
+          title: Duration Hours
+          default: 24
+        auto_select:
+          type: boolean
+          title: Auto Select
+          default: true
+        min_sample_size:
+          type: integer
+          minimum: 50.0
+          title: Min Sample Size
+          default: 100
+        variants:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Variants
+      type: object
+      required:
+      - test_type
+      - variants
+      title: ABTestConfig
+      description: A/B test configuration
+    SendCampaignRequest:
+      properties:
+        campaign_id:
+          type: integer
+          title: Campaign Id
+        consumer_group_ids:
+          items:
+            type: integer
+          type: array
+          title: Consumer Group Ids
+        scheduled_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled Time
+        ab_test_config:
+          anyOf:
+          - $ref: '#/components/schemas/ABTestConfig'
+          - type: 'null'
+      type: object
+      required:
+      - campaign_id
+      - consumer_group_ids
+      title: SendCampaignRequest
+      description: Request to send campaign
+    PreviewRequest:
+      properties:
+        campaign_id:
+          type: integer
+          title: Campaign Id
+        sample_size:
+          type: integer
+          maximum: 20.0
+          minimum: 1.0
+          title: Sample Size
+          default: 5
+      type: object
+      required:
+      - campaign_id
+      title: PreviewRequest
+      description: Request for email preview
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

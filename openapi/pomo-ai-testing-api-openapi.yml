@@ -1,0 +1,1064 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend AI Testing API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: ai-testing
+paths:
+  /api/ai-testing/ads:
+    get:
+      tags:
+      - ai-testing
+      summary: List Ai Testing Ads
+      description: Return launchable ads across every platform supported by AI Testing.
+      operationId: list_ai_testing_ads_api_ai_testing_ads_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/ai-testing/personas:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Ai Personas
+      description: Get all AI personas for the current company profile.
+      operationId: get_ai_personas_api_ai_testing_personas_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AIPersonaResponse'
+                type: array
+                title: Response Get Ai Personas Api Ai Testing Personas Get
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - ai-testing
+      summary: Create Ai Persona
+      description: Create a new AI persona for testing.
+      operationId: create_ai_persona_api_ai_testing_personas_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIPersonaCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIPersonaResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/ai-testing/personas/generate:
+    post:
+      tags:
+      - ai-testing
+      summary: Generate Ai Personas
+      description: Generate AI personas for the appropriate company profile based on ad context.
+      operationId: generate_ai_personas_api_ai_testing_personas_generate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ad_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+      - name: ad_platform
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Platform
+      - name: personas_per_group
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          description: Number of personas per target group
+          default: 30
+          title: Personas Per Group
+        description: Number of personas per target group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/routes__ai_testing__GeneratePersonasRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/personas/by-company:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Personas By Company
+      description: Get AI personas for the user's company, optionally filtered by target audience group.
+      operationId: get_personas_by_company_api_ai_testing_personas_by_company_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: target_audience_group
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Audience Group
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIPersonaResponse'
+                title: Response Get Personas By Company Api Ai Testing Personas By Company Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/personas/groups-with-count:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Persona Groups With Count
+      description: Get all target audience groups with persona counts for the user's company.
+      operationId: get_persona_groups_with_count_api_ai_testing_personas_groups_with_count_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties: true
+                  type: object
+                type: array
+                title: Response Get Persona Groups With Count Api Ai Testing Personas Groups With Count Get
+      security:
+      - HTTPBearer: []
+  /api/ai-testing/test:
+    post:
+      tags:
+      - ai-testing
+      summary: Start Ai Test
+      description: Start an AI customer test for an ad using real personas and market intelligence.
+      operationId: start_ai_test_api_ai_testing_test_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AITestRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AITestSessionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/ai-testing/test/{session_id}:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Test Session
+      description: Get a specific test session by ID with paginated test results.
+      operationId: get_test_session_api_ai_testing_test__session_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Session Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 10
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AITestSessionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/test/{session_id}/results:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Test Results
+      description: Get paginated test results for a specific session.
+      operationId: get_test_results_api_ai_testing_test__session_id__results_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Session Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 25
+          minimum: 1
+          default: 5
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/test/ad/{ad_id}:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Ad Test Sessions
+      description: Get all test sessions for a specific ad.
+      operationId: get_ad_test_sessions_api_ai_testing_test_ad__ad_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ad_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Ad Id
+      - name: ad_platform
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Platform
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/test/{session_id}/heatmaps:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Test Heatmaps
+      description: Get detailed heatmap data for a test session.
+      operationId: get_test_heatmaps_api_ai_testing_test__session_id__heatmaps_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Session Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/persona-sets:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Persona Sets
+      description: Get all persona sets for the organization's company profiles.
+      operationId: get_persona_sets_api_ai_testing_persona_sets_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PersonaSetResponse'
+                title: Response Get Persona Sets Api Ai Testing Persona Sets Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - ai-testing
+      summary: Create Persona Set
+      description: Create a new persona set.
+      operationId: create_persona_set_api_ai_testing_persona_sets_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonaSetCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaSetResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/persona-sets/{set_id}:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Persona Set
+      description: Get a specific persona set.
+      operationId: get_persona_set_api_ai_testing_persona_sets__set_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: set_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Set Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaSetResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - ai-testing
+      summary: Update Persona Set
+      description: Update a persona set.
+      operationId: update_persona_set_api_ai_testing_persona_sets__set_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: set_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Set Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonaSetUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaSetResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - ai-testing
+      summary: Delete Persona Set
+      description: Delete a persona set and all its personas.
+      operationId: delete_persona_set_api_ai_testing_persona_sets__set_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: set_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Set Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/persona-sets/{set_id}/personas:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Persona Set Personas
+      description: Get all personas in a specific persona set.
+      operationId: get_persona_set_personas_api_ai_testing_persona_sets__set_id__personas_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: set_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Set Id
+      - name: target_audience_group
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Audience Group
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIPersonaResponse'
+                title: Response Get Persona Set Personas Api Ai Testing Persona Sets  Set Id  Personas Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/persona-sets/{set_id}/generate:
+    post:
+      tags:
+      - ai-testing
+      summary: Generate Personas For Set
+      description: Generate personas for a specific persona set.
+      operationId: generate_personas_for_set_api_ai_testing_persona_sets__set_id__generate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: set_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Set Id
+      - name: personas_per_group
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          description: Number of personas per target group
+          default: 30
+          title: Personas Per Group
+        description: Number of personas per target group
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-testing/test/ad/{ad_id}/latest:
+    get:
+      tags:
+      - ai-testing
+      summary: Get Latest Test Result
+      description: Get the latest test result for an ad (for caching on ad card).
+      operationId: get_latest_test_result_api_ai_testing_test_ad__ad_id__latest_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ad_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ad Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AITestRequest:
+      properties:
+        ad_id:
+          type: string
+          title: Ad Id
+        ad_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Platform
+        persona_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Persona Ids
+        audience_groups:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Audience Groups
+        target_audience_data:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Target Audience Data
+        persona_set_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Persona Set Id
+      type: object
+      required:
+      - ad_id
+      title: AITestRequest
+    AIPersonaResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        demographics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Demographics
+        interests:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Interests
+        behaviors:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Behaviors
+        pain_points:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Pain Points
+        goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Goals
+        preferred_channels:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Preferred Channels
+        is_active:
+          type: boolean
+          title: Is Active
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - name
+      - description
+      - demographics
+      - behaviors
+      - is_active
+      - created_at
+      - updated_at
+      title: AIPersonaResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    LocationInfo:
+      properties:
+        country:
+          type: string
+          title: Country
+        country_code:
+          type: string
+          title: Country Code
+        state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State
+        state_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Code
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+      type: object
+      required:
+      - country
+      - country_code
+      title: LocationInfo
+    AIPersonaCreate:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        demographics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Demographics
+        interests:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Interests
+        behaviors:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Behaviors
+        pain_points:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Pain Points
+        goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Goals
+        preferred_channels:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Preferred Channels
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+      type: object
+      required:
+      - name
+      title: AIPersonaCreate
+    PersonaSetResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        location:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Location
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        is_active:
+          type: boolean
+          title: Is Active
+        persona_count:
+          type: integer
+          title: Persona Count
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - name
+      - description
+      - location
+      - company_profile_id
+      - is_active
+      - persona_count
+      - created_at
+      - updated_at
+      title: PersonaSetResponse
+    routes__ai_testing__GeneratePersonasRequest:
+      properties:
+        location:
+          anyOf:
+          - $ref: '#/components/schemas/LocationInfo'
+          - type: 'null'
+        persona_set_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona Set Name
+        persona_set_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Persona Set Description
+      type: object
+      title: GeneratePersonasRequest
+    PersonaSetUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+      type: object
+      title: PersonaSetUpdate
+    AITestSessionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        session_id:
+          type: string
+          format: uuid
+          title: Session Id
+        persona_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Persona Ids
+        summary:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Summary
+        overall_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Overall Score
+        status:
+          type: string
+          title: Status
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        test_results:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Test Results
+          default: []
+        pagination:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Pagination
+      type: object
+      required:
+      - id
+      - session_id
+      - persona_ids
+      - summary
+      - overall_score
+      - status
+      - started_at
+      - completed_at
+      - created_at
+      title: AITestSessionResponse
+    PersonaSetCreate:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        location:
+          anyOf:
+          - $ref: '#/components/schemas/LocationInfo'
+          - type: 'null'
+      type: object
+      required:
+      - name
+      title: PersonaSetCreate
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

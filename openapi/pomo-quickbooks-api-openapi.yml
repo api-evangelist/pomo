@@ -1,0 +1,794 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Quickbooks API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: quickbooks
+paths:
+  /api/quickbooks/review-queue:
+    get:
+      tags:
+      - quickbooks
+      summary: Get Quickbooks Review Queue
+      description: 'Marketing expense review queue from Databricks silver tables.
+
+
+        Flags:
+
+        - uncategorized: marketing expense missing a category (or splits include uncategorized marketing)
+
+        - low_confidence: marketing expense with low model confidence (only when no splits exist)
+
+        - large_amount: high-dollar expense (marketing or non-marketing)
+
+        - unmapped_vendor: marketing expense not classified via mapping rules (qb_marketing_source != ''mapping'')'
+      operationId: get_quickbooks_review_queue_api_quickbooks_review_queue_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      - name: min_amount
+        in: query
+        required: false
+        schema:
+          type: number
+          minimum: 0
+          description: Flag expenses with amount >= min_amount
+          default: 500.0
+          title: Min Amount
+        description: Flag expenses with amount >= min_amount
+      - name: confidence_lt
+        in: query
+        required: false
+        schema:
+          type: number
+          maximum: 1
+          minimum: 0
+          description: Flag marketing expenses with confidence < threshold
+          default: 0.7
+          title: Confidence Lt
+        description: Flag marketing expenses with confidence < threshold
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 2000
+          minimum: 1
+          description: Max rows to return
+          default: 200
+          title: Limit
+        description: Max rows to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuickBooksReviewQueueRow'
+                title: Response Get Quickbooks Review Queue Api Quickbooks Review Queue Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/quickbooks/mappings:
+    get:
+      tags:
+      - quickbooks
+      summary: List Quickbooks Mappings
+      operationId: list_quickbooks_mappings_api_quickbooks_mappings_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/QuickBooksMappingRow'
+                type: array
+                title: Response List Quickbooks Mappings Api Quickbooks Mappings Get
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - quickbooks
+      summary: Create Quickbooks Mapping
+      operationId: create_quickbooks_mapping_api_quickbooks_mappings_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickBooksMappingCreateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuickBooksMappingRow'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/quickbooks/mappings/{mapping_id}:
+    patch:
+      tags:
+      - quickbooks
+      summary: Update Quickbooks Mapping
+      operationId: update_quickbooks_mapping_api_quickbooks_mappings__mapping_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: mapping_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Mapping Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickBooksMappingUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuickBooksMappingRow'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - quickbooks
+      summary: Delete Quickbooks Mapping
+      operationId: delete_quickbooks_mapping_api_quickbooks_mappings__mapping_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: mapping_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Mapping Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/quickbooks/expenses/{qb_token}/splits:
+    get:
+      tags:
+      - quickbooks
+      summary: Get Quickbooks Expense Splits
+      operationId: get_quickbooks_expense_splits_api_quickbooks_expenses__qb_token__splits_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: qb_token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Qb Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuickBooksExpenseSplitsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - quickbooks
+      summary: Upsert Quickbooks Expense Splits
+      operationId: upsert_quickbooks_expense_splits_api_quickbooks_expenses__qb_token__splits_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: qb_token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Qb Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickBooksExpenseSplitsUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuickBooksExpenseSplitsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/quickbooks/expenses/{qb_token}:
+    patch:
+      tags:
+      - quickbooks
+      summary: Annotate Quickbooks Expense
+      operationId: annotate_quickbooks_expense_api_quickbooks_expenses__qb_token__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: qb_token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Qb Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickBooksExpenseAnnotateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QBMarketingAnnotationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/quickbooks/expenses/bulk-annotate:
+    post:
+      tags:
+      - quickbooks
+      summary: Bulk Annotate Quickbooks Expenses
+      operationId: bulk_annotate_quickbooks_expenses_api_quickbooks_expenses_bulk_annotate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickBooksExpenseBulkAnnotateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuickBooksExpenseBulkAnnotateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/quickbooks/audit:
+    get:
+      tags:
+      - quickbooks
+      summary: Get Quickbooks Audit
+      operationId: get_quickbooks_audit_api_quickbooks_audit_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuickBooksAuditResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    QuickBooksExpenseSplitRow:
+      properties:
+        id:
+          type: string
+          title: Id
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+        amount:
+          type: number
+          title: Amount
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - id
+      - qb_is_marketing_expense
+      - amount
+      title: QuickBooksExpenseSplitRow
+    QuickBooksMappingUpdateRequest:
+      properties:
+        match_field:
+          anyOf:
+          - type: string
+            enum:
+            - vendor
+            - account
+          - type: 'null'
+          title: Match Field
+        match_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Match Text
+        qb_is_marketing_expense:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Qb Is Marketing Expense
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+      type: object
+      title: QuickBooksMappingUpdateRequest
+    QuickBooksMappingCreateRequest:
+      properties:
+        match_field:
+          type: string
+          enum:
+          - vendor
+          - account
+          title: Match Field
+        match_text:
+          type: string
+          title: Match Text
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+          default: true
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+      type: object
+      required:
+      - match_field
+      - match_text
+      title: QuickBooksMappingCreateRequest
+    QuickBooksExpenseAnnotateRequest:
+      properties:
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+          description: Whether this transaction is marketing spend
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+          description: Marketing category (required when qb_is_marketing_expense=true)
+        qb_marketing_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Reason
+          description: User-provided annotation reason
+      type: object
+      required:
+      - qb_is_marketing_expense
+      title: QuickBooksExpenseAnnotateRequest
+    QuickBooksMappingRow:
+      properties:
+        id:
+          type: string
+          title: Id
+        match_field:
+          type: string
+          enum:
+          - vendor
+          - account
+          title: Match Field
+        match_text:
+          type: string
+          title: Match Text
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - match_field
+      - match_text
+      - qb_is_marketing_expense
+      title: QuickBooksMappingRow
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    QuickBooksReviewQueueRow:
+      properties:
+        entity_type:
+          type: string
+          enum:
+          - bill
+          - purchase
+          title: Entity Type
+        qb_token:
+          type: string
+          title: Qb Token
+        qb_id:
+          type: string
+          title: Qb Id
+        qb_txn_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Qb Txn Date
+        qb_vendor_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Vendor Name
+        qb_account_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Account Name
+        qb_total_amt:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Qb Total Amt
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+          default: false
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+        qb_marketing_category_confidence:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Qb Marketing Category Confidence
+        qb_marketing_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Source
+        qb_has_splits:
+          type: boolean
+          title: Qb Has Splits
+          default: false
+        flags:
+          items:
+            type: string
+            enum:
+            - uncategorized
+            - low_confidence
+            - large_amount
+            - unmapped_vendor
+          type: array
+          title: Flags
+      type: object
+      required:
+      - entity_type
+      - qb_token
+      - qb_id
+      title: QuickBooksReviewQueueRow
+    QuickBooksExpenseBulkAnnotateResponse:
+      properties:
+        updated:
+          type: integer
+          title: Updated
+          default: 0
+      type: object
+      title: QuickBooksExpenseBulkAnnotateResponse
+    QuickBooksExpenseSplitsResponse:
+      properties:
+        qb_token:
+          type: string
+          title: Qb Token
+        entity_type:
+          type: string
+          enum:
+          - bill
+          - purchase
+          title: Entity Type
+        splits:
+          items:
+            $ref: '#/components/schemas/QuickBooksExpenseSplitRow'
+          type: array
+          title: Splits
+      type: object
+      required:
+      - qb_token
+      - entity_type
+      - splits
+      title: QuickBooksExpenseSplitsResponse
+    QuickBooksExpenseSplitsUpdateRequest:
+      properties:
+        splits:
+          items:
+            $ref: '#/components/schemas/QuickBooksExpenseSplitUpsert'
+          type: array
+          title: Splits
+        expense_total_amt:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Expense Total Amt
+          description: Parent expense total in dollars (for server-side validation)
+      type: object
+      required:
+      - splits
+      title: QuickBooksExpenseSplitsUpdateRequest
+    QuickBooksExpenseBulkAnnotateRequest:
+      properties:
+        qb_tokens:
+          items:
+            type: string
+          type: array
+          title: Qb Tokens
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+        qb_marketing_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Reason
+      type: object
+      required:
+      - qb_tokens
+      - qb_is_marketing_expense
+      title: QuickBooksExpenseBulkAnnotateRequest
+    QuickBooksAuditResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/QuickBooksAuditEventRow'
+          type: array
+          title: Events
+      type: object
+      required:
+      - events
+      title: QuickBooksAuditResponse
+    QuickBooksAuditEventRow:
+      properties:
+        id:
+          type: string
+          title: Id
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        actor_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actor User Id
+        actor_user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actor User Email
+        action:
+          type: string
+          title: Action
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - id
+      - timestamp
+      - action
+      title: QuickBooksAuditEventRow
+    QuickBooksExpenseSplitUpsert:
+      properties:
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+          default: true
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+        amount:
+          type: number
+          title: Amount
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - amount
+      title: QuickBooksExpenseSplitUpsert
+    QBMarketingAnnotationResponse:
+      properties:
+        qb_token:
+          type: string
+          title: Qb Token
+        entity_type:
+          type: string
+          enum:
+          - bill
+          - purchase
+          title: Entity Type
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+          default: false
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+        qb_marketing_category_confidence:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Qb Marketing Category Confidence
+        qb_marketing_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Reason
+        qb_marketing_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Source
+        qb_has_splits:
+          type: boolean
+          title: Qb Has Splits
+          default: false
+      type: object
+      required:
+      - qb_token
+      - entity_type
+      title: QBMarketingAnnotationResponse
+      description: Lightweight response for annotation writes (no transaction data needed).
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

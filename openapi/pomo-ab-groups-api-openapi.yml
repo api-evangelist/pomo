@@ -1,0 +1,622 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Ab Groups API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: ab-groups
+paths:
+  /api/ab-groups:
+    get:
+      tags:
+      - ab-groups
+      summary: List Ab Groups
+      operationId: list_ab_groups_api_ab_groups_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ads_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ads Type
+      - name: status_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Filter
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ABGroupResponse'
+                title: Response List Ab Groups Api Ab Groups Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - ab-groups
+      summary: Create Ab Group
+      operationId: create_ab_group_api_ab_groups_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ABGroupCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ABGroupDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ab-groups/{ab_group_id}:
+    get:
+      tags:
+      - ab-groups
+      summary: Get Ab Group
+      operationId: get_ab_group_api_ab_groups__ab_group_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ab_group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ab Group Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ABGroupDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - ab-groups
+      summary: Update Ab Group
+      operationId: update_ab_group_api_ab_groups__ab_group_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ab_group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ab Group Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ABGroupUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ABGroupResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - ab-groups
+      summary: Delete Ab Group
+      operationId: delete_ab_group_api_ab_groups__ab_group_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ab_group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ab Group Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ab-groups/{ab_group_id}/metrics:
+    get:
+      tags:
+      - ab-groups
+      summary: Get Ab Group Metrics
+      operationId: get_ab_group_metrics_api_ab_groups__ab_group_id__metrics_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ab_group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ab Group Id
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 30
+          title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ABGroupMetricsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ab-groups/{ab_group_id}/members:
+    post:
+      tags:
+      - ab-groups
+      summary: Add Members
+      operationId: add_members_api_ab_groups__ab_group_id__members_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ab_group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ab Group Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ABGroupAddMembersRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ABGroupDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ab-groups/{ab_group_id}/members/{ad_id}:
+    delete:
+      tags:
+      - ab-groups
+      summary: Remove Member
+      operationId: remove_member_api_ab_groups__ab_group_id__members__ad_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ab_group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ab Group Id
+      - name: ad_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ad Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ABGroupDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ab-groups/{ab_group_id}/members/reorder:
+    post:
+      tags:
+      - ab-groups
+      summary: Reorder Members
+      operationId: reorder_members_api_ab_groups__ab_group_id__members_reorder_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: ab_group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Ab Group Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ABGroupReorderMembersRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ABGroupDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ABGroupMetricsResponse:
+      properties:
+        summary:
+          $ref: '#/components/schemas/ABGroupMetricsSummary'
+        trends:
+          items:
+            $ref: '#/components/schemas/ABGroupMetricsTrend'
+          type: array
+          title: Trends
+        variants:
+          additionalProperties:
+            $ref: '#/components/schemas/ABGroupMetricsSummary'
+          type: object
+          title: Variants
+        per_variant_trends:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/ABGroupMetricsTrend'
+            type: array
+          type: object
+          title: Per Variant Trends
+        variant_labels:
+          additionalProperties:
+            type: string
+          type: object
+          title: Variant Labels
+      type: object
+      required:
+      - summary
+      - trends
+      - variants
+      title: ABGroupMetricsResponse
+    ABGroupResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        ads_type:
+          type: string
+          title: Ads Type
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        settings:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        member_count:
+          type: integer
+          title: Member Count
+      type: object
+      required:
+      - id
+      - name
+      - ads_type
+      - member_count
+      title: ABGroupResponse
+    ABGroupUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: draft|active|paused|ended
+        settings:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings
+      type: object
+      title: ABGroupUpdateRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ABGroupCreateRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+        ads_type:
+          type: string
+          title: Ads Type
+          description: Canonical ads type key, e.g., google_display
+        ad_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Ad Ids
+          description: Initial member Ad IDs for the given type
+        settings:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings
+      type: object
+      required:
+      - name
+      - ads_type
+      title: ABGroupCreateRequest
+    ABGroupMetricsTrend:
+      properties:
+        date:
+          type: string
+          title: Date
+        impressions:
+          type: integer
+          title: Impressions
+        clicks:
+          type: integer
+          title: Clicks
+        cost_micros:
+          type: integer
+          title: Cost Micros
+      type: object
+      required:
+      - date
+      - impressions
+      - clicks
+      - cost_micros
+      title: ABGroupMetricsTrend
+    ABGroupReorderMembersRequest:
+      properties:
+        ordered_ad_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Ordered Ad Ids
+      type: object
+      required:
+      - ordered_ad_ids
+      title: ABGroupReorderMembersRequest
+    ABGroupMetricsSummary:
+      properties:
+        impressions:
+          type: integer
+          title: Impressions
+          default: 0
+        clicks:
+          type: integer
+          title: Clicks
+          default: 0
+        cost_micros:
+          type: integer
+          title: Cost Micros
+          default: 0
+        conversions:
+          type: number
+          title: Conversions
+          default: 0.0
+        video_views:
+          type: integer
+          title: Video Views
+          default: 0
+        ctr:
+          type: number
+          title: Ctr
+          default: 0.0
+        average_cpc:
+          type: number
+          title: Average Cpc
+          default: 0.0
+        cost_per_conversion:
+          type: number
+          title: Cost Per Conversion
+          default: 0.0
+      type: object
+      title: ABGroupMetricsSummary
+    ABGroupAddMembersRequest:
+      properties:
+        ad_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Ad Ids
+      type: object
+      required:
+      - ad_ids
+      title: ABGroupAddMembersRequest
+    ABGroupDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        ads_type:
+          type: string
+          title: Ads Type
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        settings:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        member_count:
+          type: integer
+          title: Member Count
+        members:
+          items:
+            $ref: '#/components/schemas/ABGroupMemberResponse'
+          type: array
+          title: Members
+      type: object
+      required:
+      - id
+      - name
+      - ads_type
+      - member_count
+      - members
+      title: ABGroupDetailResponse
+    ABGroupMemberResponse:
+      properties:
+        ad_id:
+          type: string
+          format: uuid
+          title: Ad Id
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      type: object
+      required:
+      - ad_id
+      title: ABGroupMemberResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

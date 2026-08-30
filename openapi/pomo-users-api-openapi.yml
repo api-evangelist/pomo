@@ -1,0 +1,162 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Users API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: users
+paths:
+  /api/users/analytics/genai-usage:
+    get:
+      tags:
+      - users
+      summary: Get Genai Usage Stats
+      description: 'Get GenAI usage statistics for the current user.
+
+
+        Returns counts of text and image generation events, total images generated,
+
+        and usage by endpoint.'
+      operationId: get_genai_usage_stats_api_users_analytics_genai_usage_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Start date in ISO format with timezone
+          title: Start Date
+        description: Start date in ISO format with timezone
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: End date in ISO format with timezone
+          title: End Date
+        description: End date in ISO format with timezone
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Genai Usage Stats Api Users Analytics Genai Usage Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/users/analytics/genai-usage-with-quota:
+    get:
+      tags:
+      - users
+      summary: Get Genai Usage With Quota
+      description: 'Get GenAI usage statistics with quota information for the current user.
+
+        Combines usage counts with subscription limits and human-readable labels.'
+      operationId: get_genai_usage_with_quota_api_users_analytics_genai_usage_with_quota_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Start date in ISO format with timezone
+          title: Start Date
+        description: Start date in ISO format with timezone
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: End date in ISO format with timezone
+          title: End Date
+        description: End date in ISO format with timezone
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Genai Usage With Quota Api Users Analytics Genai Usage With Quota Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

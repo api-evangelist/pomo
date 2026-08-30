@@ -1,0 +1,2481 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Overview API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: overview
+paths:
+  /api/overview/bootstrap:
+    get:
+      tags:
+      - overview
+      summary: Get Overview Bootstrap
+      description: Return the overview page's primary data in one response without changing its UI contract.
+      operationId: get_overview_bootstrap_api_overview_bootstrap_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OverviewBootstrapResponse'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    OverviewDailyReportSectionResponse:
+      properties:
+        agent_id:
+          type: string
+          title: Agent Id
+        label:
+          type: string
+          title: Label
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        action_count:
+          type: integer
+          title: Action Count
+          default: 0
+        primary_action_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Action Title
+      type: object
+      required:
+      - agent_id
+      - label
+      title: OverviewDailyReportSectionResponse
+      description: A compact, exact projection of one authored daily-report section.
+    SocialListeningSummaryCitationResponse:
+      properties:
+        citation_id:
+          type: string
+          title: Citation Id
+        mention_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mention Id
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+        content_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Id
+        platform_post_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Post Id
+        platform_comment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Comment Id
+        canonical_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Canonical Url
+        permalink:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Permalink
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        author:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author
+        community_prefixed:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Community Prefixed
+        target_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Type
+        target_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Name
+        competitor_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Competitor Name
+        product_offering_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Offering Name
+        created_datetime:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created Datetime
+        engagement_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Engagement Count
+      type: object
+      required:
+      - citation_id
+      title: SocialListeningSummaryCitationResponse
+    OverviewDailyReportProjectionResponse:
+      properties:
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline
+        executive_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Executive Summary
+        director_insight_package:
+          anyOf:
+          - $ref: '#/components/schemas/DirectorInsightPackageResponse'
+          - type: 'null'
+        sections:
+          items:
+            $ref: '#/components/schemas/OverviewDailyReportSectionResponse'
+          type: array
+          title: Sections
+        budget:
+          anyOf:
+          - $ref: '#/components/schemas/OverviewDailyReportBudgetResponse'
+          - type: 'null'
+        ads_performance:
+          anyOf:
+          - $ref: '#/components/schemas/OverviewAdsPerformanceSummaryResponse'
+          - type: 'null'
+      type: object
+      title: OverviewDailyReportProjectionResponse
+      description: Small latest-run projection shared with the Marketing Director report.
+    OverviewProductivityBreakdownItem:
+      properties:
+        key:
+          type: string
+          title: Key
+        label:
+          type: string
+          title: Label
+        count:
+          type: integer
+          title: Count
+          default: 0
+        minutes_each:
+          type: integer
+          title: Minutes Each
+          default: 0
+        total_minutes:
+          type: integer
+          title: Total Minutes
+          default: 0
+        contributes_to:
+          items:
+            type: string
+          type: array
+          title: Contributes To
+      type: object
+      required:
+      - key
+      - label
+      title: OverviewProductivityBreakdownItem
+    OverviewMmmSpendRecommendationPlatformResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        label:
+          type: string
+          title: Label
+        current_spend:
+          type: number
+          title: Current Spend
+          default: 0.0
+        recommended_spend:
+          type: number
+          title: Recommended Spend
+          default: 0.0
+        current_spend_pct:
+          type: number
+          title: Current Spend Pct
+          default: 0.0
+        recommended_spend_pct:
+          type: number
+          title: Recommended Spend Pct
+          default: 0.0
+        change_spend:
+          type: number
+          title: Change Spend
+          default: 0.0
+        rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rationale
+      type: object
+      required:
+      - key
+      - label
+      title: OverviewMmmSpendRecommendationPlatformResponse
+    DirectorInsightSupportingPointResponse:
+      properties:
+        text:
+          type: string
+          title: Text
+        evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Evidence Ids
+      type: object
+      required:
+      - text
+      title: DirectorInsightSupportingPointResponse
+    OverviewProductivitySummaryResponse:
+      properties:
+        data_state:
+          type: string
+          enum:
+          - ready
+          - empty
+          - unavailable
+          title: Data State
+          default: empty
+        window_days:
+          type: integer
+          title: Window Days
+          default: 30
+        window_start:
+          type: string
+          format: date-time
+          title: Window Start
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        time_saved_minutes:
+          type: integer
+          title: Time Saved Minutes
+          default: 0
+        time_saved_label:
+          type: string
+          title: Time Saved Label
+          default: 0 min
+        signals_surfaced:
+          type: integer
+          title: Signals Surfaced
+          default: 0
+        marketing_outputs:
+          type: integer
+          title: Marketing Outputs
+          default: 0
+        basis_label:
+          type: string
+          title: Basis Label
+          default: No qualifying activity in the last 30 days yet.
+        breakdown:
+          items:
+            $ref: '#/components/schemas/OverviewProductivityBreakdownItem'
+          type: array
+          title: Breakdown
+      type: object
+      required:
+      - window_start
+      - generated_at
+      title: OverviewProductivitySummaryResponse
+    AgentTeamAgentResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        agent_key:
+          type: string
+          title: Agent Key
+        display_name:
+          type: string
+          title: Display Name
+        role:
+          type: string
+          title: Role
+        is_active:
+          type: boolean
+          title: Is Active
+        capabilities_json:
+          items:
+            type: string
+          type: array
+          title: Capabilities Json
+        tool_allowlist_json:
+          items:
+            type: string
+          type: array
+          title: Tool Allowlist Json
+        config_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Config Json
+        prompt_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prompt Text
+        base_daily_routine:
+          items:
+            $ref: '#/components/schemas/AgentTeamRoutineStepResponse'
+          type: array
+          title: Base Daily Routine
+        effective_daily_routine:
+          items:
+            $ref: '#/components/schemas/AgentTeamRoutineStepResponse'
+          type: array
+          title: Effective Daily Routine
+        custom_daily_routine_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Daily Routine Text
+        custom_daily_routine_updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Custom Daily Routine Updated At
+        custom_daily_routine_updated_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Daily Routine Updated By User Id
+        custom_daily_routine_updated_by_agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Daily Routine Updated By Agent Key
+        custom_daily_routine_update_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Daily Routine Update Source
+        effective_is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Effective Is Active
+        module_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Module Key
+        disabled_by_module_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Disabled By Module Key
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - team_id
+      - agent_key
+      - display_name
+      - role
+      - is_active
+      - capabilities_json
+      - tool_allowlist_json
+      - created_at
+      - updated_at
+      title: AgentTeamAgentResponse
+    OverviewMmmSpendRecommendationResponse:
+      properties:
+        report_id:
+          type: string
+          title: Report Id
+        generated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Generated At
+        model_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model Type
+        confidence_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence Level
+        source_label:
+          type: string
+          title: Source Label
+          default: MMM
+        total_current_spend:
+          type: number
+          title: Total Current Spend
+          default: 0.0
+        total_recommended_spend:
+          type: number
+          title: Total Recommended Spend
+          default: 0.0
+        platforms:
+          items:
+            $ref: '#/components/schemas/OverviewMmmSpendRecommendationPlatformResponse'
+          type: array
+          title: Platforms
+      type: object
+      required:
+      - report_id
+      title: OverviewMmmSpendRecommendationResponse
+    DirectorInsightEvidenceResponse:
+      properties:
+        evidence_id:
+          type: string
+          title: Evidence Id
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+        source_agent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Agent
+        signal_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signal Type
+        snippet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Snippet
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        observed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Observed At
+        freshness:
+          additionalProperties: true
+          type: object
+          title: Freshness
+        limitations:
+          items:
+            type: string
+          type: array
+          title: Limitations
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+      type: object
+      required:
+      - evidence_id
+      title: DirectorInsightEvidenceResponse
+    SocialListeningSummaryAnalysisItemResponse:
+      properties:
+        theme_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Theme Key
+        title:
+          type: string
+          title: Title
+        analysis:
+          type: string
+          title: Analysis
+        recommendation:
+          type: string
+          title: Recommendation
+        drivers:
+          items:
+            type: string
+          type: array
+          title: Drivers
+        citations:
+          items:
+            $ref: '#/components/schemas/SocialListeningSummaryCitationResponse'
+          type: array
+          title: Citations
+        citation_mention_ids:
+          items:
+            type: string
+          type: array
+          title: Citation Mention Ids
+        group_citation_ids:
+          items:
+            type: string
+          type: array
+          title: Group Citation Ids
+        group_mention_ids:
+          items:
+            type: string
+          type: array
+          title: Group Mention Ids
+        group_metrics:
+          additionalProperties: true
+          type: object
+          title: Group Metrics
+        theme_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Theme Type
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        sentiment_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sentiment Label
+      type: object
+      required:
+      - title
+      - analysis
+      - recommendation
+      title: SocialListeningSummaryAnalysisItemResponse
+    OverviewBootstrapResponse:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        organization_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Organization Id
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        product_summary:
+          additionalProperties: true
+          type: object
+          title: Product Summary
+        trends_bundle:
+          additionalProperties: true
+          type: object
+          title: Trends Bundle
+        social_summary:
+          anyOf:
+          - $ref: '#/components/schemas/SocialListeningSummaryResponse'
+          - type: 'null'
+        active_team:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamDetailResponse'
+          - type: 'null'
+        approvals:
+          $ref: '#/components/schemas/AgentTeamApprovalListResponse'
+        ai_team_outputs:
+          $ref: '#/components/schemas/OverviewAiTeamOutputsResponse'
+        aeo_readiness_summary:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Aeo Readiness Summary
+        market_intelligence:
+          items:
+            $ref: '#/components/schemas/MarketIntelligenceResponse'
+          type: array
+          title: Market Intelligence
+        competitors:
+          items:
+            $ref: '#/components/schemas/CompetitorInfo'
+          type: array
+          title: Competitors
+        competitor_cards:
+          items:
+            $ref: '#/components/schemas/OverviewCompetitorCardResponse'
+          type: array
+          title: Competitor Cards
+        ad_spend_summary:
+          anyOf:
+          - $ref: '#/components/schemas/CompanyProfileDailySpendSummaryResponse'
+          - type: 'null'
+        mmm_spend_recommendation:
+          anyOf:
+          - $ref: '#/components/schemas/OverviewMmmSpendRecommendationResponse'
+          - type: 'null'
+        productivity_summary:
+          $ref: '#/components/schemas/OverviewProductivitySummaryResponse'
+        errors:
+          additionalProperties:
+            type: string
+          type: object
+          title: Errors
+      type: object
+      required:
+      - company_profile_id
+      - generated_at
+      title: OverviewBootstrapResponse
+    DirectorInsightRecommendedActionResponse:
+      properties:
+        insight_id:
+          type: string
+          title: Insight Id
+        title:
+          type: string
+          title: Title
+        action:
+          type: string
+          title: Action
+        action_type:
+          anyOf:
+          - type: string
+            enum:
+            - act_now
+            - validate_next
+            - monitor
+          - type: 'null'
+          title: Action Type
+        priority:
+          type: string
+          title: Priority
+        priority_rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority Rationale
+        why_now:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Why Now
+        measurement_plan:
+          type: string
+          title: Measurement Plan
+        expected_kpi_impact:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Kpi Impact
+        evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Evidence Ids
+      type: object
+      required:
+      - insight_id
+      - title
+      - action
+      - priority
+      - measurement_plan
+      title: DirectorInsightRecommendedActionResponse
+    AgentTeamDailySummaryResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        summary_date:
+          type: string
+          format: date
+          title: Summary Date
+        title:
+          type: string
+          title: Title
+        ops_blog_markdown:
+          type: string
+          title: Ops Blog Markdown
+        marketing_blog_markdown:
+          type: string
+          title: Marketing Blog Markdown
+        highlights_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Highlights Json
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - team_id
+      - summary_date
+      - title
+      - ops_blog_markdown
+      - marketing_blog_markdown
+      - created_at
+      title: AgentTeamDailySummaryResponse
+    CompetitorInfo:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        domain:
+          type: string
+          title: Domain
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+        industry:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Industry
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        categories:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Categories
+        subcategories:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Subcategories
+        business_characteristics:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Business Characteristics
+        target_market:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Market
+        status:
+          type: string
+          title: Status
+        last_scanned_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Scanned At
+        active_campaigns_count:
+          type: integer
+          title: Active Campaigns Count
+          default: 0
+        is_self:
+          type: boolean
+          title: Is Self
+          default: false
+        company_size:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Size
+        operating_regions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Operating Regions
+        match_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Match Score
+        match_percentage:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Match Percentage
+        match_breakdown:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Match Breakdown
+        audience_overlap_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Audience Overlap Score
+        offer_overlap_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Offer Overlap Score
+        positioning_overlap_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Positioning Overlap Score
+        scoring_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Scoring Metadata
+        discovery_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Discovery Metadata
+        website_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Website Url
+        contact_page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Contact Page Url
+        facebook_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Facebook Url
+        instagram_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Handle
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+        twitter_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Twitter Handle
+        tiktok_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tiktok Url
+        youtube_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Youtube Url
+        is_scanning:
+          type: boolean
+          title: Is Scanning
+          default: false
+        last_scan_started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Scan Started At
+        last_scan_completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Scan Completed At
+        setup_pending:
+          type: boolean
+          title: Setup Pending
+          default: false
+      type: object
+      required:
+      - id
+      - name
+      - domain
+      - status
+      title: CompetitorInfo
+      description: Basic competitor information.
+    DirectorInsightMetricResponse:
+      properties:
+        metric_id:
+          type: string
+          title: Metric Id
+        evidence_id:
+          type: string
+          title: Evidence Id
+        label:
+          type: string
+          title: Label
+        value:
+          type: number
+          maximum: 1000000000000000.0
+          minimum: -1000000000000000.0
+          title: Value
+        display_value:
+          type: string
+          title: Display Value
+        unit:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Unit
+        currency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Currency
+        scope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope
+        window:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Window
+        observed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Observed At
+        role:
+          anyOf:
+          - type: string
+            enum:
+            - decision
+            - context
+          - type: 'null'
+          title: Role
+        comparison_status:
+          anyOf:
+          - type: string
+            enum:
+            - absolute
+            - comparative
+          - type: 'null'
+          title: Comparison Status
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher
+        source_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Title
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        published_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published Date
+        estimate:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Estimate
+      type: object
+      required:
+      - metric_id
+      - evidence_id
+      - label
+      - value
+      - display_value
+      title: DirectorInsightMetricResponse
+    OverviewAdsCreativePreviewResponse:
+      properties:
+        evidence_id:
+          type: string
+          title: Evidence Id
+        asset_library_id:
+          type: string
+          title: Asset Library Id
+        media_type:
+          type: string
+          title: Media Type
+        platform:
+          type: string
+          title: Platform
+        campaign_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Name
+        performance_tier:
+          type: string
+          title: Performance Tier
+          default: learning
+        analyzed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analyzed At
+      type: object
+      required:
+      - evidence_id
+      - asset_library_id
+      - media_type
+      - platform
+      title: OverviewAdsCreativePreviewResponse
+      description: Small, profile-scoped reference to an analyzed visual ad asset.
+    CompanyProfileDailySpendSummaryResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+        google_spend:
+          type: number
+          title: Google Spend
+          default: 0.0
+        meta_spend:
+          type: number
+          title: Meta Spend
+          default: 0.0
+        tiktok_spend:
+          type: number
+          title: Tiktok Spend
+          default: 0.0
+        linkedin_spend:
+          type: number
+          title: Linkedin Spend
+          default: 0.0
+        total_spend:
+          type: number
+          title: Total Spend
+          default: 0.0
+        google_spend_pct:
+          type: number
+          title: Google Spend Pct
+          default: 0.0
+        meta_spend_pct:
+          type: number
+          title: Meta Spend Pct
+          default: 0.0
+        tiktok_spend_pct:
+          type: number
+          title: Tiktok Spend Pct
+          default: 0.0
+        linkedin_spend_pct:
+          type: number
+          title: Linkedin Spend Pct
+          default: 0.0
+        contains_shared_spend:
+          type: boolean
+          title: Contains Shared Spend
+          default: false
+        generated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Generated At
+      type: object
+      required:
+      - metric_date
+      - company_profile_id
+      title: CompanyProfileDailySpendSummaryResponse
+    AgentTeamApprovalListResponse:
+      properties:
+        approvals:
+          items:
+            $ref: '#/components/schemas/AgentTeamApprovalResponse'
+          type: array
+          title: Approvals
+        total:
+          type: integer
+          title: Total
+        matching_total:
+          type: integer
+          title: Matching Total
+          default: 0
+      type: object
+      required:
+      - approvals
+      - total
+      title: AgentTeamApprovalListResponse
+    AgentTeamRoutineStepResponse:
+      properties:
+        step_id:
+          type: string
+          title: Step Id
+        label:
+          type: string
+          title: Label
+        required_tool_packs:
+          items:
+            type: string
+          type: array
+          title: Required Tool Packs
+      type: object
+      required:
+      - step_id
+      - label
+      title: AgentTeamRoutineStepResponse
+    AgentTeamApprovalResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        recommendation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recommendation Id
+        owner_agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Agent Key
+        title:
+          type: string
+          title: Title
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        risk:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Risk
+        approval_state:
+          anyOf:
+          - type: string
+            enum:
+            - pending_approval
+            - approved
+            - rejected
+            - auto_approved
+            - deferred
+            - escalated
+            - expired
+          - type: string
+          title: Approval State
+        approval_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Approval Reason
+        decision_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Decision Note
+        decided_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Decided By User Id
+        decided_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Decided At
+        defer_until_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Defer Until At
+        escalated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Escalated At
+        expired_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expired At
+        payload_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payload Json
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - team_id
+      - title
+      - approval_state
+      - created_at
+      - updated_at
+      title: AgentTeamApprovalResponse
+    OverviewCompetitorCardSignalResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        label:
+          type: string
+          title: Label
+        value:
+          type: string
+          title: Value
+        items:
+          items:
+            type: string
+          type: array
+          title: Items
+      type: object
+      required:
+      - id
+      - label
+      - value
+      title: OverviewCompetitorCardSignalResponse
+    OverviewCompetitorCardResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        timestamp:
+          type: string
+          title: Timestamp
+        timestampSource:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timestampsource
+        competitorName:
+          type: string
+          title: Competitorname
+        competitorDomain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Competitordomain
+        headline:
+          type: string
+          title: Headline
+        subline:
+          type: string
+          title: Subline
+        heroInsight:
+          type: string
+          title: Heroinsight
+        signals:
+          items:
+            $ref: '#/components/schemas/OverviewCompetitorCardSignalResponse'
+          type: array
+          title: Signals
+        meta:
+          items:
+            type: string
+          type: array
+          title: Meta
+        logoUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logourl
+        mediaUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mediaurl
+        mediaAlt:
+          type: string
+          title: Mediaalt
+        placeholderLabel:
+          type: string
+          title: Placeholderlabel
+        industry:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Industry
+        radarMetrics:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/OverviewCompetitorRadarMetricResponse'
+            type: array
+          - type: 'null'
+          title: Radarmetrics
+        radarState:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Radarstate
+        radarProfileSimilarity:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Radarprofilesimilarity
+      type: object
+      required:
+      - id
+      - title
+      - timestamp
+      - competitorName
+      - headline
+      - subline
+      - heroInsight
+      - mediaAlt
+      - placeholderLabel
+      title: OverviewCompetitorCardResponse
+    DirectorInsightResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        why_now:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Why Now
+        recommended_action:
+          type: string
+          title: Recommended Action
+        action_type:
+          anyOf:
+          - type: string
+            enum:
+            - act_now
+            - validate_next
+            - monitor
+          - type: 'null'
+          title: Action Type
+        measurement_plan:
+          type: string
+          title: Measurement Plan
+        expected_kpi_impact:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Kpi Impact
+        priority:
+          type: string
+          title: Priority
+        priority_rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority Rationale
+        priority_evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Priority Evidence Ids
+        confidence:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - high
+            - medium
+            - low
+          - type: 'null'
+          title: Confidence
+        confidence_label:
+          anyOf:
+          - type: string
+            enum:
+            - high
+            - medium
+            - low
+          - type: 'null'
+          title: Confidence Label
+        confidence_rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence Rationale
+        source_domains:
+          items:
+            type: string
+          type: array
+          title: Source Domains
+        association_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Association Summary
+        action_evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Action Evidence Ids
+        supporting_points:
+          items:
+            type: string
+          type: array
+          title: Supporting Points
+        supporting_point_evidence:
+          items:
+            $ref: '#/components/schemas/DirectorInsightSupportingPointResponse'
+          type: array
+          title: Supporting Point Evidence
+        metric_ids:
+          items:
+            type: string
+          type: array
+          title: Metric Ids
+        key_metrics:
+          items:
+            $ref: '#/components/schemas/DirectorInsightMetricResponse'
+          type: array
+          title: Key Metrics
+        quantification_status:
+          anyOf:
+          - type: string
+            enum:
+            - quantified
+            - qualitative
+            - qualitative_no_decision_grade_metrics
+          - type: 'null'
+          title: Quantification Status
+        quantification_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Quantification Note
+        evidence:
+          items:
+            $ref: '#/components/schemas/DirectorInsightEvidenceResponse'
+          type: array
+          title: Evidence
+        citations:
+          items:
+            type: string
+          type: array
+          title: Citations
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - recommended_action
+      - measurement_plan
+      - priority
+      title: DirectorInsightResponse
+    SocialListeningSummaryResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        summary_markdown:
+          type: string
+          title: Summary Markdown
+        analysis_items:
+          items:
+            $ref: '#/components/schemas/SocialListeningSummaryAnalysisItemResponse'
+          type: array
+          title: Analysis Items
+        model_name:
+          type: string
+          title: Model Name
+        mention_count:
+          type: integer
+          title: Mention Count
+        lookback_days:
+          type: integer
+          title: Lookback Days
+        latest_mention_created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Mention Created At
+        generated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generated At
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        is_cached:
+          type: boolean
+          title: Is Cached
+        summary_metadata:
+          additionalProperties: true
+          type: object
+          title: Summary Metadata
+      type: object
+      required:
+      - summary_markdown
+      - model_name
+      - mention_count
+      - lookback_days
+      - is_cached
+      title: SocialListeningSummaryResponse
+    OverviewAiTeamOutputsResponse:
+      properties:
+        recommendations:
+          items:
+            $ref: '#/components/schemas/AgentTeamRecommendationResponse'
+          type: array
+          title: Recommendations
+        latest_daily_summary:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamDailySummaryResponse'
+          - type: 'null'
+        daily_report_projection:
+          anyOf:
+          - $ref: '#/components/schemas/OverviewDailyReportProjectionResponse'
+          - type: 'null'
+      type: object
+      title: OverviewAiTeamOutputsResponse
+      description: Small, already-sanitized payload used by Today's priorities on first paint.
+    AgentTeamModuleResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        label:
+          type: string
+          title: Label
+        description:
+          type: string
+          title: Description
+        enabled:
+          type: boolean
+          title: Enabled
+        disableable:
+          type: boolean
+          title: Disableable
+          default: true
+        coordinator_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Coordinator Key
+        member_agent_keys:
+          items:
+            type: string
+          type: array
+          title: Member Agent Keys
+        member_display_names:
+          items:
+            type: string
+          type: array
+          title: Member Display Names
+        disabled_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Disabled Reason
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        updated_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated By User Id
+      type: object
+      required:
+      - key
+      - label
+      - description
+      - enabled
+      title: AgentTeamModuleResponse
+    AgentTeamRecommendationResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        recommendation_key:
+          type: string
+          title: Recommendation Key
+        recommendation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recommendation Id
+        owner_agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Agent Key
+        title:
+          type: string
+          title: Title
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        risk:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Risk
+        rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rationale
+        approval_state:
+          type: string
+          title: Approval State
+        lifecycle_state:
+          anyOf:
+          - type: string
+            enum:
+            - proposed
+            - needs_approval
+            - approved
+            - rejected
+            - ready_for_execution
+            - observing
+            - completed
+            - cancelled
+          - type: string
+          title: Lifecycle State
+        status_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Note
+        approval_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Approval Id
+        approved_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Approved By User Id
+        rejected_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Rejected By User Id
+        first_seen_at:
+          type: string
+          format: date-time
+          title: First Seen At
+        last_seen_at:
+          type: string
+          format: date-time
+          title: Last Seen At
+        approved_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Approved At
+        rejected_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Rejected At
+        kpi_snapshot_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Kpi Snapshot Json
+        kpi_delta_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Kpi Delta Json
+        metadata_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata Json
+        latest_outcome_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Latest Outcome Json
+        outcome_history_json:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Outcome History Json
+        goal_alignment_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Goal Alignment Score
+        goal_alignment_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal Alignment Level
+        goal_alignment_notes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Goal Alignment Notes
+        evidence_json:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Evidence Json
+        citation_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Citation Urls
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - team_id
+      - recommendation_key
+      - title
+      - approval_state
+      - lifecycle_state
+      - first_seen_at
+      - last_seen_at
+      - created_at
+      - updated_at
+      title: AgentTeamRecommendationResponse
+    AgentTeamDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        created_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By User Id
+        name:
+          type: string
+          title: Name
+        status:
+          type: string
+          enum:
+          - active
+          - paused
+          - error
+          - deleted
+          title: Status
+        approval_mode:
+          type: string
+          title: Approval Mode
+        template_version:
+          type: string
+          title: Template Version
+        default_schedule_minutes:
+          type: integer
+          title: Default Schedule Minutes
+        next_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Run At
+        last_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Run At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        task_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Task Id
+        conversation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Conversation Id
+        settings_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings Json
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        primary_agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Agent Key
+        agents:
+          items:
+            $ref: '#/components/schemas/AgentTeamAgentResponse'
+          type: array
+          title: Agents
+        modules:
+          items:
+            $ref: '#/components/schemas/AgentTeamModuleResponse'
+          type: array
+          title: Modules
+        pending_run_guidance:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamRunGuidanceResponse'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      - organization_id
+      - company_profile_id
+      - name
+      - status
+      - approval_mode
+      - template_version
+      - default_schedule_minutes
+      - created_at
+      - updated_at
+      title: AgentTeamDetailResponse
+    OverviewAdsPerformanceChannelResponse:
+      properties:
+        platform:
+          type: string
+          title: Platform
+        label:
+          type: string
+          title: Label
+        running_campaigns:
+          type: integer
+          title: Running Campaigns
+          default: 0
+        running_ads:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Running Ads
+        delivery_verified:
+          type: boolean
+          title: Delivery Verified
+          default: false
+        spend_7d:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Spend 7D
+        spend_7d_by_currency:
+          additionalProperties:
+            type: number
+          type: object
+          title: Spend 7D By Currency
+        ctr_7d:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Ctr 7D
+        conversions_7d:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Conversions 7D
+        high_ads:
+          type: integer
+          title: High Ads
+          default: 0
+        typical_ads:
+          type: integer
+          title: Typical Ads
+          default: 0
+        low_ads:
+          type: integer
+          title: Low Ads
+          default: 0
+        learning_ads:
+          type: integer
+          title: Learning Ads
+          default: 0
+      type: object
+      required:
+      - platform
+      - label
+      title: OverviewAdsPerformanceChannelResponse
+      description: Truthful, bounded paid-media facts for one provider family.
+    DirectorInsightSourceCoverageResponse:
+      properties:
+        domain:
+          type: string
+          title: Domain
+        evidence_count:
+          type: integer
+          title: Evidence Count
+          default: 0
+        latest_observed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Latest Observed At
+      type: object
+      required:
+      - domain
+      title: DirectorInsightSourceCoverageResponse
+    OverviewDailyReportBudgetResponse:
+      properties:
+        readiness_tier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Readiness Tier
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        total_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Total Label
+      type: object
+      title: OverviewDailyReportBudgetResponse
+    OverviewCompetitorRadarMetricResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        label:
+          type: string
+          title: Label
+        shortLabel:
+          type: string
+          title: Shortlabel
+        selfScore:
+          type: integer
+          title: Selfscore
+        competitorScore:
+          type: integer
+          title: Competitorscore
+        similarity:
+          type: integer
+          title: Similarity
+      type: object
+      required:
+      - id
+      - label
+      - shortLabel
+      - selfScore
+      - competitorScore
+      - similarity
+      title: OverviewCompetitorRadarMetricResponse
+    OverviewAdsPerformanceSummaryResponse:
+      properties:
+        report_id:
+          type: string
+          title: Report Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        generated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Generated At
+        report_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Report Date
+        metric_mode:
+          type: string
+          title: Metric Mode
+          default: production
+        simulation:
+          type: boolean
+          title: Simulation
+          default: false
+        delivery_verified:
+          type: boolean
+          title: Delivery Verified
+          default: false
+        running_ads:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Running Ads
+        spend_7d:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Spend 7D
+        spend_7d_by_currency:
+          additionalProperties:
+            type: number
+          type: object
+          title: Spend 7D By Currency
+        ctr_7d:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Ctr 7D
+        conversions_7d:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Conversions 7D
+        high_ads:
+          type: integer
+          title: High Ads
+          default: 0
+        typical_ads:
+          type: integer
+          title: Typical Ads
+          default: 0
+        low_ads:
+          type: integer
+          title: Low Ads
+          default: 0
+        learning_ads:
+          type: integer
+          title: Learning Ads
+          default: 0
+        optimization_action_count:
+          type: integer
+          title: Optimization Action Count
+          default: 0
+        creative_analyzed_count:
+          type: integer
+          title: Creative Analyzed Count
+          default: 0
+        creative_remaining_count:
+          type: integer
+          title: Creative Remaining Count
+          default: 0
+        creative_previews:
+          items:
+            $ref: '#/components/schemas/OverviewAdsCreativePreviewResponse'
+          type: array
+          title: Creative Previews
+        channels:
+          items:
+            $ref: '#/components/schemas/OverviewAdsPerformanceChannelResponse'
+          type: array
+          title: Channels
+      type: object
+      required:
+      - report_id
+      title: OverviewAdsPerformanceSummaryResponse
+      description: 'Compact projection of the deterministic Ads Audit report.
+
+
+        Currency maps remain intact because totals in unlike currencies must never
+
+        be combined into a fabricated spend number on Overview.'
+    DirectorInsightPackageResponse:
+      properties:
+        contract_version:
+          type: string
+          const: director_insight_package_v1
+          title: Contract Version
+        generated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Generated At
+        headline:
+          type: string
+          title: Headline
+        executive_summary:
+          type: string
+          title: Executive Summary
+        executive_summary_evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Executive Summary Evidence Ids
+        executive_summary_metric_ids:
+          items:
+            type: string
+          type: array
+          title: Executive Summary Metric Ids
+        key_metrics:
+          items:
+            $ref: '#/components/schemas/DirectorInsightMetricResponse'
+          type: array
+          title: Key Metrics
+        quantification_status:
+          anyOf:
+          - type: string
+            enum:
+            - quantified
+            - qualitative
+            - qualitative_no_decision_grade_metrics
+          - type: 'null'
+          title: Quantification Status
+        quantification_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Quantification Note
+        source_coverage:
+          items:
+            $ref: '#/components/schemas/DirectorInsightSourceCoverageResponse'
+          type: array
+          title: Source Coverage
+        recommended_actions:
+          items:
+            $ref: '#/components/schemas/DirectorInsightRecommendedActionResponse'
+          type: array
+          title: Recommended Actions
+        insights:
+          items:
+            $ref: '#/components/schemas/DirectorInsightResponse'
+          type: array
+          title: Insights
+        limitations:
+          items:
+            type: string
+          type: array
+          title: Limitations
+        citations:
+          items:
+            type: string
+          type: array
+          title: Citations
+      type: object
+      required:
+      - contract_version
+      - headline
+      - executive_summary
+      title: DirectorInsightPackageResponse
+    AgentTeamRunGuidanceResponse:
+      properties:
+        version:
+          type: integer
+          title: Version
+          default: 1
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+        text:
+          type: string
+          title: Text
+        created_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By User Id
+        created_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Name
+        created_by_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Email
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - text
+      title: AgentTeamRunGuidanceResponse
+    MarketIntelligenceResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        intelligence_type:
+          type: string
+          title: Intelligence Type
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        insights:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Insights
+        metrics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metrics
+        recommendations:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recommendations
+        data_sources:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Data Sources
+        confidence_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Confidence Score
+        impact_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+        is_active:
+          type: boolean
+          title: Is Active
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - intelligence_type
+      - title
+      - description
+      - insights
+      - metrics
+      - recommendations
+      - data_sources
+      - confidence_score
+      - impact_level
+      - category
+      - tags
+      - is_active
+      - expires_at
+      - created_at
+      - updated_at
+      title: MarketIntelligenceResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

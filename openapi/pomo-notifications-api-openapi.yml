@@ -1,0 +1,389 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Notifications API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: notifications
+paths:
+  /api/notifications/organization-inbox:
+    get:
+      tags:
+      - notifications
+      summary: Get Organization Notifications
+      description: Get a merged notifications inbox for the current user in the active organization.
+      operationId: get_organization_notifications_api_notifications_organization_inbox_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: unread_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return only unread notifications
+          default: false
+          title: Unread Only
+        description: Return only unread notifications
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          description: Maximum number of notifications
+          default: 50
+          title: Limit
+        description: Maximum number of notifications
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Offset for pagination
+          default: 0
+          title: Offset
+        description: Offset for pagination
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Organization Notifications Api Notifications Organization Inbox Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/notifications/company-profile/{company_profile_id}:
+    get:
+      tags:
+      - notifications
+      summary: Get Notifications
+      description: "Get notifications for a company profile.\n\nArgs:\n    company_profile_id: Company profile ID\n    unread_only: Whether to return only unread notifications\n    limit: Maximum number of notifications to return\n    offset: Offset for pagination\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Dictionary with notifications, total count, and pagination info"
+      operationId: get_notifications_api_notifications_company_profile__company_profile_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: unread_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return only unread notifications
+          default: false
+          title: Unread Only
+        description: Return only unread notifications
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          description: Maximum number of notifications
+          default: 50
+          title: Limit
+        description: Maximum number of notifications
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Offset for pagination
+          default: 0
+          title: Offset
+        description: Offset for pagination
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Notifications Api Notifications Company Profile  Company Profile Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/notifications/{notification_id}/action:
+    post:
+      tags:
+      - notifications
+      summary: Apply Notification Action
+      description: Apply an action (accepted/declined) to a notification.
+      operationId: apply_notification_action_api_notifications__notification_id__action_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: notification_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Notification Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+            example:
+              action: accepted
+              payload:
+                applied_at: '2024-05-20T10:00:00Z'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Apply Notification Action Api Notifications  Notification Id  Action Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/notifications/{notification_id}/read:
+    post:
+      tags:
+      - notifications
+      summary: Mark Notification Read
+      description: "Mark a notification as read.\n\nArgs:\n    notification_id: Notification ID\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Success status"
+      operationId: mark_notification_read_api_notifications__notification_id__read_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: notification_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Notification Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Mark Notification Read Api Notifications  Notification Id  Read Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/notifications/company-profile/{company_profile_id}/mark-all-read:
+    post:
+      tags:
+      - notifications
+      summary: Mark All Notifications Read
+      description: "Mark all notifications as read for a company profile.\nUses optimized bulk SQL operations.\n\nArgs:\n    company_profile_id: Company profile ID\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Number of notifications marked as read"
+      operationId: mark_all_notifications_read_api_notifications_company_profile__company_profile_id__mark_all_read_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Mark All Notifications Read Api Notifications Company Profile  Company Profile Id  Mark All Read Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/notifications/company-profile/{company_profile_id}/unread-count:
+    get:
+      tags:
+      - notifications
+      summary: Get Unread Count
+      description: "Get count of unread notifications with multi-tab deduplication support.\n\nArgs:\n    company_profile_id: Company profile ID\n    session_id: Optional session ID for multi-tab deduplication\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Count of unread notifications"
+      operationId: get_unread_count_api_notifications_company_profile__company_profile_id__unread_count_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: session_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Session ID for multi-tab deduplication
+          title: Session Id
+        description: Session ID for multi-tab deduplication
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Unread Count Api Notifications Company Profile  Company Profile Id  Unread Count Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/notifications/company-profile/{company_profile_id}/stats:
+    get:
+      tags:
+      - notifications
+      summary: Get Notification Stats
+      description: "Get notification delivery statistics for monitoring.\n\nArgs:\n    company_profile_id: Company profile ID\n    days: Number of days to look back\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Delivery statistics"
+      operationId: get_notification_stats_api_notifications_company_profile__company_profile_id__stats_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 30
+          minimum: 1
+          description: Number of days to look back
+          default: 7
+          title: Days
+        description: Number of days to look back
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Notification Stats Api Notifications Company Profile  Company Profile Id  Stats Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

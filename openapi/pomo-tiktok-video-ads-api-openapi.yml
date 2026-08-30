@@ -1,0 +1,649 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend TikTok Video Ads API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: TikTok Video Ads
+paths:
+  /api/campaigns/online-ads/tiktok-video:
+    post:
+      tags:
+      - TikTok Video Ads
+      summary: Create Tiktok Video Ad Campaign
+      operationId: create_tiktok_video_ad_campaign_api_campaigns_online_ads_tiktok_video_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TikTokVideoAdRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - TikTok Video Ads
+      summary: Get Tiktok Video Campaigns
+      operationId: get_tiktok_video_campaigns_api_campaigns_online_ads_tiktok_video_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Page
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/online-ads/tiktok-video/all:
+    get:
+      tags:
+      - TikTok Video Ads
+      summary: Get Tiktok Video Ad Campaigns
+      operationId: get_tiktok_video_ad_campaigns_api_campaigns_online_ads_tiktok_video_all_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/campaigns/online-ads/tiktok-video/call-to-actions:
+    get:
+      tags:
+      - TikTok Video Ads
+      summary: Get Tiktok Video Call To Actions
+      operationId: get_tiktok_video_call_to_actions_api_campaigns_online_ads_tiktok_video_call_to_actions_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/campaigns/online-ads/tiktok-video/{campaign_id}:
+    get:
+      tags:
+      - TikTok Video Ads
+      summary: Get Tiktok Video Ad Campaign
+      operationId: get_tiktok_video_ad_campaign_api_campaigns_online_ads_tiktok_video__campaign_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/online-ads/tiktok-video/campaign/{campaign_id}:
+    delete:
+      tags:
+      - TikTok Video Ads
+      summary: Delete Tiktok Video Ad Campaign
+      operationId: delete_tiktok_video_ad_campaign_api_campaigns_online_ads_tiktok_video_campaign__campaign_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/online-ads/tiktok-video/update-campaign:
+    put:
+      tags:
+      - TikTok Video Ads
+      summary: Update Tiktok Video Ad Campaign
+      operationId: update_tiktok_video_ad_campaign_api_campaigns_online_ads_tiktok_video_update_campaign_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdsCampaignUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    KeywordWithCpc:
+      properties:
+        keyword:
+          type: string
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
+      type: object
+      required:
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
+    CampaignMediaOperation:
+      properties:
+        action:
+          type: string
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Action
+        media_type:
+          type: string
+          enum:
+          - image
+          - video
+          title: Media Type
+        selected_url:
+          type: string
+          title: Selected Url
+        previous_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous Url
+        source_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Source Index
+      type: object
+      required:
+      - action
+      - media_type
+      - selected_url
+      title: CampaignMediaOperation
+      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AdsCampaignUpdateRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline
+        long_headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Long Headline
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        ad_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Name
+        call_to_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Call To Action
+        keywords:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - items:
+              $ref: '#/components/schemas/KeywordWithCpc'
+            type: array
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Keywords
+        negative_keywords:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - items:
+              $ref: '#/components/schemas/KeywordWithCpc'
+            type: array
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Negative Keywords
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        recommended_daily_budget:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Recommended Daily Budget
+        total_budget:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Budget
+        duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration
+        target_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Platform
+        start_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
+        business_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Name
+        final_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Final Url
+        headlines:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Headlines
+        descriptions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Descriptions
+        format_setting:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Format Setting
+        primary_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Text
+        destination_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Destination Url
+        ad_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Format
+        placements:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Placements
+        introductory_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Introductory Text
+        alt_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alt Text
+        aspect_ratio:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aspect Ratio
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        linkedin_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Linkedin Lead Form Config
+        google_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Google Lead Form Config
+        meta_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta Lead Form Config
+        asin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asin
+        sku:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sku
+        targeting_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Targeting Type
+        bidding_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bidding Strategy
+        default_bid:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Default Bid
+        brand_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Brand Name
+        landing_page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Landing Page Url
+        showcase_products:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Showcase Products
+        targeting_products:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Targeting Products
+        audience_segments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Audience Segments
+        interests:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Interests
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+        bid_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bid Strategy
+        max_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Cpc
+        ad_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Text
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        objective_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Objective Type
+        video_length:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Length
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: string
+          - type: 'null'
+          title: Dayparting Config
+        media_operations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CampaignMediaOperation'
+            type: array
+          - type: 'null'
+          title: Media Operations
+      type: object
+      required:
+      - campaign_id
+      title: AdsCampaignUpdateRequest
+      description: Request model for updating ad campaign data
+    TikTokVideoAdRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+        target_audience:
+          type: string
+          title: Target Audience
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          default: 3
+        video_length:
+          type: integer
+          maximum: 10.0
+          minimum: 10.0
+          title: Video Length
+          description: Video duration is fixed at 10 seconds
+          default: 10
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          default: automatic
+        budget_range:
+          type: string
+          title: Budget Range
+          default: medium
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Reference Images
+      type: object
+      required:
+      - product_description
+      - target_audience
+      title: TikTokVideoAdRequest
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,679 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend User Activity API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: user-activity
+paths:
+  /api/activity/events:
+    post:
+      tags:
+      - user-activity
+      summary: Record Product Events
+      operationId: record_product_events_api_activity_events_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductEventsBatchIn'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductEventsBatchResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/activity/ping:
+    post:
+      tags:
+      - user-activity
+      summary: Record Presence Ping
+      operationId: record_presence_ping_api_activity_ping_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresencePingIn'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresencePingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/activity/presence:
+    get:
+      tags:
+      - user-activity
+      summary: List Presence
+      operationId: list_presence_api_activity_presence_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Organization Id
+      - name: active_window_seconds
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 3600
+          minimum: 15
+          default: 90
+          title: Active Window Seconds
+      - name: interaction_window_seconds
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 86400
+          minimum: 30
+          default: 300
+          title: Interaction Window Seconds
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 200
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresenceListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/activity/users/{user_id}/timeline:
+    get:
+      tags:
+      - user-activity
+      summary: Get User Activity Timeline
+      operationId: get_user_activity_timeline_api_activity_users__user_id__timeline_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      - name: organization_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Organization Id
+      - name: from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: From
+      - name: to
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: To
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 200
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductEventTimelineResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    PresenceRow:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        session_id:
+          type: string
+          title: Session Id
+        tab_id:
+          type: string
+          title: Tab Id
+        device_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Device Id
+        route_path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Route Path
+        route_template:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Route Template
+        app_area:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: App Area
+        subview_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subview Type
+        subview_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subview Key
+        subview_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subview Label
+        is_visible:
+          type: boolean
+          title: Is Visible
+        activity_status:
+          type: string
+          title: Activity Status
+        last_interaction_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Interaction At
+        last_visible_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Visible At
+        last_ping_at:
+          type: string
+          format: date-time
+          title: Last Ping At
+      type: object
+      required:
+      - user_id
+      - session_id
+      - tab_id
+      - is_visible
+      - activity_status
+      - last_ping_at
+      title: PresenceRow
+    PresencePingResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        last_ping_at:
+          type: string
+          format: date-time
+          title: Last Ping At
+      type: object
+      required:
+      - status
+      - last_ping_at
+      title: PresencePingResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProductEventTimelineResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/ProductEventRow'
+          type: array
+          title: Events
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - events
+      - total
+      title: ProductEventTimelineResponse
+    PresenceListResponse:
+      properties:
+        presence:
+          items:
+            $ref: '#/components/schemas/PresenceRow'
+          type: array
+          title: Presence
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - presence
+      - total
+      title: PresenceListResponse
+    ProductEventsBatchResponse:
+      properties:
+        accepted:
+          type: integer
+          title: Accepted
+      type: object
+      required:
+      - accepted
+      title: ProductEventsBatchResponse
+    PresencePingIn:
+      properties:
+        session_id:
+          type: string
+          maxLength: 96
+          minLength: 1
+          title: Session Id
+        tab_id:
+          type: string
+          maxLength: 96
+          minLength: 1
+          title: Tab Id
+        device_id:
+          anyOf:
+          - type: string
+            maxLength: 96
+          - type: 'null'
+          title: Device Id
+        route_path:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Route Path
+        route_template:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Route Template
+        app_area:
+          anyOf:
+          - type: string
+            maxLength: 96
+          - type: 'null'
+          title: App Area
+        subview_type:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Subview Type
+        subview_key:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Subview Key
+        subview_label:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          title: Subview Label
+        is_visible:
+          type: boolean
+          title: Is Visible
+          default: true
+        last_interaction_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Interaction At
+        last_visible_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Visible At
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - session_id
+      - tab_id
+      title: PresencePingIn
+    ProductEventsBatchIn:
+      properties:
+        session_id:
+          type: string
+          maxLength: 96
+          minLength: 1
+          title: Session Id
+        tab_id:
+          type: string
+          maxLength: 96
+          minLength: 1
+          title: Tab Id
+        device_id:
+          anyOf:
+          - type: string
+            maxLength: 96
+          - type: 'null'
+          title: Device Id
+        events:
+          items:
+            $ref: '#/components/schemas/ProductEventIn'
+          type: array
+          maxItems: 100
+          minItems: 1
+          title: Events
+      type: object
+      required:
+      - session_id
+      - tab_id
+      - events
+      title: ProductEventsBatchIn
+    ProductEventRow:
+      properties:
+        id:
+          type: string
+          title: Id
+        user_id:
+          type: string
+          title: User Id
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        session_id:
+          type: string
+          title: Session Id
+        tab_id:
+          type: string
+          title: Tab Id
+        device_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Device Id
+        page_view_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page View Id
+        event_name:
+          type: string
+          title: Event Name
+        route_path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Route Path
+        route_template:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Route Template
+        app_area:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: App Area
+        component_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Component Id
+        action_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Action Id
+        object_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Object Type
+        object_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Object Id
+        subview_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subview Type
+        subview_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subview Key
+        subview_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subview Label
+        duration_ms:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Ms
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+        client_timestamp:
+          type: string
+          format: date-time
+          title: Client Timestamp
+        server_timestamp:
+          type: string
+          format: date-time
+          title: Server Timestamp
+      type: object
+      required:
+      - id
+      - user_id
+      - session_id
+      - tab_id
+      - event_name
+      - client_timestamp
+      - server_timestamp
+      title: ProductEventRow
+    ProductEventIn:
+      properties:
+        event_name:
+          type: string
+          maxLength: 96
+          minLength: 1
+          title: Event Name
+        page_view_id:
+          anyOf:
+          - type: string
+            maxLength: 96
+          - type: 'null'
+          title: Page View Id
+        route_path:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Route Path
+        route_template:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Route Template
+        app_area:
+          anyOf:
+          - type: string
+            maxLength: 96
+          - type: 'null'
+          title: App Area
+        component_id:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Component Id
+        action_id:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Action Id
+        object_type:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Object Type
+        object_id:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Object Id
+        subview_type:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Subview Type
+        subview_key:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Subview Key
+        subview_label:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          title: Subview Label
+        duration_ms:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Duration Ms
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+        client_timestamp:
+          type: string
+          format: date-time
+          title: Client Timestamp
+      type: object
+      required:
+      - event_name
+      - client_timestamp
+      title: ProductEventIn
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

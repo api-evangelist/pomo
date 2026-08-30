@@ -1,0 +1,505 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Social Posts API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: social-posts
+paths:
+  /api/social-posts/platforms:
+    get:
+      tags:
+      - social-posts
+      summary: Get Platforms
+      description: Get all supported platforms and their configurations.
+      operationId: get_platforms_api_social_posts_platforms_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/social-posts/platforms/{platform}/post-types:
+    get:
+      tags:
+      - social-posts
+      summary: Get Platform Post Types
+      description: Get supported post types for a specific platform.
+      operationId: get_platform_post_types_api_social_posts_platforms__platform__post_types_get
+      parameters:
+      - name: platform
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Platform
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/social-posts/generate:
+    post:
+      tags:
+      - social-posts
+      summary: Generate Social Posts
+      description: Generate social media posts for a specific platform and format.
+      operationId: generate_social_posts_api_social_posts_generate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialPostRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/social-posts/batch-generate:
+    post:
+      tags:
+      - social-posts
+      summary: Batch Generate Posts
+      description: Generate posts for multiple platforms in one request.
+      operationId: batch_generate_posts_api_social_posts_batch_generate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchGenerateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/social-posts/campaigns:
+    get:
+      tags:
+      - social-posts
+      summary: Get Campaigns
+      description: Get user's social media campaigns with filtering.
+      operationId: get_campaigns_api_social_posts_campaigns_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: platform
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+      - name: post_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Type
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/social-posts/campaigns/{campaign_id}:
+    get:
+      tags:
+      - social-posts
+      summary: Get Campaign Details
+      description: Get detailed information about a specific campaign.
+      operationId: get_campaign_details_api_social_posts_campaigns__campaign_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - social-posts
+      summary: Update Campaign
+      description: Update a campaign's content.
+      operationId: update_campaign_api_social_posts_campaigns__campaign_id__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Campaign Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePostRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - social-posts
+      summary: Delete Campaign
+      description: Delete a campaign and all its variations.
+      operationId: delete_campaign_api_social_posts_campaigns__campaign_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/social-posts/campaigns/{campaign_id}/variation:
+    post:
+      tags:
+      - social-posts
+      summary: Generate Variation
+      description: Generate a variation of an existing post.
+      operationId: generate_variation_api_social_posts_campaigns__campaign_id__variation_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Campaign Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateVariationRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GenerateVariationRequest:
+      properties:
+        post_id:
+          type: integer
+          title: Post Id
+          description: ID of the original post
+        variation_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variation Prompt
+          description: Optional prompt for variation
+      type: object
+      required:
+      - post_id
+      title: GenerateVariationRequest
+      description: Request model for generating post variations.
+    BatchGenerateRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+        target_audience:
+          type: string
+          title: Target Audience
+        platforms:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type: array
+          title: Platforms
+          description: List of platform configurations
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+        key_selling_points:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Selling Points
+          default: ''
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Reference Images
+        use_brand_style:
+          type: boolean
+          title: Use Brand Style
+          default: false
+        num_posts:
+          type: integer
+          maximum: 5.0
+          minimum: 1.0
+          title: Num Posts
+          default: 1
+      type: object
+      required:
+      - product_description
+      - target_audience
+      - platforms
+      title: BatchGenerateRequest
+      description: Request model for batch generation across multiple platforms.
+    SocialPostRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+          description: Description of product/service
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Target audience description
+        platform:
+          type: string
+          title: Platform
+          description: Social media platform (instagram, facebook, linkedin, x, tiktok_social)
+        post_type:
+          type: string
+          title: Post Type
+          description: Type of post (feed_post, story, reel, article, thread)
+        media_type:
+          type: string
+          title: Media Type
+          description: Type of media (image, video, text, carousel)
+          default: image
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+          description: Campaign goals
+        key_selling_points:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Selling Points
+          description: Key selling points
+          default: ''
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Reference Images
+          description: Base64 encoded reference images
+        use_brand_style:
+          type: boolean
+          title: Use Brand Style
+          description: Maintain brand consistency
+          default: false
+        num_posts:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Posts
+          description: Number of posts to generate
+          default: 1
+        num_media:
+          type: integer
+          maximum: 35.0
+          minimum: 0.0
+          title: Num Media
+          description: Number of media items per post
+          default: 1
+        video_duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Duration
+          description: Video duration is fixed at 10 seconds
+        platform_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Platform Config
+          description: Platform-specific configuration
+      type: object
+      required:
+      - product_description
+      - target_audience
+      - platform
+      - post_type
+      title: SocialPostRequest
+      description: Request model for generating social posts.
+    UpdatePostRequest:
+      properties:
+        caption:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caption
+        hashtags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Hashtags
+        platform_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Platform Config
+        scheduled_for:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheduled For
+      type: object
+      title: UpdatePostRequest
+      description: Request model for updating a post.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

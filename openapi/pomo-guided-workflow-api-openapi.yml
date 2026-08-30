@@ -1,0 +1,1722 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Guided Workflow API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: guided-workflow
+paths:
+  /api/guided-workflow/landing-page-preflight:
+    post:
+      tags:
+      - guided-workflow
+      summary: Preflight Landing Page
+      operationId: preflight_landing_page_api_guided_workflow_landing_page_preflight_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LandingPagePreflightRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/guided-workflow/generate-target-audience/job:
+    post:
+      tags:
+      - guided-workflow
+      summary: Start Target Audience Job
+      description: Start asynchronous target audience generation and return job tracking info.
+      operationId: start_target_audience_job_api_guided_workflow_generate_target_audience_job_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Force regeneration of target audiences
+          default: false
+          title: Force Refresh
+        description: Force regeneration of target audiences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TargetAudienceRequest'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/guided-workflow/check-integrations:
+    get:
+      tags:
+      - guided-workflow
+      summary: Check Integrations
+      description: 'Check integration status for all external platforms.
+
+
+        Returns boolean status for each supported platform integration.'
+      operationId: check_integrations_api_guided_workflow_check_integrations_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/guided-workflow/audience-estimates:
+    post:
+      tags:
+      - guided-workflow
+      summary: Get Audience Estimates
+      description: Estimate audience sizes for Meta and LinkedIn based on target audience options.
+      operationId: get_audience_estimates_api_guided_workflow_audience_estimates_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AudienceEstimateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/guided-workflow/create-social-post-campaign:
+    post:
+      tags:
+      - guided-workflow
+      summary: Create Social Post Campaign
+      description: Start social post campaign generation asynchronously. Returns a tracking job id.
+      operationId: create_social_post_campaign_api_guided_workflow_create_social_post_campaign_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_social_post_campaign_api_guided_workflow_create_social_post_campaign_post'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/guided-workflow/create-email-campaign:
+    post:
+      tags:
+      - guided-workflow
+      summary: Create Email Campaign
+      description: Start email campaign generation asynchronously. Returns a tracking job id.
+      operationId: create_email_campaign_api_guided_workflow_create_email_campaign_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_email_campaign_api_guided_workflow_create_email_campaign_post'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/guided-workflow/create-ads-campaign:
+    post:
+      tags:
+      - guided-workflow
+      summary: Create Ads Campaign Endpoint
+      description: Start ads campaign generation asynchronously. Returns a tracking job id.
+      operationId: create_ads_campaign_endpoint_api_guided_workflow_create_ads_campaign_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_ads_campaign_endpoint_api_guided_workflow_create_ads_campaign_post'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/guided-workflow/campaigns/{campaign_id}/generate-video:
+    post:
+      tags:
+      - guided-workflow
+      summary: Finalize Video Campaign
+      description: Start video generation for a draft video campaign (HITL finalize step).
+      operationId: finalize_video_campaign_api_guided_workflow_campaigns__campaign_id__generate_video_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinalizeVideoRequest'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/guided-workflow/campaigns/generate-videos:
+    post:
+      tags:
+      - guided-workflow
+      summary: Finalize Video Campaigns
+      description: Finalize multiple draft video campaigns, then generate any deferred non-video campaigns.
+      operationId: finalize_video_campaigns_api_guided_workflow_campaigns_generate_videos_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinalizeVideosRequest'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/guided-workflow/social-campaigns/generate-videos:
+    post:
+      tags:
+      - guided-workflow
+      summary: Finalize Social Video Campaigns
+      description: Finalize reviewed social video drafts, then generate deferred non-video social posts.
+      operationId: finalize_social_video_campaigns_api_guided_workflow_social_campaigns_generate_videos_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinalizeSocialVideosRequest'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    StructuredTimedBeatScriptModel:
+      properties:
+        total_runtime_seconds:
+          type: number
+          title: Total Runtime Seconds
+          description: Total runtime for the video in seconds
+        beats:
+          items:
+            $ref: '#/components/schemas/StructuredVideoBeatModel'
+          type: array
+          title: Beats
+          description: Contiguous timestamped beats that cover the full runtime
+      type: object
+      required:
+      - total_runtime_seconds
+      title: StructuredTimedBeatScriptModel
+    AudienceEstimateRequest:
+      properties:
+        audiences:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Audiences
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+          description: Country code (e.g., US)
+        state:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          - type: 'null'
+          title: State
+          description: State/region names or codes
+        city:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          - type: 'null'
+          title: City
+          description: City names
+      type: object
+      title: AudienceEstimateRequest
+    StructuredVideoBeatModel:
+      properties:
+        start_seconds:
+          type: number
+          title: Start Seconds
+          description: Beat start time in seconds
+        end_seconds:
+          type: number
+          title: End Seconds
+          description: Beat end time in seconds
+        visual_action:
+          type: string
+          title: Visual Action
+          description: What happens visually during this beat
+        spoken_audio:
+          type: string
+          title: Spoken Audio
+          description: What is spoken during this beat, or an empty string when silent
+        sound_effects:
+          type: string
+          title: Sound Effects
+          description: Beat-specific sound effects or audio accents, or an empty string when none
+        cta_delivery:
+          type: string
+          title: Cta Delivery
+          description: How this beat advances or lands the CTA/value takeaway
+      type: object
+      required:
+      - start_seconds
+      - end_seconds
+      - visual_action
+      - spoken_audio
+      - sound_effects
+      - cta_delivery
+      title: StructuredVideoBeatModel
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    FinalizeVideoCampaignItem:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Draft campaign ID to finalize
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+          description: Target platform for this draft campaign
+        video_length:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Length
+          description: Video duration is fixed at 10 seconds for this draft campaign
+        video_quality:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Quality
+          description: Requested video quality for this draft campaign
+        ugc_style_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ugc Style Enabled
+          description: Whether this draft campaign should use creator-led UGC-style video guidance
+        use_fast_model:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Use Fast Model
+          description: Whether this draft campaign should use the Gemini fast video model (lite + 1080p)
+        draft_ads:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Draft Ads
+          description: Client-provided draft ads for this campaign
+        modified_prompts:
+          anyOf:
+          - additionalProperties:
+              $ref: '#/components/schemas/StructuredVideoPromptModel'
+            type: object
+          - type: 'null'
+          title: Modified Prompts
+          description: Optional map of ad_id to edited structured video prompt
+      type: object
+      required:
+      - campaign_id
+      title: FinalizeVideoCampaignItem
+    FinalizeSocialVideoCampaignItem:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Draft social campaign ID to finalize
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+          description: Platform key (instagram, facebook, linkedin)
+        post_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Type
+          description: Social post type
+        media_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Type
+          description: Media type for this finalize item
+          default: video
+        video_duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Duration
+          description: Requested video duration for this social draft
+        video_quality:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Quality
+          description: Requested video quality for this social draft
+        ugc_style_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ugc Style Enabled
+          description: Whether this social draft campaign should use creator-led UGC-style video guidance
+        use_fast_model:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Use Fast Model
+          description: Whether this social draft campaign should use the Gemini fast video model (lite + 1080p)
+        draft_ads:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Draft Ads
+          description: Client-provided social draft ads
+        modified_prompts:
+          anyOf:
+          - additionalProperties:
+              $ref: '#/components/schemas/StructuredVideoPromptModel'
+            type: object
+          - type: 'null'
+          title: Modified Prompts
+          description: Optional map of draft_ad_id to edited structured video prompt
+      type: object
+      required:
+      - campaign_id
+      title: FinalizeSocialVideoCampaignItem
+    StructuredVideoPromptModel:
+      properties:
+        opening_frame_continuity:
+          type: string
+          title: Opening Frame Continuity
+          description: How the shot starts from the first frame
+        subject_product_invariants:
+          type: string
+          title: Subject Product Invariants
+          description: Who and what must remain unchanged throughout the shot
+        talent_presence:
+          type: string
+          title: Talent Presence
+          description: Whether a person is visible on camera, how much of them is shown, and whether that visibility stays consistent
+        spoken_audio_delivery:
+          type: string
+          title: Spoken Audio Delivery
+          description: How spoken lines are delivered across the clip, such as on-camera speech, voiceover, off-camera speech, or fully silent
+        timed_beat_script:
+          $ref: '#/components/schemas/StructuredTimedBeatScriptModel'
+          description: Timed beat script covering the full runtime
+        camera_composition:
+          type: string
+          title: Camera Composition
+          description: Shot type, framing, angle, lens feel, and movement
+        context_environment:
+          type: string
+          title: Context Environment
+          description: Where the action happens and what remains present in the scene
+        style_lighting_ambience:
+          type: string
+          title: Style Lighting Ambience
+          description: Visual tone, lighting, palette, and ambience
+        global_audio_bed:
+          type: string
+          title: Global Audio Bed
+          description: Continuous music, ambience, or room tone for the full clip
+        constraints:
+          type: string
+          title: Constraints
+          description: Continuity and brand-safety constraints for the video
+      type: object
+      required:
+      - opening_frame_continuity
+      - subject_product_invariants
+      - talent_presence
+      - spoken_audio_delivery
+      - timed_beat_script
+      - camera_composition
+      - context_environment
+      - style_lighting_ambience
+      - global_audio_bed
+      - constraints
+      title: StructuredVideoPromptModel
+    FinalizeVideosRequest:
+      properties:
+        video_campaigns:
+          items:
+            $ref: '#/components/schemas/FinalizeVideoCampaignItem'
+          type: array
+          title: Video Campaigns
+          description: Draft video campaigns to finalize
+        non_video_platforms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Non Video Platforms
+          description: Non-video platforms to generate after video finalize
+        target_platforms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Platforms
+          description: Original requested platforms (used to derive non-video)
+        platform_sub_formats:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Platform Sub Formats
+          description: Platform-specific creative mode selections from the original request
+        num_ads:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Ads
+          description: Number of ads per non-video platform
+        num_images_per_ad:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Images Per Ad
+          description: Images per non-video ad
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Reference Images
+          description: Reference image data URLs
+        provided_media_assets:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Provided Media Assets
+          description: User-provided media assets to use instead of generating primary video/image creative
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+          description: Enable lead forms where supported
+        lead_forms_by_ad_type:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Lead Forms By Ad Type
+          description: Lead form settings keyed by ad type
+        max_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Cpc
+          description: Max CPC for manual bidding
+        objective:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Objective
+          description: Campaign objective
+        ad_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Format
+          description: Ad format
+        video_length:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Length
+          description: Video duration is fixed at 10 seconds for video platforms
+        video_lengths:
+          anyOf:
+          - additionalProperties:
+              type: integer
+            type: object
+          - type: 'null'
+          title: Video Lengths
+          description: Optional map of platform ids to video duration; values are normalized to 10 seconds
+        video_quality:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Quality
+          description: Default video quality for video platforms
+          default: 1080p
+        video_qualities:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Video Qualities
+          description: Optional map of platform ids to requested video quality
+        ugc_style_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ugc Style Enabled
+          description: Whether to steer generated videos and seed images toward creator-led UGC style
+          default: false
+        use_fast_model:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Use Fast Model
+          description: Whether to use the Gemini fast video model (lite + 1080p) for finalized videos
+          default: false
+        user_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Prompt
+          description: Original user prompt/product description
+        target_audience:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Target Audience
+          description: Target audience description
+        locations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Locations
+          description: Structured target locations
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+          description: Product offering ID
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+          description: Country for geo targeting
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+          description: State/Province for geo targeting
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+          description: City for geo targeting
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+          description: Optional campaign goals
+        key_selling_points:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Selling Points
+          description: Optional key selling points
+        bid_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bid Strategy
+          description: Optional bidding strategy
+        budget_range:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Budget Range
+          description: Optional budget range
+        budget_allocation:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Budget Allocation
+        budget_constraints:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Budget Constraints
+        campaign_timing:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Campaign Timing
+        dayparting_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Dayparting Enabled
+          default: false
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Dayparting Config
+        product_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Description
+          description: 'Deprecated: use user_prompt'
+        target_locations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Target Locations
+          description: 'Deprecated: use locations'
+        target_audience_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Target Audience Json
+          description: 'Deprecated: derive from target_audience'
+      type: object
+      title: FinalizeVideosRequest
+    FinalizeVideoRequest:
+      properties:
+        modified_prompts:
+          anyOf:
+          - additionalProperties:
+              $ref: '#/components/schemas/StructuredVideoPromptModel'
+            type: object
+          - type: 'null'
+          title: Modified Prompts
+          description: Optional map of ad_id to edited structured video prompt
+        draft_ads:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Draft Ads
+          description: Optional client-provided draft ads (images/prompts)
+        user_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Prompt
+          description: Original user prompt/product description
+        target_audience:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Target Audience
+          description: Target audience description
+        locations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Locations
+          description: Structured target locations
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+          description: Product offering ID
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+          description: Country for geo targeting
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+          description: State/Province for geo targeting
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+          description: City for geo targeting
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+          description: Optional campaign goals
+        key_selling_points:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Selling Points
+          description: Optional key selling points
+        bid_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bid Strategy
+          description: Optional bidding strategy
+        budget_range:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Budget Range
+          description: Optional budget range
+        budget_allocation:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Budget Allocation
+        budget_constraints:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Budget Constraints
+        campaign_timing:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Campaign Timing
+        dayparting_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Dayparting Enabled
+          default: false
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Dayparting Config
+        target_platforms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Platforms
+          description: Requested platforms for this finalize action
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+          description: Enable lead forms where supported
+        lead_forms_by_ad_type:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Lead Forms By Ad Type
+          description: Lead form settings keyed by ad type
+        video_length:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Length
+          description: Video duration is fixed at 10 seconds
+        video_quality:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Quality
+          description: Requested video quality for this finalize action
+          default: 1080p
+        provided_media_assets:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Provided Media Assets
+          description: User-provided media assets to use instead of generating primary video/image creative
+        ugc_style_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ugc Style Enabled
+          description: Whether to steer the generated video and seed image toward creator-led UGC style
+          default: false
+        use_fast_model:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Use Fast Model
+          description: Whether to use the Gemini fast video model (lite + 1080p) for video generation
+          default: false
+        product_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Description
+          description: 'Deprecated: use user_prompt'
+        target_locations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Target Locations
+          description: 'Deprecated: use locations'
+        target_audience_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Target Audience Json
+          description: 'Deprecated: derive from target_audience'
+      type: object
+      title: FinalizeVideoRequest
+    Body_create_email_campaign_api_guided_workflow_create_email_campaign_post:
+      properties:
+        user_prompt:
+          type: string
+          title: User Prompt
+          description: User's description of what they want to do
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Description of the target audience
+        custom_instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Instructions
+          description: Free-text user instructions/preferences to respect across idea and creative generation
+        reference_image_urls:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reference Image Urls
+          description: JSON array of reference image URLs
+        files:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Files
+          description: Optional reference images (max 5)
+        num_samples:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Samples
+          description: Number of email samples to generate (max 5)
+          default: 3
+        num_images_per_sample:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Images Per Sample
+          description: Number of images per email sample (max 5)
+          default: 2
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+          description: Product offering ID if campaign is for a specific product
+      type: object
+      required:
+      - user_prompt
+      - target_audience
+      title: Body_create_email_campaign_api_guided_workflow_create_email_campaign_post
+    FinalizeSocialVideosRequest:
+      properties:
+        video_campaigns:
+          items:
+            $ref: '#/components/schemas/FinalizeSocialVideoCampaignItem'
+          type: array
+          title: Video Campaigns
+          description: Draft social video campaigns to finalize
+        deferred_platform_configs:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Deferred Platform Configs
+          description: Deferred non-video platform configs to generate after video finalize
+        provided_media_assets:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Provided Media Assets
+          description: User-provided media assets to use for deferred social creative
+        num_posts:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Posts
+          description: Number of posts per deferred platform
+          default: 3
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Reference Images
+          description: Reference image data URLs
+        use_brand_style:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Use Brand Style
+          description: Apply brand style constraints
+          default: false
+        video_duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Duration
+          description: Fallback video duration for social video finalize
+        video_quality:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Quality
+          description: Default video quality for social videos
+          default: 1080p
+        ugc_style_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ugc Style Enabled
+          description: Whether to steer generated social videos and seed images toward creator-led UGC style
+          default: false
+        use_fast_model:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Use Fast Model
+          description: Whether to use the Gemini fast video model (lite + 1080p) for finalized social videos
+          default: false
+        batch_campaign_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Batch Campaign Id
+          description: Optional batch campaign id
+        user_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Prompt
+          description: Original user prompt/product description
+        target_audience:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Target Audience
+          description: Target audience description
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+          description: Product offering ID
+        product_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Description
+          description: 'Deprecated: use user_prompt'
+        target_audience_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Target Audience Json
+          description: 'Deprecated: derive from target_audience'
+      type: object
+      title: FinalizeSocialVideosRequest
+    LandingPagePreflightRequest:
+      properties:
+        url:
+          type: string
+          title: Url
+        expected_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Expected Urls
+        use_firecrawl:
+          type: boolean
+          title: Use Firecrawl
+          default: true
+      type: object
+      required:
+      - url
+      title: LandingPagePreflightRequest
+    Body_create_ads_campaign_endpoint_api_guided_workflow_create_ads_campaign_post:
+      properties:
+        user_prompt:
+          type: string
+          title: User Prompt
+          description: User's description of what they want to do
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Description of the target audience
+        custom_instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Instructions
+          description: Free-text user instructions/preferences to respect across idea and creative generation
+        selected_target_audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selected Target Audience
+          description: JSON object for the selected audience
+        selected_campaign_idea:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selected Campaign Idea
+          description: JSON object for the selected campaign idea
+        campaign_timing:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Timing
+          description: JSON object for structured campaign timing
+        campaign_budget:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Budget
+          description: JSON object for structured campaign budget
+        campaign_budget_constraints:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Budget Constraints
+          description: JSON object for reviewed campaign budget constraints
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+          description: Company profile ID (required)
+        target_platforms:
+          type: string
+          title: Target Platforms
+          description: JSON array of target platforms
+        num_ads:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Ads
+          description: Number of ads to generate (max 3)
+          default: 3
+        num_images_per_ad:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Images Per Ad
+          description: Number of images per ad (max 3)
+          default: 2
+        experiment_package_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Experiment Package Id
+          description: Test package id for A/B linkage
+        launch_strategy_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launch Strategy Mode
+          description: test_learn_pilot or direct_campaign
+        experiment_variants:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Experiment Variants
+          description: JSON array of A/B creative versions for per-version campaign fan-out
+        video_length:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Length
+          description: Video duration is fixed at 10 seconds for video ads
+          default: 10
+        video_lengths:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Lengths
+          description: JSON object mapping video platforms to video duration; values are normalized to 10 seconds
+        video_quality:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Quality
+          description: Fallback video quality for video ads
+          default: 1080p
+        video_qualities:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Qualities
+          description: JSON object mapping video platforms to requested video quality
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+          description: Target country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+          description: Target state/province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+          description: Target city
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+          description: Whether to use lead form extension
+          default: false
+        lead_forms_by_ad_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lead Forms By Ad Type
+          description: Lead form settings keyed by ad type JSON
+        reference_image_urls:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reference Image Urls
+          description: JSON array of reference image URLs
+        platform_sub_formats:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Sub Formats
+          description: JSON object with platform-specific sub-formats
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+          description: Product offering ID if campaign is for a specific product
+        objective:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Objective
+          description: Campaign objective (for TikTok, only TRAFFIC is currently supported)
+        ad_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Format
+          description: 'Ad format (e.g., for TikTok: SINGLE_IMAGE, VIDEO)'
+        locations:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Locations
+          description: JSON array of multi-geo locations (LocationItem[])
+        dayparting_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Dayparting Enabled
+          description: Whether dayparting is enabled for this campaign
+          default: false
+        dayparting_config:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dayparting Config
+          description: JSON object with dayparting configuration
+        ugc_style_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ugc Style Enabled
+          description: Whether requested video creatives should use creator-led UGC style
+          default: false
+        provided_media_assets:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provided Media Assets
+          description: JSON array of user-provided media assets to use as ad creative
+        files:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Files
+          description: Optional reference images (max 5)
+        youtube_logo_image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Youtube Logo Image Url
+          description: Optional square logo URL for YouTube/Google Video
+      type: object
+      required:
+      - user_prompt
+      - target_audience
+      - company_profile_id
+      - target_platforms
+      title: Body_create_ads_campaign_endpoint_api_guided_workflow_create_ads_campaign_post
+    Body_create_social_post_campaign_api_guided_workflow_create_social_post_campaign_post:
+      properties:
+        user_prompt:
+          type: string
+          title: User Prompt
+          description: User's description of what they want to do
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Description of the target audience
+        custom_instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Instructions
+          description: Free-text user instructions/preferences to respect across idea and creative generation
+        experiment_package_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Experiment Package Id
+          description: Test package id for A/B linkage
+        launch_strategy_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launch Strategy Mode
+          description: test_learn_pilot or direct_campaign
+        selected_target_audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selected Target Audience
+          description: JSON object for the selected audience
+        selected_campaign_idea:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selected Campaign Idea
+          description: JSON object for the selected campaign idea
+        campaign_timing:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Timing
+          description: JSON object for structured campaign timing
+        campaign_budget:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Budget
+          description: JSON object for structured campaign budget
+        campaign_budget_constraints:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Budget Constraints
+          description: JSON object for reviewed campaign budget constraints
+        reference_image_urls:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reference Image Urls
+          description: JSON array of reference image URLs
+        files:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Files
+          description: Optional reference images (max 5)
+        num_posts:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Posts
+          description: Number of posts to generate (max 3)
+          default: 3
+        num_images_per_post:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Images Per Post
+          description: Number of images per post (max 5)
+          default: 2
+        platforms:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platforms
+          description: JSON array of platforms to generate posts for
+        post_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Type
+          description: Type of post (for single platform)
+        media_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Type
+          description: Media type (for single platform)
+        video_duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Duration
+          description: Video duration is fixed at 10 seconds for video posts
+          default: 10
+        video_quality:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Quality
+          description: Fallback video quality for video posts
+          default: 1080p
+        use_batch_endpoint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Use Batch Endpoint
+          description: Flag to use batch endpoint for multi-platform
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+          description: Product offering ID if campaign is for a specific product
+        ugc_style_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ugc Style Enabled
+          description: Whether requested social video creatives should use creator-led UGC style
+          default: false
+        provided_media_assets:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provided Media Assets
+          description: JSON array of user-provided media assets to use as social post creative
+      type: object
+      required:
+      - user_prompt
+      - target_audience
+      title: Body_create_social_post_campaign_api_guided_workflow_create_social_post_campaign_post
+    TargetAudienceRequest:
+      properties:
+        user_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Prompt
+          description: Optional user prompt to guide target audience generation
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+          description: Product offering ID (UUID). Omit/null for company-wide targeting
+        product_offering_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Offering Name
+          description: Product offering name for reference
+        pinned_audiences:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Pinned Audiences
+          description: List of audience objects to keep; generator will refresh remaining slots
+        locations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Locations
+          description: Structured campaign scope locations to use when generating local audiences
+        target_locations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Target Locations
+          description: Deprecated alias for locations
+        user_provided_locations:
+          type: boolean
+          title: User Provided Locations
+          description: Whether the user explicitly selected campaign scope locations
+          default: false
+      type: object
+      title: TargetAudienceRequest
+      description: Request schema for target audience generation
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,531 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Marketing Docs API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: marketing-docs
+paths:
+  /api/marketing-docs/gamma/deck/generate:
+    post:
+      tags:
+      - marketing-docs
+      summary: Generate Pitch Deck
+      description: Reject new pitch deck generation while the feature is unavailable.
+      operationId: generate_pitch_deck_api_marketing_docs_gamma_deck_generate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateDeckRequest'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/marketing-docs/gamma/deck/status:
+    get:
+      tags:
+      - marketing-docs
+      summary: Get Pitch Deck Status
+      description: 'Proxy status polling to Gamma. Frontend can poll every ~5s.
+
+
+        For now, we do on-demand polling per request. If needed we can later
+
+        persist jobs and background-poll.'
+      operationId: get_pitch_deck_status_api_marketing_docs_gamma_deck_status_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: doc_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Doc Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeckStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/marketing-docs/market-opportunity/generate:
+    post:
+      tags:
+      - marketing-docs
+      summary: Generate Market Opportunity Document
+      description: Store one-run supporting files and start document generation.
+      operationId: generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/marketing-docs/gtm/generate:
+    post:
+      tags:
+      - marketing-docs
+      summary: Generate Gtm Document
+      description: Reject new GTM generation while the feature is unavailable.
+      operationId: generate_gtm_document_api_marketing_docs_gtm_generate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateGTMRequest'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/marketing-docs/gamma/deck/download:
+    get:
+      tags:
+      - marketing-docs
+      summary: Download Pitch Deck
+      description: 'Download the generated deck (pptx or pdf) by proxying Gamma file response.
+
+
+        This keeps the API key server-side and streams bytes to the client.'
+      operationId: download_pitch_deck_api_marketing_docs_gamma_deck_download_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: doc_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Doc Id
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          default: pptx
+          title: Format
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    GenerateDeckRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        product_offering_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Product Offering Ids
+        title:
+          type: string
+          title: Title
+        audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Audience
+        goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal
+        slides_total:
+          type: integer
+          maximum: 50.0
+          minimum: 1.0
+          title: Slides Total
+        sections:
+          items:
+            $ref: '#/components/schemas/DeckSection'
+          type: array
+          title: Sections
+        style:
+          anyOf:
+          - $ref: '#/components/schemas/DeckStyle'
+          - type: 'null'
+        sample_reference_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sample Reference Url
+        export:
+          anyOf:
+          - $ref: '#/components/schemas/DeckExport'
+          - type: 'null'
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        attachments:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Attachments
+      type: object
+      required:
+      - company_profile_id
+      - title
+      - slides_total
+      - sections
+      title: GenerateDeckRequest
+    Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post:
+      properties:
+        request_json:
+          type: string
+          title: Request Json
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+          default: []
+      type: object
+      required:
+      - request_json
+      title: Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post
+    GenerateGTMRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        product_offering_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Product Offering Ids
+        audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Audience
+        goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal
+        tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tone
+          default: professional
+        expected_length:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Length
+          default: standard
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        attachments:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Attachments
+      type: object
+      required:
+      - company_profile_id
+      title: GenerateGTMRequest
+    DeckStatusResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        status:
+          type: string
+          title: Status
+        ready:
+          type: boolean
+          title: Ready
+        doc_id:
+          type: string
+          title: Doc Id
+        doc_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Doc Url
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        provider_response:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Provider Response
+        file_urls:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: File Urls
+        files:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/DeckFileDescriptor'
+            type: array
+          - type: 'null'
+          title: Files
+      type: object
+      required:
+      - success
+      - status
+      - ready
+      - doc_id
+      title: DeckStatusResponse
+    DeckStyle:
+      properties:
+        palette:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Palette
+        fonts:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Fonts
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+        tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tone
+        density:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Density
+        icon_style:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon Style
+      type: object
+      title: DeckStyle
+    DeckExport:
+      properties:
+        pptx:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Pptx
+          default: false
+        pdf:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Pdf
+          default: false
+      type: object
+      title: DeckExport
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DeckFileDescriptor:
+      properties:
+        format:
+          type: string
+          title: Format
+        filename:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Filename
+        gcs_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gcs Url
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+        signed_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signed Url
+      type: object
+      required:
+      - format
+      title: DeckFileDescriptor
+    DeckSection:
+      properties:
+        name:
+          type: string
+          title: Name
+        target_slides:
+          type: integer
+          minimum: 1.0
+          title: Target Slides
+          description: Target slides in this section
+        must_include:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Must Include
+          default: false
+      type: object
+      required:
+      - name
+      - target_slides
+      title: DeckSection
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

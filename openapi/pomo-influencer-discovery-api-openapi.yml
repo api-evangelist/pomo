@@ -1,0 +1,2157 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Influencer Discovery API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: influencer-discovery
+paths:
+  /api/influencer-discovery/tiktok/challenges:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Search Tiktok Challenge Endpoint
+      operationId: search_tiktok_challenge_endpoint_api_influencer_discovery_tiktok_challenges_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: keywords
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+          title: Keywords
+      - name: count
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 10
+          title: Count
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Cursor
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Search Tiktok Challenge Endpoint Api Influencer Discovery Tiktok Challenges Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/tiktok/users/search:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Search Tiktok Users Endpoint
+      operationId: search_tiktok_users_endpoint_api_influencer_discovery_tiktok_users_search_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: keywords
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+          title: Keywords
+      - name: follower_count
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 4
+          minimum: 0
+          default: 0
+          title: Follower Count
+      - name: count
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 5
+          title: Count
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Cursor
+      - name: profile_type
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Profile Type
+      - name: other_pref
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Other Pref
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Search Tiktok Users Endpoint Api Influencer Discovery Tiktok Users Search Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/tiktok/users/info:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Get Tiktok User Info Endpoint
+      operationId: get_tiktok_user_info_endpoint_api_influencer_discovery_tiktok_users_info_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: unique_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+          title: Unique Id
+      - name: region
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 16
+          - type: 'null'
+          title: Region
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Tiktok User Info Endpoint Api Influencer Discovery Tiktok Users Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/tiktok/users/posts:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Get Tiktok User Posts Endpoint
+      operationId: get_tiktok_user_posts_endpoint_api_influencer_discovery_tiktok_users_posts_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: unique_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+          title: Unique Id
+      - name: count
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 6
+          minimum: 1
+          default: 6
+          title: Count
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Cursor
+      - name: sort_type
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Sort Type
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Tiktok User Posts Endpoint Api Influencer Discovery Tiktok Users Posts Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/instagram/hashtags/search:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Search Instagram Hashtag Endpoint
+      operationId: search_instagram_hashtag_endpoint_api_influencer_discovery_instagram_hashtags_search_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: hashtag
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+          title: Hashtag
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Search Instagram Hashtag Endpoint Api Influencer Discovery Instagram Hashtags Search Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/instagram/users/search:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Search Instagram Users Endpoint
+      operationId: search_instagram_users_endpoint_api_influencer_discovery_instagram_users_search_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: query
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+          title: Query
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Search Instagram Users Endpoint Api Influencer Discovery Instagram Users Search Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/instagram/users/profile:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Get Instagram Profile Endpoint
+      operationId: get_instagram_profile_endpoint_api_influencer_discovery_instagram_users_profile_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: username
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+          title: Username
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Instagram Profile Endpoint Api Influencer Discovery Instagram Users Profile Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/instagram/reels:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Get Instagram Reels Endpoint
+      operationId: get_instagram_reels_endpoint_api_influencer_discovery_instagram_reels_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+          title: Id
+      - name: count
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 12
+          minimum: 1
+          default: 12
+          title: Count
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Instagram Reels Endpoint Api Influencer Discovery Instagram Reels Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/youtube/channel/details:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Get Youtube Channel Details Endpoint
+      operationId: get_youtube_channel_details_endpoint_api_influencer_discovery_youtube_channel_details_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 300
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Youtube Channel Details Endpoint Api Influencer Discovery Youtube Channel Details Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/youtube/channel/videos:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Get Youtube Channel Videos Endpoint
+      operationId: get_youtube_channel_videos_endpoint_api_influencer_discovery_youtube_channel_videos_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+          title: Id
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+          default: videos_latest
+          title: Filter
+      - name: hl
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 16
+          default: en
+          title: Hl
+      - name: gl
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 2
+          default: US
+          title: Gl
+      - name: count
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 12
+          minimum: 1
+          default: 6
+          title: Count
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Youtube Channel Videos Endpoint Api Influencer Discovery Youtube Channel Videos Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/youtube/auto-complete:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Get Youtube Auto Complete Endpoint
+      operationId: get_youtube_auto_complete_endpoint_api_influencer_discovery_youtube_auto_complete_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+          title: Q
+      - name: hl
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 16
+          default: en
+          title: Hl
+      - name: gl
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 2
+          default: US
+          title: Gl
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Youtube Auto Complete Endpoint Api Influencer Discovery Youtube Auto Complete Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/youtube/search:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Search Youtube Endpoint
+      operationId: search_youtube_endpoint_api_influencer_discovery_youtube_search_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+          title: Q
+      - name: hl
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 16
+          default: en
+          title: Hl
+      - name: gl
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 2
+          default: US
+          title: Gl
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Search Youtube Endpoint Api Influencer Discovery Youtube Search Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/hashtags/recommendations:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Recommend Creator Hashtags Endpoint
+      operationId: recommend_creator_hashtags_endpoint_api_influencer_discovery_hashtags_recommendations_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: platform
+        in: query
+        required: true
+        schema:
+          type: string
+          pattern: ^(tiktok|instagram)$
+          title: Platform
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Recommend Creator Hashtags Endpoint Api Influencer Discovery Hashtags Recommendations Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/hashtags/product-offering-recommendations:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Recommend Product Offering Creator Hashtags Endpoint
+      operationId: recommend_product_offering_creator_hashtags_endpoint_api_influencer_discovery_hashtags_product_offering_recommendations_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: platform
+        in: query
+        required: true
+        schema:
+          type: string
+          pattern: ^(tiktok|instagram)$
+          title: Platform
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Recommend Product Offering Creator Hashtags Endpoint Api Influencer Discovery Hashtags Product Offering Recommendations Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/outreach/draft-message:
+    post:
+      tags:
+      - influencer-discovery
+      summary: Draft Creator Outreach Message Endpoint
+      operationId: draft_creator_outreach_message_endpoint_api_influencer_discovery_outreach_draft_message_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DraftCreatorOutreachMessageRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Draft Creator Outreach Message Endpoint Api Influencer Discovery Outreach Draft Message Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/influencer-discovery/pricing/estimate:
+    post:
+      tags:
+      - influencer-discovery
+      summary: Estimate Influencer Pricing Endpoint
+      operationId: estimate_influencer_pricing_endpoint_api_influencer_discovery_pricing_estimate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerPricingEstimateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfluencerPricingEstimateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/influencer-discovery/instagram/beta/sections:
+    get:
+      tags:
+      - influencer-discovery
+      summary: List Instagram Beta Sections Endpoint
+      operationId: list_instagram_beta_sections_endpoint_api_influencer_discovery_instagram_beta_sections_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List Instagram Beta Sections Endpoint Api Influencer Discovery Instagram Beta Sections Get
+      security:
+      - HTTPBearer: []
+  /api/influencer-discovery/instagram/beta/section-selection:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Select Instagram Beta Section Endpoint
+      operationId: select_instagram_beta_section_endpoint_api_influencer_discovery_instagram_beta_section_selection_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Select Instagram Beta Section Endpoint Api Influencer Discovery Instagram Beta Section Selection Get
+      security:
+      - HTTPBearer: []
+  /api/influencer-discovery/instagram/avatar:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Proxy Instagram Avatar Endpoint
+      operationId: proxy_instagram_avatar_endpoint_api_influencer_discovery_instagram_avatar_get
+      parameters:
+      - name: url
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/profile/avatar:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Proxy Influencer Profile Avatar Endpoint
+      operationId: proxy_influencer_profile_avatar_endpoint_api_influencer_discovery_profile_avatar_get
+      parameters:
+      - name: url
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 500
+          title: Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/tiktok/users/ingest:
+    post:
+      tags:
+      - influencer-discovery
+      summary: Ingest Tiktok User Endpoint
+      operationId: ingest_tiktok_user_endpoint_api_influencer_discovery_tiktok_users_ingest_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: unique_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+          title: Unique Id
+      - name: region
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 16
+          - type: 'null'
+          title: Region
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ingest Tiktok User Endpoint Api Influencer Discovery Tiktok Users Ingest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/instagram/users/ingest:
+    post:
+      tags:
+      - influencer-discovery
+      summary: Ingest Instagram User Endpoint
+      operationId: ingest_instagram_user_endpoint_api_influencer_discovery_instagram_users_ingest_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: username
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+          title: Username
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ingest Instagram User Endpoint Api Influencer Discovery Instagram Users Ingest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/youtube/channel/ingest:
+    post:
+      tags:
+      - influencer-discovery
+      summary: Ingest Youtube Channel Endpoint
+      operationId: ingest_youtube_channel_endpoint_api_influencer_discovery_youtube_channel_ingest_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 500
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ingest Youtube Channel Endpoint Api Influencer Discovery Youtube Channel Ingest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/outreach-list:
+    get:
+      tags:
+      - influencer-discovery
+      summary: List Outreach Creators Endpoint
+      operationId: list_outreach_creators_endpoint_api_influencer_discovery_outreach_list_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List Outreach Creators Endpoint Api Influencer Discovery Outreach List Get
+      security:
+      - HTTPBearer: []
+  /api/influencer-discovery/lists:
+    post:
+      tags:
+      - influencer-discovery
+      summary: Create Creator List Endpoint
+      operationId: create_creator_list_endpoint_api_influencer_discovery_lists_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCreatorListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Create Creator List Endpoint Api Influencer Discovery Lists Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - influencer-discovery
+      summary: List Creator Lists Endpoint
+      operationId: list_creator_lists_endpoint_api_influencer_discovery_lists_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Creator Lists Endpoint Api Influencer Discovery Lists Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/lists/{list_id}:
+    get:
+      tags:
+      - influencer-discovery
+      summary: Get Creator List Endpoint
+      operationId: get_creator_list_endpoint_api_influencer_discovery_lists__list_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: List Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Creator List Endpoint Api Influencer Discovery Lists  List Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - influencer-discovery
+      summary: Update Creator List Endpoint
+      operationId: update_creator_list_endpoint_api_influencer_discovery_lists__list_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: List Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCreatorListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Creator List Endpoint Api Influencer Discovery Lists  List Id  Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - influencer-discovery
+      summary: Archive Creator List Endpoint
+      operationId: archive_creator_list_endpoint_api_influencer_discovery_lists__list_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: List Id
+      - name: permanent
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Permanent
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Archive Creator List Endpoint Api Influencer Discovery Lists  List Id  Delete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/lists/{list_id}/members:
+    post:
+      tags:
+      - influencer-discovery
+      summary: Add Creators To List Endpoint
+      operationId: add_creators_to_list_endpoint_api_influencer_discovery_lists__list_id__members_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: List Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCreatorsToListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Add Creators To List Endpoint Api Influencer Discovery Lists  List Id  Members Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/creators/{creator_id}/lists:
+    post:
+      tags:
+      - influencer-discovery
+      summary: Add Creator To Lists Endpoint
+      operationId: add_creator_to_lists_endpoint_api_influencer_discovery_creators__creator_id__lists_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCreatorToListsRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Add Creator To Lists Endpoint Api Influencer Discovery Creators  Creator Id  Lists Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/lists/{list_id}/members/{creator_id}:
+    patch:
+      tags:
+      - influencer-discovery
+      summary: Update Creator List Member Endpoint
+      operationId: update_creator_list_member_endpoint_api_influencer_discovery_lists__list_id__members__creator_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: List Id
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCreatorListMembershipRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Creator List Member Endpoint Api Influencer Discovery Lists  List Id  Members  Creator Id  Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - influencer-discovery
+      summary: Remove Creator From List Endpoint
+      operationId: remove_creator_from_list_endpoint_api_influencer_discovery_lists__list_id__members__creator_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: list_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: List Id
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Remove Creator From List Endpoint Api Influencer Discovery Lists  List Id  Members  Creator Id  Delete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/outreach-list/{creator_id}:
+    delete:
+      tags:
+      - influencer-discovery
+      summary: Remove Outreach Creator Endpoint
+      operationId: remove_outreach_creator_endpoint_api_influencer_discovery_outreach_list__creator_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Remove Outreach Creator Endpoint Api Influencer Discovery Outreach List  Creator Id  Delete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/outreach-list/{creator_id}/stage:
+    patch:
+      tags:
+      - influencer-discovery
+      summary: Update Outreach Creator Stage Endpoint
+      operationId: update_outreach_creator_stage_endpoint_api_influencer_discovery_outreach_list__creator_id__stage_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOutreachStageRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Outreach Creator Stage Endpoint Api Influencer Discovery Outreach List  Creator Id  Stage Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/outreach-list/{creator_id}/outreach-sent:
+    post:
+      tags:
+      - influencer-discovery
+      summary: Mark Creator Outreach Sent Endpoint
+      operationId: mark_creator_outreach_sent_endpoint_api_influencer_discovery_outreach_list__creator_id__outreach_sent_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Mark Creator Outreach Sent Endpoint Api Influencer Discovery Outreach List  Creator Id  Outreach Sent Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/outreach-list/{creator_id}/drafts:
+    get:
+      tags:
+      - influencer-discovery
+      summary: List Creator Outreach Drafts Endpoint
+      operationId: list_creator_outreach_drafts_endpoint_api_influencer_discovery_outreach_list__creator_id__drafts_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Creator Outreach Drafts Endpoint Api Influencer Discovery Outreach List  Creator Id  Drafts Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - influencer-discovery
+      summary: Save Creator Outreach Draft Endpoint
+      operationId: save_creator_outreach_draft_endpoint_api_influencer_discovery_outreach_list__creator_id__drafts_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveCreatorOutreachDraftRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Save Creator Outreach Draft Endpoint Api Influencer Discovery Outreach List  Creator Id  Drafts Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/outreach-list/{creator_id}/contacts:
+    patch:
+      tags:
+      - influencer-discovery
+      summary: Update Outreach Creator Contacts Endpoint
+      operationId: update_outreach_creator_contacts_endpoint_api_influencer_discovery_outreach_list__creator_id__contacts_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCreatorContactsRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Outreach Creator Contacts Endpoint Api Influencer Discovery Outreach List  Creator Id  Contacts Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/influencer-discovery/outreach-list/{creator_id}/locations:
+    patch:
+      tags:
+      - influencer-discovery
+      summary: Update Outreach Creator Locations Endpoint
+      operationId: update_outreach_creator_locations_endpoint_api_influencer_discovery_outreach_list__creator_id__locations_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: creator_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Creator Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCreatorLocationsRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Outreach Creator Locations Endpoint Api Influencer Discovery Outreach List  Creator Id  Locations Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UpdateCreatorContactsRequest:
+      properties:
+        contacts_json:
+          additionalProperties: true
+          type: object
+          title: Contacts Json
+      type: object
+      required:
+      - contacts_json
+      title: UpdateCreatorContactsRequest
+    InfluencerDeliverablePricingEstimate:
+      properties:
+        deliverable_type:
+          type: string
+          title: Deliverable Type
+        deliverable_label:
+          type: string
+          title: Deliverable Label
+        deliverable_description:
+          type: string
+          title: Deliverable Description
+        pricing_basis:
+          type: string
+          title: Pricing Basis
+        confidence:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          title: Confidence
+        expected_views:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Expected Views
+        expected_views_min:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Expected Views Min
+        expected_views_max:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Expected Views Max
+        expected_views_source:
+          anyOf:
+          - type: string
+            enum:
+            - recent_media_direct_views
+            - provider_avg_video_views
+            - avg_interactions_fallback
+            - followers_fallback
+          - type: 'null'
+          title: Expected Views Source
+        expected_views_confidence:
+          anyOf:
+          - type: string
+            enum:
+            - low
+            - medium
+            - high
+          - type: 'null'
+          title: Expected Views Confidence
+        expected_views_basis:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Views Basis
+        cpm_min_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Cpm Min Usd
+        cpm_max_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Cpm Max Usd
+        cpm_suggested_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Cpm Suggested Usd
+        canonical_range:
+          $ref: '#/components/schemas/InfluencerPricingRange'
+        local_range:
+          anyOf:
+          - $ref: '#/components/schemas/InfluencerPricingRange'
+          - type: 'null'
+        display_ranges:
+          items:
+            $ref: '#/components/schemas/InfluencerPricingRange'
+          type: array
+          title: Display Ranges
+        factors:
+          items:
+            type: string
+          type: array
+          title: Factors
+        assumptions:
+          items:
+            type: string
+          type: array
+          title: Assumptions
+        missing_data:
+          items:
+            type: string
+          type: array
+          title: Missing Data
+        caveats:
+          items:
+            type: string
+          type: array
+          title: Caveats
+      type: object
+      required:
+      - deliverable_type
+      - deliverable_label
+      - deliverable_description
+      - pricing_basis
+      - confidence
+      - canonical_range
+      - display_ranges
+      title: InfluencerDeliverablePricingEstimate
+      description: Structured price estimate for one deliverable type.
+    UpdateCreatorLocationsRequest:
+      properties:
+        creator_locations_json:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Creator Locations Json
+      type: object
+      title: UpdateCreatorLocationsRequest
+    InfluencerPricingRange:
+      properties:
+        currency:
+          type: string
+          maxLength: 3
+          minLength: 3
+          title: Currency
+        min_amount:
+          type: number
+          minimum: 0.0
+          title: Min Amount
+        max_amount:
+          type: number
+          minimum: 0.0
+          title: Max Amount
+        suggested_amount:
+          type: number
+          minimum: 0.0
+          title: Suggested Amount
+        label:
+          type: string
+          title: Label
+        is_local:
+          type: boolean
+          title: Is Local
+          default: false
+        exchange_rate_per_usd:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Exchange Rate Per Usd
+      type: object
+      required:
+      - currency
+      - min_amount
+      - max_amount
+      - suggested_amount
+      - label
+      title: InfluencerPricingRange
+      description: Price range in one display currency.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DraftCreatorOutreachMessageRequest:
+      properties:
+        channel:
+          type: string
+          enum:
+          - email
+          - platform_dm
+          title: Channel
+        creator_name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Creator Name
+        creator_handle:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Creator Handle
+        platform:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Platform
+        account_label:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Account Label
+        account_value:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Account Value
+        account_url:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Account Url
+        creator_bio:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Creator Bio
+        creator_category:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Creator Category
+        creator_location:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Creator Location
+        creator_audience:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Creator Audience
+        followers:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Followers
+        engagement:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Engagement
+        verified:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Verified
+        product_offering_id:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Product Offering Id
+        campaign_theme:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Campaign Theme
+        campaign_idea:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Campaign Idea
+        instruction:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Instruction
+        current_subject:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Current Subject
+        current_message:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Current Message
+      type: object
+      required:
+      - channel
+      - creator_name
+      title: DraftCreatorOutreachMessageRequest
+    AddCreatorToListsRequest:
+      properties:
+        list_ids:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: List Ids
+      type: object
+      required:
+      - list_ids
+      title: AddCreatorToListsRequest
+    UpdateCreatorListMembershipRequest:
+      properties:
+        outreach_stage:
+          anyOf:
+          - type: string
+            enum:
+            - saved
+            - outreached
+            - replied
+            - negotiating
+            - confirmed
+            - rejected
+          - type: 'null'
+          title: Outreach Stage
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+      type: object
+      title: UpdateCreatorListMembershipRequest
+    CreateCreatorListRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        list_type:
+          type: string
+          title: List Type
+          default: manual
+        campaign_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Id
+        campaign_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Type
+        metadata_json:
+          additionalProperties: true
+          type: object
+          title: Metadata Json
+      type: object
+      required:
+      - name
+      title: CreateCreatorListRequest
+    SaveCreatorOutreachDraftRequest:
+      properties:
+        channel:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Channel
+        target_label:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Target Label
+        target_value:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Target Value
+        subject:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Subject
+        message:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Message
+        last_prompt:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Last Prompt
+      type: object
+      required:
+      - channel
+      - target_value
+      - message
+      title: SaveCreatorOutreachDraftRequest
+    InfluencerPricingEstimateRequest:
+      properties:
+        creator_id:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Creator Id
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        handle:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Handle
+        platform:
+          type: string
+          enum:
+          - tiktok
+          - instagram
+          - youtube
+          - unknown
+          title: Platform
+          default: unknown
+        source:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Source
+        category:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Category
+        bio:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Bio
+        audience:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Audience
+        followers:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Followers
+        followers_value:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Followers Value
+        engagement:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Engagement
+        engagement_rate:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Engagement Rate
+        likes_value:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Likes Value
+        videos_value:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Videos Value
+        views_value:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Views Value
+        avg_video_views_value:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Avg Video Views Value
+        avg_interactions_value:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Avg Interactions Value
+        recent_media_view_counts:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Recent Media View Counts
+        verified:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Verified
+        private_account:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Private Account
+        location_label:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Location Label
+        country_code:
+          anyOf:
+          - type: string
+            maxLength: 2
+          - type: 'null'
+          title: Country Code
+        country_name:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Country Name
+        subdivision_code:
+          anyOf:
+          - type: string
+            maxLength: 24
+          - type: 'null'
+          title: Subdivision Code
+        subdivision_name:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Subdivision Name
+      type: object
+      required:
+      - name
+      title: InfluencerPricingEstimateRequest
+      description: Creator profile snapshot used to estimate a collaboration price range.
+    UpdateCreatorListRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        is_pinned:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Pinned
+        metadata_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata Json
+      type: object
+      title: UpdateCreatorListRequest
+    AddCreatorsToListRequest:
+      properties:
+        creator_ids:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Creator Ids
+        positions_by_creator_id:
+          anyOf:
+          - additionalProperties:
+              type: integer
+            type: object
+          - type: 'null'
+          title: Positions By Creator Id
+      type: object
+      required:
+      - creator_ids
+      title: AddCreatorsToListRequest
+    UpdateOutreachStageRequest:
+      properties:
+        outreach_stage:
+          type: string
+          enum:
+          - saved
+          - outreached
+          - replied
+          - negotiating
+          - confirmed
+          - rejected
+          title: Outreach Stage
+      type: object
+      required:
+      - outreach_stage
+      title: UpdateOutreachStageRequest
+    InfluencerPricingEstimateResponse:
+      properties:
+        market_country_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Market Country Code
+        market_country_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Market Country Name
+        estimates:
+          items:
+            $ref: '#/components/schemas/InfluencerDeliverablePricingEstimate'
+          type: array
+          title: Estimates
+      type: object
+      required:
+      - estimates
+      title: InfluencerPricingEstimateResponse
+      description: Structured influencer price estimates grouped by deliverable type.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

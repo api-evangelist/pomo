@@ -1,0 +1,366 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend MCP API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: mcp
+paths:
+  /api/mcp/resources/read:
+    post:
+      tags:
+      - mcp
+      summary: Read Resource
+      description: "Read a specific resource by ID.\n\nExample:\n```json\n{\n    \"resource_type\": \"company-profile\",\n    \"resource_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"params\": {\"include_products\": true}\n}\n```"
+      operationId: read_resource_api_mcp_resources_read_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceReadRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/mcp/resources/list:
+    post:
+      tags:
+      - mcp
+      summary: List Resources
+      description: "List available resources of a specific type.\n\nExample:\n```json\n{\n    \"resource_type\": \"company-profile\",\n    \"params\": {\"limit\": 10, \"offset\": 0}\n}\n```"
+      operationId: list_resources_api_mcp_resources_list_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceListRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/mcp/tools/execute:
+    post:
+      tags:
+      - mcp
+      summary: Execute Tool
+      description: "Execute an MCP tool.\n\nExample:\n```json\n{\n    \"tool_name\": \"generate_campaign_ideas\",\n    \"company_profile_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"arguments\": {\n        \"customer_goal\": \"increase brand awareness\",\n        \"target_audiences\": [\n            {\"description\": \"Tech-savvy millennials\"}\n        ]\n    }\n}\n```"
+      operationId: execute_tool_api_mcp_tools_execute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolExecuteRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/mcp/tools/list:
+    get:
+      tags:
+      - mcp
+      summary: List Tools
+      description: 'List all available MCP tools with their schemas.
+
+
+        Returns tool definitions suitable for LLM function calling.'
+      operationId: list_tools_api_mcp_tools_list_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List Tools Api Mcp Tools List Get
+      security:
+      - HTTPBearer: []
+  /api/mcp/prompts/list:
+    get:
+      tags:
+      - mcp
+      summary: List Prompt Templates
+      description: "List available prompt templates.\n\nArgs:\n    category: Optional category filter (e.g., 'analytics', 'planning')\n\nReturns:\n    List of available prompts"
+      operationId: list_prompt_templates_api_mcp_prompts_list_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Prompt Templates Api Mcp Prompts List Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/mcp/prompts/{prompt_name}:
+    get:
+      tags:
+      - mcp
+      summary: Get Prompt Template
+      description: "Get a specific prompt template.\n\nArgs:\n    prompt_name: Name of the prompt template\n\nReturns:\n    Full prompt template with variables"
+      operationId: get_prompt_template_api_mcp_prompts__prompt_name__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: prompt_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Prompt Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Prompt Template Api Mcp Prompts  Prompt Name  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/mcp/capabilities:
+    get:
+      tags:
+      - mcp
+      summary: Get Capabilities
+      description: 'Get MCP server capabilities and configuration.
+
+
+        Returns information about available resources, tools, and features.'
+      operationId: get_capabilities_api_mcp_capabilities_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Capabilities Api Mcp Capabilities Get
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ResourceListRequest:
+      properties:
+        resource_type:
+          type: string
+          title: Resource Type
+          description: Type of resource to list
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+          description: Organization context
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+          description: Company profile context
+        params:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Params
+          description: Filtering parameters
+      type: object
+      required:
+      - resource_type
+      title: ResourceListRequest
+      description: Request to list resources
+    ResourceReadRequest:
+      properties:
+        resource_type:
+          type: string
+          title: Resource Type
+          description: Type of resource (e.g., 'company-profile')
+        resource_id:
+          type: string
+          title: Resource Id
+          description: UUID of the resource
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+          description: Organization context
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+          description: Company profile context
+        params:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Params
+          description: Additional parameters
+      type: object
+      required:
+      - resource_type
+      - resource_id
+      title: ResourceReadRequest
+      description: Request to read a specific resource
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MCPResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Data
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - success
+      title: MCPResponse
+      description: Standard MCP response
+    ToolExecuteRequest:
+      properties:
+        tool_name:
+          type: string
+          title: Tool Name
+          description: Name of the tool to execute
+        organization_id:
+          type: string
+          title: Organization Id
+          description: Organization context (required)
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+          description: Company profile context (required)
+        arguments:
+          additionalProperties: true
+          type: object
+          title: Arguments
+          description: Tool arguments
+        confirmation_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confirmation Token
+          description: Confirmation token for write operations
+        conversation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Conversation Id
+          description: Conversation ID for async job notifications
+      type: object
+      required:
+      - tool_name
+      - organization_id
+      - company_profile_id
+      title: ToolExecuteRequest
+      description: Request to execute a tool
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,347 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Competitive Gap Analysis API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: competitive-gap-analysis
+paths:
+  /api/competitive-gap-analysis/{company_profile_id}:
+    get:
+      tags:
+      - competitive-gap-analysis
+      summary: Get Gap Analysis
+      description: "Get competitive gap analysis for a company profile.\n\nArgs:\n    company_profile_id: ID of the company profile\n    version: Optional specific version to retrieve\n    \nReturns:\n    Gap analysis data formatted for API response"
+      operationId: get_gap_analysis_api_competitive_gap_analysis__company_profile_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: version
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Specific version to retrieve
+          title: Version
+        description: Specific version to retrieve
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Gap Analysis Api Competitive Gap Analysis  Company Profile Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/competitive-gap-analysis/{company_profile_id}/dashboard-summary:
+    get:
+      tags:
+      - competitive-gap-analysis
+      summary: Get Gap Analysis Dashboard
+      description: 'Get comprehensive gap analysis data for marketing wizard dashboard.
+
+        Returns ALL data properly formatted for visualization.'
+      operationId: get_gap_analysis_dashboard_api_competitive_gap_analysis__company_profile_id__dashboard_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Gap Analysis Dashboard Api Competitive Gap Analysis  Company Profile Id  Dashboard Summary Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/competitive-gap-analysis/{company_profile_id}/versions:
+    get:
+      tags:
+      - competitive-gap-analysis
+      summary: Get Analysis Versions
+      description: "Get all versions of gap analysis for a company profile.\n\nReturns:\n    List of analysis versions with summary data"
+      operationId: get_analysis_versions_api_competitive_gap_analysis__company_profile_id__versions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Analysis Versions Api Competitive Gap Analysis  Company Profile Id  Versions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/competitive-gap-analysis/{company_profile_id}/generate:
+    post:
+      tags:
+      - competitive-gap-analysis
+      summary: Generate Gap Analysis
+      description: 'Generate competitive gap analysis for a company profile.
+
+
+        This follows the same logic as the brand workflow generation.'
+      operationId: generate_gap_analysis_api_competitive_gap_analysis__company_profile_id__generate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Generate Gap Analysis Api Competitive Gap Analysis  Company Profile Id  Generate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/competitive-gap-analysis/{company_profile_id}/regenerate:
+    post:
+      tags:
+      - competitive-gap-analysis
+      summary: Regenerate Gap Analysis
+      description: 'Regenerate competitive gap analysis for a company profile.
+
+
+        This will create a new version of the analysis.'
+      operationId: regenerate_gap_analysis_api_competitive_gap_analysis__company_profile_id__regenerate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Regenerate Gap Analysis Api Competitive Gap Analysis  Company Profile Id  Regenerate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/competitive-gap-analysis/{company_profile_id}/strategic-campaigns:
+    get:
+      tags:
+      - competitive-gap-analysis
+      summary: Get Strategic Campaigns
+      description: 'Get strategic campaign recommendations from the latest gap analysis.
+
+        Automatically generates fresh analysis daily to incorporate latest market trends.
+
+
+        **DEPRECATED**: Use POST /generate-simple-campaigns for faster, goal-focused generation.
+
+        This endpoint does full competitive analysis which takes 15-20 seconds.'
+      operationId: get_strategic_campaigns_api_competitive_gap_analysis__company_profile_id__strategic_campaigns_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Force regeneration of analysis
+          default: false
+          title: Force Refresh
+        description: Force regeneration of analysis
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Strategic Campaigns Api Competitive Gap Analysis  Company Profile Id  Strategic Campaigns Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/competitive-gap-analysis/{company_profile_id}/competitor-insights:
+    get:
+      tags:
+      - competitive-gap-analysis
+      summary: Get Competitor Insights
+      description: 'Get detailed competitor insights from ProductOfferingCompetitiveAnalysis.
+
+
+        Returns company-wide competitive analysis.'
+      operationId: get_competitor_insights_api_competitive_gap_analysis__company_profile_id__competitor_insights_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Competitor Insights Api Competitive Gap Analysis  Company Profile Id  Competitor Insights Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/competitive-gap-analysis/{company_profile_id}/generate-simple-campaigns:
+    post:
+      tags:
+      - competitive-gap-analysis
+      summary: Generate Simple Campaign Recommendations
+      description: "Simplified endpoint to generate 5-8 campaign recommendations based on:\n- Target audiences (from request body)\n- Customer goal (from request body)\n\nThis bypasses the full competitive analysis and focuses purely on campaign generation.\nResults are cached to avoid regenerating for identical parameters.\n\nRequest body should contain:\n{\n    \"target_audiences\": [...],\n    \"customer_goal\": \"string\",\n    \"additional_context\": \"string\" (optional),\n    \"force_refresh\": false (optional - bypasses cache)\n}"
+      operationId: generate_simple_campaign_recommendations_api_competitive_gap_analysis__company_profile_id__generate_simple_campaigns_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Request Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Generate Simple Campaign Recommendations Api Competitive Gap Analysis  Company Profile Id  Generate Simple Campaigns Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

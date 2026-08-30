@@ -1,0 +1,6820 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Agentic Teams API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: agentic-teams
+paths:
+  /api/agentic/teams:
+    post:
+      tags:
+      - agentic-teams
+      summary: Create Team
+      operationId: create_team_api_agentic_teams_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - agentic-teams
+      summary: List Teams
+      operationId: list_teams_api_agentic_teams_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organization Id
+      - name: company_profile_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+      - name: include_deleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include Deleted
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/templates:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Templates
+      description: Return the catalog of available team templates.
+      operationId: list_team_templates_api_agentic_teams_templates_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/agentic/teams/policy:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Policy
+      operationId: get_team_policy_api_agentic_teams_policy_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organization Id
+      - name: company_profile_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+      - name: template_version
+        in: query
+        required: false
+        schema:
+          type: string
+          default: data_intel_team
+          title: Template Version
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamPolicyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/active:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Active Team
+      operationId: get_active_team_api_agentic_teams_active_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organization Id
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/AgentTeamDetailResponse'
+                - type: 'null'
+                title: Response Get Active Team Api Agentic Teams Active Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/fleet:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Fleet Snapshot
+      operationId: get_team_fleet_snapshot_api_agentic_teams_fleet_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organization Id
+      - name: company_profile_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 200
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by team status
+          title: Status
+        description: Filter by team status
+      - name: blocked_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include only blocked teams
+          default: false
+          title: Blocked Only
+        description: Include only blocked teams
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort key
+          default: updated_at
+          title: Sort By
+        description: Sort key
+      - name: sort_order
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort order (asc|desc)
+          default: desc
+          title: Sort Order
+        description: Sort order (asc|desc)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamFleetSnapshotResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/workspace-init:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Workspace Init
+      operationId: get_team_workspace_init_api_agentic_teams_workspace_init_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organization Id
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: template_version
+        in: query
+        required: false
+        schema:
+          type: string
+          default: data_intel_team
+          title: Template Version
+      - name: include_workspace_data
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Include Workspace Data
+      - name: include_report_summary
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include Report Summary
+      - name: include_presentation_daily_report
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Include Presentation Daily Report
+      - name: report_run_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Report Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamWorkspaceInitResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/agents/{agent_id}:
+    patch:
+      tags:
+      - agentic-teams
+      summary: Update Team Agent
+      operationId: update_team_agent_api_agentic_teams__team_id__agents__agent_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Agent Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamAgentUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamAgentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}:
+    patch:
+      tags:
+      - agentic-teams
+      summary: Update Team Settings
+      operationId: update_team_settings_api_agentic_teams__team_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team
+      operationId: get_team_api_agentic_teams__team_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/control-snapshot:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Control Snapshot
+      description: Read current card preflight state without synchronizing team policy.
+      operationId: get_team_control_snapshot_api_agentic_teams__team_id__control_snapshot_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamControlSnapshotResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/interaction-policy:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Interaction Policy
+      operationId: get_team_interaction_policy_api_agentic_teams__team_id__interaction_policy_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamInteractionPolicyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - agentic-teams
+      summary: Update Team Interaction Policy
+      operationId: update_team_interaction_policy_api_agentic_teams__team_id__interaction_policy_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamInteractionPolicyUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamInteractionPolicyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/consult:
+    post:
+      tags:
+      - agentic-teams
+      summary: Consult Team Agent
+      operationId: consult_team_agent_api_agentic_teams__team_id__consult_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamConsultRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamConsultResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/run-guidance:
+    put:
+      tags:
+      - agentic-teams
+      summary: Save Team Run Guidance
+      description: 'Save (or clear) the focus the team''s next run should use.
+
+
+        Saving never starts a run: the next run to start — scheduled or manual —
+
+        consumes the saved focus and clears it.'
+      operationId: save_team_run_guidance_api_agentic_teams__team_id__run_guidance_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamRunGuidanceSaveRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamPendingRunGuidanceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/run-now:
+    post:
+      tags:
+      - agentic-teams
+      summary: Run Team Now
+      operationId: run_team_now_api_agentic_teams__team_id__run_now_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/AgentTeamRunNowRequest'
+              - type: 'null'
+              title: Request
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamRunNowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/pause:
+    post:
+      tags:
+      - agentic-teams
+      summary: Pause Team
+      operationId: pause_team_api_agentic_teams__team_id__pause_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/resume:
+    post:
+      tags:
+      - agentic-teams
+      summary: Resume Team
+      operationId: resume_team_api_agentic_teams__team_id__resume_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/start-fresh:
+    post:
+      tags:
+      - agentic-teams
+      summary: Start Team Fresh
+      operationId: start_team_fresh_api_agentic_teams__team_id__start_fresh_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamStartFreshRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamStartFreshResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/runs:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Runs
+      operationId: list_team_runs_api_agentic_teams__team_id__runs_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamRunListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/runs/{run_id}/graph:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Run Graph
+      operationId: get_team_run_graph_api_agentic_teams__team_id__runs__run_id__graph_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamRunGraphResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/runs/{run_id}/stop:
+    post:
+      tags:
+      - agentic-teams
+      summary: Stop Team Run
+      operationId: stop_team_run_api_agentic_teams__team_id__runs__run_id__stop_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamRunStopRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamRunResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/runs/{run_id}/graph/intervene:
+    post:
+      tags:
+      - agentic-teams
+      summary: Intervene Team Run Graph Node
+      operationId: intervene_team_run_graph_node_api_agentic_teams__team_id__runs__run_id__graph_intervene_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamRunNodeInterventionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamRunNodeInterventionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/events:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Events
+      operationId: list_team_events_api_agentic_teams__team_id__events_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: run_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 200
+          title: Limit
+      - name: cursor_created_at
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Cursor Created At
+      - name: cursor_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Cursor Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamEventListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/messages:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Messages
+      operationId: list_team_messages_api_agentic_teams__team_id__messages_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: run_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 200
+          title: Limit
+      - name: cursor_created_at
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Cursor Created At
+      - name: cursor_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Cursor Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamMessageListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/mission-feed:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Mission Feed
+      operationId: list_team_mission_feed_api_agentic_teams__team_id__mission_feed_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: run_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 200
+          title: Limit
+      - name: cursor_created_at
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Cursor Created At
+      - name: cursor_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cursor Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamMissionFeedListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/workspace-bootstrap:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Workspace Bootstrap
+      operationId: get_team_workspace_bootstrap_api_agentic_teams__team_id__workspace_bootstrap_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamWorkspaceBootstrapResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/reports/workspace:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Report Workspace
+      operationId: get_team_report_workspace_api_agentic_teams__team_id__reports_workspace_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: section_key
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Report section key
+          title: Section Key
+        description: Report section key
+      - name: report_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Report Id
+      - name: run_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Scope to a single agent-team run.
+          title: Run Id
+        description: Scope to a single agent-team run.
+      - name: states
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional comma-separated approval states for lifecycle-specific report views.
+          title: States
+        description: Optional comma-separated approval states for lifecycle-specific report views.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 3
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: include_linked
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Include linked recommendations and actions for detail views.
+          default: false
+          title: Include Linked
+        description: Include linked recommendations and actions for detail views.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamReportWorkspaceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/stream:
+    get:
+      tags:
+      - agentic-teams
+      summary: Stream Team Activity
+      operationId: stream_team_activity_api_agentic_teams__team_id__stream_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: run_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: ISO cursor timestamp to resume stream
+          title: Cursor
+        description: ISO cursor timestamp to resume stream
+      - name: poll_seconds
+        in: query
+        required: false
+        schema:
+          type: number
+          maximum: 5.0
+          minimum: 0.5
+          default: 1.5
+          title: Poll Seconds
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/recommendations:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Recommendations
+      operationId: list_team_recommendations_api_agentic_teams__team_id__recommendations_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: states
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Comma-separated lifecycle states
+          title: States
+        description: Comma-separated lifecycle states
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 200
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamRecommendationListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/mmm/latest:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Latest Mmm Measurement
+      operationId: get_latest_mmm_measurement_api_agentic_teams__team_id__mmm_latest_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Latest Mmm Measurement Api Agentic Teams  Team Id  Mmm Latest Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/mmm/reports:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Mmm Measurement Reports
+      operationId: list_mmm_measurement_reports_api_agentic_teams__team_id__mmm_reports_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 3
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: run_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Scope to a single agent-team run.
+          title: Run Id
+        description: Scope to a single agent-team run.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Mmm Measurement Reports Api Agentic Teams  Team Id  Mmm Reports Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/search-readiness/reports:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Search Readiness Reports
+      operationId: list_search_readiness_reports_api_agentic_teams__team_id__search_readiness_reports_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 3
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: run_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Scope to a single agent-team run.
+          title: Run Id
+        description: Scope to a single agent-team run.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Search Readiness Reports Api Agentic Teams  Team Id  Search Readiness Reports Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/search-readiness/summary:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Search Readiness Summary
+      operationId: get_search_readiness_summary_api_agentic_teams__team_id__search_readiness_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 26
+          minimum: 2
+          default: 8
+          title: Window
+      - name: run_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Scope to a single agent-team run.
+          title: Run Id
+        description: Scope to a single agent-team run.
+      - name: compact
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return only the aggregate report fields needed by dashboard cards.
+          default: false
+          title: Compact
+        description: Return only the aggregate report fields needed by dashboard cards.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Search Readiness Summary Api Agentic Teams  Team Id  Search Readiness Summary Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/search-readiness/actions/{action_key}:
+    put:
+      tags:
+      - agentic-teams
+      summary: Update Search Readiness Action Status
+      operationId: update_search_readiness_action_status_api_agentic_teams__team_id__search_readiness_actions__action_key__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: action_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Action Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AeoActionStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Search Readiness Action Status Api Agentic Teams  Team Id  Search Readiness Actions  Action Key  Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/actions:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Actions
+      operationId: list_team_actions_api_agentic_teams__team_id__actions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: statuses
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Comma-separated action statuses
+          title: Statuses
+        description: Comma-separated action statuses
+      - name: owner_agent_keys
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Comma-separated owner agent keys
+          title: Owner Agent Keys
+        description: Comma-separated owner agent keys
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 200
+          title: Limit
+      - name: cursor_updated_at
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Cursor Updated At
+      - name: cursor_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Cursor Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamActionListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/actions/{action_id}/status:
+    patch:
+      tags:
+      - agentic-teams
+      summary: Update Team Action Status
+      operationId: update_team_action_status_api_agentic_teams__team_id__actions__action_id__status_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: action_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Action Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamActionStatusUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamActionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/actions/{action_id}/retry:
+    post:
+      tags:
+      - agentic-teams
+      summary: Retry Team Action Execution
+      operationId: retry_team_action_execution_api_agentic_teams__team_id__actions__action_id__retry_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: action_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Action Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamActionRetryRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamActionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/goal-contract:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Goal Contract
+      operationId: get_team_goal_contract_api_agentic_teams__team_id__goal_contract_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamGoalContractResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - agentic-teams
+      summary: Update Team Goal Contract
+      operationId: update_team_goal_contract_api_agentic_teams__team_id__goal_contract_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamGoalContractRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamGoalContractResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/daily-summaries:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Daily Summaries
+      operationId: list_daily_summaries_api_agentic_teams__team_id__daily_summaries_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 90
+          minimum: 1
+          default: 30
+          title: Limit
+      - name: cursor_created_at
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Cursor Created At
+      - name: cursor_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Cursor Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamDailySummaryListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/digest-emails:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Digest Emails
+      description: 'List a team''s delivered daily digest emails.
+
+
+        The digest belongs to the company profile, not to whichever teammate the
+
+        email happened to be addressed to, so visibility is scoped to the team —
+
+        ``_get_team_or_404`` has already validated org + profile access — and never
+
+        to ``recipient_user_id``.'
+      operationId: list_team_digest_emails_api_agentic_teams__team_id__digest_emails_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 90
+          minimum: 1
+          default: 30
+          title: Limit
+      - name: cursor_sent_at
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Cursor Sent At
+      - name: cursor_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Cursor Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AITeamDigestEmailListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/digest-emails/{send_id}:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Digest Email
+      description: 'Return a single delivered digest email''s browser-renderable HTML.
+
+
+        Readable by anyone with access to the team''s company profile (see
+
+        ``list_team_digest_emails``); the team filter still blocks reads across
+
+        profiles. Signed image URLs nearing expiry are refreshed (and re-persisted)
+
+        before the HTML is returned, so old digests keep rendering their creative
+
+        thumbnails.'
+      operationId: get_team_digest_email_api_agentic_teams__team_id__digest_emails__send_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: send_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Send Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AITeamDigestEmailHtmlResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/commands:
+    post:
+      tags:
+      - agentic-teams
+      summary: Create Team Command
+      operationId: create_team_command_api_agentic_teams__team_id__commands_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamCommandCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamCommandResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Commands
+      operationId: list_team_commands_api_agentic_teams__team_id__commands_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamCommandListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/approvals:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Approvals
+      operationId: list_team_approvals_api_agentic_teams__team_id__approvals_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: states
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Comma-separated approval states
+          title: States
+        description: Comma-separated approval states
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamApprovalListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/approvals/bulk-decision:
+    post:
+      tags:
+      - agentic-teams
+      summary: Decide Team Approvals Bulk
+      operationId: decide_team_approvals_bulk_api_agentic_teams__team_id__approvals_bulk_decision_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamApprovalBulkDecisionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamApprovalBulkDecisionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/approvals/{approval_id}/items/{item_id}/generate:
+    post:
+      tags:
+      - agentic-teams
+      summary: Generate Team Approval Bundle Item
+      description: 'Draft one item of a selectable bundle, leaving the rest of it open.
+
+
+        The bundle approval can be decided only once, so drafting a single story
+
+        through the decision route would take the rest of the week''s plan with it.'
+      operationId: generate_team_approval_bundle_item_api_agentic_teams__team_id__approvals__approval_id__items__item_id__generate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: approval_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Approval Id
+      - name: item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Item Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamBundleItemGenerationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/approvals/{approval_id}/items/{item_id}/skip:
+    post:
+      tags:
+      - agentic-teams
+      summary: Skip Team Approval Bundle Item
+      description: Decline one item of a selectable bundle, leaving the rest of it open.
+      operationId: skip_team_approval_bundle_item_api_agentic_teams__team_id__approvals__approval_id__items__item_id__skip_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: approval_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Approval Id
+      - name: item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Item Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamBundleItemSkipResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/approvals/{approval_id}/decision:
+    post:
+      tags:
+      - agentic-teams
+      summary: Decide Team Approval
+      operationId: decide_team_approval_api_agentic_teams__team_id__approvals__approval_id__decision_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: approval_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Approval Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamApprovalDecisionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamApprovalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/agent-reliability:
+    get:
+      tags:
+      - agentic-teams
+      summary: List Team Agent Reliability
+      operationId: list_team_agent_reliability_api_agentic_teams__team_id__agent_reliability_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AgentTeamAgentReliabilityResponse'
+                title: Response List Team Agent Reliability Api Agentic Teams  Team Id  Agent Reliability Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/learning/summary:
+    get:
+      tags:
+      - agentic-teams
+      summary: Get Team Learning Summary
+      operationId: get_team_learning_summary_api_agentic_teams__team_id__learning_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamLearningSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/learning/notes/{category}:
+    patch:
+      tags:
+      - agentic-teams
+      summary: Update Team Learning Note
+      operationId: update_team_learning_note_api_agentic_teams__team_id__learning_notes__category__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamLearningNoteUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Update Team Learning Note Api Agentic Teams  Team Id  Learning Notes  Category  Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/agentic/teams/{team_id}/recommendations/{recommendation_id}/outcome:
+    post:
+      tags:
+      - agentic-teams
+      summary: Record Team Recommendation Outcome
+      operationId: record_team_recommendation_outcome_api_agentic_teams__team_id__recommendations__recommendation_id__outcome_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Team Id
+      - name: recommendation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Recommendation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTeamRecommendationOutcomeRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTeamRecommendationOutcomeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AgentTeamFleetTeamResponse:
+      properties:
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        team_name:
+          type: string
+          title: Team Name
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - active
+            - paused
+            - error
+            - deleted
+          - type: string
+          title: Status
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        last_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Run At
+        next_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Run At
+        pending_approvals:
+          type: integer
+          title: Pending Approvals
+          default: 0
+        escalated_approvals:
+          type: integer
+          title: Escalated Approvals
+          default: 0
+        open_approvals:
+          type: integer
+          title: Open Approvals
+          default: 0
+        live_runs:
+          type: integer
+          title: Live Runs
+          default: 0
+        recommendation_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Recommendation Counts
+        blocked:
+          type: boolean
+          title: Blocked
+          default: false
+        blocker_reasons:
+          items:
+            type: string
+          type: array
+          title: Blocker Reasons
+      type: object
+      required:
+      - team_id
+      - company_profile_id
+      - team_name
+      - status
+      title: AgentTeamFleetTeamResponse
+    AgentTeamPendingRunGuidanceResponse:
+      properties:
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_guidance:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamRunGuidanceResponse'
+          - type: 'null'
+      type: object
+      required:
+      - team_id
+      title: AgentTeamPendingRunGuidanceResponse
+    AgentTeamPolicyModuleResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        label:
+          type: string
+          title: Label
+        description:
+          type: string
+          title: Description
+        coordinator_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Coordinator Key
+        member_agent_keys:
+          items:
+            type: string
+          type: array
+          title: Member Agent Keys
+      type: object
+      required:
+      - key
+      - label
+      - description
+      - member_agent_keys
+      title: AgentTeamPolicyModuleResponse
+    AgentTeamActionListResponse:
+      properties:
+        actions:
+          items:
+            $ref: '#/components/schemas/AgentTeamActionResponse'
+          type: array
+          title: Actions
+        total:
+          type: integer
+          title: Total
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+        next_cursor_updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Cursor Updated At
+        next_cursor_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Next Cursor Id
+      type: object
+      required:
+      - actions
+      - total
+      title: AgentTeamActionListResponse
+    AgentTeamReportSectionSummaryResponse:
+      properties:
+        item_count:
+          type: integer
+          title: Item Count
+          default: 0
+        asset_count:
+          type: integer
+          title: Asset Count
+          default: 0
+        latest_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Title
+        latest_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Latest At
+        headline_metric:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline Metric
+        headline_delta:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline Delta
+        status_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Label
+        status_tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Tone
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+        attention_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Attention Count
+        evidence:
+          items:
+            $ref: '#/components/schemas/AgentTeamReportSectionEvidenceResponse'
+          type: array
+          title: Evidence
+      type: object
+      title: AgentTeamReportSectionSummaryResponse
+    AgentTeamMessageListResponse:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/AgentTeamMessageResponse'
+          type: array
+          title: Messages
+        total:
+          type: integer
+          title: Total
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+        next_cursor_created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Cursor Created At
+        next_cursor_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Next Cursor Id
+      type: object
+      required:
+      - messages
+      - total
+      title: AgentTeamMessageListResponse
+    AgentTeamApprovalBulkDecisionResponse:
+      properties:
+        approvals:
+          items:
+            $ref: '#/components/schemas/AgentTeamApprovalResponse'
+          type: array
+          title: Approvals
+        applied_count:
+          type: integer
+          title: Applied Count
+          default: 0
+        skipped_count:
+          type: integer
+          title: Skipped Count
+          default: 0
+        errors:
+          items:
+            $ref: '#/components/schemas/AgentTeamApprovalBulkDecisionError'
+          type: array
+          title: Errors
+      type: object
+      title: AgentTeamApprovalBulkDecisionResponse
+    DirectorInsightRecommendedActionResponse:
+      properties:
+        insight_id:
+          type: string
+          title: Insight Id
+        title:
+          type: string
+          title: Title
+        action:
+          type: string
+          title: Action
+        action_type:
+          anyOf:
+          - type: string
+            enum:
+            - act_now
+            - validate_next
+            - monitor
+          - type: 'null'
+          title: Action Type
+        priority:
+          type: string
+          title: Priority
+        priority_rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority Rationale
+        why_now:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Why Now
+        measurement_plan:
+          type: string
+          title: Measurement Plan
+        expected_kpi_impact:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Kpi Impact
+        evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Evidence Ids
+      type: object
+      required:
+      - insight_id
+      - title
+      - action
+      - priority
+      - measurement_plan
+      title: DirectorInsightRecommendedActionResponse
+    AgentTeamRunNowRequest:
+      properties:
+        custom_instructions:
+          anyOf:
+          - type: string
+            maxLength: 600
+          - type: 'null'
+          title: Custom Instructions
+          description: Optional one-run guidance used as an AI Team prioritization lens.
+        ad_optimization_metric_mode:
+          anyOf:
+          - type: string
+            const: simulation
+          - type: 'null'
+          title: Ad Optimization Metric Mode
+          description: Explicitly run the paid-media audit against isolated simulation facts. Omitted means production provider evidence. Simulation runs never poll providers and never execute recommendations.
+      type: object
+      title: AgentTeamRunNowRequest
+    AgentTeamMissionFeedEntryResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        source_type:
+          type: string
+          title: Source Type
+        event_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Type
+        actor:
+          type: string
+          title: Actor
+        title:
+          type: string
+          title: Title
+        body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Body
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        severity:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severity
+        payload_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payload Json
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - team_id
+      - source_type
+      - actor
+      - title
+      - created_at
+      title: AgentTeamMissionFeedEntryResponse
+    AgentSelection:
+      properties:
+        agent_key:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Agent Key
+        enabled:
+          type: boolean
+          title: Enabled
+          default: true
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Display Name
+      type: object
+      required:
+      - agent_key
+      title: AgentSelection
+    AgentTeamRecommendationOutcomeResponse:
+      properties:
+        recommendation:
+          $ref: '#/components/schemas/AgentTeamRecommendationResponse'
+        reliability:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamAgentReliabilityResponse'
+          - type: 'null'
+        followup_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Followup Run Id
+        followup_reused_inflight:
+          type: boolean
+          title: Followup Reused Inflight
+          default: false
+      type: object
+      required:
+      - recommendation
+      title: AgentTeamRecommendationOutcomeResponse
+    AgentTeamRunListResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/AgentTeamRunResponse'
+          type: array
+          title: Runs
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - runs
+      - total
+      title: AgentTeamRunListResponse
+    AgentTeamMissionFeedListResponse:
+      properties:
+        entries:
+          items:
+            $ref: '#/components/schemas/AgentTeamMissionFeedEntryResponse'
+          type: array
+          title: Entries
+        total:
+          type: integer
+          title: Total
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+        next_cursor_created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Cursor Created At
+        next_cursor_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor Id
+      type: object
+      required:
+      - entries
+      - total
+      title: AgentTeamMissionFeedListResponse
+    AgentTeamModuleUpdate:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+      type: object
+      required:
+      - enabled
+      title: AgentTeamModuleUpdate
+    AgentTeamApprovalListResponse:
+      properties:
+        approvals:
+          items:
+            $ref: '#/components/schemas/AgentTeamApprovalResponse'
+          type: array
+          title: Approvals
+        total:
+          type: integer
+          title: Total
+        matching_total:
+          type: integer
+          title: Matching Total
+          default: 0
+      type: object
+      required:
+      - approvals
+      - total
+      title: AgentTeamApprovalListResponse
+    AgentTeamWorkspaceBootstrapResponse:
+      properties:
+        approvals:
+          items:
+            $ref: '#/components/schemas/AgentTeamApprovalResponse'
+          type: array
+          title: Approvals
+        recommendations:
+          items:
+            $ref: '#/components/schemas/AgentTeamRecommendationResponse'
+          type: array
+          title: Recommendations
+        actions:
+          items:
+            $ref: '#/components/schemas/AgentTeamActionResponse'
+          type: array
+          title: Actions
+        runs:
+          items:
+            $ref: '#/components/schemas/AgentTeamRunResponse'
+          type: array
+          title: Runs
+        mission_feed:
+          items:
+            $ref: '#/components/schemas/AgentTeamMissionFeedEntryResponse'
+          type: array
+          title: Mission Feed
+        timings_ms:
+          additionalProperties:
+            type: number
+          type: object
+          title: Timings Ms
+      type: object
+      required:
+      - approvals
+      - recommendations
+      - actions
+      - runs
+      - mission_feed
+      title: AgentTeamWorkspaceBootstrapResponse
+    AgentTeamStartFreshResponse:
+      properties:
+        team:
+          $ref: '#/components/schemas/AgentTeamResponse'
+        started_fresh_at:
+          type: string
+          format: date-time
+          title: Started Fresh At
+        cleared_memory_items:
+          type: integer
+          minimum: 0.0
+          title: Cleared Memory Items
+          default: 0
+        dismissed_commands:
+          type: integer
+          minimum: 0.0
+          title: Dismissed Commands
+          default: 0
+        expired_approvals:
+          type: integer
+          minimum: 0.0
+          title: Expired Approvals
+          default: 0
+        cancelled_recommendations:
+          type: integer
+          minimum: 0.0
+          title: Cancelled Recommendations
+          default: 0
+        cancelled_actions:
+          type: integer
+          minimum: 0.0
+          title: Cancelled Actions
+          default: 0
+        cleared_events:
+          type: integer
+          minimum: 0.0
+          title: Cleared Events
+          default: 0
+        cleared_messages:
+          type: integer
+          minimum: 0.0
+          title: Cleared Messages
+          default: 0
+        cleared_runs:
+          type: integer
+          minimum: 0.0
+          title: Cleared Runs
+          default: 0
+        cleared_summaries:
+          type: integer
+          minimum: 0.0
+          title: Cleared Summaries
+          default: 0
+        audit_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Audit Run Id
+      type: object
+      required:
+      - team
+      - started_fresh_at
+      title: AgentTeamStartFreshResponse
+    AgentTeamConsultResponse:
+      properties:
+        policy:
+          $ref: '#/components/schemas/AgentTeamInteractionPolicyResponse'
+        run:
+          $ref: '#/components/schemas/AgentTeamRunResponse'
+        target_agent_key:
+          type: string
+          title: Target Agent Key
+        user_message:
+          $ref: '#/components/schemas/AgentTeamMessageResponse'
+        agent_response:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamMessageResponse'
+          - type: 'null'
+        manager_handoff_message:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamMessageResponse'
+          - type: 'null'
+        manager_decision_message:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamMessageResponse'
+          - type: 'null'
+      type: object
+      required:
+      - policy
+      - run
+      - target_agent_key
+      - user_message
+      title: AgentTeamConsultResponse
+    AgentTeamReportHomeSummaryResponse:
+      properties:
+        decision_items:
+          type: integer
+          title: Decision Items
+          default: 0
+        creative_assets:
+          type: integer
+          title: Creative Assets
+          default: 0
+        latest_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Title
+        latest_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Latest At
+        run_guidance:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamRunGuidanceResponse'
+          - type: 'null'
+        sections:
+          additionalProperties:
+            $ref: '#/components/schemas/AgentTeamReportSectionSummaryResponse'
+          type: object
+          title: Sections
+        authored_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authored Summary
+        authored_summary_generated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Authored Summary Generated At
+      type: object
+      title: AgentTeamReportHomeSummaryResponse
+    AgentTeamCreativeScheduleOverride:
+      properties:
+        selection_id:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Selection Id
+        scheduled_local_date:
+          anyOf:
+          - type: string
+            maxLength: 20
+          - type: 'null'
+          title: Scheduled Local Date
+        scheduled_local_time:
+          anyOf:
+          - type: string
+            maxLength: 10
+          - type: 'null'
+          title: Scheduled Local Time
+        schedule_timezone:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Schedule Timezone
+      type: object
+      required:
+      - selection_id
+      title: AgentTeamCreativeScheduleOverride
+    AgentTeamBundleItemGenerationResponse:
+      properties:
+        approval:
+          $ref: '#/components/schemas/AgentTeamApprovalResponse'
+        action_id:
+          type: string
+          format: uuid
+          title: Action Id
+        item_id:
+          type: string
+          title: Item Id
+        generated_item_ids:
+          items:
+            type: string
+          type: array
+          title: Generated Item Ids
+        remaining_item_ids:
+          items:
+            type: string
+          type: array
+          title: Remaining Item Ids
+        approval_resolved:
+          type: boolean
+          title: Approval Resolved
+        project_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Project Id
+      type: object
+      required:
+      - approval
+      - action_id
+      - item_id
+      - generated_item_ids
+      - remaining_item_ids
+      - approval_resolved
+      title: AgentTeamBundleItemGenerationResponse
+      description: Result of sending one selectable bundle item to private generation.
+    DirectorInsightPackageResponse:
+      properties:
+        contract_version:
+          type: string
+          const: director_insight_package_v1
+          title: Contract Version
+        generated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Generated At
+        headline:
+          type: string
+          title: Headline
+        executive_summary:
+          type: string
+          title: Executive Summary
+        executive_summary_evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Executive Summary Evidence Ids
+        executive_summary_metric_ids:
+          items:
+            type: string
+          type: array
+          title: Executive Summary Metric Ids
+        key_metrics:
+          items:
+            $ref: '#/components/schemas/DirectorInsightMetricResponse'
+          type: array
+          title: Key Metrics
+        quantification_status:
+          anyOf:
+          - type: string
+            enum:
+            - quantified
+            - qualitative
+            - qualitative_no_decision_grade_metrics
+          - type: 'null'
+          title: Quantification Status
+        quantification_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Quantification Note
+        source_coverage:
+          items:
+            $ref: '#/components/schemas/DirectorInsightSourceCoverageResponse'
+          type: array
+          title: Source Coverage
+        recommended_actions:
+          items:
+            $ref: '#/components/schemas/DirectorInsightRecommendedActionResponse'
+          type: array
+          title: Recommended Actions
+        insights:
+          items:
+            $ref: '#/components/schemas/DirectorInsightResponse'
+          type: array
+          title: Insights
+        limitations:
+          items:
+            type: string
+          type: array
+          title: Limitations
+        citations:
+          items:
+            type: string
+          type: array
+          title: Citations
+      type: object
+      required:
+      - contract_version
+      - headline
+      - executive_summary
+      title: DirectorInsightPackageResponse
+    AgentTeamResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        created_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By User Id
+        name:
+          type: string
+          title: Name
+        status:
+          type: string
+          enum:
+          - active
+          - paused
+          - error
+          - deleted
+          title: Status
+        approval_mode:
+          type: string
+          title: Approval Mode
+        template_version:
+          type: string
+          title: Template Version
+        default_schedule_minutes:
+          type: integer
+          title: Default Schedule Minutes
+        next_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Run At
+        last_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Run At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        task_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Task Id
+        conversation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Conversation Id
+        settings_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings Json
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - company_profile_id
+      - name
+      - status
+      - approval_mode
+      - template_version
+      - default_schedule_minutes
+      - created_at
+      - updated_at
+      title: AgentTeamResponse
+    AgentTeamBundleItemSkipResponse:
+      properties:
+        approval:
+          $ref: '#/components/schemas/AgentTeamApprovalResponse'
+        item_id:
+          type: string
+          title: Item Id
+        skipped_item_ids:
+          items:
+            type: string
+          type: array
+          title: Skipped Item Ids
+        remaining_item_ids:
+          items:
+            type: string
+          type: array
+          title: Remaining Item Ids
+        approval_resolved:
+          type: boolean
+          title: Approval Resolved
+      type: object
+      required:
+      - approval
+      - item_id
+      - skipped_item_ids
+      - remaining_item_ids
+      - approval_resolved
+      title: AgentTeamBundleItemSkipResponse
+      description: Result of declining one selectable bundle item.
+    AgentTeamLearningSummaryResponse:
+      properties:
+        learning_notes:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Learning Notes
+      type: object
+      title: AgentTeamLearningSummaryResponse
+    AgentTeamReportWorkspaceResponse:
+      properties:
+        approvals:
+          items:
+            $ref: '#/components/schemas/AgentTeamApprovalResponse'
+          type: array
+          title: Approvals
+        recommendations:
+          items:
+            $ref: '#/components/schemas/AgentTeamRecommendationResponse'
+          type: array
+          title: Recommendations
+        actions:
+          items:
+            $ref: '#/components/schemas/AgentTeamActionResponse'
+          type: array
+          title: Actions
+        ads_performance_reports:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Ads Performance Reports
+        total:
+          type: integer
+          title: Total
+          default: 0
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+        offset:
+          type: integer
+          title: Offset
+          default: 0
+        limit:
+          type: integer
+          title: Limit
+          default: 0
+        next_offset:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Next Offset
+        timings_ms:
+          additionalProperties:
+            type: number
+          type: object
+          title: Timings Ms
+      type: object
+      title: AgentTeamReportWorkspaceResponse
+    AgentTeamRecommendationOutcomeRequest:
+      properties:
+        outcome:
+          type: string
+          enum:
+          - improved
+          - neutral
+          - regressed
+          - failed
+          - unknown
+          title: Outcome
+        summary:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Summary
+        kpi_delta_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Kpi Delta Json
+        observed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Observed At
+      type: object
+      required:
+      - outcome
+      title: AgentTeamRecommendationOutcomeRequest
+    AgentTeamLearningNoteUpdateRequest:
+      properties:
+        markdown:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Markdown
+      type: object
+      required:
+      - markdown
+      title: AgentTeamLearningNoteUpdateRequest
+    AgentTeamInteractionPolicyResponse:
+      properties:
+        phase:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          title: Phase
+        phase_label:
+          type: string
+          title: Phase Label
+        manager_control_plane:
+          type: boolean
+          title: Manager Control Plane
+          default: true
+        manager_commit_required:
+          type: boolean
+          title: Manager Commit Required
+          default: true
+        commit_intents_enabled:
+          type: boolean
+          title: Commit Intents Enabled
+          default: false
+        non_manager_proposal_only:
+          type: boolean
+          title: Non Manager Proposal Only
+          default: true
+        phase1_specialist_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phase1 Specialist Key
+        allowed_non_manager_agent_keys:
+          items:
+            type: string
+          type: array
+          title: Allowed Non Manager Agent Keys
+        allowed_agent_keys:
+          items:
+            type: string
+          type: array
+          title: Allowed Agent Keys
+        active_agent_keys:
+          items:
+            type: string
+          type: array
+          title: Active Agent Keys
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        updated_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated By User Id
+      type: object
+      required:
+      - phase
+      - phase_label
+      title: AgentTeamInteractionPolicyResponse
+    DirectorInsightMetricResponse:
+      properties:
+        metric_id:
+          type: string
+          title: Metric Id
+        evidence_id:
+          type: string
+          title: Evidence Id
+        label:
+          type: string
+          title: Label
+        value:
+          type: number
+          maximum: 1000000000000000.0
+          minimum: -1000000000000000.0
+          title: Value
+        display_value:
+          type: string
+          title: Display Value
+        unit:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Unit
+        currency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Currency
+        scope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope
+        window:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Window
+        observed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Observed At
+        role:
+          anyOf:
+          - type: string
+            enum:
+            - decision
+            - context
+          - type: 'null'
+          title: Role
+        comparison_status:
+          anyOf:
+          - type: string
+            enum:
+            - absolute
+            - comparative
+          - type: 'null'
+          title: Comparison Status
+        publisher:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher
+        source_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Title
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        published_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Published Date
+        estimate:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Estimate
+      type: object
+      required:
+      - metric_id
+      - evidence_id
+      - label
+      - value
+      - display_value
+      title: DirectorInsightMetricResponse
+    AgentTeamRuntimeControlsUpdate:
+      properties:
+        execution_mode:
+          anyOf:
+          - type: string
+            enum:
+            - prepare_only
+            - approval_gated_execute
+          - type: 'null'
+          title: Execution Mode
+        require_approval_for_external_actions:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Require Approval For External Actions
+        max_external_actions_per_run:
+          anyOf:
+          - type: integer
+            maximum: 10.0
+            minimum: 0.0
+          - type: 'null'
+          title: Max External Actions Per Run
+        inbox_max_drafts_per_run:
+          anyOf:
+          - type: integer
+            maximum: 250.0
+            minimum: 0.0
+          - type: 'null'
+          title: Inbox Max Drafts Per Run
+        allow_high_risk_execution:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Allow High Risk Execution
+        max_creative_generations_per_run:
+          anyOf:
+          - type: integer
+            maximum: 10.0
+            minimum: 0.0
+          - type: 'null'
+          title: Max Creative Generations Per Run
+        auto_progress_approved_actions:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Auto Progress Approved Actions
+        max_auto_progress_per_run:
+          anyOf:
+          - type: integer
+            maximum: 10.0
+            minimum: 0.0
+          - type: 'null'
+          title: Max Auto Progress Per Run
+        auto_progress_allow_high_risk:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Auto Progress Allow High Risk
+        slack_send_manager_reports:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Slack Send Manager Reports
+        slack_send_approval_alerts:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Slack Send Approval Alerts
+        slack_channel_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Slack Channel Id
+      type: object
+      title: AgentTeamRuntimeControlsUpdate
+    AgentTeamRunNodeInterventionResponse:
+      properties:
+        run:
+          $ref: '#/components/schemas/AgentTeamRunResponse'
+        graph:
+          $ref: '#/components/schemas/AgentTeamRunGraphResponse'
+      type: object
+      required:
+      - run
+      - graph
+      title: AgentTeamRunNodeInterventionResponse
+    AeoActionStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          enum:
+          - open
+          - done
+          - dismissed
+          title: Status
+        title:
+          type: string
+          maxLength: 512
+          minLength: 1
+          title: Title
+        report_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Report Id
+      type: object
+      required:
+      - status
+      - title
+      title: AeoActionStatusUpdateRequest
+      description: Set the lifecycle state of a recommended AEO/GEO action.
+    AgentTeamRoutineStepResponse:
+      properties:
+        step_id:
+          type: string
+          title: Step Id
+        label:
+          type: string
+          title: Label
+        required_tool_packs:
+          items:
+            type: string
+          type: array
+          title: Required Tool Packs
+      type: object
+      required:
+      - step_id
+      - label
+      title: AgentTeamRoutineStepResponse
+    AgentTeamScheduleSettingsUpdate:
+      properties:
+        jitter_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Jitter Enabled
+        jitter_seconds_max:
+          anyOf:
+          - type: integer
+            maximum: 600.0
+            minimum: 0.0
+          - type: 'null'
+          title: Jitter Seconds Max
+      type: object
+      title: AgentTeamScheduleSettingsUpdate
+    AgentTeamRunNodeInterventionRequest:
+      properties:
+        action:
+          type: string
+          enum:
+          - retry
+          - skip
+          - reprioritize
+          title: Action
+        node_id:
+          type: string
+          maxLength: 255
+          minLength: 3
+          title: Node Id
+        note:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Note
+        backoff_seconds:
+          anyOf:
+          - type: integer
+            maximum: 900.0
+            minimum: 1.0
+          - type: 'null'
+          title: Backoff Seconds
+        priority_boost:
+          anyOf:
+          - type: number
+            maximum: 5.0
+            minimum: -5.0
+          - type: 'null'
+          title: Priority Boost
+      type: object
+      required:
+      - action
+      - node_id
+      title: AgentTeamRunNodeInterventionRequest
+    AgentTeamAgentReliabilityResponse:
+      properties:
+        agent_key:
+          type: string
+          title: Agent Key
+        display_name:
+          type: string
+          title: Display Name
+        success_count:
+          type: integer
+          title: Success Count
+          default: 0
+        failure_count:
+          type: integer
+          title: Failure Count
+          default: 0
+        neutral_count:
+          type: integer
+          title: Neutral Count
+          default: 0
+        total_count:
+          type: integer
+          title: Total Count
+          default: 0
+        score:
+          type: number
+          title: Score
+          default: 0.0
+        score_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Score Level
+        rubric_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rubric Version
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - agent_key
+      - display_name
+      title: AgentTeamAgentReliabilityResponse
+    AgentTeamRunResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        trigger_type:
+          type: string
+          title: Trigger Type
+        status:
+          type: string
+          enum:
+          - queued
+          - running
+          - cancelling
+          - cancelled
+          - completed
+          - failed
+          title: Status
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        summary_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Text
+        summary_markdown:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Markdown
+        report_headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Report Headline
+        run_guidance:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamRunGuidanceResponse'
+          - type: 'null'
+        stats_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Stats Json
+        run_lifecycle:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Run Lifecycle
+        error_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Text
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - team_id
+      - trigger_type
+      - status
+      - created_at
+      - updated_at
+      title: AgentTeamRunResponse
+    AgentTeamActionRetryRequest:
+      properties:
+        note:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Note
+        launch_account_overrides:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamLaunchAccountOverrides'
+          - type: 'null'
+      type: object
+      title: AgentTeamActionRetryRequest
+    AgentTeamPolicyResponse:
+      properties:
+        feature_enabled:
+          type: boolean
+          title: Feature Enabled
+        feature_access:
+          type: boolean
+          title: Feature Access
+        required_tier:
+          type: string
+          title: Required Tier
+        current_tier:
+          type: string
+          title: Current Tier
+        upgrade_url:
+          type: string
+          title: Upgrade Url
+        required_agent_keys:
+          items:
+            type: string
+          type: array
+          title: Required Agent Keys
+        optional_agent_keys:
+          items:
+            type: string
+          type: array
+          title: Optional Agent Keys
+        available_agents:
+          items:
+            $ref: '#/components/schemas/AgentTeamPolicyAgentResponse'
+          type: array
+          title: Available Agents
+        modules:
+          items:
+            $ref: '#/components/schemas/AgentTeamPolicyModuleResponse'
+          type: array
+          title: Modules
+        default_schedule_minutes:
+          type: integer
+          title: Default Schedule Minutes
+        schedule_options_minutes:
+          items:
+            type: integer
+          type: array
+          title: Schedule Options Minutes
+        default_approval_mode:
+          type: string
+          enum:
+          - approval_first
+          - auto_low_risk
+          - auto_all
+          title: Default Approval Mode
+        startup_contract:
+          additionalProperties: true
+          type: object
+          title: Startup Contract
+      type: object
+      required:
+      - feature_enabled
+      - feature_access
+      - required_tier
+      - current_tier
+      - upgrade_url
+      - required_agent_keys
+      - optional_agent_keys
+      - available_agents
+      - default_schedule_minutes
+      - schedule_options_minutes
+      - default_approval_mode
+      - startup_contract
+      title: AgentTeamPolicyResponse
+    AITeamDigestEmailHtmlResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        subject:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject
+        sent_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Sent At
+        summary_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Date
+        highlights:
+          anyOf:
+          - $ref: '#/components/schemas/AITeamDigestEmailHighlights'
+          - type: 'null'
+        rendered_html:
+          type: string
+          title: Rendered Html
+      type: object
+      required:
+      - id
+      - rendered_html
+      title: AITeamDigestEmailHtmlResponse
+      description: A single delivered digest plus its browser-renderable HTML body.
+    AgentTeamRecommendationResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        recommendation_key:
+          type: string
+          title: Recommendation Key
+        recommendation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recommendation Id
+        owner_agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Agent Key
+        title:
+          type: string
+          title: Title
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        risk:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Risk
+        rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rationale
+        approval_state:
+          type: string
+          title: Approval State
+        lifecycle_state:
+          anyOf:
+          - type: string
+            enum:
+            - proposed
+            - needs_approval
+            - approved
+            - rejected
+            - ready_for_execution
+            - observing
+            - completed
+            - cancelled
+          - type: string
+          title: Lifecycle State
+        status_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Note
+        approval_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Approval Id
+        approved_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Approved By User Id
+        rejected_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Rejected By User Id
+        first_seen_at:
+          type: string
+          format: date-time
+          title: First Seen At
+        last_seen_at:
+          type: string
+          format: date-time
+          title: Last Seen At
+        approved_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Approved At
+        rejected_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Rejected At
+        kpi_snapshot_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Kpi Snapshot Json
+        kpi_delta_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Kpi Delta Json
+        metadata_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata Json
+        latest_outcome_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Latest Outcome Json
+        outcome_history_json:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Outcome History Json
+        goal_alignment_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Goal Alignment Score
+        goal_alignment_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal Alignment Level
+        goal_alignment_notes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Goal Alignment Notes
+        evidence_json:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Evidence Json
+        citation_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Citation Urls
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - team_id
+      - recommendation_key
+      - title
+      - approval_state
+      - lifecycle_state
+      - first_seen_at
+      - last_seen_at
+      - created_at
+      - updated_at
+      title: AgentTeamRecommendationResponse
+    AITeamDigestEmailHighlights:
+      properties:
+        recommendation_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Recommendation Count
+        decision_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Decision Count
+        ads_draft_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ads Draft Count
+        social_draft_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Social Draft Count
+      type: object
+      title: AITeamDigestEmailHighlights
+      description: Compact per-digest activity counts for the history rail glance line.
+    AgentTeamCommandResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: User Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        content:
+          type: string
+          title: Content
+        context_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Context Json
+        status:
+          type: string
+          title: Status
+        consumed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Consumed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - team_id
+      - content
+      - status
+      - created_at
+      - updated_at
+      title: AgentTeamCommandResponse
+    DirectorInsightSourceCoverageResponse:
+      properties:
+        domain:
+          type: string
+          title: Domain
+        evidence_count:
+          type: integer
+          title: Evidence Count
+          default: 0
+        latest_observed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Latest Observed At
+      type: object
+      required:
+      - domain
+      title: DirectorInsightSourceCoverageResponse
+    DailyReportMmmAllocationResponse:
+      properties:
+        channel_key:
+          type: string
+          title: Channel Key
+        channel_display:
+          type: string
+          title: Channel Display
+        current_share:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Current Share
+        recommended_share:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Recommended Share
+        current_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Current Display
+        recommended_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recommended Display
+      type: object
+      required:
+      - channel_key
+      - channel_display
+      title: DailyReportMmmAllocationResponse
+      description: One channel's assumption-only budget share (current vs recommended).
+    AgentTeamCommandListResponse:
+      properties:
+        commands:
+          items:
+            $ref: '#/components/schemas/AgentTeamCommandResponse'
+          type: array
+          title: Commands
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - commands
+      - total
+      title: AgentTeamCommandListResponse
+    AITeamDigestEmailListResponse:
+      properties:
+        digests:
+          items:
+            $ref: '#/components/schemas/AITeamDigestEmailListItem'
+          type: array
+          title: Digests
+        total:
+          type: integer
+          title: Total
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+        next_cursor_sent_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Cursor Sent At
+        next_cursor_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Next Cursor Id
+      type: object
+      required:
+      - digests
+      - total
+      title: AITeamDigestEmailListResponse
+    AgentTeamEventListResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/AgentTeamEventResponse'
+          type: array
+          title: Events
+        total:
+          type: integer
+          title: Total
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+        next_cursor_created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Cursor Created At
+        next_cursor_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Next Cursor Id
+      type: object
+      required:
+      - events
+      - total
+      title: AgentTeamEventListResponse
+    AgentTeamApprovalBulkDecisionError:
+      properties:
+        approval_id:
+          type: string
+          format: uuid
+          title: Approval Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - approval_id
+      - message
+      title: AgentTeamApprovalBulkDecisionError
+    AgentTeamControlSnapshotResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        status:
+          type: string
+          enum:
+          - active
+          - paused
+          - error
+          - deleted
+          title: Status
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - company_profile_id
+      - status
+      - updated_at
+      title: AgentTeamControlSnapshotResponse
+      description: Minimal read-only preflight for a server-authored chat control card.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AgentTeamGoalContractRequest:
+      properties:
+        goal_contract_json:
+          additionalProperties: true
+          type: object
+          title: Goal Contract Json
+      type: object
+      title: AgentTeamGoalContractRequest
+    AgentTeamInteractionPolicyUpdateRequest:
+      properties:
+        phase:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          title: Phase
+        phase1_specialist_key:
+          anyOf:
+          - type: string
+            maxLength: 64
+            minLength: 1
+          - type: 'null'
+          title: Phase1 Specialist Key
+      type: object
+      required:
+      - phase
+      title: AgentTeamInteractionPolicyUpdateRequest
+    DirectorInsightEvidenceResponse:
+      properties:
+        evidence_id:
+          type: string
+          title: Evidence Id
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+        source_agent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Agent
+        signal_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signal Type
+        snippet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Snippet
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        observed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Observed At
+        freshness:
+          additionalProperties: true
+          type: object
+          title: Freshness
+        limitations:
+          items:
+            type: string
+          type: array
+          title: Limitations
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+      type: object
+      required:
+      - evidence_id
+      title: DirectorInsightEvidenceResponse
+    AgentTeamCreate:
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        schedule_minutes:
+          type: integer
+          maximum: 10080.0
+          minimum: 1.0
+          title: Schedule Minutes
+          default: 1440
+        approval_mode:
+          type: string
+          enum:
+          - approval_first
+          - auto_low_risk
+          - auto_all
+          title: Approval Mode
+          default: approval_first
+        template_version:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Template Version
+          default: data_intel_team
+        agents:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AgentSelection'
+            type: array
+          - type: 'null'
+          title: Agents
+        goal_contract_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Goal Contract Json
+      type: object
+      required:
+      - organization_id
+      - company_profile_id
+      title: AgentTeamCreate
+    AgentTeamRunStopRequest:
+      properties:
+        note:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Note
+      type: object
+      title: AgentTeamRunStopRequest
+    AgentTeamDirectorInsightProjectionResponse:
+      properties:
+        run_id:
+          type: string
+          format: uuid
+          title: Run Id
+        package:
+          $ref: '#/components/schemas/DirectorInsightPackageResponse'
+      type: object
+      required:
+      - run_id
+      - package
+      title: AgentTeamDirectorInsightProjectionResponse
+      description: Run-bound Director package for the lightweight daily-report endpoint.
+    AgentTeamDailySummaryResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        summary_date:
+          type: string
+          format: date
+          title: Summary Date
+        title:
+          type: string
+          title: Title
+        ops_blog_markdown:
+          type: string
+          title: Ops Blog Markdown
+        marketing_blog_markdown:
+          type: string
+          title: Marketing Blog Markdown
+        highlights_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Highlights Json
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - team_id
+      - summary_date
+      - title
+      - ops_blog_markdown
+      - marketing_blog_markdown
+      - created_at
+      title: AgentTeamDailySummaryResponse
+    DailyReportSectionResponse:
+      properties:
+        section_key:
+          type: string
+          title: Section Key
+        agent_id:
+          type: string
+          title: Agent Id
+        agent_display_name:
+          type: string
+          title: Agent Display Name
+        eyebrow:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Eyebrow
+        headline:
+          type: string
+          title: Headline
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        status_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Label
+        status_tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Tone
+        entities:
+          items:
+            $ref: '#/components/schemas/DailyReportEntityResponse'
+          type: array
+          title: Entities
+      type: object
+      required:
+      - section_key
+      - agent_id
+      - agent_display_name
+      - headline
+      title: DailyReportSectionResponse
+      description: One agent's section of the daily report (AI-authored copy + typed items).
+    AgentTeamActionStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          enum:
+          - proposed
+          - needs_approval
+          - approved
+          - executing
+          - in_progress
+          - live
+          - completed
+          - failed
+          - blocked
+          - cancelled
+          title: Status
+        note:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Note
+        outcome_state:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Outcome State
+        outcome_summary:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Outcome Summary
+      type: object
+      required:
+      - status
+      title: AgentTeamActionStatusUpdateRequest
+    AgentTeamRunGuidanceSaveRequest:
+      properties:
+        custom_instructions:
+          anyOf:
+          - type: string
+            maxLength: 600
+          - type: 'null'
+          title: Custom Instructions
+          description: Focus saved for the team's next run. Empty or null clears the saved focus.
+      type: object
+      title: AgentTeamRunGuidanceSaveRequest
+    AgentTeamReportSelectionResponse:
+      properties:
+        status:
+          type: string
+          enum:
+          - latest
+          - resolved
+          - not_found
+          title: Status
+        requested_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Requested Run Id
+        resolved_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Resolved Run Id
+      type: object
+      required:
+      - status
+      title: AgentTeamReportSelectionResponse
+      description: Authoritative resolution of the report run requested by the client.
+    AgentTeamActionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        recommendation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Recommendation Id
+        recommendation_key:
+          type: string
+          title: Recommendation Key
+        recommendation_external_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recommendation External Id
+        approval_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Approval Id
+        owner_agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Agent Key
+        title:
+          type: string
+          title: Title
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        risk:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Risk
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - proposed
+            - needs_approval
+            - approved
+            - executing
+            - in_progress
+            - live
+            - completed
+            - failed
+            - blocked
+            - cancelled
+          - type: string
+          title: Status
+        status_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Reason
+        due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Due At
+        change_scope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Change Scope
+        change_from:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Change From
+        change_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Change To
+        why_now:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Why Now
+        impact_estimate:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Estimate
+        rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rationale
+        execution_started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Execution Started At
+        execution_completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Execution Completed At
+        outcome_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Outcome State
+        outcome_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Outcome Summary
+        payload_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payload Json
+        first_seen_at:
+          type: string
+          format: date-time
+          title: First Seen At
+        last_seen_at:
+          type: string
+          format: date-time
+          title: Last Seen At
+        last_transition_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Transition At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - team_id
+      - recommendation_key
+      - title
+      - status
+      - first_seen_at
+      - last_seen_at
+      - created_at
+      - updated_at
+      title: AgentTeamActionResponse
+    DailyReportChannelMetricsResponse:
+      properties:
+        availability:
+          type: string
+          enum:
+          - connected
+          - no_accounts
+          - stale
+          title: Availability
+          default: no_accounts
+        as_of:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: As Of
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        currency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Currency
+        channels:
+          items:
+            $ref: '#/components/schemas/DailyReportChannelMetricResponse'
+          type: array
+          title: Channels
+      type: object
+      title: DailyReportChannelMetricsResponse
+      description: Channel performance — honest about availability; never fabricated.
+    AgentTeamApprovalDecisionRequest:
+      properties:
+        decision:
+          type: string
+          enum:
+          - approved
+          - rejected
+          - deferred
+          title: Decision
+        note:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Note
+        defer_hours:
+          anyOf:
+          - type: integer
+            maximum: 168.0
+            minimum: 1.0
+          - type: 'null'
+          title: Defer Hours
+        selected_bundle_item_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 100
+          - type: 'null'
+          title: Selected Bundle Item Ids
+        selected_plan_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 100
+          - type: 'null'
+          title: Selected Plan Ids
+        selected_creative_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 100
+          title: Selected Creative Ids
+        creative_schedule_overrides:
+          items:
+            $ref: '#/components/schemas/AgentTeamCreativeScheduleOverride'
+          type: array
+          maxItems: 100
+          title: Creative Schedule Overrides
+        launch_account_overrides:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamLaunchAccountOverrides'
+          - type: 'null'
+        selected_optimization_option_id:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Selected Optimization Option Id
+        selected_optimization_option_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 200
+          title: Selected Optimization Option Ids
+        selected_optimization_action_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 400
+          - type: 'null'
+          title: Selected Optimization Action Ids
+      type: object
+      required:
+      - decision
+      title: AgentTeamApprovalDecisionRequest
+    PresentationDailyReportResponse:
+      properties:
+        version:
+          type: integer
+          title: Version
+          default: 1
+        run_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run Id
+        generated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Generated At
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+        headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline
+        executive_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Executive Summary
+        sections:
+          items:
+            $ref: '#/components/schemas/DailyReportSectionResponse'
+          type: array
+          title: Sections
+        creative_review:
+          items:
+            $ref: '#/components/schemas/DailyReportCreativeResponse'
+          type: array
+          title: Creative Review
+        channel_metrics:
+          anyOf:
+          - $ref: '#/components/schemas/DailyReportChannelMetricsResponse'
+          - type: 'null'
+        marketing_mix:
+          anyOf:
+          - $ref: '#/components/schemas/DailyReportMarketingMixResponse'
+          - type: 'null'
+        director_insight_package:
+          anyOf:
+          - $ref: '#/components/schemas/DirectorInsightPackageResponse'
+          - type: 'null'
+        ads_performance_report:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ads Performance Report
+        run_guidance:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamRunGuidanceResponse'
+          - type: 'null'
+      type: object
+      title: PresentationDailyReportResponse
+      description: 'AI-authored, presentation-ready daily report rendered faithfully by the UI.
+
+
+        Cached on ``AgentTeamRun.stats_json`` at run completion. Absent for older
+
+        runs, in which case the frontend falls back to the count-based summary.'
+    DailyReportChannelMetricResponse:
+      properties:
+        channel_key:
+          type: string
+          title: Channel Key
+        channel_display_name:
+          type: string
+          title: Channel Display Name
+        spend_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Spend Cents
+        roas:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Roas
+        cpa:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cpa
+        conversions:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Conversions
+        impressions:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Impressions
+        data_confidence:
+          type: string
+          enum:
+          - measured
+          - estimated
+          - unavailable
+          title: Data Confidence
+          default: unavailable
+      type: object
+      required:
+      - channel_key
+      - channel_display_name
+      title: DailyReportChannelMetricResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DirectorInsightResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        why_now:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Why Now
+        recommended_action:
+          type: string
+          title: Recommended Action
+        action_type:
+          anyOf:
+          - type: string
+            enum:
+            - act_now
+            - validate_next
+            - monitor
+          - type: 'null'
+          title: Action Type
+        measurement_plan:
+          type: string
+          title: Measurement Plan
+        expected_kpi_impact:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Kpi Impact
+        priority:
+          type: string
+          title: Priority
+        priority_rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority Rationale
+        priority_evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Priority Evidence Ids
+        confidence:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - high
+            - medium
+            - low
+          - type: 'null'
+          title: Confidence
+        confidence_label:
+          anyOf:
+          - type: string
+            enum:
+            - high
+            - medium
+            - low
+          - type: 'null'
+          title: Confidence Label
+        confidence_rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence Rationale
+        source_domains:
+          items:
+            type: string
+          type: array
+          title: Source Domains
+        association_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Association Summary
+        action_evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Action Evidence Ids
+        supporting_points:
+          items:
+            type: string
+          type: array
+          title: Supporting Points
+        supporting_point_evidence:
+          items:
+            $ref: '#/components/schemas/DirectorInsightSupportingPointResponse'
+          type: array
+          title: Supporting Point Evidence
+        metric_ids:
+          items:
+            type: string
+          type: array
+          title: Metric Ids
+        key_metrics:
+          items:
+            $ref: '#/components/schemas/DirectorInsightMetricResponse'
+          type: array
+          title: Key Metrics
+        quantification_status:
+          anyOf:
+          - type: string
+            enum:
+            - quantified
+            - qualitative
+            - qualitative_no_decision_grade_metrics
+          - type: 'null'
+          title: Quantification Status
+        quantification_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Quantification Note
+        evidence:
+          items:
+            $ref: '#/components/schemas/DirectorInsightEvidenceResponse'
+          type: array
+          title: Evidence
+        citations:
+          items:
+            type: string
+          type: array
+          title: Citations
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - recommended_action
+      - measurement_plan
+      - priority
+      title: DirectorInsightResponse
+    AgentTeamFleetSnapshotResponse:
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        offset:
+          type: integer
+          title: Offset
+          default: 0
+        limit:
+          type: integer
+          title: Limit
+          default: 200
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+        sort_by:
+          type: string
+          title: Sort By
+          default: updated_at
+        sort_order:
+          type: string
+          title: Sort Order
+          default: desc
+        status_filter:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Filter
+        blocked_only:
+          type: boolean
+          title: Blocked Only
+          default: false
+        totals:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Totals
+        teams:
+          items:
+            $ref: '#/components/schemas/AgentTeamFleetTeamResponse'
+          type: array
+          title: Teams
+      type: object
+      required:
+      - organization_id
+      - generated_at
+      title: AgentTeamFleetSnapshotResponse
+    AgentTeamModuleResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        label:
+          type: string
+          title: Label
+        description:
+          type: string
+          title: Description
+        enabled:
+          type: boolean
+          title: Enabled
+        disableable:
+          type: boolean
+          title: Disableable
+          default: true
+        coordinator_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Coordinator Key
+        member_agent_keys:
+          items:
+            type: string
+          type: array
+          title: Member Agent Keys
+        member_display_names:
+          items:
+            type: string
+          type: array
+          title: Member Display Names
+        disabled_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Disabled Reason
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        updated_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated By User Id
+      type: object
+      required:
+      - key
+      - label
+      - description
+      - enabled
+      title: AgentTeamModuleResponse
+    AgentTeamDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        created_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By User Id
+        name:
+          type: string
+          title: Name
+        status:
+          type: string
+          enum:
+          - active
+          - paused
+          - error
+          - deleted
+          title: Status
+        approval_mode:
+          type: string
+          title: Approval Mode
+        template_version:
+          type: string
+          title: Template Version
+        default_schedule_minutes:
+          type: integer
+          title: Default Schedule Minutes
+        next_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Run At
+        last_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Run At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        task_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Task Id
+        conversation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Conversation Id
+        settings_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings Json
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        primary_agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Agent Key
+        agents:
+          items:
+            $ref: '#/components/schemas/AgentTeamAgentResponse'
+          type: array
+          title: Agents
+        modules:
+          items:
+            $ref: '#/components/schemas/AgentTeamModuleResponse'
+          type: array
+          title: Modules
+        pending_run_guidance:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamRunGuidanceResponse'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      - organization_id
+      - company_profile_id
+      - name
+      - status
+      - approval_mode
+      - template_version
+      - default_schedule_minutes
+      - created_at
+      - updated_at
+      title: AgentTeamDetailResponse
+    AgentTeamLaunchAccountOverrides:
+      properties:
+        google_account_id:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Google Account Id
+        login_customer_id:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Login Customer Id
+        ad_account_id:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Ad Account Id
+        meta_account_id:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Meta Account Id
+        page_id:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Page Id
+        instagram_account_id:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Instagram Account Id
+        advertiser_id:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Advertiser Id
+        tiktok_advertiser_id:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Tiktok Advertiser Id
+      type: object
+      title: AgentTeamLaunchAccountOverrides
+    AgentTeamConsultRequest:
+      properties:
+        agent_key:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Agent Key
+        message:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Message
+        intent:
+          type: string
+          enum:
+          - ask
+          - propose
+          title: Intent
+          default: ask
+        context_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Context Json
+      type: object
+      required:
+      - agent_key
+      - message
+      title: AgentTeamConsultRequest
+    AgentTeamRecommendationListResponse:
+      properties:
+        recommendations:
+          items:
+            $ref: '#/components/schemas/AgentTeamRecommendationResponse'
+          type: array
+          title: Recommendations
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - recommendations
+      - total
+      title: AgentTeamRecommendationListResponse
+    DailyReportCreativeResponse:
+      properties:
+        selection_id:
+          type: string
+          title: Selection Id
+        approval_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Approval Id
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        platform_display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Display Name
+        headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline
+        body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Body
+        image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Url
+        video_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Url
+        media_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Type
+        surface:
+          type: string
+          enum:
+          - ads
+          - social
+          title: Surface
+          default: ads
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        pending:
+          type: boolean
+          title: Pending
+          default: false
+        bundle_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bundle Title
+        bundle_rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bundle Rationale
+        bundle_expected:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bundle Expected
+        bundle_confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bundle Confidence
+      type: object
+      required:
+      - selection_id
+      title: DailyReportCreativeResponse
+      description: 'One reviewable creative with a stable ``selection_id`` the approval
+
+        decision endpoint already consumes (``selected_creative_ids``).'
+    AgentTeamApprovalBulkDecisionRequest:
+      properties:
+        approval_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Approval Ids
+        decision:
+          type: string
+          enum:
+          - approved
+          - rejected
+          - deferred
+          title: Decision
+        note:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Note
+        defer_hours:
+          anyOf:
+          - type: integer
+            maximum: 168.0
+            minimum: 1.0
+          - type: 'null'
+          title: Defer Hours
+      type: object
+      required:
+      - decision
+      title: AgentTeamApprovalBulkDecisionRequest
+    AgentTeamListResponse:
+      properties:
+        teams:
+          items:
+            $ref: '#/components/schemas/AgentTeamResponse'
+          type: array
+          title: Teams
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - teams
+      - total
+      title: AgentTeamListResponse
+    AgentTeamRunGraphResponse:
+      properties:
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          type: string
+          format: uuid
+          title: Run Id
+        version:
+          type: integer
+          title: Version
+          default: 1
+        template:
+          type: string
+          title: Template
+          default: team_graph_v1
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        meta:
+          additionalProperties: true
+          type: object
+          title: Meta
+        progress:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Progress
+        diagnostics:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Diagnostics
+        critical_path:
+          additionalProperties: true
+          type: object
+          title: Critical Path
+        nodes:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Nodes
+        edges:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type: array
+          title: Edges
+      type: object
+      required:
+      - team_id
+      - run_id
+      title: AgentTeamRunGraphResponse
+    DailyReportEvidenceResponse:
+      properties:
+        label:
+          type: string
+          title: Label
+        value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Value
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+      type: object
+      required:
+      - label
+      title: DailyReportEvidenceResponse
+      description: One labeled supporting fact for a daily-report entity.
+    AgentTeamUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        schedule_minutes:
+          anyOf:
+          - type: integer
+            maximum: 10080.0
+            minimum: 1.0
+          - type: 'null'
+          title: Schedule Minutes
+        approval_mode:
+          anyOf:
+          - type: string
+            enum:
+            - approval_first
+            - auto_low_risk
+            - auto_all
+          - type: 'null'
+          title: Approval Mode
+        runtime_controls:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamRuntimeControlsUpdate'
+          - type: 'null'
+        schedule_settings:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamScheduleSettingsUpdate'
+          - type: 'null'
+        module_settings:
+          anyOf:
+          - additionalProperties:
+              $ref: '#/components/schemas/AgentTeamModuleUpdate'
+            type: object
+          - type: 'null'
+          title: Module Settings
+      type: object
+      title: AgentTeamUpdate
+    DirectorInsightSupportingPointResponse:
+      properties:
+        text:
+          type: string
+          title: Text
+        evidence_ids:
+          items:
+            type: string
+          type: array
+          title: Evidence Ids
+      type: object
+      required:
+      - text
+      title: DirectorInsightSupportingPointResponse
+    AgentTeamGoalContractResponse:
+      properties:
+        goal_contract_json:
+          additionalProperties: true
+          type: object
+          title: Goal Contract Json
+      type: object
+      title: AgentTeamGoalContractResponse
+    AgentTeamAgentResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        agent_key:
+          type: string
+          title: Agent Key
+        display_name:
+          type: string
+          title: Display Name
+        role:
+          type: string
+          title: Role
+        is_active:
+          type: boolean
+          title: Is Active
+        capabilities_json:
+          items:
+            type: string
+          type: array
+          title: Capabilities Json
+        tool_allowlist_json:
+          items:
+            type: string
+          type: array
+          title: Tool Allowlist Json
+        config_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Config Json
+        prompt_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prompt Text
+        base_daily_routine:
+          items:
+            $ref: '#/components/schemas/AgentTeamRoutineStepResponse'
+          type: array
+          title: Base Daily Routine
+        effective_daily_routine:
+          items:
+            $ref: '#/components/schemas/AgentTeamRoutineStepResponse'
+          type: array
+          title: Effective Daily Routine
+        custom_daily_routine_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Daily Routine Text
+        custom_daily_routine_updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Custom Daily Routine Updated At
+        custom_daily_routine_updated_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Daily Routine Updated By User Id
+        custom_daily_routine_updated_by_agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Daily Routine Updated By Agent Key
+        custom_daily_routine_update_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custom Daily Routine Update Source
+        effective_is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Effective Is Active
+        module_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Module Key
+        disabled_by_module_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Disabled By Module Key
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - team_id
+      - agent_key
+      - display_name
+      - role
+      - is_active
+      - capabilities_json
+      - tool_allowlist_json
+      - created_at
+      - updated_at
+      title: AgentTeamAgentResponse
+    AgentTeamCommandCreate:
+      properties:
+        content:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Content
+        context_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Context Json
+      type: object
+      required:
+      - content
+      title: AgentTeamCommandCreate
+    DailyReportMarketingMixResponse:
+      properties:
+        readiness_tier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Readiness Tier
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+        budget_scenario:
+          anyOf:
+          - $ref: '#/components/schemas/DailyReportBudgetScenarioResponse'
+          - type: 'null'
+        data_gaps:
+          items:
+            type: string
+          type: array
+          title: Data Gaps
+        planning_assumptions:
+          items:
+            type: string
+          type: array
+          title: Planning Assumptions
+      type: object
+      title: DailyReportMarketingMixResponse
+      description: 'Budget / marketing-mix planning detail — honest about whether it is a
+
+        measured allocation or an assumption-based scaffold.'
+    AgentTeamWorkspaceInitResponse:
+      properties:
+        policy:
+          $ref: '#/components/schemas/AgentTeamPolicyResponse'
+        team:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamDetailResponse'
+          - type: 'null'
+        approvals:
+          items:
+            $ref: '#/components/schemas/AgentTeamApprovalResponse'
+          type: array
+          title: Approvals
+        recommendations:
+          items:
+            $ref: '#/components/schemas/AgentTeamRecommendationResponse'
+          type: array
+          title: Recommendations
+        actions:
+          items:
+            $ref: '#/components/schemas/AgentTeamActionResponse'
+          type: array
+          title: Actions
+        runs:
+          items:
+            $ref: '#/components/schemas/AgentTeamRunResponse'
+          type: array
+          title: Runs
+        mission_feed:
+          items:
+            $ref: '#/components/schemas/AgentTeamMissionFeedEntryResponse'
+          type: array
+          title: Mission Feed
+        report_summary:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamReportHomeSummaryResponse'
+          - type: 'null'
+        presentation_daily_report:
+          anyOf:
+          - $ref: '#/components/schemas/PresentationDailyReportResponse'
+          - type: 'null'
+        report_selection:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamReportSelectionResponse'
+          - type: 'null'
+        director_insight_projection:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTeamDirectorInsightProjectionResponse'
+          - type: 'null'
+        ads_performance_reports:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Ads Performance Reports
+        timings_ms:
+          additionalProperties:
+            type: number
+          type: object
+          title: Timings Ms
+      type: object
+      required:
+      - policy
+      title: AgentTeamWorkspaceInitResponse
+    AgentTeamAgentUpdate:
+      properties:
+        enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Enabled
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Display Name
+        custom_daily_routine_text:
+          anyOf:
+          - type: string
+            maxLength: 8000
+          - type: 'null'
+          title: Custom Daily Routine Text
+      type: object
+      title: AgentTeamAgentUpdate
+    AgentTeamDailySummaryListResponse:
+      properties:
+        summaries:
+          items:
+            $ref: '#/components/schemas/AgentTeamDailySummaryResponse'
+          type: array
+          title: Summaries
+        total:
+          type: integer
+          title: Total
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+        next_cursor_created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Cursor Created At
+        next_cursor_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Next Cursor Id
+      type: object
+      required:
+      - summaries
+      - total
+      title: AgentTeamDailySummaryListResponse
+    AgentTeamEventResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          type: string
+          format: uuid
+          title: Run Id
+        agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Key
+        event_type:
+          type: string
+          title: Event Type
+        title:
+          type: string
+          title: Title
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+        payload_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payload Json
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - team_id
+      - run_id
+      - event_type
+      - title
+      - created_at
+      title: AgentTeamEventResponse
+    AITeamDigestEmailListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        subject:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject
+        sent_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Sent At
+        summary_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Date
+        highlights:
+          anyOf:
+          - $ref: '#/components/schemas/AITeamDigestEmailHighlights'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      title: AITeamDigestEmailListItem
+      description: One delivered daily digest email available for in-app re-display.
+    AgentTeamReportSectionEvidenceResponse:
+      properties:
+        label:
+          type: string
+          title: Label
+        value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Value
+        detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Detail
+        tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tone
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - label
+      title: AgentTeamReportSectionEvidenceResponse
+    DailyReportBudgetScenarioResponse:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        allocations:
+          items:
+            $ref: '#/components/schemas/DailyReportMmmAllocationResponse'
+          type: array
+          title: Allocations
+        total_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Total Display
+        basis_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Basis Note
+      type: object
+      title: DailyReportBudgetScenarioResponse
+    AgentTeamApprovalResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Run Id
+        recommendation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recommendation Id
+        owner_agent_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Agent Key
+        title:
+          type: string
+          title: Title
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        risk:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Risk
+        approval_state:
+          anyOf:
+          - type: string
+            enum:
+            - pending_approval
+            - approved
+            - rejected
+            - auto_approved
+            - deferred
+            - escalated
+            - expired
+          - type: string
+          title: Approval State
+        approval_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Approval Reason
+        decision_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Decision Note
+        decided_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Decided By User Id
+        decided_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Decided At
+        defer_until_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Defer Until At
+        escalated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Escalated At
+        expired_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expired At
+        payload_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payload Json
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - team_id
+      - title
+      - approval_state
+      - created_at
+      - updated_at
+      title: AgentTeamApprovalResponse
+    AgentTeamStartFreshRequest:
+      properties:
+        clear_agent_memory:
+          type: boolean
+          title: Clear Agent Memory
+          default: true
+        clear_pending_commands:
+          type: boolean
+          title: Clear Pending Commands
+          default: true
+        clear_open_approvals:
+          type: boolean
+          title: Clear Open Approvals
+          default: true
+        clear_active_recommendations:
+          type: boolean
+          title: Clear Active Recommendations
+          default: true
+        clear_active_actions:
+          type: boolean
+          title: Clear Active Actions
+          default: true
+        clear_run_history:
+          type: boolean
+          title: Clear Run History
+          default: true
+        note:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Note
+      type: object
+      title: AgentTeamStartFreshRequest
+    AgentTeamRunNowResponse:
+      properties:
+        team:
+          $ref: '#/components/schemas/AgentTeamResponse'
+        run:
+          $ref: '#/components/schemas/AgentTeamRunResponse'
+        created_new:
+          type: boolean
+          title: Created New
+          default: false
+        reused_inflight:
+          type: boolean
+          title: Reused Inflight
+          default: false
+      type: object
+      required:
+      - team
+      - run
+      title: AgentTeamRunNowResponse
+    AgentTeamMessageResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        team_id:
+          type: string
+          format: uuid
+          title: Team Id
+        run_id:
+          type: string
+          format: uuid
+          title: Run Id
+        from_agent_key:
+          type: string
+          title: From Agent Key
+        to_agent_key:
+          type: string
+          title: To Agent Key
+        message_type:
+          type: string
+          title: Message Type
+        content:
+          type: string
+          title: Content
+        payload_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payload Json
+        correlation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Correlation Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - team_id
+      - run_id
+      - from_agent_key
+      - to_agent_key
+      - message_type
+      - content
+      - created_at
+      title: AgentTeamMessageResponse
+    DailyReportEntityResponse:
+      properties:
+        kind:
+          type: string
+          enum:
+          - signal
+          - competitor
+          - creative
+          - optimization
+          - channel_metric
+          - insight
+          title: Kind
+          default: insight
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        ui_tone:
+          type: string
+          enum:
+          - alert
+          - ready
+          - live
+          - pending
+          - neutral
+          title: Ui Tone
+          default: neutral
+        data_confidence:
+          type: string
+          enum:
+          - measured
+          - estimated
+          - unavailable
+          title: Data Confidence
+          default: estimated
+        evidence:
+          items:
+            $ref: '#/components/schemas/DailyReportEvidenceResponse'
+          type: array
+          title: Evidence
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - title
+      title: DailyReportEntityResponse
+      description: 'A typed, presentation-ready item the AI team authored for one section.
+
+
+        Copy fields (``title``, ``description``) are clean owner-facing prose written
+
+        by the AI; ``data_confidence`` lets the team label or omit anything the source
+
+        data does not support rather than fabricate it.'
+    AgentTeamPolicyAgentResponse:
+      properties:
+        agent_key:
+          type: string
+          title: Agent Key
+        label:
+          type: string
+          title: Label
+        description:
+          type: string
+          title: Description
+        default_display_name:
+          type: string
+          title: Default Display Name
+        role:
+          type: string
+          title: Role
+        required:
+          type: boolean
+          title: Required
+        configurable:
+          type: boolean
+          title: Configurable
+        enabled_by_default:
+          type: boolean
+          title: Enabled By Default
+      type: object
+      required:
+      - agent_key
+      - label
+      - description
+      - default_display_name
+      - role
+      - required
+      - configurable
+      - enabled_by_default
+      title: AgentTeamPolicyAgentResponse
+    AgentTeamRunGuidanceResponse:
+      properties:
+        version:
+          type: integer
+          title: Version
+          default: 1
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+        text:
+          type: string
+          title: Text
+        created_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By User Id
+        created_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Name
+        created_by_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Email
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - text
+      title: AgentTeamRunGuidanceResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

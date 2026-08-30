@@ -1,0 +1,28 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Sitemap.xml API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Sitemap.xml
+paths:
+  /sitemap.xml:
+    get:
+      summary: Sitemap Xml
+      description: Serve sitemap.xml for search engines
+      operationId: sitemap_xml_sitemap_xml_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Sitemap.xml
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

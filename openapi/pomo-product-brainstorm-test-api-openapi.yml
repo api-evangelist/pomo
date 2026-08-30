@@ -1,0 +1,406 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Product Brainstorm Test API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Product Brainstorm Test
+paths:
+  /api/ai-product-lab/product-brainstorm/test:
+    post:
+      tags:
+      - Product Brainstorm Test
+      summary: Test Product Launch
+      description: Start testing a product idea with AI personas.
+      operationId: test_product_launch_api_ai_product_lab_product_brainstorm_test_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductLaunchTestRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductLaunchTestResult'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/ai-product-lab/product-brainstorm/test/{test_id}:
+    get:
+      tags:
+      - Product Brainstorm Test
+      summary: Get Test Results
+      description: Get results of a product launch test with paginated persona responses.
+      operationId: get_test_results_api_ai_product_lab_product_brainstorm_test__test_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: test_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Test Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 10
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductLaunchTestResult'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-product-lab/product-brainstorm/test/{test_id}/responses:
+    get:
+      tags:
+      - Product Brainstorm Test
+      summary: Get Test Persona Responses
+      description: Get paginated persona responses for a product launch test.
+      operationId: get_test_persona_responses_api_ai_product_lab_product_brainstorm_test__test_id__responses_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: test_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Test Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 10
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-product-lab/product-brainstorm/tests:
+    get:
+      tags:
+      - Product Brainstorm Test
+      summary: Get All Tests
+      description: Get all product launch tests for the user's company profile.
+      operationId: get_all_tests_api_ai_product_lab_product_brainstorm_tests_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: launch_session_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Launch Session Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductLaunchTestResult'
+                title: Response Get All Tests Api Ai Product Lab Product Brainstorm Tests Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-product-lab/product-brainstorm/test/{test_id}/heatmaps:
+    get:
+      tags:
+      - Product Brainstorm Test
+      summary: Get Test Heatmaps
+      description: Get heatmap data for a product launch test.
+      operationId: get_test_heatmaps_api_ai_product_lab_product_brainstorm_test__test_id__heatmaps_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: test_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Test Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProductLaunchTestResult:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        launch_session_id:
+          type: string
+          format: uuid
+          title: Launch Session Id
+        product_name:
+          type: string
+          title: Product Name
+        product_description:
+          type: string
+          title: Product Description
+        total_personas_tested:
+          type: integer
+          title: Total Personas Tested
+        overall_interest_score:
+          type: number
+          title: Overall Interest Score
+        purchase_intent_score:
+          type: number
+          title: Purchase Intent Score
+        market_fit_score:
+          type: number
+          title: Market Fit Score
+        sentiment_analysis:
+          additionalProperties: true
+          type: object
+          title: Sentiment Analysis
+        key_insights:
+          items:
+            type: string
+          type: array
+          title: Key Insights
+        recommendations:
+          items:
+            type: string
+          type: array
+          title: Recommendations
+        persona_responses:
+          items:
+            $ref: '#/components/schemas/PersonaResponseData'
+          type: array
+          title: Persona Responses
+        test_status:
+          type: string
+          title: Test Status
+        started_at:
+          type: string
+          format: date-time
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        pagination:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Pagination
+      type: object
+      required:
+      - id
+      - launch_session_id
+      - product_name
+      - product_description
+      - total_personas_tested
+      - overall_interest_score
+      - purchase_intent_score
+      - market_fit_score
+      - sentiment_analysis
+      - key_insights
+      - recommendations
+      - persona_responses
+      - test_status
+      - started_at
+      - completed_at
+      title: ProductLaunchTestResult
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PersonaResponseData:
+      properties:
+        persona_id:
+          type: string
+          format: uuid
+          title: Persona Id
+        persona_name:
+          type: string
+          title: Persona Name
+        interest_level:
+          type: number
+          title: Interest Level
+        purchase_likelihood:
+          type: number
+          title: Purchase Likelihood
+        price_sensitivity:
+          type: string
+          title: Price Sensitivity
+        initial_reaction:
+          type: string
+          title: Initial Reaction
+        perceived_benefits:
+          items:
+            type: string
+          type: array
+          title: Perceived Benefits
+        concerns:
+          items:
+            type: string
+          type: array
+          title: Concerns
+        feature_requests:
+          items:
+            type: string
+          type: array
+          title: Feature Requests
+        would_recommend:
+          type: boolean
+          title: Would Recommend
+        recommendation_reason:
+          type: string
+          title: Recommendation Reason
+      type: object
+      required:
+      - persona_id
+      - persona_name
+      - interest_level
+      - purchase_likelihood
+      - price_sensitivity
+      - initial_reaction
+      - perceived_benefits
+      - concerns
+      - feature_requests
+      - would_recommend
+      - recommendation_reason
+      title: PersonaResponseData
+    ProductLaunchTestRequest:
+      properties:
+        launch_session_id:
+          type: string
+          format: uuid
+          title: Launch Session Id
+        product_idea_index:
+          type: integer
+          title: Product Idea Index
+        target_audience_groups:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Audience Groups
+        persona_set_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Persona Set Id
+      type: object
+      required:
+      - launch_session_id
+      - product_idea_index
+      title: ProductLaunchTestRequest
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

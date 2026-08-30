@@ -1,0 +1,654 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend CRM People API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: crm-people
+paths:
+  /api/crm/people:
+    get:
+      tags:
+      - crm-people
+      summary: List Crm People
+      description: Return the unified People projection for the active company profile.
+      operationId: list_crm_people_api_crm_people_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          description: People per page
+          default: 25
+          title: Limit
+        description: People per page
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Zero-based offset
+          default: 0
+          title: Offset
+        description: Zero-based offset
+      - name: source
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Source filter
+          title: Source
+        description: Source filter
+      - name: stage
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Unified stage filter
+          title: Stage
+        description: Unified stage filter
+      - name: hubspot
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: HubSpot sync filter
+          title: Hubspot
+        description: HubSpot sync filter
+      - name: signal
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Dedupe-signal filter
+          title: Signal
+        description: Dedupe-signal filter
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          description: Search text
+          title: Search
+        description: Search text
+      - name: sort_key
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort key
+          default: last_activity
+          title: Sort Key
+        description: Sort key
+      - name: sort_direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort direction
+          default: desc
+          title: Sort Direction
+        description: Sort direction
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPeopleListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/crm/people/export:
+    get:
+      tags:
+      - crm-people
+      summary: Export Crm People
+      description: Download every person matching the active list query as one CSV.
+      operationId: export_crm_people_api_crm_people_export_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: source
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Source filter
+          title: Source
+        description: Source filter
+      - name: stage
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Unified stage filter
+          title: Stage
+        description: Unified stage filter
+      - name: hubspot
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: HubSpot sync filter
+          title: Hubspot
+        description: HubSpot sync filter
+      - name: signal
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Dedupe-signal filter
+          title: Signal
+        description: Dedupe-signal filter
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          description: Search text
+          title: Search
+        description: Search text
+      - name: sort_key
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort key
+          default: last_activity
+          title: Sort Key
+        description: Sort key
+      - name: sort_direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort direction
+          default: desc
+          title: Sort Direction
+        description: Sort direction
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/crm/people/{person_ref}:
+    get:
+      tags:
+      - crm-people
+      summary: Get Crm Person
+      description: Return full detail for a single unified person.
+      operationId: get_crm_person_api_crm_people__person_ref__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: person_ref
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Person Ref
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPersonDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/crm/people/{person_ref}/contacted:
+    post:
+      tags:
+      - crm-people
+      summary: Mark Person Contacted
+      description: 'Log a manual ``contacted`` touch against a person; return refreshed detail.
+
+
+        The single write surface over the otherwise read-through People projection.
+
+        A 404 means the person_ref does not resolve within the active profile.'
+      operationId: mark_person_contacted_api_crm_people__person_ref__contacted_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: person_ref
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Person Ref
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/CrmMarkContactedRequest'
+              - type: 'null'
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPersonDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - crm-people
+      summary: Unmark Person Contacted
+      description: 'Undo: clear this profile''s ``contacted`` touches for a person.'
+      operationId: unmark_person_contacted_api_crm_people__person_ref__contacted_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: person_ref
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Person Ref
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPersonDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/crm/people/{person_ref}/stage:
+    put:
+      tags:
+      - crm-people
+      summary: Set Person Stage
+      description: Manually set a person's pipeline stage (a reversible override over auto).
+      operationId: set_person_stage_api_crm_people__person_ref__stage_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: person_ref
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Person Ref
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmSetStageRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPersonDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - crm-people
+      summary: Clear Person Stage
+      description: Revert a manual stage override back to the source-derived auto stage.
+      operationId: clear_person_stage_api_crm_people__person_ref__stage_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: person_ref
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Person Ref
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPersonDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/crm/people/{person_ref}/split:
+    post:
+      tags:
+      - crm-people
+      summary: Split Person Source
+      description: 'Peel one contributing source out of a wrongly-merged person.
+
+
+        Records a persistent do-not-merge override so the projection keeps that
+
+        source as its own standalone person. A 404 means the person_ref does not
+
+        resolve in the active profile, the source_ref is not one of its sources, or
+
+        the person has nothing to split (a single source).'
+      operationId: split_person_source_api_crm_people__person_ref__split_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: person_ref
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Person Ref
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmSplitSourceRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPersonDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - crm-people
+      summary: Unsplit Person Source
+      description: 'Undo a split — drop the do-not-merge override so the source re-fuses.
+
+
+        A 404 means ``person_ref`` no longer resolves in the active profile.'
+      operationId: unsplit_person_source_api_crm_people__person_ref__split_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: person_ref
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Person Ref
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmSplitSourceRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPersonDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CrmSplitSourceRequest:
+      properties:
+        source_ref:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Source Ref
+      type: object
+      required:
+      - source_ref
+      title: CrmSplitSourceRequest
+      description: 'Body for ``POST /api/crm/people/{person_ref}/split``.
+
+
+        ``source_ref`` is the contributing ``{source}:{id}`` to peel out of the merged
+
+        person into its own standalone record (a persistent do-not-merge override).'
+    CrmPersonDetailResponse:
+      properties:
+        access:
+          additionalProperties: true
+          type: object
+          title: Access
+        person:
+          additionalProperties: true
+          type: object
+          title: Person
+        sources:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Sources
+        timeline:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Timeline
+        engagement:
+          additionalProperties: true
+          type: object
+          title: Engagement
+      type: object
+      required:
+      - access
+      title: CrmPersonDetailResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CrmSetStageRequest:
+      properties:
+        stage:
+          type: string
+          enum:
+          - prospect
+          - engaged
+          - replied
+          - qualified
+          - customer
+          - archived
+          title: Stage
+      type: object
+      required:
+      - stage
+      title: CrmSetStageRequest
+      description: Body for ``PUT /api/crm/people/{person_ref}/stage`` — a manual override.
+    CrmPeopleListResponse:
+      properties:
+        access:
+          additionalProperties: true
+          type: object
+          title: Access
+        people:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: People
+        pagination:
+          $ref: '#/components/schemas/CrmPeoplePagination'
+        filters:
+          $ref: '#/components/schemas/CrmPeopleFilters'
+        summary:
+          additionalProperties: true
+          type: object
+          title: Summary
+      type: object
+      required:
+      - access
+      title: CrmPeopleListResponse
+    CrmMarkContactedRequest:
+      properties:
+        note:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Note
+        channel:
+          anyOf:
+          - type: string
+            maxLength: 32
+          - type: 'null'
+          title: Channel
+      type: object
+      title: CrmMarkContactedRequest
+      description: 'Body for ``POST /api/crm/people/{person_ref}/contacted``.
+
+
+        Both fields are optional — an empty body logs a manual touch with no note.
+
+        ``channel`` defaults to ``manual`` (I reached out myself, off-platform).'
+    CrmPeopleFilters:
+      properties:
+        source_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Source Counts
+        stage_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Stage Counts
+        hubspot_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Hubspot Counts
+      type: object
+      title: CrmPeopleFilters
+    CrmPeoplePagination:
+      properties:
+        limit:
+          type: integer
+          title: Limit
+          default: 25
+        offset:
+          type: integer
+          title: Offset
+          default: 0
+        total:
+          type: integer
+          title: Total
+          default: 0
+        page:
+          type: integer
+          title: Page
+          default: 1
+        total_pages:
+          type: integer
+          title: Total Pages
+          default: 1
+        has_next:
+          type: boolean
+          title: Has Next
+          default: false
+        has_previous:
+          type: boolean
+          title: Has Previous
+          default: false
+      type: object
+      title: CrmPeoplePagination
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

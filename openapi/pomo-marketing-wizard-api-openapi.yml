@@ -1,0 +1,511 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Marketing Wizard API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: marketing-wizard
+paths:
+  /api/marketing-wizard/product-offerings/{product_offering_id}/generate-pdp:
+    post:
+      tags:
+      - marketing-wizard
+      summary: Generate Product Description Page
+      description: Start asynchronous PDP generation for a specific product offering.
+      operationId: generate_product_description_page_api_marketing_wizard_product_offerings__product_offering_id__generate_pdp_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PDPGenerationRequest'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/marketing-wizard/product-offerings/{product_offering_id}/pdps:
+    get:
+      tags:
+      - marketing-wizard
+      summary: List Product Description Pages
+      description: Return previously generated PDPs for a product offering.
+      operationId: list_product_description_pages_api_marketing_wizard_product_offerings__product_offering_id__pdps_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PDPHistoryItem'
+                title: Response List Product Description Pages Api Marketing Wizard Product Offerings  Product Offering Id  Pdps Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/marketing-wizard/product-offerings/{product_offering_id}/pdps/{pdp_id}:
+    get:
+      tags:
+      - marketing-wizard
+      summary: Get Product Description Page Detail
+      description: Fetch a stored PDP generation for preview within the wizard.
+      operationId: get_product_description_page_detail_api_marketing_wizard_product_offerings__product_offering_id__pdps__pdp_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      - name: pdp_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Pdp Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PDPGenerationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/marketing-wizard/product-offerings/{product_offering_id}/pdps/{pdp_id}/download:
+    get:
+      tags:
+      - marketing-wizard
+      summary: Download Product Description Page Html
+      description: Download a persisted PDP variant as a self-contained HTML bundle.
+      operationId: download_product_description_page_html_api_marketing_wizard_product_offerings__product_offering_id__pdps__pdp_id__download_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Offering Id
+      - name: pdp_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Pdp Id
+      - name: variant
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/PDPVariantType'
+          default: modern
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/marketing-wizard/intelligence/product/{product_id}:
+    get:
+      tags:
+      - marketing-wizard
+      summary: Get Product Intelligence
+      description: "Get market intelligence for a specific product\n\nArgs:\n    product_id: ID of the product\n    intelligence_type: Optional filter for intelligence type\n    limit: Maximum number of results\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    Dictionary with grouped intelligence data"
+      operationId: get_product_intelligence_api_marketing_wizard_intelligence_product__product_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Id
+      - name: intelligence_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intelligence Type
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Product Intelligence Api Marketing Wizard Intelligence Product  Product Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PDPVariantResponse:
+      properties:
+        variant:
+          $ref: '#/components/schemas/PDPVariantType'
+          description: Variant type (modern or marketplace).
+        html:
+          type: string
+          title: Html
+          description: Full HTML document with inline CSS for the PDP.
+        seo_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Seo Title
+          description: Suggested SEO page title.
+        seo_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Seo Description
+          description: Suggested meta description.
+        primary_cta:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Cta
+          description: Recommended primary call-to-action copy.
+        highlights:
+          items:
+            type: string
+          type: array
+          title: Highlights
+          description: Key highlight bullets to reuse elsewhere.
+        sections:
+          items:
+            $ref: '#/components/schemas/PDPSectionSummary'
+          type: array
+          title: Sections
+          description: High-level outline of the sections included in the HTML.
+        diagnostics:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Diagnostics
+          description: Optional raw diagnostic information from the generator.
+      type: object
+      required:
+      - variant
+      - html
+      title: PDPVariantResponse
+      description: Single PDP variant response.
+    PDPExperienceTier:
+      type: string
+      enum:
+      - premium
+      - standard
+      - value
+      - luxury
+      title: PDPExperienceTier
+      description: Available experience tiers for PDP generation.
+    PDPSectionSummary:
+      properties:
+        heading:
+          type: string
+          title: Heading
+          description: Human-friendly heading for the section.
+        intent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intent
+          description: Goal or purpose of the section (e.g., 'Social proof', 'Feature showcase').
+      type: object
+      required:
+      - heading
+      title: PDPSectionSummary
+      description: Summary of a key section returned by the generator.
+    PDPGenerationResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          description: Indicates whether generation succeeded.
+          default: true
+        tier:
+          $ref: '#/components/schemas/PDPExperienceTier'
+          description: Tier used during generation.
+        tone:
+          type: string
+          title: Tone
+          description: Tone used during generation.
+        include_marketplace:
+          type: boolean
+          title: Include Marketplace
+          description: Whether a marketplace variant was requested.
+          default: false
+        record_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Record Id
+          description: Identifier of the persisted PDP record, if stored.
+        used_images:
+          items:
+            type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          type: array
+          title: Used Images
+          description: Image URLs that were passed to the generator.
+        modern_page:
+          $ref: '#/components/schemas/PDPVariantResponse'
+          description: Modern website PDP variant.
+        marketplace_page:
+          anyOf:
+          - $ref: '#/components/schemas/PDPVariantResponse'
+          - type: 'null'
+          description: Marketplace-style PDP variant, if generated.
+        marketplace_generated:
+          type: boolean
+          title: Marketplace Generated
+          description: True when a marketplace variant was produced.
+          default: false
+        warnings:
+          items:
+            type: string
+          type: array
+          title: Warnings
+          description: Non-blocking warnings encountered during generation.
+      type: object
+      required:
+      - tier
+      - tone
+      - modern_page
+      title: PDPGenerationResponse
+      description: Response payload returned after PDP generation.
+    PDPGenerationRequest:
+      properties:
+        tier:
+          $ref: '#/components/schemas/PDPExperienceTier'
+          description: Experience tier that determines aesthetic and layout density.
+        tone:
+          type: string
+          minLength: 2
+          title: Tone
+          description: Copywriting tone (e.g., 'Bold & Confident', 'Friendly and Warm').
+        selected_images:
+          items:
+            type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          type: array
+          maxItems: 5
+          title: Selected Images
+          description: Ordered list of up to five image URLs to embed in the PDP.
+        include_marketplace:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Include Marketplace
+          description: Override to force marketplace variant generation.
+        additional_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Additional Context
+          description: Optional extra instructions or nuances about the PDP.
+        target_audience_segments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Audience Segments
+          description: Optional list of audience segments to tailor messaging (from cached target audience).
+      type: object
+      required:
+      - tier
+      - tone
+      title: PDPGenerationRequest
+      description: Request payload for PDP generation.
+    PDPHistoryItem:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+          description: Record identifier for the stored PDP.
+        tier:
+          $ref: '#/components/schemas/PDPExperienceTier'
+          description: Experience tier used for the generation.
+        tone:
+          type: string
+          title: Tone
+          description: Tone used for the copy.
+        include_marketplace:
+          type: boolean
+          title: Include Marketplace
+          description: Whether a marketplace variant was requested.
+        marketplace_generated:
+          type: boolean
+          title: Marketplace Generated
+          description: True if a marketplace variant was produced.
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Timestamp when the PDP was generated.
+        used_images:
+          items:
+            type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          type: array
+          title: Used Images
+          description: Images that informed the generation.
+      type: object
+      required:
+      - id
+      - tier
+      - tone
+      - include_marketplace
+      - marketplace_generated
+      - created_at
+      title: PDPHistoryItem
+      description: Summary of a previously generated PDP.
+    PDPVariantType:
+      type: string
+      enum:
+      - modern
+      - marketplace
+      title: PDPVariantType
+      description: Supported PDP layout variants.
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,278 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend AI Personas API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: ai-personas
+paths:
+  /api/ai-personas/personas:
+    get:
+      tags:
+      - ai-personas
+      summary: Get Personas
+      description: Get AI personas for the current company profile with pagination.
+      operationId: get_personas_api_ai_personas_personas_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by specific product offering (None for company-wide)
+          title: Product Offering Id
+        description: Filter by specific product offering (None for company-wide)
+      - name: target_group
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by target audience group
+          title: Target Group
+        description: Filter by target audience group
+      - name: persona_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by persona type
+          title: Persona Type
+        description: Filter by persona type
+      - name: persona_set_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by specific persona set
+          title: Persona Set Id
+        description: Filter by specific persona set
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          description: Number of personas to return
+          default: 50
+          title: Limit
+        description: Number of personas to return
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          description: Number of personas to skip
+          default: 0
+          title: Offset
+        description: Number of personas to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-personas/personas/groups:
+    get:
+      tags:
+      - ai-personas
+      summary: Get Persona Groups
+      description: Get all target audience groups with persona counts.
+      operationId: get_persona_groups_api_ai_personas_personas_groups_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by specific product offering
+          title: Product Offering Id
+        description: Filter by specific product offering
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-personas/personas/generate:
+    post:
+      tags:
+      - ai-personas
+      summary: Generate Personas
+      description: Generate AI personas for company or specific product offering.
+      operationId: generate_personas_api_ai_personas_personas_generate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/routes__ai_personas__GeneratePersonasRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/ai-personas/personas/{persona_id}:
+    delete:
+      tags:
+      - ai-personas
+      summary: Delete Persona
+      description: Delete (deactivate) a specific persona.
+      operationId: delete_persona_api_ai_personas_personas__persona_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: persona_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Persona Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-personas/personas/bulk-delete:
+    post:
+      tags:
+      - ai-personas
+      summary: Bulk Delete Personas
+      description: Delete multiple personas at once.
+      operationId: bulk_delete_personas_api_ai_personas_personas_bulk_delete_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+                format: uuid
+              type: array
+              title: Persona Ids
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    routes__ai_personas__GeneratePersonasRequest:
+      properties:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        personas_per_group:
+          type: integer
+          maximum: 100.0
+          title: Personas Per Group
+          description: Number of personas per target group
+          default: 50
+        persona_set_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Persona Set Id
+        location:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Location
+      type: object
+      title: GeneratePersonasRequest
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,303 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Programmatic API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: programmatic
+paths:
+  /api/programmatic/v1/hello:
+    get:
+      tags:
+      - programmatic
+      summary: Hello
+      operationId: hello_api_programmatic_v1_hello_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/programmatic/v1/campaign-ideas:
+    post:
+      tags:
+      - programmatic
+      summary: Generate Campaign Ideas
+      operationId: generate_campaign_ideas_api_programmatic_v1_campaign_ideas_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgrammaticCampaignIdeasRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgrammaticCampaignIdeasResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/programmatic/v1/campaign-ideas/generate:
+    post:
+      tags:
+      - programmatic
+      summary: Generate Campaigns From Ideas
+      operationId: generate_campaigns_from_ideas_api_programmatic_v1_campaign_ideas_generate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgrammaticCampaignGenerationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgrammaticCampaignGenerationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProgrammaticCampaignGenerationItem:
+      properties:
+        idea_id:
+          type: string
+          minLength: 1
+          title: Idea Id
+        social_or_ads:
+          anyOf:
+          - type: string
+            enum:
+            - social
+            - ads
+          - type: 'null'
+          title: Social Or Ads
+        platforms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Platforms
+      type: object
+      required:
+      - idea_id
+      title: ProgrammaticCampaignGenerationItem
+    ProgrammaticCampaignGenerationResult:
+      properties:
+        campaign_idea_id:
+          type: string
+          title: Campaign Idea Id
+        campaign_type:
+          type: string
+          title: Campaign Type
+        platforms:
+          items:
+            type: string
+          type: array
+          title: Platforms
+        status:
+          type: string
+          title: Status
+        output:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Output
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - campaign_idea_id
+      - campaign_type
+      - platforms
+      - status
+      title: ProgrammaticCampaignGenerationResult
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProgrammaticCampaignIdeasRequest:
+      properties:
+        campaign_goal:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Campaign Goal
+        target_audience:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Target Audience
+        num_ideas:
+          type: integer
+          maximum: 30.0
+          minimum: 1.0
+          title: Num Ideas
+        platform:
+          type: string
+          enum:
+          - meta
+          - google
+          - tiktok
+          - linkedin
+          title: Platform
+        social_or_ads:
+          type: string
+          enum:
+          - social
+          - ads
+          title: Social Or Ads
+          default: social
+      type: object
+      required:
+      - campaign_goal
+      - target_audience
+      - num_ideas
+      - platform
+      title: ProgrammaticCampaignIdeasRequest
+    ProgrammaticCampaignGenerationResponse:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        request_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Id
+        results:
+          items:
+            $ref: '#/components/schemas/ProgrammaticCampaignGenerationResult'
+          type: array
+          title: Results
+      type: object
+      required:
+      - organization_id
+      - company_profile_id
+      - results
+      title: ProgrammaticCampaignGenerationResponse
+    ProgrammaticCampaignIdeasResponse:
+      properties:
+        campaign_goal:
+          type: string
+          title: Campaign Goal
+        target_audience_input:
+          type: string
+          title: Target Audience Input
+        target_audiences:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Target Audiences
+        campaign_ideas:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Campaign Ideas
+        platform:
+          type: string
+          enum:
+          - meta
+          - google
+          - tiktok
+          - linkedin
+          title: Platform
+        social_or_ads:
+          type: string
+          enum:
+          - social
+          - ads
+          title: Social Or Ads
+        num_ideas:
+          type: integer
+          title: Num Ideas
+        organization_id:
+          type: string
+          title: Organization Id
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        request_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Id
+      type: object
+      required:
+      - campaign_goal
+      - target_audience_input
+      - target_audiences
+      - campaign_ideas
+      - platform
+      - social_or_ads
+      - num_ideas
+      - organization_id
+      - company_profile_id
+      title: ProgrammaticCampaignIdeasResponse
+    ProgrammaticCampaignGenerationRequest:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ProgrammaticCampaignGenerationItem'
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Items
+      type: object
+      required:
+      - items
+      title: ProgrammaticCampaignGenerationRequest
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

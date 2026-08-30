@@ -1,0 +1,477 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Company Profile Access API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: company-profile-access
+paths:
+  /api/company-profile-access/{profile_id}/access:
+    get:
+      tags:
+      - company-profile-access
+      summary: List Project Access
+      description: 'Get all users who have access to a specific project.
+
+        Only project admins and org admins/owners can view access list.'
+      operationId: list_project_access_api_company_profile_access__profile_id__access_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyProfileAccessListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - company-profile-access
+      summary: Grant Project Access
+      description: 'Grant a user access to a project.
+
+        Only project admins and org admins/owners can grant access.'
+      operationId: grant_project_access_api_company_profile_access__profile_id__access_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyProfileAccessGrantRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyProfileAccessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/company-profile-access/{profile_id}/access/{user_id}:
+    put:
+      tags:
+      - company-profile-access
+      summary: Update Project Access
+      description: 'Update a user''s project access role.
+
+        Only project admins and org admins/owners can update access.'
+      operationId: update_project_access_api_company_profile_access__profile_id__access__user_id__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyProfileAccessUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyProfileAccessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - company-profile-access
+      summary: Revoke Project Access
+      description: 'Revoke a user''s access to a project.
+
+        Only project admins and org admins/owners can revoke access.'
+      operationId: revoke_project_access_api_company_profile_access__profile_id__access__user_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/company-profile-access/{profile_id}/access/bulk:
+    post:
+      tags:
+      - company-profile-access
+      summary: Bulk Grant Project Access
+      description: 'Grant project access to multiple users at once.
+
+        Only project admins and org admins/owners can grant bulk access.'
+      operationId: bulk_grant_project_access_api_company_profile_access__profile_id__access_bulk_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCompanyProfileAccessRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkCompanyProfileAccessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    CompanyProfileAccessResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        role:
+          type: string
+          title: Role
+        user_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Name
+        user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Email
+        granted_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Granted By
+        created_at:
+          type: string
+          title: Created At
+        updated_at:
+          type: string
+          title: Updated At
+        is_org_owner:
+          type: boolean
+          title: Is Org Owner
+          default: false
+      type: object
+      required:
+      - id
+      - user_id
+      - company_profile_id
+      - role
+      - created_at
+      - updated_at
+      title: CompanyProfileAccessResponse
+      description: Response model for company profile access information.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CompanyProfileAccessUpdateRequest:
+      properties:
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+          description: New company profile role
+      type: object
+      required:
+      - role
+      title: CompanyProfileAccessUpdateRequest
+      description: Request to update a user's company profile access.
+    ProjectRoleEnum:
+      type: string
+      enum:
+      - admin
+      - contributor
+      - observer
+      title: ProjectRoleEnum
+      description: Project-level role options (for company profiles).
+    CompanyProfileAccessListResponse:
+      properties:
+        access_list:
+          items:
+            $ref: '#/components/schemas/CompanyProfileAccessResponse'
+          type: array
+          title: Access List
+        total_count:
+          type: integer
+          title: Total Count
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        company_profile_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Name
+      type: object
+      required:
+      - access_list
+      - total_count
+      - company_profile_id
+      title: CompanyProfileAccessListResponse
+      description: Response model for listing company profile access.
+    BulkCompanyProfileAccessRequest:
+      properties:
+        user_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: User Ids
+          description: List of user IDs
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+          description: Role to assign to all users
+      type: object
+      required:
+      - user_ids
+      - role
+      title: BulkCompanyProfileAccessRequest
+      description: Request to grant company profile access to multiple users.
+    CompanyProfileAccessGrantRequest:
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+          description: ID of the user to grant access
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+          description: Company profile role to assign
+      type: object
+      required:
+      - user_id
+      - role
+      title: CompanyProfileAccessGrantRequest
+      description: Request to grant company profile access to a user.
+    BulkCompanyProfileAccessResponse:
+      properties:
+        successful:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Successful
+          description: User IDs successfully granted access
+        failed:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Failed
+          description: User IDs that failed with error messages
+        total_processed:
+          type: integer
+          title: Total Processed
+      type: object
+      required:
+      - total_processed
+      title: BulkCompanyProfileAccessResponse
+      description: Response for bulk company profile access operations.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

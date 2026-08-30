@@ -1,0 +1,155 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Competitor Ad Insights API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: competitor-ad-insights
+paths:
+  /api/competitor-ad-insights/{competitor_id}/analyze:
+    post:
+      tags:
+      - competitor-ad-insights
+      summary: Analyze Competitor Ads
+      description: 'Perform bulk analysis of all competitor ads to generate insights.
+
+        This analyzes both text and display ads together.'
+      operationId: analyze_competitor_ads_api_competitor_ad_insights__competitor_id__analyze_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: competitor_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Competitor Id
+      - name: days
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of days to analyze
+          default: 30
+          title: Days
+        description: Number of days to analyze
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/competitor-ad-insights/{competitor_id}/latest:
+    get:
+      tags:
+      - competitor-ad-insights
+      summary: Get Latest Ad Insights
+      description: Get the most recent ad insights for a competitor.
+      operationId: get_latest_ad_insights_api_competitor_ad_insights__competitor_id__latest_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: competitor_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Competitor Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/competitor-ad-insights/{competitor_id}/history:
+    get:
+      tags:
+      - competitor-ad-insights
+      summary: Get Ad Insights History
+      description: Get historical ad insights for a competitor.
+      operationId: get_ad_insights_history_api_competitor_ad_insights__competitor_id__history_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: competitor_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Competitor Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Number of historical insights to return
+          default: 10
+          title: Limit
+        description: Number of historical insights to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

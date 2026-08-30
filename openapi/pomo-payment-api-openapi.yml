@@ -1,0 +1,1136 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Payment API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: payment
+paths:
+  /api/payment/subscription/resume:
+    post:
+      tags:
+      - payment
+      summary: Resume Subscription
+      description: 'Resume a subscription that was scheduled to cancel at period end.
+
+        This clears cancel_at_period_end on Stripe and in our DB.'
+      operationId: resume_subscription_api_payment_subscription_resume_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Resume Subscription Api Payment Subscription Resume Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/subscription/end-trial:
+    post:
+      tags:
+      - payment
+      summary: End Trial And Start Paid Billing
+      description: 'End an eligible free trial immediately so the saved Stripe payment method
+
+        can start paid billing on the current plan.'
+      operationId: end_trial_and_start_paid_billing_api_payment_subscription_end_trial_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response End Trial And Start Paid Billing Api Payment Subscription End Trial Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/subscription/{subscription_id}/payment-status:
+    get:
+      tags:
+      - payment
+      summary: Get Subscription Payment Status
+      description: 'Get subscription payment status (polling endpoint).
+
+        Fetches the subscription and its latest_invoice to find the PaymentIntent.'
+      operationId: get_subscription_payment_status_api_payment_subscription__subscription_id__payment_status_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: subscription_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Subscription Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/subscription/debug:
+    get:
+      tags:
+      - payment
+      summary: Subscription Debug
+      description: 'Diagnostics endpoint to verify Stripe configuration for subscriptions.
+
+        Does not expose full secrets; returns booleans and configured price IDs.'
+      operationId: subscription_debug_api_payment_subscription_debug_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Subscription Debug Api Payment Subscription Debug Get
+      security:
+      - HTTPBearer: []
+  /api/payment/subscription/client-config:
+    get:
+      tags:
+      - payment
+      summary: Subscription Client Config
+      description: 'Minimal runtime config needed by Stripe Elements on the client.
+
+        The publishable key is safe to expose to the browser.'
+      operationId: subscription_client_config_api_payment_subscription_client_config_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Subscription Client Config Api Payment Subscription Client Config Get
+  /api/payment/subscription/plans:
+    get:
+      tags:
+      - payment
+      summary: Get Subscription Plans
+      description: Get all available subscription plans.
+      operationId: get_subscription_plans_api_payment_subscription_plans_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/SubscriptionTier'
+                type: array
+                title: Response Get Subscription Plans Api Payment Subscription Plans Get
+  /api/payment/subscription/init-payment-element:
+    post:
+      tags:
+      - payment
+      summary: Init Payment Element
+      description: 'Initialize a Stripe Payment Element for subscriptions.
+
+
+        Creates an incomplete subscription (default_incomplete) and returns the
+
+        client_secret of the underlying PaymentIntent from the latest invoice.
+
+        The client confirms payment using Payment Element; we rely on webhooks to
+
+        persist final subscription state.
+
+
+        Request payload must include:
+
+        - plan_id: Subscription tier (silver, gold, platinum)
+
+        - organization_id: UUID of the organization to subscribe'
+      operationId: init_payment_element_api_payment_subscription_init_payment_element_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties:
+                type: string
+              type: object
+              title: Payload
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Init Payment Element Api Payment Subscription Init Payment Element Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/subscription/subscribe:
+    post:
+      tags:
+      - payment
+      summary: Create Subscription
+      description: 'Create a new subscription for an organization.
+
+
+        Requires:
+
+        - organization_id: UUID of the organization to subscribe
+
+        - plan_id: Subscription tier (silver, gold, platinum)
+
+        - payment_method_id: Stripe payment method ID
+
+
+        User must be an OWNER or ADMIN of the organization.'
+      operationId: create_subscription_api_payment_subscription_subscribe_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Create Subscription Api Payment Subscription Subscribe Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/subscription/init-setup:
+    post:
+      tags:
+      - payment
+      summary: Init Setup Intent
+      description: 'Client-first flow: Create (or reuse) Stripe Customer and a SetupIntent to collect
+
+        card + billing address on the client. Returns the SetupIntent client_secret.
+
+
+        Request payload must include:
+
+        - organization_id: UUID of the organization'
+      operationId: init_setup_intent_api_payment_subscription_init_setup_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - additionalProperties: true
+                type: object
+              - type: 'null'
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Init Setup Intent Api Payment Subscription Init Setup Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/subscription/apply-coupon:
+    post:
+      tags:
+      - payment
+      summary: Apply Coupon
+      description: 'Validate a coupon/promotion code for a given plan and return discounted amount.
+
+
+        Expects:
+
+        - plan_id: one of SUBSCRIPTION_TIERS keys
+
+        - coupon_code: promotion code string'
+      operationId: apply_coupon_api_payment_subscription_apply_coupon_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Payload
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Apply Coupon Api Payment Subscription Apply Coupon Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/subscription/create-subscription:
+    post:
+      tags:
+      - payment
+      summary: Create Subscription From Setup
+      description: 'Create a subscription using a PaymentMethod saved via SetupIntent.
+
+        This is the second half of the client-first flow.
+
+
+        Expects:
+
+        - organization_id: UUID of the organization
+
+        - setup_intent_id: Stripe SetupIntent ID
+
+        - plan_id: Subscription tier'
+      operationId: create_subscription_from_setup_api_payment_subscription_create_subscription_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Payload
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Create Subscription From Setup Api Payment Subscription Create Subscription Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/subscription/current:
+    get:
+      tags:
+      - payment
+      summary: Get Current Subscription
+      description: 'Get the current active subscription for a specific organization.
+
+
+        Query parameters:
+
+        - organization_id: UUID of the organization
+
+
+        Returns the active subscription if found, None otherwise.'
+      operationId: get_current_subscription_api_payment_subscription_current_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/SubscriptionResponse'
+                - type: 'null'
+                title: Response Get Current Subscription Api Payment Subscription Current Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/subscription/cancel:
+    post:
+      tags:
+      - payment
+      summary: Cancel Subscription
+      description: "Cancel the current subscription for an organization.\nBy default, this will cancel at the end of the current billing period.\n\nQuery parameters:\n- organization_id: UUID of the organization\n\nArgs:\n    cancel_data: Contains at_period_end parameter indicating when to cancel"
+      operationId: cancel_subscription_api_payment_subscription_cancel_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelSubscriptionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Cancel Subscription Api Payment Subscription Cancel Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/subscription/validate-plan-change:
+    post:
+      tags:
+      - payment
+      summary: Validate Plan Change
+      description: 'Validate if a plan change is possible for an organization.
+
+
+        CRITICAL: For downgrades, this strictly validates current usage against target plan limits.
+
+        Returns detailed errors if the downgrade would exceed limits.
+
+
+        For upgrades, this estimates the proration amount (actual amount calculated by Stripe).'
+      operationId: validate_plan_change_api_payment_subscription_validate_plan_change_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidatePlanChangeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanChangeValidationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/subscription/change-plan:
+    post:
+      tags:
+      - payment
+      summary: Change Subscription Plan
+      description: 'Change the subscription plan for an organization.
+
+
+        CRITICAL: This endpoint UPDATES the EXISTING subscription, never creates a new one.
+
+        - For upgrades: Uses proration_behavior=''create_prorations'' (charges immediately)
+
+        - For downgrades: Uses proration_behavior=''none'' (NO REFUNDS)
+
+
+        This prevents duplicate subscriptions which was the main issue.'
+      operationId: change_subscription_plan_api_payment_subscription_change_plan_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePlanRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Change Subscription Plan Api Payment Subscription Change Plan Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/subscription/portal-session:
+    get:
+      tags:
+      - payment
+      summary: Create Billing Portal Session
+      description: 'Create a Stripe Customer Portal session for subscription management.
+
+
+        Query parameters:
+
+        - return_url: The URL to redirect to after completing actions in the customer portal
+
+        - organization_id: UUID of the organization'
+      operationId: create_billing_portal_session_api_payment_subscription_portal_session_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: return_url
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Return Url
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingPortalSessionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/subscription/payment-history:
+    get:
+      tags:
+      - payment
+      summary: Get Payment History
+      description: Return recent Stripe-backed payment history for the current organization billing scope.
+      operationId: get_payment_history_api_payment_subscription_payment_history_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Company Profile Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentHistoryListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/subscription/checkout-session:
+    post:
+      tags:
+      - payment
+      summary: Create Checkout Session
+      description: Create an embedded Stripe Checkout Session for subscription purchase.
+      operationId: create_checkout_session_api_payment_subscription_checkout_session_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Checkout Data
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Create Checkout Session Api Payment Subscription Checkout Session Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/payment/subscription/checkout-session/{session_id}/status:
+    get:
+      tags:
+      - payment
+      summary: Get Checkout Session Status
+      description: 'Report whether an in-flight embedded Checkout Session has already failed.
+
+
+        The embedded checkout iframe owns the 3-D Secure challenge, so when the
+
+        issuer''s ACS page hangs the browser has no way to learn that Stripe already
+
+        gave up on the authentication behind it. The registration UI polls this so
+
+        it can replace a dead blank overlay with a real error and a retry.'
+      operationId: get_checkout_session_status_api_payment_subscription_checkout_session__session_id__status_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Session Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Checkout Session Status Api Payment Subscription Checkout Session  Session Id  Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/subscription/subscription-status:
+    get:
+      tags:
+      - payment
+      summary: Get Subscription Status
+      description: 'Get subscription status for a specific organization.
+
+
+        Query parameters:
+
+        - organization_id: UUID of the organization
+
+
+        Returns details about the organization''s current subscription status.'
+      operationId: get_subscription_status_api_payment_subscription_subscription_status_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Subscription Status Api Payment Subscription Subscription Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/payment/subscription/webhook:
+    post:
+      tags:
+      - payment
+      summary: Handle Stripe Webhook
+      description: 'Handle Stripe webhook events for subscription lifecycle.
+
+
+        This endpoint processes events from Stripe to keep our database
+
+        in sync with subscription changes and payments.'
+      operationId: handle_stripe_webhook_api_payment_subscription_webhook_post
+      parameters:
+      - name: Stripe-Signature
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Stripe-Signature
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PlanChangeValidationResponse:
+      properties:
+        is_valid:
+          type: boolean
+          title: Is Valid
+        is_upgrade:
+          type: boolean
+          title: Is Upgrade
+        is_downgrade:
+          type: boolean
+          title: Is Downgrade
+        current_plan:
+          type: string
+          title: Current Plan
+        target_plan:
+          type: string
+          title: Target Plan
+        billing_currency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Currency
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+        errors:
+          items:
+            type: string
+          type: array
+          title: Errors
+          default: []
+        current_usage:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Current Usage
+          default: {}
+        target_limits:
+          additionalProperties:
+            anyOf:
+            - type: integer
+            - type: 'null'
+          type: object
+          title: Target Limits
+          default: {}
+        proration_amount:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Proration Amount
+        blocking_items:
+          anyOf:
+          - additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+          - type: 'null'
+          title: Blocking Items
+        payment_method:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payment Method
+      type: object
+      required:
+      - is_valid
+      - is_upgrade
+      - is_downgrade
+      - current_plan
+      - target_plan
+      title: PlanChangeValidationResponse
+      description: Response model for plan change validation.
+    PaymentHistoryListResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        payment_history:
+          items:
+            $ref: '#/components/schemas/PaymentHistoryItemResponse'
+          type: array
+          title: Payment History
+      type: object
+      required:
+      - status
+      - payment_history
+      title: PaymentHistoryListResponse
+      description: Response model for payment history.
+    SubscriptionResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        plan_id:
+          type: string
+          title: Plan Id
+        status:
+          type: string
+          title: Status
+        current_period_start:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Current Period Start
+        current_period_end:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Current Period End
+        cancel_at_period_end:
+          type: boolean
+          title: Cancel At Period End
+        trial_end:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Trial End
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - plan_id
+      - status
+      - cancel_at_period_end
+      - created_at
+      title: SubscriptionResponse
+      description: Response model for subscription information.
+    PaymentHistoryItemResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        invoice_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Id
+        invoice_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Number
+        amount:
+          type: number
+          title: Amount
+        currency:
+          type: string
+          title: Currency
+        status:
+          type: string
+          title: Status
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        paid_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Paid At
+        refunded:
+          type: boolean
+          title: Refunded
+          default: false
+        refund_amount:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Refund Amount
+      type: object
+      required:
+      - id
+      - amount
+      - currency
+      - status
+      title: PaymentHistoryItemResponse
+      description: Response model for a payment history entry.
+    CreateSubscriptionRequest:
+      properties:
+        payment_method_id:
+          type: string
+          title: Payment Method Id
+        plan_id:
+          type: string
+          title: Plan Id
+          default: silver
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+      type: object
+      required:
+      - payment_method_id
+      title: CreateSubscriptionRequest
+      description: Request model for creating a subscription.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SubscriptionTier:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        price:
+          type: number
+          title: Price
+        currency:
+          type: string
+          title: Currency
+          default: USD
+        features:
+          items:
+            type: string
+          type: array
+          title: Features
+        stripe_price_id:
+          type: string
+          title: Stripe Price Id
+      type: object
+      required:
+      - id
+      - name
+      - description
+      - price
+      - features
+      - stripe_price_id
+      title: SubscriptionTier
+      description: Model representing a subscription tier.
+    BillingPortalSessionResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        portal_url:
+          type: string
+          title: Portal Url
+      type: object
+      required:
+      - status
+      - portal_url
+      title: BillingPortalSessionResponse
+      description: Response model for a Stripe billing portal session.
+    CancellationReason:
+      type: string
+      enum:
+      - too_expensive
+      - missing_features
+      - not_using
+      - switched_competitor
+      - technical_issues
+      - hard_to_use
+      - temporary
+      - other
+      title: CancellationReason
+      description: 'High-level reason a user selects when cancelling a subscription.
+
+
+        Kept in sync with the frontend cancellation reason form. The order here is
+
+        not significant; values are persisted verbatim for churn analysis.'
+    ValidatePlanChangeRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        target_plan:
+          type: string
+          title: Target Plan
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+      type: object
+      required:
+      - organization_id
+      - target_plan
+      title: ValidatePlanChangeRequest
+      description: Request model for validating a plan change.
+    ChangePlanRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        target_plan:
+          type: string
+          title: Target Plan
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+      type: object
+      required:
+      - organization_id
+      - target_plan
+      title: ChangePlanRequest
+      description: Request model for changing subscription plan.
+    CancelSubscriptionRequest:
+      properties:
+        at_period_end:
+          type: boolean
+          title: At Period End
+          description: If True, cancellation occurs at period end (default).
+          default: true
+        cancellation_reason_category:
+          anyOf:
+          - $ref: '#/components/schemas/CancellationReason'
+          - type: 'null'
+          description: High-level reason the user is cancelling (for churn analysis).
+        cancellation_note:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Cancellation Note
+          description: Optional free-text elaboration on why the user is cancelling.
+      type: object
+      title: CancelSubscriptionRequest
+      description: Request model for cancelling a subscription.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

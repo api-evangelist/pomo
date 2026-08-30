@@ -1,0 +1,81 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Gallery Media API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: gallery-media
+paths:
+  /api/gallery-media/{image_id}:
+    get:
+      tags:
+      - gallery-media
+      summary: Stream Gallery Video Playback
+      description: Range-stream a video after validating its short-lived playback capability.
+      operationId: stream_gallery_video_playback_api_gallery_media__image_id__get
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Image Id
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 32
+          maxLength: 4096
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

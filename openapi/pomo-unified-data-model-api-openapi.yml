@@ -1,0 +1,3843 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Unified Data Model API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Unified Data Model
+paths:
+  /api/udm/revenue/daily:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily revenue by channel
+      description: Returns daily revenue breakdown by vendor and channel (in-store, online, etc.)
+      operationId: get_revenue_daily_api_udm_revenue_daily_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD). Defaults to 30 days ago.
+          title: Start Date
+        description: Start date (YYYY-MM-DD). Defaults to 30 days ago.
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD). Defaults to today.
+          title: End Date
+        description: End date (YYYY-MM-DD). Defaults to today.
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Date preset: today, yesterday, last_7_days, last_30_days, this_month, last_month, this_quarter, year_to_date'
+          title: Preset
+        description: 'Date preset: today, yesterday, last_7_days, last_30_days, this_month, last_month, this_quarter, year_to_date'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RevenueByChannelResponse'
+                title: Response Get Revenue Daily Api Udm Revenue Daily Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/revenue/summary:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get revenue summary
+      description: Returns aggregated revenue metrics for the specified date range
+      operationId: get_revenue_summary_api_udm_revenue_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Start Date
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: End Date
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevenueSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/ads/performance:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily ad performance
+      description: Returns daily ad performance metrics by platform
+      operationId: get_ad_performance_api_udm_ads_performance_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Start Date
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: End Date
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preset
+      - name: platform
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter by platform: meta, tiktok'
+          title: Platform
+        description: 'Filter by platform: meta, tiktok'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdPerformanceResponse'
+                title: Response Get Ad Performance Api Udm Ads Performance Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/ads/roas:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get blended ROAS
+      description: Returns blended ROAS across all advertising platforms
+      operationId: get_blended_roas_api_udm_ads_roas_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Start Date
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: End Date
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlendedROASResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/customers/top:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get top customers
+      description: Returns top customers by LTV or other metrics
+      operationId: get_top_customers_api_udm_customers_top_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Number of customers to return
+          default: 100
+          title: Limit
+        description: Number of customers to return
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Sort by: ltv_cents, total_orders, total_spent_cents'
+          default: ltv_cents
+          title: Order By
+        description: 'Sort by: ltv_cents, total_orders, total_spent_cents'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerSummaryResponse'
+                title: Response Get Top Customers Api Udm Customers Top Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/customers/quality-segments:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get customer quality segments
+      description: Returns high-LTV, repeat, one-time, discount-heavy, at-risk, and lapsed customer segments.
+      operationId: get_customer_quality_segments_api_udm_customers_quality_segments_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: source_vendor
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional source vendor filter, e.g. shopify
+          title: Source Vendor
+        description: Optional source vendor filter, e.g. shopify
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Get Customer Quality Segments Api Udm Customers Quality Segments Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/customers/acquisition-quality:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get acquisition source quality
+      description: Returns customer quality grouped by first observed Shopify source/UTM campaign.
+      operationId: get_acquisition_source_quality_api_udm_customers_acquisition_quality_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          type: string
+          default: avg_ltv_cents
+          title: Order By
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Get Acquisition Source Quality Api Udm Customers Acquisition Quality Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/customers/discount-quality:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get discount buyer quality
+      description: Returns repeat/LTV outcomes for full-price, discount-exposed, and discount-heavy buyers.
+      operationId: get_discount_buyer_quality_api_udm_customers_discount_quality_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties: true
+                  type: object
+                type: array
+                title: Response Get Discount Buyer Quality Api Udm Customers Discount Quality Get
+      security:
+      - HTTPBearer: []
+  /api/udm/customers/geo-quality:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get customer geo quality
+      description: Returns geography clusters for high-quality customer demand.
+      operationId: get_customer_geo_quality_api_udm_customers_geo_quality_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          type: string
+          default: avg_ltv_cents
+          title: Order By
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Get Customer Geo Quality Api Udm Customers Geo Quality Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/customers/quality-pack:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get customer quality intelligence pack
+      description: Returns customer segments, acquisition quality, discount buyer quality, product quality, and geo quality.
+      operationId: get_customer_quality_pack_api_udm_customers_quality_pack_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Customer Quality Pack Api Udm Customers Quality Pack Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/products/quality:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get product quality
+      description: Returns product and variant quality metrics tied to customer LTV, repeat behavior, and discounts.
+      operationId: get_product_quality_api_udm_products_quality_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          type: string
+          default: net_revenue_cents
+          title: Order By
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Get Product Quality Api Udm Products Quality Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/customers/{customer_key}:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get customer 360 view
+      description: Returns comprehensive view of a customer including orders, LTV, and segmentation
+      operationId: get_customer_api_udm_customers__customer_key__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Customer Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/cross-channel:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get cross-channel metrics
+      description: Returns daily blended metrics combining revenue and ad spend
+      operationId: get_cross_channel_metrics_api_udm_cross_channel_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Start Date
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: End Date
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrossChannelMetricsResponse'
+                title: Response Get Cross Channel Metrics Api Udm Cross Channel Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/google-analytics/channel-inputs:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get GA4 Gold daily channel inputs
+      description: Returns GA4-derived daily channel rows from the Gold MMM input table. These rows are refreshed by the UDM pipeline on its daily schedule.
+      operationId: get_google_analytics_channel_inputs_api_udm_google_analytics_channel_inputs_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Date preset
+          default: last_30_days
+          title: Preset
+        description: Date preset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 20000
+          minimum: 1
+          description: Maximum Gold rows to return
+          default: 500
+          title: Limit
+        description: Maximum Gold rows to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GoogleAnalyticsChannelInputResponse'
+                title: Response Get Google Analytics Channel Inputs Api Udm Google Analytics Channel Inputs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/daily:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily QuickBooks financials
+      description: Get daily QuickBooks financial metrics for the company.
+      operationId: get_qb_daily_financials_api_udm_quickbooks_daily_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Date preset (last_7_days, last_30_days, etc.)
+          title: Preset
+        description: Date preset (last_7_days, last_30_days, etc.)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBDailyFinancialsResponse'
+                title: Response Get Qb Daily Financials Api Udm Quickbooks Daily Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/summary:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get QuickBooks summary for date range
+      description: Get QuickBooks summary metrics for the company.
+      operationId: get_qb_summary_api_udm_quickbooks_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Date preset (last_7_days, last_30_days, etc.)
+          title: Preset
+        description: Date preset (last_7_days, last_30_days, etc.)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QBRangeSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/customers:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get top customers from QuickBooks
+      description: Get top customers by revenue from QuickBooks.
+      operationId: get_qb_customers_api_udm_quickbooks_customers_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Number of customers to return
+          default: 100
+          title: Limit
+        description: Number of customers to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBCustomerSummaryResponse'
+                title: Response Get Qb Customers Api Udm Quickbooks Customers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/vendors:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get top vendors from QuickBooks
+      description: Get top vendors by expense from QuickBooks.
+      operationId: get_qb_vendors_api_udm_quickbooks_vendors_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Number of vendors to return
+          default: 100
+          title: Limit
+        description: Number of vendors to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBVendorSummaryResponse'
+                title: Response Get Qb Vendors Api Udm Quickbooks Vendors Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/products:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get sales by product from QuickBooks
+      description: Get product-level sales from QuickBooks invoice lines.
+      operationId: get_qb_sales_by_product_api_udm_quickbooks_products_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Number of products to return
+          default: 100
+          title: Limit
+        description: Number of products to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBSalesByProductResponse'
+                title: Response Get Qb Sales By Product Api Udm Quickbooks Products Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/monthly:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get monthly QuickBooks financials with MoM trends
+      description: Get monthly QuickBooks financials with month-over-month trends.
+      operationId: get_qb_monthly_financials_api_udm_quickbooks_monthly_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_month
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Start month (YYYY-MM). Defaults to 12 months ago.
+          title: Start Month
+        description: Start month (YYYY-MM). Defaults to 12 months ago.
+      - name: end_month
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: End month (YYYY-MM). Defaults to current month.
+          title: End Month
+        description: End month (YYYY-MM). Defaults to current month.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBMonthlyFinancialsResponse'
+                title: Response Get Qb Monthly Financials Api Udm Quickbooks Monthly Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/marketing:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get marketing spend by category from QuickBooks
+      description: Returns monthly marketing expense breakdown by category and entity type
+      operationId: get_qb_marketing_by_category_api_udm_quickbooks_marketing_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_month
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Start month (YYYY-MM). Defaults to 12 months ago.
+          title: Start Month
+        description: Start month (YYYY-MM). Defaults to 12 months ago.
+      - name: end_month
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: End month (YYYY-MM). Defaults to current month.
+          title: End Month
+        description: End month (YYYY-MM). Defaults to current month.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBMarketingByCategoryResponse'
+                title: Response Get Qb Marketing By Category Api Udm Quickbooks Marketing Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/daily-full:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get full daily QuickBooks financials with all entity columns
+      description: Get full daily QuickBooks financials with all entity-level columns.
+      operationId: get_qb_daily_financials_full_api_udm_quickbooks_daily_full_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Date preset (last_7_days, last_30_days, etc.)
+          title: Preset
+        description: Date preset (last_7_days, last_30_days, etc.)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBDailyFinancialsFullResponse'
+                title: Response Get Qb Daily Financials Full Api Udm Quickbooks Daily Full Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/daily-marketing:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily marketing spend totals from QuickBooks
+      description: Get daily marketing spend totals from QuickBooks.
+      operationId: get_qb_daily_marketing_spend_api_udm_quickbooks_daily_marketing_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Date preset (last_7_days, last_30_days, etc.)
+          title: Preset
+        description: Date preset (last_7_days, last_30_days, etc.)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBDailyMarketingSpendResponse'
+                title: Response Get Qb Daily Marketing Spend Api Udm Quickbooks Daily Marketing Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/daily-marketing-by-category:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily marketing spend by category from QuickBooks
+      description: Get daily marketing spend by category from QuickBooks.
+      operationId: get_qb_daily_marketing_by_category_api_udm_quickbooks_daily_marketing_by_category_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Date preset (last_7_days, last_30_days, etc.)
+          title: Preset
+        description: Date preset (last_7_days, last_30_days, etc.)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBDailyMarketingByCategoryResponse'
+                title: Response Get Qb Daily Marketing By Category Api Udm Quickbooks Daily Marketing By Category Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/quickbooks/date/{txn_date}:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get all QuickBooks transactions for a single date
+      description: Get all QuickBooks transactions for a single date from Silver tables.
+      operationId: get_qb_date_detail_api_udm_quickbooks_date__txn_date__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: txn_date
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+          title: Txn Date
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QBTransactionResponse'
+                title: Response Get Qb Date Detail Api Udm Quickbooks Date  Txn Date  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/square/daily-sales:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily Square sales metrics
+      description: Get daily Square sales metrics for the company.
+      operationId: get_sq_daily_sales_api_udm_square_daily_sales_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SQDailySalesResponse'
+                title: Response Get Sq Daily Sales Api Udm Square Daily Sales Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/square/daily-sales-by-location:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily Square sales by location
+      description: Get daily Square sales broken down by location.
+      operationId: get_sq_daily_sales_by_location_api_udm_square_daily_sales_by_location_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SQDailySalesByLocationResponse'
+                title: Response Get Sq Daily Sales By Location Api Udm Square Daily Sales By Location Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/square/summary:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get Square summary for date range
+      description: Get Square summary metrics for the company.
+      operationId: get_sq_summary_api_udm_square_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SQRangeSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/square/products:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get sales by product from Square
+      description: Get product-level sales from Square.
+      operationId: get_sq_products_api_udm_square_products_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          description: Max products to return
+          default: 50
+          title: Limit
+        description: Max products to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SQProductSalesResponse'
+                title: Response Get Sq Products Api Udm Square Products Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/square/locations:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get sales by location from Square
+      description: Get monthly location-level sales from Square.
+      operationId: get_sq_locations_api_udm_square_locations_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SQLocationSalesResponse'
+                title: Response Get Sq Locations Api Udm Square Locations Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/square/date/{txn_date}:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get all Square transactions for a single date
+      description: Get all Square transactions for a single date from Silver tables.
+      operationId: get_sq_date_detail_api_udm_square_date__txn_date__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: txn_date
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+          title: Txn Date
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SQTransactionResponse'
+                title: Response Get Sq Date Detail Api Udm Square Date  Txn Date  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/stripe/daily-sales:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily Stripe sales metrics
+      description: Get daily Stripe sales metrics for the company.
+      operationId: get_st_daily_sales_route_api_udm_stripe_daily_sales_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StripeDailySalesResponse'
+                title: Response Get St Daily Sales Route Api Udm Stripe Daily Sales Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/stripe/summary:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get Stripe summary for date range
+      description: Get Stripe summary metrics for the company.
+      operationId: get_st_summary_route_api_udm_stripe_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StripeRangeSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/klaviyo/daily-email-performance:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily Klaviyo email performance metrics
+      description: Get daily Klaviyo email performance metrics for the company.
+      operationId: get_kl_daily_email_performance_api_udm_klaviyo_daily_email_performance_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KLDailyEmailPerformanceResponse'
+                title: Response Get Kl Daily Email Performance Api Udm Klaviyo Daily Email Performance Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/klaviyo/campaigns:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get Klaviyo campaign performance
+      description: Get Klaviyo campaign performance metrics for the company.
+      operationId: get_kl_campaigns_api_udm_klaviyo_campaigns_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          description: Max campaigns to return
+          default: 20
+          title: Limit
+        description: Max campaigns to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KLCampaignPerformanceResponse'
+                title: Response Get Kl Campaigns Api Udm Klaviyo Campaigns Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/klaviyo/flows:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get Klaviyo flow performance
+      description: Get Klaviyo flow performance metrics for the company.
+      operationId: get_kl_flows_api_udm_klaviyo_flows_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          description: Max flows to return
+          default: 20
+          title: Limit
+        description: Max flows to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KLFlowPerformanceResponse'
+                title: Response Get Kl Flows Api Udm Klaviyo Flows Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/klaviyo/lists:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get Klaviyo list growth metrics
+      description: Get Klaviyo list growth metrics for the company.
+      operationId: get_kl_lists_api_udm_klaviyo_lists_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KLListGrowthResponse'
+                title: Response Get Kl Lists Api Udm Klaviyo Lists Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/klaviyo/summary:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get Klaviyo summary for date range
+      description: Get Klaviyo summary metrics for the company.
+      operationId: get_kl_summary_api_udm_klaviyo_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KLRangeSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/klaviyo/date/{date}:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get all Klaviyo events for a single date
+      description: Get all Klaviyo events for a single date from Silver tables.
+      operationId: get_kl_date_detail_api_udm_klaviyo_date__date__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Date
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KLTransactionRowResponse'
+                title: Response Get Kl Date Detail Api Udm Klaviyo Date  Date  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/shopify/daily-sales:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get daily Shopify sales metrics
+      description: Get daily Shopify sales metrics for the company.
+      operationId: get_sh_daily_sales_api_udm_shopify_daily_sales_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SHDailySalesResponse'
+                title: Response Get Sh Daily Sales Api Udm Shopify Daily Sales Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/shopify/products:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get product catalog from Shopify
+      description: Get product catalog from Shopify Silver tables.
+      operationId: get_sh_products_api_udm_shopify_products_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          description: Max products to return
+          default: 100
+          title: Limit
+        description: Max products to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SHProductCatalogResponse'
+                title: Response Get Sh Products Api Udm Shopify Products Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/shopify/customers:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get Shopify customer overview
+      description: Get monthly customer overview from Shopify.
+      operationId: get_sh_customers_api_udm_shopify_customers_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SHCustomerOverviewResponse'
+                title: Response Get Sh Customers Api Udm Shopify Customers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/shopify/fulfillment:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get Shopify fulfillment status
+      description: Get daily fulfillment status from Shopify.
+      operationId: get_sh_fulfillment_api_udm_shopify_fulfillment_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SHFulfillmentStatusResponse'
+                title: Response Get Sh Fulfillment Api Udm Shopify Fulfillment Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/shopify/summary:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get Shopify summary for date range
+      description: Get Shopify summary metrics for the company.
+      operationId: get_sh_summary_api_udm_shopify_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: Start date (YYYY-MM-DD)
+          title: Start Date
+        description: Start date (YYYY-MM-DD)
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: End date (YYYY-MM-DD)
+          title: End Date
+        description: End date (YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SHRangeSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/udm/shopify/date/{txn_date}:
+    get:
+      tags:
+      - Unified Data Model
+      summary: Get all Shopify orders for a single date
+      description: Get all Shopify orders for a single date from Silver tables.
+      operationId: get_sh_date_detail_api_udm_shopify_date__txn_date__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: txn_date
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+          title: Txn Date
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SHTransactionResponse'
+                title: Response Get Sh Date Detail Api Udm Shopify Date  Txn Date  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SHFulfillmentStatusResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        pending_count:
+          type: integer
+          title: Pending Count
+        fulfilled_count:
+          type: integer
+          title: Fulfilled Count
+        partial_count:
+          type: integer
+          title: Partial Count
+        unfulfilled_count:
+          type: integer
+          title: Unfulfilled Count
+        fulfillment_rate:
+          type: number
+          title: Fulfillment Rate
+      type: object
+      required:
+      - metric_date
+      - pending_count
+      - fulfilled_count
+      - partial_count
+      - unfulfilled_count
+      - fulfillment_rate
+      title: SHFulfillmentStatusResponse
+      description: Daily Shopify fulfillment status response.
+    QBRangeSummaryResponse:
+      properties:
+        total_gross_sales_cents:
+          type: integer
+          title: Total Gross Sales Cents
+        total_net_sales_cents:
+          type: integer
+          title: Total Net Sales Cents
+        total_expenses_cents:
+          type: integer
+          title: Total Expenses Cents
+        total_net_cash_flow_cents:
+          type: integer
+          title: Total Net Cash Flow Cents
+        total_invoices:
+          type: integer
+          title: Total Invoices
+        total_bills:
+          type: integer
+          title: Total Bills
+        total_payments:
+          type: integer
+          title: Total Payments
+        avg_daily_sales_cents:
+          type: integer
+          title: Avg Daily Sales Cents
+        avg_daily_expenses_cents:
+          type: integer
+          title: Avg Daily Expenses Cents
+        total_deposit_cents:
+          type: integer
+          title: Total Deposit Cents
+        total_refund_cents:
+          type: integer
+          title: Total Refund Cents
+        total_marketing_cents:
+          type: integer
+          title: Total Marketing Cents
+      type: object
+      required:
+      - total_gross_sales_cents
+      - total_net_sales_cents
+      - total_expenses_cents
+      - total_net_cash_flow_cents
+      - total_invoices
+      - total_bills
+      - total_payments
+      - avg_daily_sales_cents
+      - avg_daily_expenses_cents
+      - total_deposit_cents
+      - total_refund_cents
+      - total_marketing_cents
+      title: QBRangeSummaryResponse
+      description: QuickBooks summary for a date range response.
+    StripeDailySalesResponse:
+      properties:
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        charge_count:
+          type: integer
+          title: Charge Count
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        refunded_charge_count:
+          type: integer
+          title: Refunded Charge Count
+        total_refunded_cents:
+          type: integer
+          title: Total Refunded Cents
+        net_revenue_cents:
+          type: integer
+          title: Net Revenue Cents
+        unique_customers:
+          type: integer
+          title: Unique Customers
+      type: object
+      required:
+      - company_profile_id
+      - metric_date
+      - charge_count
+      - gross_sales_cents
+      - refunded_charge_count
+      - total_refunded_cents
+      - net_revenue_cents
+      - unique_customers
+      title: StripeDailySalesResponse
+      description: Daily Stripe sales metrics response.
+    SQRangeSummaryResponse:
+      properties:
+        total_gross_sales_cents:
+          type: integer
+          title: Total Gross Sales Cents
+        total_net_revenue_cents:
+          type: integer
+          title: Total Net Revenue Cents
+        total_orders:
+          type: integer
+          title: Total Orders
+        total_refunds:
+          type: integer
+          title: Total Refunds
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+        total_unique_customers:
+          type: integer
+          title: Total Unique Customers
+        total_collected_cents:
+          type: integer
+          title: Total Collected Cents
+        total_refunded_cents:
+          type: integer
+          title: Total Refunded Cents
+      type: object
+      required:
+      - total_gross_sales_cents
+      - total_net_revenue_cents
+      - total_orders
+      - total_refunds
+      - avg_order_value_cents
+      - total_unique_customers
+      - total_collected_cents
+      - total_refunded_cents
+      title: SQRangeSummaryResponse
+      description: Square summary for a date range response.
+    KLListGrowthResponse:
+      properties:
+        list_id:
+          type: string
+          title: List Id
+        list_name:
+          type: string
+          title: List Name
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        profile_count:
+          type: integer
+          title: Profile Count
+        new_subscribers:
+          type: integer
+          title: New Subscribers
+        unsubscribes:
+          type: integer
+          title: Unsubscribes
+        net_growth:
+          type: integer
+          title: Net Growth
+      type: object
+      required:
+      - list_id
+      - list_name
+      - metric_date
+      - profile_count
+      - new_subscribers
+      - unsubscribes
+      - net_growth
+      title: KLListGrowthResponse
+      description: Klaviyo list growth response.
+    CrossChannelMetricsResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        total_revenue_cents:
+          type: integer
+          title: Total Revenue Cents
+        total_ad_spend_cents:
+          type: integer
+          title: Total Ad Spend Cents
+        blended_roas:
+          type: number
+          title: Blended Roas
+        total_transactions:
+          type: integer
+          title: Total Transactions
+        total_conversions:
+          type: integer
+          title: Total Conversions
+      type: object
+      required:
+      - metric_date
+      - total_revenue_cents
+      - total_ad_spend_cents
+      - blended_roas
+      - total_transactions
+      - total_conversions
+      title: CrossChannelMetricsResponse
+      description: Response model for cross-channel metrics.
+    QBSalesByProductResponse:
+      properties:
+        item_ref_id:
+          type: string
+          title: Item Ref Id
+        item_ref_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Item Ref Name
+        quantity_sold:
+          type: number
+          title: Quantity Sold
+        total_revenue_cents:
+          type: integer
+          title: Total Revenue Cents
+        avg_unit_price_cents:
+          type: integer
+          title: Avg Unit Price Cents
+        first_sale_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: First Sale Date
+        last_sale_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Sale Date
+        invoice_count:
+          type: integer
+          title: Invoice Count
+      type: object
+      required:
+      - item_ref_id
+      - item_ref_name
+      - quantity_sold
+      - total_revenue_cents
+      - avg_unit_price_cents
+      - first_sale_date
+      - last_sale_date
+      - invoice_count
+      title: QBSalesByProductResponse
+      description: Product-level sales summary response.
+    RevenueSummaryResponse:
+      properties:
+        total_net_revenue_cents:
+          type: integer
+          title: Total Net Revenue Cents
+        total_gross_revenue_cents:
+          type: integer
+          title: Total Gross Revenue Cents
+        total_discount_cents:
+          type: integer
+          title: Total Discount Cents
+        total_refund_cents:
+          type: integer
+          title: Total Refund Cents
+        total_transactions:
+          type: integer
+          title: Total Transactions
+        total_orders:
+          type: integer
+          title: Total Orders
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+        start_date:
+          type: string
+          title: Start Date
+        end_date:
+          type: string
+          title: End Date
+      type: object
+      required:
+      - total_net_revenue_cents
+      - total_gross_revenue_cents
+      - total_discount_cents
+      - total_refund_cents
+      - total_transactions
+      - total_orders
+      - avg_order_value_cents
+      - start_date
+      - end_date
+      title: RevenueSummaryResponse
+      description: Response model for revenue summary.
+    SHTransactionResponse:
+      properties:
+        sh_token:
+          type: string
+          title: Sh Token
+        order_id:
+          type: string
+          title: Order Id
+        customer_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Id
+        financial_status:
+          type: string
+          title: Financial Status
+        fulfillment_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fulfillment Status
+        total_price_cents:
+          type: integer
+          title: Total Price Cents
+        order_date:
+          type: string
+          format: date
+          title: Order Date
+        shopify_order_gid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shopify Order Gid
+        shopify_customer_gid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shopify Customer Gid
+      type: object
+      required:
+      - sh_token
+      - order_id
+      - financial_status
+      - total_price_cents
+      - order_date
+      title: SHTransactionResponse
+      description: Single Shopify order from Silver tables.
+    SQDailySalesByLocationResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        location_id:
+          type: string
+          title: Location Id
+        location_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location Name
+        order_count:
+          type: integer
+          title: Order Count
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        payment_count:
+          type: integer
+          title: Payment Count
+        total_collected_cents:
+          type: integer
+          title: Total Collected Cents
+        refund_count:
+          type: integer
+          title: Refund Count
+        total_refunded_cents:
+          type: integer
+          title: Total Refunded Cents
+        unique_customers:
+          type: integer
+          title: Unique Customers
+      type: object
+      required:
+      - metric_date
+      - location_id
+      - order_count
+      - gross_sales_cents
+      - net_sales_cents
+      - payment_count
+      - total_collected_cents
+      - refund_count
+      - total_refunded_cents
+      - unique_customers
+      title: SQDailySalesByLocationResponse
+      description: Daily Square sales by location response.
+    SQLocationSalesResponse:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        location_id:
+          type: string
+          title: Location Id
+        location_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location Name
+        order_count:
+          type: integer
+          title: Order Count
+        unique_customers:
+          type: integer
+          title: Unique Customers
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+      type: object
+      required:
+      - year_month
+      - location_id
+      - order_count
+      - unique_customers
+      - gross_sales_cents
+      - net_sales_cents
+      - avg_order_value_cents
+      title: SQLocationSalesResponse
+      description: Monthly location-level Square sales response.
+    CustomerSummaryResponse:
+      properties:
+        customer_key:
+          type: string
+          title: Customer Key
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+        acquisition_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Acquisition Date
+        total_orders:
+          type: integer
+          title: Total Orders
+        total_spent_cents:
+          type: integer
+          title: Total Spent Cents
+        ltv_cents:
+          type: integer
+          title: Ltv Cents
+        rfm_segment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rfm Segment
+        days_since_last_order:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Days Since Last Order
+        warehouse_customer_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Warehouse Customer Key
+      type: object
+      required:
+      - customer_key
+      - email
+      - first_name
+      - last_name
+      - acquisition_date
+      - total_orders
+      - total_spent_cents
+      - ltv_cents
+      - rfm_segment
+      - days_since_last_order
+      title: CustomerSummaryResponse
+      description: Response model for customer summary.
+    QBMonthlyFinancialsResponse:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        total_transaction_count:
+          type: integer
+          title: Total Transaction Count
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        payments_received_cents:
+          type: integer
+          title: Payments Received Cents
+        total_adjustments_cents:
+          type: integer
+          title: Total Adjustments Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        total_expenses_cents:
+          type: integer
+          title: Total Expenses Cents
+        net_cash_flow_cents:
+          type: integer
+          title: Net Cash Flow Cents
+        gross_sales_mom_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Gross Sales Mom Pct
+        expenses_mom_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Expenses Mom Pct
+      type: object
+      required:
+      - year_month
+      - total_transaction_count
+      - gross_sales_cents
+      - payments_received_cents
+      - total_adjustments_cents
+      - net_sales_cents
+      - total_expenses_cents
+      - net_cash_flow_cents
+      - gross_sales_mom_pct
+      - expenses_mom_pct
+      title: QBMonthlyFinancialsResponse
+      description: Monthly QuickBooks financials with MoM trends response.
+    SHRangeSummaryResponse:
+      properties:
+        total_orders:
+          type: integer
+          title: Total Orders
+        total_gross_sales_cents:
+          type: integer
+          title: Total Gross Sales Cents
+        total_net_revenue_cents:
+          type: integer
+          title: Total Net Revenue Cents
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+        total_unique_customers:
+          type: integer
+          title: Total Unique Customers
+        total_products:
+          type: integer
+          title: Total Products
+        total_inventory:
+          type: integer
+          title: Total Inventory
+        fulfillment_rate:
+          type: number
+          title: Fulfillment Rate
+      type: object
+      required:
+      - total_orders
+      - total_gross_sales_cents
+      - total_net_revenue_cents
+      - avg_order_value_cents
+      - total_unique_customers
+      - total_products
+      - total_inventory
+      - fulfillment_rate
+      title: SHRangeSummaryResponse
+      description: Shopify summary for a date range response.
+    KLTransactionRowResponse:
+      properties:
+        kl_token:
+          type: string
+          title: Kl Token
+        entity_type:
+          type: string
+          title: Entity Type
+        event_id:
+          type: string
+          title: Event Id
+        metric_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Metric Name
+        profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Profile Id
+        value_cents:
+          type: integer
+          title: Value Cents
+        event_date:
+          type: string
+          title: Event Date
+      type: object
+      required:
+      - kl_token
+      - entity_type
+      - event_id
+      - value_cents
+      - event_date
+      title: KLTransactionRowResponse
+      description: Single Klaviyo event from Silver tables.
+    KLCampaignPerformanceResponse:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign_name:
+          type: string
+          title: Campaign Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        send_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Send Time
+        total_sent:
+          type: integer
+          title: Total Sent
+        opens:
+          type: integer
+          title: Opens
+        clicks:
+          type: integer
+          title: Clicks
+        bounces:
+          type: integer
+          title: Bounces
+        unsubscribes:
+          type: integer
+          title: Unsubscribes
+        revenue_cents:
+          type: integer
+          title: Revenue Cents
+        open_rate:
+          type: number
+          title: Open Rate
+        click_rate:
+          type: number
+          title: Click Rate
+        bounce_rate:
+          type: number
+          title: Bounce Rate
+        unsub_rate:
+          type: number
+          title: Unsub Rate
+      type: object
+      required:
+      - campaign_id
+      - campaign_name
+      - total_sent
+      - opens
+      - clicks
+      - bounces
+      - unsubscribes
+      - revenue_cents
+      - open_rate
+      - click_rate
+      - bounce_rate
+      - unsub_rate
+      title: KLCampaignPerformanceResponse
+      description: Klaviyo campaign performance response.
+    KLFlowPerformanceResponse:
+      properties:
+        flow_id:
+          type: string
+          title: Flow Id
+        flow_name:
+          type: string
+          title: Flow Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        trigger_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trigger Type
+        total_sent:
+          type: integer
+          title: Total Sent
+        opens:
+          type: integer
+          title: Opens
+        clicks:
+          type: integer
+          title: Clicks
+        conversions:
+          type: integer
+          title: Conversions
+        revenue_cents:
+          type: integer
+          title: Revenue Cents
+        open_rate:
+          type: number
+          title: Open Rate
+        click_rate:
+          type: number
+          title: Click Rate
+        conversion_rate:
+          type: number
+          title: Conversion Rate
+      type: object
+      required:
+      - flow_id
+      - flow_name
+      - total_sent
+      - opens
+      - clicks
+      - conversions
+      - revenue_cents
+      - open_rate
+      - click_rate
+      - conversion_rate
+      title: KLFlowPerformanceResponse
+      description: Klaviyo flow performance response.
+    KLRangeSummaryResponse:
+      properties:
+        total_sends:
+          type: integer
+          title: Total Sends
+        total_opens:
+          type: integer
+          title: Total Opens
+        total_clicks:
+          type: integer
+          title: Total Clicks
+        avg_open_rate:
+          type: number
+          title: Avg Open Rate
+        avg_click_rate:
+          type: number
+          title: Avg Click Rate
+        total_revenue_cents:
+          type: integer
+          title: Total Revenue Cents
+        active_campaigns:
+          type: integer
+          title: Active Campaigns
+        active_flows:
+          type: integer
+          title: Active Flows
+        total_subscribers:
+          type: integer
+          title: Total Subscribers
+      type: object
+      required:
+      - total_sends
+      - total_opens
+      - total_clicks
+      - avg_open_rate
+      - avg_click_rate
+      - total_revenue_cents
+      - active_campaigns
+      - active_flows
+      - total_subscribers
+      title: KLRangeSummaryResponse
+      description: Klaviyo summary for a date range response.
+    KLDailyEmailPerformanceResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        email_sends:
+          type: integer
+          title: Email Sends
+        opens:
+          type: integer
+          title: Opens
+        clicks:
+          type: integer
+          title: Clicks
+        bounces:
+          type: integer
+          title: Bounces
+        unsubscribes:
+          type: integer
+          title: Unsubscribes
+        spam_complaints:
+          type: integer
+          title: Spam Complaints
+        revenue_cents:
+          type: integer
+          title: Revenue Cents
+        open_rate:
+          type: number
+          title: Open Rate
+        click_rate:
+          type: number
+          title: Click Rate
+      type: object
+      required:
+      - metric_date
+      - email_sends
+      - opens
+      - clicks
+      - bounces
+      - unsubscribes
+      - spam_complaints
+      - revenue_cents
+      - open_rate
+      - click_rate
+      title: KLDailyEmailPerformanceResponse
+      description: Daily Klaviyo email performance response.
+    SHProductCatalogResponse:
+      properties:
+        product_id:
+          type: string
+          title: Product Id
+        product_name:
+          type: string
+          title: Product Name
+        product_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Type
+        vendor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vendor
+        status:
+          type: string
+          title: Status
+        variant_count:
+          type: integer
+          title: Variant Count
+        total_inventory:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Inventory
+        shopify_product_gid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shopify Product Gid
+      type: object
+      required:
+      - product_id
+      - product_name
+      - status
+      - variant_count
+      title: SHProductCatalogResponse
+      description: Shopify product catalog entry.
+    QBCustomerSummaryResponse:
+      properties:
+        customer_id:
+          type: string
+          title: Customer Id
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        total_invoiced_cents:
+          type: integer
+          title: Total Invoiced Cents
+        total_received_cents:
+          type: integer
+          title: Total Received Cents
+        outstanding_balance_cents:
+          type: integer
+          title: Outstanding Balance Cents
+        invoice_count:
+          type: integer
+          title: Invoice Count
+        first_transaction_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: First Transaction Date
+        last_transaction_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Transaction Date
+      type: object
+      required:
+      - customer_id
+      - customer_name
+      - total_invoiced_cents
+      - total_received_cents
+      - outstanding_balance_cents
+      - invoice_count
+      - first_transaction_date
+      - last_transaction_date
+      title: QBCustomerSummaryResponse
+      description: Customer sales summary response.
+    StripeRangeSummaryResponse:
+      properties:
+        total_gross_sales_cents:
+          type: integer
+          title: Total Gross Sales Cents
+        total_refunded_cents:
+          type: integer
+          title: Total Refunded Cents
+        total_net_revenue_cents:
+          type: integer
+          title: Total Net Revenue Cents
+        total_charges:
+          type: integer
+          title: Total Charges
+        total_refunded_charges:
+          type: integer
+          title: Total Refunded Charges
+        avg_charge_value_cents:
+          type: integer
+          title: Avg Charge Value Cents
+        total_unique_customers:
+          type: integer
+          title: Total Unique Customers
+      type: object
+      required:
+      - total_gross_sales_cents
+      - total_refunded_cents
+      - total_net_revenue_cents
+      - total_charges
+      - total_refunded_charges
+      - avg_charge_value_cents
+      - total_unique_customers
+      title: StripeRangeSummaryResponse
+      description: Stripe summary for a date range response.
+    GoogleAnalyticsChannelInputResponse:
+      properties:
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        channel_key:
+          type: string
+          title: Channel Key
+        normalized_channel:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Normalized Channel
+        source_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Platform
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+        medium:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Medium
+        campaign_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Name
+        ga4_sessions:
+          type: integer
+          title: Ga4 Sessions
+        ga4_engaged_sessions:
+          type: integer
+          title: Ga4 Engaged Sessions
+        ga4_active_users:
+          type: integer
+          title: Ga4 Active Users
+        ga4_key_events:
+          type: number
+          title: Ga4 Key Events
+        ga4_transactions:
+          type: integer
+          title: Ga4 Transactions
+        ga4_purchase_revenue_cents:
+          type: integer
+          title: Ga4 Purchase Revenue Cents
+        observed_spend_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Observed Spend Cents
+        observed_revenue_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Observed Revenue Cents
+        data_quality_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Data Quality Score
+      type: object
+      required:
+      - company_profile_id
+      - metric_date
+      - channel_key
+      - normalized_channel
+      - source_platform
+      - source
+      - medium
+      - campaign_name
+      - ga4_sessions
+      - ga4_engaged_sessions
+      - ga4_active_users
+      - ga4_key_events
+      - ga4_transactions
+      - ga4_purchase_revenue_cents
+      - observed_spend_cents
+      - observed_revenue_cents
+      - data_quality_score
+      title: GoogleAnalyticsChannelInputResponse
+      description: GA4 daily channel input row from the Gold MMM feature table.
+    SQTransactionResponse:
+      properties:
+        sq_token:
+          type: string
+          title: Sq Token
+        entity_type:
+          type: string
+          title: Entity Type
+        transaction_id:
+          type: string
+          title: Transaction Id
+        location_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location Id
+        order_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Order Id
+        customer_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Id
+        amount_cents:
+          type: integer
+          title: Amount Cents
+        status:
+          type: string
+          title: Status
+        source_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Type
+        transaction_date:
+          type: string
+          format: date
+          title: Transaction Date
+      type: object
+      required:
+      - sq_token
+      - entity_type
+      - transaction_id
+      - amount_cents
+      - status
+      - transaction_date
+      title: SQTransactionResponse
+      description: Single Square transaction from Silver tables.
+    SQDailySalesResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        order_count:
+          type: integer
+          title: Order Count
+        completed_order_count:
+          type: integer
+          title: Completed Order Count
+        canceled_order_count:
+          type: integer
+          title: Canceled Order Count
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        total_discount_cents:
+          type: integer
+          title: Total Discount Cents
+        total_tax_cents:
+          type: integer
+          title: Total Tax Cents
+        total_tip_cents:
+          type: integer
+          title: Total Tip Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        payment_count:
+          type: integer
+          title: Payment Count
+        total_collected_cents:
+          type: integer
+          title: Total Collected Cents
+        refund_count:
+          type: integer
+          title: Refund Count
+        total_refunded_cents:
+          type: integer
+          title: Total Refunded Cents
+        net_revenue_cents:
+          type: integer
+          title: Net Revenue Cents
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+        unique_customers:
+          type: integer
+          title: Unique Customers
+      type: object
+      required:
+      - metric_date
+      - order_count
+      - completed_order_count
+      - canceled_order_count
+      - gross_sales_cents
+      - total_discount_cents
+      - total_tax_cents
+      - total_tip_cents
+      - net_sales_cents
+      - payment_count
+      - total_collected_cents
+      - refund_count
+      - total_refunded_cents
+      - net_revenue_cents
+      - avg_order_value_cents
+      - unique_customers
+      title: SQDailySalesResponse
+      description: Daily Square sales metrics response.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    QBDailyFinancialsResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        total_expenses_cents:
+          type: integer
+          title: Total Expenses Cents
+        net_cash_flow_cents:
+          type: integer
+          title: Net Cash Flow Cents
+        invoice_count:
+          type: integer
+          title: Invoice Count
+        bill_count:
+          type: integer
+          title: Bill Count
+      type: object
+      required:
+      - metric_date
+      - gross_sales_cents
+      - net_sales_cents
+      - total_expenses_cents
+      - net_cash_flow_cents
+      - invoice_count
+      - bill_count
+      title: QBDailyFinancialsResponse
+      description: Daily QuickBooks financial metrics response.
+    BlendedROASResponse:
+      properties:
+        total_spend_cents:
+          type: integer
+          title: Total Spend Cents
+        total_purchase_value_cents:
+          type: integer
+          title: Total Purchase Value Cents
+        total_impressions:
+          type: integer
+          title: Total Impressions
+        total_clicks:
+          type: integer
+          title: Total Clicks
+        total_conversions:
+          type: integer
+          title: Total Conversions
+        blended_roas:
+          type: number
+          title: Blended Roas
+        start_date:
+          type: string
+          title: Start Date
+        end_date:
+          type: string
+          title: End Date
+      type: object
+      required:
+      - total_spend_cents
+      - total_purchase_value_cents
+      - total_impressions
+      - total_clicks
+      - total_conversions
+      - blended_roas
+      - start_date
+      - end_date
+      title: BlendedROASResponse
+      description: Response model for blended ROAS.
+    SHDailySalesResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        order_count:
+          type: integer
+          title: Order Count
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        total_discount_cents:
+          type: integer
+          title: Total Discount Cents
+        total_tax_cents:
+          type: integer
+          title: Total Tax Cents
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+        unique_customers:
+          type: integer
+          title: Unique Customers
+      type: object
+      required:
+      - metric_date
+      - order_count
+      - gross_sales_cents
+      - net_sales_cents
+      - total_discount_cents
+      - total_tax_cents
+      - avg_order_value_cents
+      - unique_customers
+      title: SHDailySalesResponse
+      description: Daily Shopify sales metrics response.
+    RevenueByChannelResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        source_vendor:
+          type: string
+          title: Source Vendor
+        source_channel:
+          type: string
+          title: Source Channel
+        gross_revenue_cents:
+          type: integer
+          title: Gross Revenue Cents
+        discount_cents:
+          type: integer
+          title: Discount Cents
+        refund_cents:
+          type: integer
+          title: Refund Cents
+        net_revenue_cents:
+          type: integer
+          title: Net Revenue Cents
+        transaction_count:
+          type: integer
+          title: Transaction Count
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+      type: object
+      required:
+      - metric_date
+      - source_vendor
+      - source_channel
+      - gross_revenue_cents
+      - discount_cents
+      - refund_cents
+      - net_revenue_cents
+      - transaction_count
+      - avg_order_value_cents
+      title: RevenueByChannelResponse
+      description: Response model for revenue by channel.
+    SHCustomerOverviewResponse:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        total_customers:
+          type: integer
+          title: Total Customers
+        new_customers:
+          type: integer
+          title: New Customers
+        returning_customers:
+          type: integer
+          title: Returning Customers
+        avg_orders_per_customer:
+          type: number
+          title: Avg Orders Per Customer
+        avg_lifetime_value_cents:
+          type: integer
+          title: Avg Lifetime Value Cents
+        marketing_opted_in:
+          type: integer
+          title: Marketing Opted In
+      type: object
+      required:
+      - year_month
+      - total_customers
+      - new_customers
+      - returning_customers
+      - avg_orders_per_customer
+      - avg_lifetime_value_cents
+      - marketing_opted_in
+      title: SHCustomerOverviewResponse
+      description: Monthly Shopify customer overview response.
+    QBDailyFinancialsFullResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        invoice_total_cents:
+          type: integer
+          title: Invoice Total Cents
+        sales_receipt_total_cents:
+          type: integer
+          title: Sales Receipt Total Cents
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        payment_total_cents:
+          type: integer
+          title: Payment Total Cents
+        deposit_total_cents:
+          type: integer
+          title: Deposit Total Cents
+        credit_memo_total_cents:
+          type: integer
+          title: Credit Memo Total Cents
+        refund_total_cents:
+          type: integer
+          title: Refund Total Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        bill_total_cents:
+          type: integer
+          title: Bill Total Cents
+        purchase_total_cents:
+          type: integer
+          title: Purchase Total Cents
+        total_expenses_cents:
+          type: integer
+          title: Total Expenses Cents
+        net_cash_flow_cents:
+          type: integer
+          title: Net Cash Flow Cents
+        invoice_count:
+          type: integer
+          title: Invoice Count
+        sales_receipt_count:
+          type: integer
+          title: Sales Receipt Count
+        payment_count:
+          type: integer
+          title: Payment Count
+        deposit_count:
+          type: integer
+          title: Deposit Count
+        credit_memo_count:
+          type: integer
+          title: Credit Memo Count
+        refund_count:
+          type: integer
+          title: Refund Count
+        bill_count:
+          type: integer
+          title: Bill Count
+        purchase_count:
+          type: integer
+          title: Purchase Count
+      type: object
+      required:
+      - metric_date
+      - invoice_total_cents
+      - sales_receipt_total_cents
+      - gross_sales_cents
+      - payment_total_cents
+      - deposit_total_cents
+      - credit_memo_total_cents
+      - refund_total_cents
+      - net_sales_cents
+      - bill_total_cents
+      - purchase_total_cents
+      - total_expenses_cents
+      - net_cash_flow_cents
+      - invoice_count
+      - sales_receipt_count
+      - payment_count
+      - deposit_count
+      - credit_memo_count
+      - refund_count
+      - bill_count
+      - purchase_count
+      title: QBDailyFinancialsFullResponse
+      description: Full daily QuickBooks financials with all entity-level columns.
+    QBMarketingByCategoryResponse:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        marketing_category:
+          type: string
+          title: Marketing Category
+        entity_type:
+          type: string
+          title: Entity Type
+        expense_count:
+          type: integer
+          title: Expense Count
+        total_marketing_cents:
+          type: integer
+          title: Total Marketing Cents
+        split_count:
+          type: integer
+          title: Split Count
+      type: object
+      required:
+      - year_month
+      - marketing_category
+      - entity_type
+      - expense_count
+      - total_marketing_cents
+      - split_count
+      title: QBMarketingByCategoryResponse
+      description: Monthly marketing spend by category response.
+    QBVendorSummaryResponse:
+      properties:
+        vendor_id:
+          type: string
+          title: Vendor Id
+        vendor_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vendor Name
+        total_expenses_cents:
+          type: integer
+          title: Total Expenses Cents
+        outstanding_balance_cents:
+          type: integer
+          title: Outstanding Balance Cents
+        bill_count:
+          type: integer
+          title: Bill Count
+        purchase_count:
+          type: integer
+          title: Purchase Count
+        first_transaction_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: First Transaction Date
+        last_transaction_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Transaction Date
+      type: object
+      required:
+      - vendor_id
+      - vendor_name
+      - total_expenses_cents
+      - outstanding_balance_cents
+      - bill_count
+      - purchase_count
+      - first_transaction_date
+      - last_transaction_date
+      title: QBVendorSummaryResponse
+      description: Vendor expense summary response.
+    QBDailyMarketingSpendResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        total_marketing_cents:
+          type: integer
+          title: Total Marketing Cents
+      type: object
+      required:
+      - metric_date
+      - total_marketing_cents
+      title: QBDailyMarketingSpendResponse
+      description: Daily marketing spend total response.
+    QBDailyMarketingByCategoryResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        marketing_category:
+          type: string
+          title: Marketing Category
+        entity_type:
+          type: string
+          title: Entity Type
+        expense_count:
+          type: integer
+          title: Expense Count
+        total_marketing_cents:
+          type: integer
+          title: Total Marketing Cents
+        split_count:
+          type: integer
+          title: Split Count
+      type: object
+      required:
+      - metric_date
+      - marketing_category
+      - entity_type
+      - expense_count
+      - total_marketing_cents
+      - split_count
+      title: QBDailyMarketingByCategoryResponse
+      description: Daily marketing spend by category response.
+    AdPerformanceResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        source_platform:
+          type: string
+          title: Source Platform
+        impressions:
+          type: integer
+          title: Impressions
+        clicks:
+          type: integer
+          title: Clicks
+        spend_cents:
+          type: integer
+          title: Spend Cents
+        conversions:
+          type: integer
+          title: Conversions
+        purchase_value_cents:
+          type: integer
+          title: Purchase Value Cents
+        roas:
+          type: number
+          title: Roas
+        cpc_cents:
+          type: integer
+          title: Cpc Cents
+        cpm_cents:
+          type: integer
+          title: Cpm Cents
+      type: object
+      required:
+      - metric_date
+      - source_platform
+      - impressions
+      - clicks
+      - spend_cents
+      - conversions
+      - purchase_value_cents
+      - roas
+      - cpc_cents
+      - cpm_cents
+      title: AdPerformanceResponse
+      description: Response model for ad performance.
+    SQProductSalesResponse:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        catalog_object_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Catalog Object Id
+        product_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Name
+        variation_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variation Name
+        units_sold:
+          type: number
+          title: Units Sold
+        order_count:
+          type: integer
+          title: Order Count
+        gross_revenue_cents:
+          type: integer
+          title: Gross Revenue Cents
+        discount_cents:
+          type: integer
+          title: Discount Cents
+        net_revenue_cents:
+          type: integer
+          title: Net Revenue Cents
+        avg_unit_price_cents:
+          type: integer
+          title: Avg Unit Price Cents
+      type: object
+      required:
+      - year_month
+      - units_sold
+      - order_count
+      - gross_revenue_cents
+      - discount_cents
+      - net_revenue_cents
+      - avg_unit_price_cents
+      title: SQProductSalesResponse
+      description: Product-level Square sales response.
+    QBTransactionResponse:
+      properties:
+        entity_type:
+          type: string
+          title: Entity Type
+        qb_token:
+          type: string
+          title: Qb Token
+        qb_id:
+          type: string
+          title: Qb Id
+        txn_date:
+          type: string
+          format: date
+          title: Txn Date
+        doc_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Doc Number
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        vendor_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vendor Name
+        account_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Name
+        total_cents:
+          type: integer
+          title: Total Cents
+        balance_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Balance Cents
+        is_marketing:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Marketing
+        marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Marketing Category
+        marketing_confidence:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Marketing Confidence
+        marketing_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Marketing Source
+        has_splits:
+          type: boolean
+          title: Has Splits
+          default: false
+      type: object
+      required:
+      - entity_type
+      - qb_token
+      - qb_id
+      - txn_date
+      - total_cents
+      title: QBTransactionResponse
+      description: Single QuickBooks transaction from Silver tables.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

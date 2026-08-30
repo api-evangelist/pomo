@@ -1,0 +1,284 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend User Preferences API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: user-preferences
+paths:
+  /api/preferences:
+    get:
+      tags:
+      - user-preferences
+      summary: Get User Preferences
+      description: 'Get current user''s preferences.
+
+
+        Creates default preferences if they don''t exist.
+
+        Requires authentication.'
+      operationId: get_user_preferences_api_preferences_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferencesResponse'
+      security:
+      - HTTPBearer: []
+    put:
+      tags:
+      - user-preferences
+      summary: Update User Preferences
+      description: "Update user preferences.\n\nMerges the provided preferences with existing preferences.\nDoes not replace the entire preferences object.\nRequires authentication.\n\nExample request:\n{\n  \"preferences\": {\n    \"tutorial_completed\": true,\n    \"daily_digest_theme\": \"dark\"\n  }\n}"
+      operationId: update_user_preferences_api_preferences_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPreferencesUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferencesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+    delete:
+      tags:
+      - user-preferences
+      summary: Reset User Preferences
+      description: 'Reset user preferences to empty object.
+
+
+        This does not delete the preferences record, just clears all values.
+
+        Requires authentication.'
+      operationId: reset_user_preferences_api_preferences_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/preferences/config:
+    get:
+      tags:
+      - user-preferences
+      summary: Get User Preferences Config
+      description: 'Get only the preferences configuration object (without metadata).
+
+
+        Lightweight endpoint for frontend to quickly fetch user settings.
+
+        Requires authentication.'
+      operationId: get_user_preferences_config_api_preferences_config_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferencesPartial'
+      security:
+      - HTTPBearer: []
+  /api/preferences/release-announcements/claim:
+    post:
+      tags:
+      - user-preferences
+      summary: Claim Release Announcement
+      description: 'Atomically claim a release spotlight and mark its visible digest as
+
+        covered.
+
+
+        The user''s canonical preference row is locked before inspecting the
+
+        spotlight receipt. Exactly one concurrent request can therefore win on
+
+        databases that support ``SELECT ... FOR UPDATE`` (including production
+
+        PostgreSQL). SQLite uses ``BEGIN IMMEDIATE`` before the read to provide the
+
+        same exact-once behavior; exhausted lock contention fails closed with a
+
+        retryable 503. Each release is persisted under its own top-level key so a
+
+        later generic preference merge cannot replace an entire receipt map.'
+      operationId: claim_release_announcement_api_preferences_release_announcements_claim_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseAnnouncementClaimRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseAnnouncementClaimResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UserPreferencesResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          description: User preferences as key-value pairs
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - user_id
+      - created_at
+      - updated_at
+      title: UserPreferencesResponse
+      description: 'Response schema for user preferences.
+
+        Returns the complete preferences object with metadata.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UserPreferencesUpdate:
+      properties:
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          description: Preferences to update (will be merged with existing preferences)
+      type: object
+      required:
+      - preferences
+      title: UserPreferencesUpdate
+      description: "Schema for updating user preferences.\nAccepts a dictionary of preferences to merge with existing preferences.\n\nExample:\n{\n  \"tutorial_completed\": true,\n  \"daily_digest_theme\": \"dark\",\n  \"onboarding_dismissed\": true\n}"
+    ReleaseAnnouncementClaimResponse:
+      properties:
+        claimed:
+          type: boolean
+          title: Claimed
+        spotlight_release_id:
+          type: string
+          title: Spotlight Release Id
+        covered_release_ids:
+          items:
+            type: string
+          type: array
+          title: Covered Release Ids
+        claimed_at:
+          type: string
+          format: date-time
+          title: Claimed At
+      type: object
+      required:
+      - claimed
+      - spotlight_release_id
+      - covered_release_ids
+      - claimed_at
+      title: ReleaseAnnouncementClaimResponse
+      description: Result of atomically claiming a release-announcement spotlight.
+    ReleaseAnnouncementClaimRequest:
+      properties:
+        spotlight_release_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Spotlight Release Id
+          description: Stable ID of the release shown as the digest spotlight
+        release_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 50
+          minItems: 1
+          title: Release Ids
+          description: Stable IDs covered by the announcement digest
+      additionalProperties: false
+      type: object
+      required:
+      - spotlight_release_id
+      - release_ids
+      title: ReleaseAnnouncementClaimRequest
+      description: Claim one release-announcement spotlight and its visible digest.
+    UserPreferencesPartial:
+      properties:
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          description: User preferences as key-value pairs
+      type: object
+      title: UserPreferencesPartial
+      description: 'Response schema that returns only the preferences object without metadata.
+
+        Useful for lightweight responses.'
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

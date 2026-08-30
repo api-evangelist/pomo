@@ -1,0 +1,333 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Product Brainstorm API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Product Brainstorm
+paths:
+  /api/ai-product-lab/product-brainstorm/brainstorm:
+    post:
+      tags:
+      - Product Brainstorm
+      summary: Brainstorm Product Ideas
+      description: Generate product ideas based on product offering or company context.
+      operationId: brainstorm_product_ideas_api_ai_product_lab_product_brainstorm_brainstorm_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductIdeaBrainstormRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductIdeaResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/ai-product-lab/product-brainstorm/sessions:
+    get:
+      tags:
+      - Product Brainstorm
+      summary: Get Brainstorm Sessions
+      description: Get previous brainstorming sessions for this company profile.
+      operationId: get_brainstorm_sessions_api_ai_product_lab_product_brainstorm_sessions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductIdeaResponse'
+                title: Response Get Brainstorm Sessions Api Ai Product Lab Product Brainstorm Sessions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-product-lab/product-brainstorm/sessions/{session_id}:
+    get:
+      tags:
+      - Product Brainstorm
+      summary: Get Brainstorm Session
+      description: Get a specific brainstorming session.
+      operationId: get_brainstorm_session_api_ai_product_lab_product_brainstorm_sessions__session_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductIdeaResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Product Brainstorm
+      summary: Delete Brainstorm Session
+      description: Delete a brainstorming session.
+      operationId: delete_brainstorm_session_api_ai_product_lab_product_brainstorm_sessions__session_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-product-lab/product-brainstorm/sessions/by-offering/{offering_id}:
+    get:
+      tags:
+      - Product Brainstorm
+      summary: Get Sessions By Offering
+      description: Get brainstorming sessions for a specific product offering.
+      operationId: get_sessions_by_offering_api_ai_product_lab_product_brainstorm_sessions_by_offering__offering_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: offering_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Offering Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductIdeaResponse'
+                title: Response Get Sessions By Offering Api Ai Product Lab Product Brainstorm Sessions By Offering  Offering Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProductIdeaBrainstormRequest:
+      properties:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        user_input:
+          type: string
+          title: User Input
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+      type: object
+      required:
+      - user_input
+      title: ProductIdeaBrainstormRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProductIdeaResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+        user_input:
+          type: string
+          title: User Input
+        product_ideas:
+          items:
+            $ref: '#/components/schemas/ProductIdea'
+          type: array
+          title: Product Ideas
+        context_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Context Data
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - session_title
+      - user_input
+      - product_ideas
+      - context_data
+      - created_at
+      title: ProductIdeaResponse
+    ProductIdea:
+      properties:
+        name:
+          type: string
+          title: Name
+        tagline:
+          type: string
+          title: Tagline
+        description:
+          type: string
+          title: Description
+        target_audience:
+          type: string
+          title: Target Audience
+        key_features:
+          items:
+            type: string
+          type: array
+          title: Key Features
+        unique_value_proposition:
+          type: string
+          title: Unique Value Proposition
+        market_opportunity:
+          type: string
+          title: Market Opportunity
+        competitive_advantage:
+          type: string
+          title: Competitive Advantage
+        price_range:
+          type: string
+          title: Price Range
+        potential_challenges:
+          items:
+            type: string
+          type: array
+          title: Potential Challenges
+        success_metrics:
+          items:
+            type: string
+          type: array
+          title: Success Metrics
+      type: object
+      required:
+      - name
+      - tagline
+      - description
+      - target_audience
+      - key_features
+      - unique_value_proposition
+      - market_opportunity
+      - competitive_advantage
+      - price_range
+      - potential_challenges
+      - success_metrics
+      title: ProductIdea
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

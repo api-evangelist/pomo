@@ -1,0 +1,154 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Health API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Health
+paths:
+  /health/live:
+    get:
+      summary: Liveness Check
+      description: 'Kubernetes liveness probe - is the process alive?
+
+
+        This should always succeed if the process is running.
+
+        Failing this causes container restart.'
+      operationId: liveness_check_health_live_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Health
+  /health/ready:
+    get:
+      summary: Readiness Check
+      description: 'Kubernetes readiness probe - can the app accept traffic?
+
+
+        Checks database connectivity and auth configuration. Failing
+
+        this removes the pod from the service load balancer.'
+      operationId: readiness_check_health_ready_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Health
+  /health:
+    get:
+      summary: Health Check
+      description: 'Standard health check for load balancers.
+
+
+        Quick check that the app can respond and database is accessible.
+
+        Includes database latency and pool utilization.'
+      operationId: health_check_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Health
+  /health/detailed:
+    get:
+      summary: Detailed Health Check
+      description: 'Detailed health check for debugging and monitoring.
+
+
+        Comprehensive check of all system components:
+
+        - Database connectivity and latency
+
+        - Connection pool status
+
+        - Critical tables existence
+
+        - Redis connectivity and latency'
+      operationId: detailed_health_check_health_detailed_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+      tags:
+      - Health
+  /health/database:
+    get:
+      summary: Database Health Check
+      description: 'Database-specific health check.
+
+
+        Provides detailed information about the database status,
+
+        including connection pool statistics and configuration.'
+      operationId: database_health_check_health_database_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+      tags:
+      - Health
+  /health/events:
+    get:
+      summary: Check Event System Health
+      description: Check health of the event system
+      operationId: check_event_system_health_health_events_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Health
+  /health/events/redis:
+    get:
+      summary: Check Redis Health
+      description: Check Redis connectivity
+      operationId: check_redis_health_health_events_redis_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Health
+  /health/events/sse:
+    get:
+      summary: Check Sse Health
+      description: Check SSE connections
+      operationId: check_sse_health_health_events_sse_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Health
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

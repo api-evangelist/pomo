@@ -1,0 +1,511 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Profile Content Editor API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: profile-content-editor
+paths:
+  /api/product-offerings/content-edit/preview:
+    post:
+      tags:
+      - profile-content-editor
+      summary: Preview Profile Content Edits
+      description: Generate a reviewed before/after proposal for selected profile content.
+      operationId: preview_profile_content_edits_api_product_offerings_content_edit_preview_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileContentEditPreviewRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileContentEditPreviewResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/product-offerings/content-edit/document-preview:
+    post:
+      tags:
+      - profile-content-editor
+      summary: Preview Profile Content Edits From Documents
+      description: Generate a reviewed edit proposal from uploaded Knowledge Base documents.
+      operationId: preview_profile_content_edits_from_documents_api_product_offerings_content_edit_document_preview_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileContentEditDocumentPreviewRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileContentEditPreviewResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/product-offerings/content-edit/apply:
+    post:
+      tags:
+      - profile-content-editor
+      summary: Apply Profile Content Edit Route
+      description: Apply selected changes from a reviewed profile content edit preview.
+      operationId: apply_profile_content_edit_route_api_product_offerings_content_edit_apply_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileContentEditApplyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileContentEditApplyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProfileContentEditDocumentPreviewRequest:
+      properties:
+        prompt:
+          type: string
+          maxLength: 2500
+          title: Prompt
+          default: ''
+        document_file_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          maxItems: 5
+          minItems: 1
+          title: Document File Ids
+        targets:
+          $ref: '#/components/schemas/ProfileContentEditTargets'
+      type: object
+      required:
+      - document_file_ids
+      title: ProfileContentEditDocumentPreviewRequest
+    ProfileContentEditEvidence:
+      properties:
+        document_file_id:
+          type: string
+          title: Document File Id
+          default: ''
+        filename:
+          type: string
+          title: Filename
+          default: ''
+        excerpt:
+          type: string
+          title: Excerpt
+          default: ''
+        location:
+          type: string
+          title: Location
+          default: ''
+      type: object
+      title: ProfileContentEditEvidence
+    ProfileContentEditPreviewResponse:
+      properties:
+        status:
+          type: string
+          enum:
+          - ready
+          - unchanged
+          title: Status
+        summary:
+          type: string
+          title: Summary
+        groups:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditEntityChange-Output'
+          type: array
+          title: Groups
+        operations:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditOperation'
+          type: array
+          title: Operations
+        total_changes:
+          type: integer
+          title: Total Changes
+          default: 0
+      type: object
+      required:
+      - status
+      - summary
+      title: ProfileContentEditPreviewResponse
+    ProfileContentEditPreviewRequest:
+      properties:
+        prompt:
+          type: string
+          maxLength: 2500
+          minLength: 3
+          title: Prompt
+        targets:
+          $ref: '#/components/schemas/ProfileContentEditTargets'
+      type: object
+      required:
+      - prompt
+      title: ProfileContentEditPreviewRequest
+    ProfileContentEditFieldChange:
+      properties:
+        field_key:
+          type: string
+          title: Field Key
+        field_label:
+          type: string
+          title: Field Label
+        before:
+          type: string
+          title: Before
+        after:
+          type: string
+          title: After
+        before_value:
+          title: Before Value
+        after_value:
+          title: After Value
+        confidence:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          title: Confidence
+          default: medium
+        rationale:
+          type: string
+          title: Rationale
+          default: ''
+        evidence:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditEvidence'
+          type: array
+          title: Evidence
+        selected_by_default:
+          type: boolean
+          title: Selected By Default
+          default: true
+      type: object
+      required:
+      - field_key
+      - field_label
+      - before
+      - after
+      title: ProfileContentEditFieldChange
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProfileContentEditApplyRequest:
+      properties:
+        prompt:
+          type: string
+          maxLength: 2500
+          title: Prompt
+          default: ''
+        groups:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditEntityChange-Input'
+          type: array
+          title: Groups
+        operations:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditOperation'
+          type: array
+          title: Operations
+        selected_changes:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditSelectedChange'
+          type: array
+          title: Selected Changes
+        selected_operations:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditSelectedOperation'
+          type: array
+          title: Selected Operations
+      type: object
+      title: ProfileContentEditApplyRequest
+    ProfileContentEditTargets:
+      properties:
+        company_profile:
+          type: boolean
+          title: Company Profile
+          default: true
+        product_offering_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Product Offering Ids
+        include_all_product_offerings:
+          type: boolean
+          title: Include All Product Offerings
+          default: false
+      type: object
+      title: ProfileContentEditTargets
+    ProfileContentEditEntityChange-Output:
+      properties:
+        entity_type:
+          type: string
+          enum:
+          - company_profile
+          - company_marketing_strategy
+          - product_offering
+          - product_competitive_analysis
+          - product_marketing_strategy
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        entity_name:
+          type: string
+          title: Entity Name
+        entity_label:
+          type: string
+          title: Entity Label
+        selected_by_default:
+          type: boolean
+          title: Selected By Default
+          default: true
+        changes:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditFieldChange'
+          type: array
+          title: Changes
+      type: object
+      required:
+      - entity_type
+      - entity_id
+      - entity_name
+      - entity_label
+      title: ProfileContentEditEntityChange
+    ProfileContentEditApplyResponse:
+      properties:
+        status:
+          type: string
+          const: applied
+          title: Status
+        applied_changes:
+          type: integer
+          title: Applied Changes
+        applied_groups:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditEntityChange-Output'
+          type: array
+          title: Applied Groups
+        applied_operations:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditOperation'
+          type: array
+          title: Applied Operations
+      type: object
+      required:
+      - status
+      - applied_changes
+      title: ProfileContentEditApplyResponse
+    ProfileContentEditOperation:
+      properties:
+        operation_type:
+          type: string
+          enum:
+          - archive_product_offering
+          - create_product_offering
+          title: Operation Type
+        entity_type:
+          type: string
+          const: product_offering
+          title: Entity Type
+          default: product_offering
+        entity_id:
+          type: string
+          title: Entity Id
+        entity_name:
+          type: string
+          title: Entity Name
+        entity_label:
+          type: string
+          title: Entity Label
+          default: Product offering
+        operation_label:
+          type: string
+          title: Operation Label
+        before:
+          type: string
+          title: Before
+        after:
+          type: string
+          title: After
+        after_value:
+          title: After Value
+        confidence:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          title: Confidence
+          default: medium
+        rationale:
+          type: string
+          title: Rationale
+          default: ''
+        evidence:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditEvidence'
+          type: array
+          title: Evidence
+        selected_by_default:
+          type: boolean
+          title: Selected By Default
+          default: true
+      type: object
+      required:
+      - operation_type
+      - entity_id
+      - entity_name
+      - operation_label
+      - before
+      - after
+      title: ProfileContentEditOperation
+    ProfileContentEditSelectedChange:
+      properties:
+        entity_type:
+          type: string
+          enum:
+          - company_profile
+          - company_marketing_strategy
+          - product_offering
+          - product_competitive_analysis
+          - product_marketing_strategy
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        field_key:
+          type: string
+          title: Field Key
+      type: object
+      required:
+      - entity_type
+      - entity_id
+      - field_key
+      title: ProfileContentEditSelectedChange
+    ProfileContentEditSelectedOperation:
+      properties:
+        operation_type:
+          type: string
+          enum:
+          - archive_product_offering
+          - create_product_offering
+          title: Operation Type
+        entity_type:
+          type: string
+          const: product_offering
+          title: Entity Type
+          default: product_offering
+        entity_id:
+          type: string
+          title: Entity Id
+      type: object
+      required:
+      - operation_type
+      - entity_id
+      title: ProfileContentEditSelectedOperation
+    ProfileContentEditEntityChange-Input:
+      properties:
+        entity_type:
+          type: string
+          enum:
+          - company_profile
+          - company_marketing_strategy
+          - product_offering
+          - product_competitive_analysis
+          - product_marketing_strategy
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        entity_name:
+          type: string
+          title: Entity Name
+        entity_label:
+          type: string
+          title: Entity Label
+        selected_by_default:
+          type: boolean
+          title: Selected By Default
+          default: true
+        changes:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditFieldChange'
+          type: array
+          title: Changes
+      type: object
+      required:
+      - entity_type
+      - entity_id
+      - entity_name
+      - entity_label
+      title: ProfileContentEditEntityChange
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

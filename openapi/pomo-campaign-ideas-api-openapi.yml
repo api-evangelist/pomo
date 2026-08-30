@@ -1,0 +1,182 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Campaign Ideas API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: campaign-ideas
+paths:
+  /api/campaign-ideas/{company_profile_id}/simple:
+    post:
+      tags:
+      - campaign-ideas
+      summary: Generate Simple Campaigns
+      description: Start async simple campaign generation and return job tracking info.
+      operationId: generate_simple_campaigns_api_campaign_ideas__company_profile_id__simple_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Product offering ID
+          title: Product Offering Id
+        description: Product offering ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Request Body
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaign-ideas/{company_profile_id}/save:
+    post:
+      tags:
+      - campaign-ideas
+      summary: Save Campaigns
+      description: 'Persist edited campaign ideas for a company profile/product offering.
+
+
+        Saves into the same cache table used for generation so future loads pick up
+
+        the edited content without re-running generation.'
+      operationId: save_campaigns_api_campaign_ideas__company_profile_id__save_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Product offering ID
+          title: Product Offering Id
+        description: Product offering ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Request Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Save Campaigns Api Campaign Ideas  Company Profile Id  Save Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,208 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Brand Workflow Sse API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: brand-workflow-sse
+paths:
+  /api/brand-workflow/sse/stream/{process_id}:
+    get:
+      tags:
+      - brand-workflow-sse
+      summary: Stream Brand Workflow Events
+      description: "Stream brand workflow events for a specific process.\n\nArgs:\n    request: FastAPI request\n    process_id: Workflow process ID\n    last_event_id: Last event ID for reconnection\n    current_user: Authenticated user\n    \nReturns:\n    EventSourceResponse streaming workflow events"
+      operationId: stream_brand_workflow_events_api_brand_workflow_sse_stream__process_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: process_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Process Id
+      - name: last_event_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Event Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/brand-workflow/sse/stream:
+    get:
+      tags:
+      - brand-workflow-sse
+      summary: Stream All Workflow Events
+      description: "Stream all brand workflow events for the current user.\n\nArgs:\n    request: FastAPI request\n    last_event_id: Last event ID for reconnection\n    current_user: Authenticated user\n    \nReturns:\n    EventSourceResponse streaming all user's workflow events"
+      operationId: stream_all_workflow_events_api_brand_workflow_sse_stream_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: last_event_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Event Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/brand-workflow/sse/test/{process_id}:
+    post:
+      tags:
+      - brand-workflow-sse
+      summary: Test Workflow Events
+      description: 'Test endpoint to emit sample workflow events.
+
+        For development/testing only.'
+      operationId: test_workflow_events_api_brand_workflow_sse_test__process_id__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: process_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Process Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/brand-workflow/sse/state/{process_id}:
+    get:
+      tags:
+      - brand-workflow-sse
+      summary: Get Workflow State
+      description: Return the full, latest live state JSON for the given process_id from Redis.
+      operationId: get_workflow_state_api_brand_workflow_sse_state__process_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: process_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Process Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Workflow State Api Brand Workflow Sse State  Process Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/brand-workflow/sse/active:
+    get:
+      tags:
+      - brand-workflow-sse
+      summary: Get Active Workflow
+      description: Return the active process_id for this user+company+url if any (Redis-backed).
+      operationId: get_active_workflow_api_brand_workflow_sse_active_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_url
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Company Url
+      - name: company_profile_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

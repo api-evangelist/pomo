@@ -1,0 +1,845 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend AI Policy API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: ai-policy
+paths:
+  /api/ai-policy:
+    get:
+      tags:
+      - ai-policy
+      summary: Get Ai Policy State
+      operationId: get_ai_policy_state_api_ai_policy_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: policy_purpose
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Policy purpose: compliance|brand_guidelines'
+          default: compliance
+          title: Policy Purpose
+        description: 'Policy purpose: compliance|brand_guidelines'
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiPolicyStateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-policy/settings:
+    put:
+      tags:
+      - ai-policy
+      summary: Update Ai Policy Settings
+      operationId: update_ai_policy_settings_api_ai_policy_settings_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: policy_purpose
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Policy purpose: compliance|brand_guidelines'
+          default: compliance
+          title: Policy Purpose
+        description: 'Policy purpose: compliance|brand_guidelines'
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiPolicySettingsUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiPolicyStateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-policy/generate:
+    post:
+      tags:
+      - ai-policy
+      summary: Generate Ai Policy Draft
+      operationId: generate_ai_policy_draft_api_ai_policy_generate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: policy_purpose
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Policy purpose: compliance|brand_guidelines'
+          default: compliance
+          title: Policy Purpose
+        description: 'Policy purpose: compliance|brand_guidelines'
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiPolicyStateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-policy/draft:
+    put:
+      tags:
+      - ai-policy
+      summary: Update Ai Policy Draft
+      operationId: update_ai_policy_draft_api_ai_policy_draft_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: policy_purpose
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Policy purpose: compliance|brand_guidelines'
+          default: compliance
+          title: Policy Purpose
+        description: 'Policy purpose: compliance|brand_guidelines'
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiPolicyDraftUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiPolicyStateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-policy/save:
+    post:
+      tags:
+      - ai-policy
+      summary: Save Ai Policy
+      operationId: save_ai_policy_api_ai_policy_save_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: policy_purpose
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Policy purpose: compliance|brand_guidelines'
+          default: compliance
+          title: Policy Purpose
+        description: 'Policy purpose: compliance|brand_guidelines'
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiPolicySaveVersionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiPolicyStateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-policy/generate-version-name:
+    post:
+      tags:
+      - ai-policy
+      summary: Generate Ai Policy Version Name
+      operationId: generate_ai_policy_version_name_api_ai_policy_generate_version_name_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: policy_purpose
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Policy purpose: compliance|brand_guidelines'
+          default: compliance
+          title: Policy Purpose
+        description: 'Policy purpose: compliance|brand_guidelines'
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiPolicyGenerateVersionNameRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiPolicyGenerateVersionNameResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-policy/activate:
+    post:
+      tags:
+      - ai-policy
+      summary: Activate Ai Policy
+      operationId: activate_ai_policy_api_ai_policy_activate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: policy_purpose
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Policy purpose: compliance|brand_guidelines'
+          default: compliance
+          title: Policy Purpose
+        description: 'Policy purpose: compliance|brand_guidelines'
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiPolicyActivateVersionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiPolicyStateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-policy/violations:
+    get:
+      tags:
+      - ai-policy
+      summary: List Ai Policy Violations
+      operationId: list_ai_policy_violations_api_ai_policy_violations_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: surface
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Optional surface filter: chat|ads|social|images|cm'
+          title: Surface
+        description: 'Optional surface filter: chat|ads|social|images|cm'
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AiPolicyViolationEvent'
+                title: Response List Ai Policy Violations Api Ai Policy Violations Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/ai-policy/latest-warning:
+    get:
+      tags:
+      - ai-policy
+      summary: Get Latest Ai Policy Warning
+      operationId: get_latest_ai_policy_warning_api_ai_policy_latest_warning_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: surface
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Optional surface filter: chat|ads|social|images|cm'
+          title: Surface
+        description: 'Optional surface filter: chat|ads|social|images|cm'
+      - name: ad_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+      - name: campaign_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Id
+      - name: primary_campaign_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Campaign Id
+      - name: batch_campaign_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Batch Campaign Id
+      - name: conversation_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Conversation Id
+      - name: change_request_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Change Request Id
+      - name: gallery_image_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gallery Image Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiPolicyContextWarningResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AiPolicyDraftUpdateRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: Updated draft policy text
+      type: object
+      required:
+      - text
+      title: AiPolicyDraftUpdateRequest
+    AiPolicyEnabledSurfaces:
+      properties:
+        chat:
+          type: boolean
+          title: Chat
+          default: true
+        ads:
+          type: boolean
+          title: Ads
+          default: true
+        social:
+          type: boolean
+          title: Social
+          default: true
+        images:
+          type: boolean
+          title: Images
+          default: true
+      type: object
+      title: AiPolicyEnabledSurfaces
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AiPolicyStateResponse:
+      properties:
+        policy_purpose:
+          anyOf:
+          - type: string
+            enum:
+            - compliance
+            - brand_guidelines
+          - type: 'null'
+          title: Policy Purpose
+        enabled:
+          type: boolean
+          title: Enabled
+        mode:
+          type: string
+          title: Mode
+        enabled_surfaces:
+          anyOf:
+          - $ref: '#/components/schemas/AiPolicyEnabledSurfaces'
+          - type: 'null'
+        active_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Active Version Id
+        active_version_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Active Version Ids
+        draft:
+          anyOf:
+          - $ref: '#/components/schemas/AiPolicyDraft'
+          - type: 'null'
+        versions:
+          items:
+            $ref: '#/components/schemas/AiPolicyVersion'
+          type: array
+          title: Versions
+      type: object
+      required:
+      - enabled
+      - mode
+      title: AiPolicyStateResponse
+    AiPolicyGenerateVersionNameResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Generated policy version name
+      type: object
+      required:
+      - name
+      title: AiPolicyGenerateVersionNameResponse
+    AiPolicySaveVersionRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        activate:
+          type: boolean
+          title: Activate
+          default: false
+        text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text
+          description: Optional editor text to save as a version without requiring a separate draft save first
+      type: object
+      title: AiPolicySaveVersionRequest
+    AiPolicyVersion:
+      properties:
+        id:
+          type: string
+          title: Id
+        policy_purpose:
+          anyOf:
+          - type: string
+            enum:
+            - compliance
+            - brand_guidelines
+          - type: 'null'
+          title: Policy Purpose
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        text:
+          type: string
+          title: Text
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        created_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By User Id
+      type: object
+      required:
+      - id
+      - text
+      title: AiPolicyVersion
+    AiPolicyDraft:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: Editable draft policy text
+          default: ''
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+          description: 'draft source: generated|manual'
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+          description: ISO timestamp
+        updated_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated By User Id
+          description: User ID who last edited the draft
+      type: object
+      title: AiPolicyDraft
+    AiPolicyViolationEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+        created_at:
+          type: string
+          title: Created At
+        user_id:
+          type: string
+          title: User Id
+        user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Email
+        endpoint:
+          type: string
+          title: Endpoint
+        event_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Name
+        event_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event Metadata
+      type: object
+      required:
+      - id
+      - created_at
+      - user_id
+      - endpoint
+      title: AiPolicyViolationEvent
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AiPolicyActivateVersionRequest:
+      properties:
+        version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Version Id
+        version_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Version Ids
+      type: object
+      title: AiPolicyActivateVersionRequest
+      description: 'Backwards-compatible activation request.
+
+
+        - `version_id`: activate a single version
+
+        - `version_ids`: activate a policy set (multiple versions), in the provided order'
+    AiPolicyGenerateVersionNameRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: Policy text used to generate a short version name
+        max_length:
+          type: integer
+          maximum: 80.0
+          minimum: 16.0
+          title: Max Length
+          description: Maximum output length for the generated version name
+          default: 48
+      type: object
+      required:
+      - text
+      title: AiPolicyGenerateVersionNameRequest
+    AiPolicySettingsUpdateRequest:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        enabled_surfaces:
+          anyOf:
+          - $ref: '#/components/schemas/AiPolicyEnabledSurfaces'
+          - type: 'null'
+      type: object
+      required:
+      - enabled
+      title: AiPolicySettingsUpdateRequest
+    AiPolicyContextWarningResponse:
+      properties:
+        found:
+          type: boolean
+          title: Found
+          default: false
+        evaluation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Evaluation Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        ai_policy_eval:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Policy Eval
+      type: object
+      title: AiPolicyContextWarningResponse
+      description: 'Lightweight lookup for the latest warn-only evaluation matching a UI context.
+
+
+        This is intended for inline warnings in campaign details pages (ads/social) and similar surfaces.'
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

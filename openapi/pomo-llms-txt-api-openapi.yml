@@ -1,0 +1,28 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Llms.txt API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Llms.txt
+paths:
+  /llms.txt:
+    get:
+      summary: Llms Txt
+      description: Serve llms.txt for AI crawlers and LLMs
+      operationId: llms_txt_llms_txt_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Llms.txt
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

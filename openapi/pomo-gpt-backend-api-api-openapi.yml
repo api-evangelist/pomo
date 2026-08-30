@@ -1,0 +1,27 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: GPT Backend API
+paths:
+  /:
+    get:
+      summary: Root
+      operationId: root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - GPT Backend API
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

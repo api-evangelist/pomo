@@ -1,0 +1,793 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Auth API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: auth
+paths:
+  /api/auth/status:
+    get:
+      tags:
+      - auth
+      summary: Check Registration Status
+      description: 'Check user registration status.
+
+        Returns whether user is authenticated and registered.'
+      operationId: check_registration_status_api_auth_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/auth/registration/touch:
+    post:
+      tags:
+      - auth
+      summary: Touch Registration Lead
+      description: 'Capture signed-in Clerk identities before ToS/account details are submitted.
+
+
+        This does not create a product user record; `/register/init` remains the
+
+        only self-serve path that creates `users`.'
+      operationId: touch_registration_lead_api_auth_registration_touch_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationTouchRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationTouchResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/auth/register/init:
+    post:
+      tags:
+      - auth
+      summary: Register Init
+      description: 'Initialize registration by creating the user and organization after ToS acceptance.
+
+
+        - Validates ToS and allowlist
+
+        - If allowlisted: creates User + Organization + default CompanyProfile + credits
+
+        - Sets registration_data.status = ''account_created''
+
+        - Returns { user_id, organization_id, on_waitlist }
+
+
+        Idempotent: if already created (phase account_created), returns existing IDs.
+
+        If already complete, 409.'
+      operationId: register_init_api_auth_register_init_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationFormData'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/auth/register/finalize:
+    post:
+      tags:
+      - auth
+      summary: Register Finalize
+      description: 'Finalize registration after plan selection/payment.
+
+
+        Sets registration_data.status = ''complete'' and records selected_plan.
+
+        Idempotent: if already complete, returns success.'
+      operationId: register_finalize_api_auth_register_finalize_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinalizeRegistrationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/auth/invitation:
+    get:
+      tags:
+      - auth
+      summary: Get Invitation Info From Query
+      description: 'Query-parameter variant for invitation preview.
+
+        Useful when clients/proxies alter path-style tokens.'
+      operationId: get_invitation_info_from_query_api_auth_invitation_get
+      parameters:
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationInfoResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/auth/invitation/{invite_token}:
+    get:
+      tags:
+      - auth
+      summary: Get Invitation Info
+      description: 'Preview invitation details before accepting.
+
+        Can be called by authenticated or unauthenticated users.'
+      operationId: get_invitation_info_api_auth_invitation__invite_token__get
+      parameters:
+      - name: invite_token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Invite Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationInfoResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/auth/accept-invitation:
+    post:
+      tags:
+      - auth
+      summary: Accept Invitation
+      description: "Accept an organization invitation.\nHandles both new users and existing users joining additional organizations.\n\nFlow:\n- Validates ToS acceptance\n- Validates invite token\n- If user exists:\n    - ACTIVE users: Join organization as MEMBER (no credits)\n    - SUSPENDED/DELETED users: Error\n- If user doesn't exist:\n    - Check allowlist → waitlist if not allowed\n    - Create user + join organization as MEMBER + allocate credits"
+      operationId: accept_invitation_api_auth_accept_invitation_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptInvitationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptInvitationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/auth/register:
+    post:
+      tags:
+      - auth
+      summary: Register User
+      description: 'Register NEW users creating their own organization.
+
+        For accepting invitations, use /accept-invitation endpoint instead.
+
+
+        Flow:
+
+        - Validates ToS acceptance
+
+        - Checks if user already exists → error if yes
+
+        - Validates email allowlist → waitlist if not allowed
+
+        - Creates user + new organization (as OWNER) + company profile
+
+        - Allocates initial credits to organization'
+      operationId: register_user_api_auth_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationFormData'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/auth/me:
+    get:
+      tags:
+      - auth
+      summary: Get User Profile
+      description: Get current user profile (requires registration and verification).
+      operationId: get_user_profile_api_auth_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+      - HTTPBearer: []
+  /api/auth/update-profile:
+    post:
+      tags:
+      - auth
+      summary: Update User Profile
+      description: Update the current user's profile information.
+      operationId: update_user_profile_api_auth_update_profile_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/auth/logout:
+    post:
+      tags:
+      - auth
+      summary: Logout
+      description: 'Clear the user context.
+
+        Note: Clerk handles token invalidation on the client side.'
+      operationId: logout_api_auth_logout_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/auth/health:
+    get:
+      tags:
+      - auth
+      summary: Health Check
+      description: Check if auth service is healthy.
+      operationId: health_check_api_auth_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AcceptInvitationRequest:
+      properties:
+        invite_token:
+          type: string
+          title: Invite Token
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        tos_hash:
+          type: string
+          title: Tos Hash
+        tos_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tos Version
+      type: object
+      required:
+      - invite_token
+      - tos_hash
+      title: AcceptInvitationRequest
+      description: 'Request schema for accepting an organization invitation.
+
+        Used by both new users and existing users joining additional organizations.'
+    FinalizeRegistrationRequest:
+      properties:
+        selected_plan:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selected Plan
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+      type: object
+      title: FinalizeRegistrationRequest
+      description: Finalize registration by marking status complete and recording selected plan.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    InvitationProfileAccess:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        company_profile_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Name
+        role:
+          type: string
+          title: Role
+      type: object
+      required:
+      - company_profile_id
+      - role
+      title: InvitationProfileAccess
+      description: Profile access details attached to an invite.
+    AcceptInvitationResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+        user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: User Id
+        organization_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Organization Id
+        organization_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Name
+        is_new_user:
+          type: boolean
+          title: Is New User
+          default: false
+        on_waitlist:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: On Waitlist
+          default: false
+      type: object
+      required:
+      - success
+      - message
+      title: AcceptInvitationResponse
+      description: Response from accept invitation endpoint.
+    RegistrationTouchResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        registration_lead_id:
+          type: string
+          format: uuid
+          title: Registration Lead Id
+        registration_event_id:
+          type: string
+          format: uuid
+          title: Registration Event Id
+        current_phase:
+          type: string
+          title: Current Phase
+      type: object
+      required:
+      - success
+      - registration_lead_id
+      - registration_event_id
+      - current_phase
+      title: RegistrationTouchResponse
+      description: Response after recording a registration funnel event.
+    UserUpdate:
+      properties:
+        email:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: Email
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Password
+        profile_completed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Profile Completed
+        google_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Google Id
+        company:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        company_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Link
+      type: object
+      title: UserUpdate
+      description: Schema for user profile updates. Status changes require admin privileges.
+    RegistrationResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+        user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: User Id
+        organization_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Organization Id
+        organization_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Name
+        on_waitlist:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: On Waitlist
+          default: false
+        waitlist_position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Waitlist Position
+      type: object
+      required:
+      - success
+      - message
+      title: RegistrationResponse
+      description: Response from registration endpoint (new users creating their own organization).
+    RegistrationTouchRequest:
+      properties:
+        event_name:
+          type: string
+          title: Event Name
+        path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Path
+        phase:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phase
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - event_name
+      title: RegistrationTouchRequest
+      description: Record a pre-registration page or lifecycle event after Clerk auth.
+    RegistrationFormData:
+      properties:
+        name:
+          type: string
+          title: Name
+        company:
+          type: string
+          title: Company
+        title:
+          type: string
+          title: Title
+        company_link:
+          type: string
+          title: Company Link
+        selected_plan:
+          type: string
+          title: Selected Plan
+          default: gold
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+        tos_hash:
+          type: string
+          title: Tos Hash
+        tos_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tos Version
+        recaptcha_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recaptcha Token
+      type: object
+      required:
+      - name
+      - company
+      - title
+      - company_link
+      - tos_hash
+      title: RegistrationFormData
+      description: 'Registration form data for NEW users creating their own organization.
+
+        For accepting invitations, use AcceptInvitationRequest instead.'
+    InvitationInfoResponse:
+      properties:
+        organization_name:
+          type: string
+          title: Organization Name
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        invited_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invited By
+        role:
+          type: string
+          title: Role
+        valid:
+          type: boolean
+          title: Valid
+        already_member:
+          type: boolean
+          title: Already Member
+        invite_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invite Type
+        invited_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invited Email
+        email_matches:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Email Matches
+        expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expires At
+        company_profile_access:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/InvitationProfileAccess'
+            type: array
+          - type: 'null'
+          title: Company Profile Access
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+      type: object
+      required:
+      - organization_name
+      - organization_id
+      - role
+      - valid
+      - already_member
+      title: InvitationInfoResponse
+      description: Response from invitation preview endpoint.
+    User:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        google_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Google Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          default: active
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+          default: true
+        company:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company
+        auth_provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Auth Provider
+        registration_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Registration Data
+      type: object
+      required:
+      - email
+      - id
+      title: User
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

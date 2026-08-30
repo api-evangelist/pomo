@@ -1,0 +1,1071 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Email Campaigns API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Email Campaigns
+paths:
+  /api/campaigns/email/edit-image:
+    post:
+      tags:
+      - Email Campaigns
+      summary: Edit Campaign Image
+      description: 'Edit a campaign supporting image based on user instructions.
+
+        The edited image will be added as a new image for the same campaign.
+
+        Only supporting images can be edited (not banner images).
+
+
+        The user provides a text description of the changes they want, and the
+
+        AI will generate an edited version of the image based on those instructions.'
+      operationId: edit_campaign_image_api_campaigns_email_edit_image_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_edit_campaign_image_api_campaigns_email_edit_image_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/email/edit-content:
+    post:
+      tags:
+      - Email Campaigns
+      summary: Edit Campaign Content
+      description: 'Edit email campaign content based on user instructions.
+
+        The edited content will replace the existing content for the campaign.
+
+
+        The user provides a text description of the changes they want, and the
+
+        AI will generate an edited version of the email content based on those instructions.'
+      operationId: edit_campaign_content_api_campaigns_email_edit_content_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_edit_campaign_content_api_campaigns_email_edit_content_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/email/delete-image:
+    delete:
+      tags:
+      - Email Campaigns
+      summary: Delete Campaign Image
+      description: 'Delete a campaign supporting image.
+
+        Only the user who created the campaign can delete images associated with it.
+
+
+        Query parameters:
+
+        - campaign_id: Campaign ID of the image to delete
+
+        - idea_number: Campaign idea number
+
+        - image_url: URL of the image to delete'
+      operationId: delete_campaign_image_api_campaigns_email_delete_image_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      - name: idea_number
+        in: query
+        required: true
+        schema:
+          type: integer
+          title: Idea Number
+      - name: image_url
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Image Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/email/upload-image:
+    post:
+      tags:
+      - Email Campaigns
+      summary: Upload Email Campaign Image General
+      description: 'Upload a new image for an email campaign and update database records.
+
+        This endpoint is used for manual image uploads for email campaigns.
+
+        It replaces the general upload-image endpoint previously in campaigns_general.py.'
+      operationId: upload_email_campaign_image_general_api_campaigns_email_upload_image_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_email_campaign_image_general_api_campaigns_email_upload_image_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/email/upload-campaign-image:
+    post:
+      tags:
+      - Email Campaigns
+      summary: Upload Campaign Image
+      description: "Upload a new campaign image and update database records.\nThis endpoint is used for manual image edits instead of replacing an existing image.\n\nArgs:\n    file: The image file to upload\n    campaign_id: Campaign ID\n    idea_number: Campaign idea number\n    image_type: Type of image (defaults to EMAIL_IMAGE)\n    current_user: The authenticated user\n    db: Database session\n\nReturns:\n    JSON response with the result including new image URL"
+      operationId: upload_campaign_image_api_campaigns_email_upload_campaign_image_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_campaign_image_api_campaigns_email_upload_campaign_image_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/email/upload-campaign-images:
+    post:
+      tags:
+      - Email Campaigns
+      summary: Upload Campaign Images
+      description: "Upload campaign images (up to 15) and update database records.\nThis endpoint allows batch uploading of images for a specific campaign idea.\n\nArgs:\n    files: List of image files to upload (max 15)\n    campaign_id: Campaign ID\n    idea_number: Campaign idea number\n    image_type: Type of image (defaults to EMAIL_IMAGE)\n    current_user: The authenticated user\n    db: Database session\n\nReturns:\n    JSON response with the result including new image URLs"
+      operationId: upload_campaign_images_api_campaigns_email_upload_campaign_images_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/email:
+    get:
+      tags:
+      - Email Campaigns
+      summary: Fetch All Email Campaigns
+      description: 'Fetch all email campaigns for the current user, including the generated email images.
+
+        Support pagination with page and limit parameters.'
+      operationId: fetch_all_email_campaigns_api_campaigns_email_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Page
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Fetch All Email Campaigns Api Campaigns Email Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - Email Campaigns
+      summary: Create Email Campaign
+      description: 'Create a new email campaign using the dedicated EmailCampaign model.
+
+        This endpoint provides a direct REST API method for creating campaigns
+
+        instead of using the workflow approach.'
+      operationId: create_email_campaign_api_campaigns_email_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailCampaignCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailCampaignResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/email/{campaign_id}:
+    delete:
+      tags:
+      - Email Campaigns
+      summary: Delete Email Campaign
+      description: 'Delete an entire email campaign (all ideas) and related resources.
+
+        This will remove the EmailCampaign models and related resources.'
+      operationId: delete_email_campaign_api_campaigns_email__campaign_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/email/{campaign_id}/idea/{idea_number}:
+    delete:
+      tags:
+      - Email Campaigns
+      summary: Delete Email Campaign Idea
+      description: 'Delete a specific idea from an email campaign.
+
+        This will remove the idea and all associated images from the database.
+
+        Handles both the new EmailCampaign model and the legacy Campaign model.'
+      operationId: delete_email_campaign_idea_api_campaigns_email__campaign_id__idea__idea_number__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      - name: idea_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Idea Number
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/email/count:
+    get:
+      tags:
+      - Email Campaigns
+      summary: Get Email Campaigns Count
+      description: 'Get the count of email campaigns for the current user.
+
+        This counts campaigns in the new EmailCampaign model.'
+      operationId: get_email_campaigns_count_api_campaigns_email_count_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/campaigns/email/associate-consumer-group:
+    post:
+      tags:
+      - Email Campaigns
+      summary: Associate Consumer Group With Email Campaign
+      description: Associate a consumer group with an email campaign.
+      operationId: associate_consumer_group_with_email_campaign_api_campaigns_email_associate_consumer_group_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Data
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/campaigns/email/list-associated-consumer-groups/{campaign_id}/{idea_number}:
+    get:
+      tags:
+      - Email Campaigns
+      summary: List Associated Consumer Groups
+      description: List all consumer groups associated with an email campaign idea.
+      operationId: list_associated_consumer_groups_api_campaigns_email_list_associated_consumer_groups__campaign_id___idea_number__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      - name: idea_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Idea Number
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/email/remove-consumer-group-association/{association_id}:
+    delete:
+      tags:
+      - Email Campaigns
+      summary: Remove Consumer Group Association
+      description: Remove an association between a consumer group and an email campaign.
+      operationId: remove_consumer_group_association_api_campaigns_email_remove_consumer_group_association__association_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: association_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Association Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/campaigns/email/{email_campaign_id}/image:
+    post:
+      tags:
+      - Email Campaigns
+      summary: Add Email Campaign Image
+      description: 'Add a new image to an existing email campaign using the EmailCampaignImage model.
+
+        The email_campaign_id refers to the ID of the EmailCampaign record.'
+      operationId: add_email_campaign_image_api_campaigns_email__email_campaign_id__image_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: email_campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Email Campaign Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailCampaignImageCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EmailCampaignResponse:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        subject_line:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Line
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+        preview_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preview Text
+        call_to_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Call To Action
+        target_audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Audience
+        key_selling_points:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Selling Points
+        from_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: From Name
+        reply_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reply To
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        workflow_status:
+          anyOf:
+          - $ref: '#/components/schemas/WorkflowStatus'
+          - type: 'null'
+          default: draft
+        scheduled_send_time:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheduled Send Time
+        sent_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sent At
+        personalization_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Personalization Level
+          default: medium
+        merge_variables:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Merge Variables
+        dynamic_blocks:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Dynamic Blocks
+        ab_test_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ab Test Config
+        performance_metrics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Performance Metrics
+        optimization_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Optimization Config
+        company_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Id
+        consumer_group_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Consumer Group Ids
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        variation:
+          type: integer
+          title: Variation
+        total_recipients:
+          type: integer
+          title: Total Recipients
+          default: 0
+        emails_sent:
+          type: integer
+          title: Emails Sent
+          default: 0
+        emails_failed:
+          type: integer
+          title: Emails Failed
+          default: 0
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+        last_modified:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Modified
+        images:
+          items:
+            $ref: '#/components/schemas/EmailCampaignImageResponse'
+          type: array
+          title: Images
+          default: []
+      type: object
+      required:
+      - id
+      - company_profile_id
+      - campaign_id
+      - idea_number
+      - variation
+      - creation_date
+      - last_modified
+      title: EmailCampaignResponse
+    EmailCampaignCreate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        subject_line:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Line
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+        preview_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preview Text
+        call_to_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Call To Action
+        target_audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Audience
+        key_selling_points:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Selling Points
+        from_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: From Name
+        reply_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reply To
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        workflow_status:
+          anyOf:
+          - $ref: '#/components/schemas/WorkflowStatus'
+          - type: 'null'
+          default: draft
+        scheduled_send_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled Send Time
+        sent_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Sent At
+        personalization_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Personalization Level
+          default: medium
+        merge_variables:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Merge Variables
+        dynamic_blocks:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Dynamic Blocks
+        ab_test_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ab Test Config
+        performance_metrics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Performance Metrics
+        optimization_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Optimization Config
+        company_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Id
+        consumer_group_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Consumer Group Ids
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        variation:
+          type: integer
+          title: Variation
+          default: 0
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      title: EmailCampaignCreate
+    Body_edit_campaign_content_api_campaigns_email_edit_content_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID of the content to edit
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        content:
+          type: string
+          title: Content
+          description: Existing HTML content to edit
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+          description: Instructions for editing the content
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - content
+      - edit_prompt
+      title: Body_edit_campaign_content_api_campaigns_email_edit_content_post
+    Body_upload_email_campaign_image_general_api_campaigns_email_upload_image_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+          description: New image file to upload
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        image_type:
+          type: string
+          title: Image Type
+          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
+          default: EMAIL_IMAGE
+      type: object
+      required:
+      - file
+      - campaign_id
+      - idea_number
+      title: Body_upload_email_campaign_image_general_api_campaigns_email_upload_image_post
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EmailCampaignImageCreate:
+      properties:
+        image_type:
+          type: string
+          title: Image Type
+        image_url:
+          type: string
+          title: Image Url
+        original_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Original Prompt
+        enhanced_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Enhanced Prompt
+        width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Height
+      type: object
+      required:
+      - image_type
+      - image_url
+      title: EmailCampaignImageCreate
+    WorkflowStatus:
+      type: string
+      enum:
+      - draft
+      - review
+      - approved
+      - scheduled
+      - sending
+      - sent
+      - failed
+      title: WorkflowStatus
+      description: Email campaign workflow status values.
+    EmailCampaignImageResponse:
+      properties:
+        image_type:
+          type: string
+          title: Image Type
+        image_url:
+          type: string
+          title: Image Url
+        original_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Original Prompt
+        enhanced_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Enhanced Prompt
+        width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Height
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        email_campaign_id:
+          type: string
+          format: uuid
+          title: Email Campaign Id
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+      type: object
+      required:
+      - image_type
+      - image_url
+      - id
+      - email_campaign_id
+      - creation_date
+      title: EmailCampaignImageResponse
+    Body_upload_campaign_image_api_campaigns_email_upload_campaign_image_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+          description: New image file to upload
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        image_type:
+          type: string
+          title: Image Type
+          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
+          default: EMAIL_IMAGE
+      type: object
+      required:
+      - file
+      - campaign_id
+      - idea_number
+      title: Body_upload_campaign_image_api_campaigns_email_upload_campaign_image_post
+    Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+          description: List of image files to upload (max 15)
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        image_type:
+          type: string
+          title: Image Type
+          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
+          default: EMAIL_IMAGE
+      type: object
+      required:
+      - files
+      - campaign_id
+      - idea_number
+      title: Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post
+    Body_edit_campaign_image_api_campaigns_email_edit_image_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID of the image to edit
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        image_url:
+          type: string
+          title: Image Url
+          description: URL of the image to edit
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+          description: Instructions for editing the image
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - image_url
+      - edit_prompt
+      title: Body_edit_campaign_image_api_campaigns_email_edit_image_post
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

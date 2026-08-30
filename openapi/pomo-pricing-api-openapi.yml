@@ -1,0 +1,92 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Pricing API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: pricing
+paths:
+  /api/payment/pricing/context:
+    get:
+      tags:
+      - pricing
+      summary: Get Pricing Context
+      description: 'Resolve pricing context based on explicit billing country, request headers/IP,
+
+        or the default country fallback.
+
+        Returns country, currency, available intervals, plan prices, and credit packages.'
+      operationId: get_pricing_context_api_payment_pricing_context_get
+      parameters:
+      - name: billing_country
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Explicit billing country override as a two-letter ISO code.
+          title: Billing Country
+        description: Explicit billing country override as a two-letter ISO code.
+      - name: force_refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Bypass the shared response cache
+          default: false
+          title: Force Refresh
+        description: Bypass the shared response cache
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Pricing Context Api Payment Pricing Context Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

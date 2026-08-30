@@ -1,0 +1,734 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Feedback API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: feedback
+paths:
+  /api/feedback/bug-report:
+    post:
+      tags:
+      - feedback
+      summary: Submit a bug report with diagnostics
+      description: Submit a bug report with sanitized browser diagnostics and an optional screenshot artifact.
+      operationId: create_bug_report_api_feedback_bug_report_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Company-Profile-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Company-Profile-Id
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_bug_report_api_feedback_bug_report_post'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackBugReportResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/feedback:
+    post:
+      tags:
+      - feedback
+      summary: Submit user feedback
+      description: Submit feedback including bug reports, feature requests, or general comments.
+      operationId: create_feedback_api_feedback_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - feedback
+      summary: List user's feedback
+      description: Get a paginated list of the current user's feedback submissions.
+      operationId: list_my_feedback_api_feedback_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Page number
+          default: 1
+          title: Page
+        description: Page number
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          description: Items per page
+          default: 10
+          title: Page Size
+        description: Items per page
+      - name: feedback_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/FeedbackType'
+          - type: 'null'
+          description: Filter by feedback type
+          title: Feedback Type
+        description: Filter by feedback type
+      - name: company_profile_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by company profile
+          title: Company Profile Id
+        description: Filter by company profile
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/feedback/screenshot:
+    post:
+      tags:
+      - feedback
+      summary: Upload a screenshot for feedback
+      description: Upload a screenshot image to attach to feedback submission.
+      operationId: upload_screenshot_api_feedback_screenshot_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_screenshot_api_feedback_screenshot_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScreenshotUploadResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/feedback/{feedback_id}:
+    get:
+      tags:
+      - feedback
+      summary: Get feedback details
+      description: Get details of a specific feedback submission.
+      operationId: get_feedback_api_feedback__feedback_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: feedback_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Feedback Id
+      - name: allow_inactive_subscription
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Inactive Subscription
+      - name: X-Organization-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Organization-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FeedbackCreate:
+      properties:
+        feedback_type:
+          $ref: '#/components/schemas/FeedbackType'
+          description: 'Type of feedback: bug, feature, or general'
+        message:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Message
+          description: The feedback message content
+        page_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Page Url
+          description: Full URL where feedback was submitted
+        page_route:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Page Route
+          description: React route path where feedback was submitted
+        component_name:
+          anyOf:
+          - type: string
+            maxLength: 256
+          - type: 'null'
+          title: Component Name
+          description: Name of the component where feedback was triggered
+        screenshot_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Screenshot Url
+          description: URL of the uploaded screenshot
+        browser_info:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Browser Info
+          description: Browser and device metadata
+      type: object
+      required:
+      - feedback_type
+      - message
+      title: FeedbackCreate
+      description: Request schema for creating new feedback.
+    FeedbackBugReportResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        feedback_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+        message:
+          type: string
+          title: Message
+        page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Url
+        page_route:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Route
+        component_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Component Name
+        screenshot_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Screenshot Url
+        browser_info:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Browser Info
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+        severity:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severity
+        report_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Report Source
+        client_report_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Report Id
+        frontend_release:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Frontend Release
+        diagnostics_schema_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Diagnostics Schema Version
+        redaction_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redaction Version
+        diagnostics_summary:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Diagnostics Summary
+        request_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Request Ids
+        console_error_count:
+          type: integer
+          title: Console Error Count
+          default: 0
+        http_error_count:
+          type: integer
+          title: Http Error Count
+          default: 0
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        artifacts:
+          items:
+            $ref: '#/components/schemas/FeedbackArtifactResponse'
+          type: array
+          title: Artifacts
+      type: object
+      required:
+      - id
+      - feedback_type
+      - message
+      - status
+      - created_at
+      title: FeedbackBugReportResponse
+      description: Response schema for rich bug reports.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    FeedbackResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        feedback_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+        message:
+          type: string
+          title: Message
+        page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Url
+        page_route:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Route
+        component_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Component Name
+        screenshot_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Screenshot Url
+        browser_info:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Browser Info
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+        severity:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severity
+        report_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Report Source
+        client_report_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Report Id
+        frontend_release:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Frontend Release
+        diagnostics_schema_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Diagnostics Schema Version
+        redaction_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redaction Version
+        diagnostics_summary:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Diagnostics Summary
+        request_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Request Ids
+        console_error_count:
+          type: integer
+          title: Console Error Count
+          default: 0
+        http_error_count:
+          type: integer
+          title: Http Error Count
+          default: 0
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - feedback_type
+      - message
+      - status
+      - created_at
+      title: FeedbackResponse
+      description: Response schema for feedback data.
+    Body_create_bug_report_api_feedback_bug_report_post:
+      properties:
+        report_json:
+          type: string
+          title: Report Json
+        screenshot:
+          anyOf:
+          - type: string
+            format: binary
+          - type: 'null'
+          title: Screenshot
+      type: object
+      required:
+      - report_json
+      title: Body_create_bug_report_api_feedback_bug_report_post
+    ScreenshotUploadResponse:
+      properties:
+        screenshot_url:
+          type: string
+          title: Screenshot Url
+          description: URL of the uploaded screenshot
+      type: object
+      required:
+      - screenshot_url
+      title: ScreenshotUploadResponse
+      description: Response schema for screenshot upload.
+    FeedbackArtifactResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        feedback_id:
+          type: string
+          title: Feedback Id
+        artifact_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+        gcs_url:
+          type: string
+          title: Gcs Url
+        content_type:
+          type: string
+          title: Content Type
+        byte_size:
+          type: integer
+          title: Byte Size
+        sha256:
+          type: string
+          title: Sha256
+        redaction_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redaction Version
+        artifact_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Artifact Metadata
+        created_at:
+          type: string
+          title: Created At
+      type: object
+      required:
+      - id
+      - feedback_id
+      - artifact_type
+      - gcs_url
+      - content_type
+      - byte_size
+      - sha256
+      - created_at
+      title: FeedbackArtifactResponse
+      description: Response schema for metadata about a stored feedback artifact.
+    FeedbackType:
+      type: string
+      enum:
+      - bug
+      - feature
+      - general
+      - churn
+      title: FeedbackType
+      description: Type of feedback submitted by the user.
+    FeedbackListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/FeedbackResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+        has_more:
+          type: boolean
+          title: Has More
+      type: object
+      required:
+      - items
+      - total
+      - page
+      - page_size
+      - has_more
+      title: FeedbackListResponse
+      description: Response schema for listing feedback.
+    Body_upload_screenshot_api_feedback_screenshot_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_upload_screenshot_api_feedback_screenshot_post
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

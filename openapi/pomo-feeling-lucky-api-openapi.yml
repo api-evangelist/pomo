@@ -1,0 +1,161 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Feeling Lucky API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: feeling-lucky
+paths:
+  /api/feeling-lucky/pick:
+    post:
+      tags:
+      - feeling-lucky
+      summary: Lucky Pick
+      description: 'Pick the best candidate from a list using AI.
+
+
+        This endpoint is used by the Feeling Lucky flow in the campaign builder
+
+        and by the chatbot wizard to auto-select the best audience or campaign idea.'
+      operationId: lucky_pick_api_feeling_lucky_pick_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LuckyPickRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LuckyPickResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    LuckyPickResponse:
+      properties:
+        choice:
+          title: Choice
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - choice
+      - reason
+      title: LuckyPickResponse
+      description: Response body for the /feeling-lucky/pick endpoint.
+    LuckyPickContext:
+      properties:
+        offering_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Offering Id
+        offering_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Offering Name
+        goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal
+        tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tone
+        platform_pref:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Pref
+        campaign_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Type
+        campaign_theme:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Theme
+        refinement:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Refinement
+      type: object
+      title: LuckyPickContext
+      description: Context for the lucky pick request.
+    LuckyPickRequest:
+      properties:
+        kind:
+          type: string
+          enum:
+          - audience
+          - campaign_idea
+          title: Kind
+          description: Type of item to pick.
+        candidates:
+          items: {}
+          type: array
+          title: Candidates
+          description: Candidates to choose from.
+        context:
+          anyOf:
+          - $ref: '#/components/schemas/LuckyPickContext'
+          - type: 'null'
+      type: object
+      required:
+      - kind
+      - candidates
+      title: LuckyPickRequest
+      description: Request body for the /feeling-lucky/pick endpoint.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

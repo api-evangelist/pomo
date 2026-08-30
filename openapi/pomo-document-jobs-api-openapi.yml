@@ -1,0 +1,364 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Document Jobs API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: document-jobs
+paths:
+  /api/document-jobs:
+    get:
+      tags:
+      - document-jobs
+      summary: List Document Jobs
+      operationId: list_document_jobs_api_document_jobs_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_profile_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      - name: product_offering_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+      - name: doc_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Doc Type
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentJobsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/document-jobs/{job_id}:
+    get:
+      tags:
+      - document-jobs
+      summary: Get Document Job
+      operationId: get_document_job_api_document_jobs__job_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Job Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentJobDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/document-jobs/{job_id}/sign:
+    get:
+      tags:
+      - document-jobs
+      summary: Sign Document Download
+      operationId: sign_document_download_api_document_jobs__job_id__sign_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Job Id
+      - name: format
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Format
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedUrlResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/document-jobs/{job_id}/preview-html:
+    get:
+      tags:
+      - document-jobs
+      summary: Get Document Preview Html
+      operationId: get_document_preview_html_api_document_jobs__job_id__preview_html_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Job Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtmlPreviewResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    HtmlPreviewResponse:
+      properties:
+        html:
+          type: string
+          title: Html
+      type: object
+      required:
+      - html
+      title: HtmlPreviewResponse
+    SignedUrlResponse:
+      properties:
+        signed_url:
+          type: string
+          title: Signed Url
+        expires_in_seconds:
+          type: integer
+          title: Expires In Seconds
+      type: object
+      required:
+      - signed_url
+      - expires_in_seconds
+      title: SignedUrlResponse
+    DocumentJobsResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DocumentJobListItem'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: DocumentJobsResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DocumentJobDetailResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        doc_type:
+          type: string
+          title: Doc Type
+        provider:
+          type: string
+          title: Provider
+        provider_generation_id:
+          type: string
+          title: Provider Generation Id
+        provider_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Status
+        provider_payload:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Provider Payload
+        inputs:
+          additionalProperties: true
+          type: object
+          title: Inputs
+        files:
+          additionalProperties: true
+          type: object
+          title: Files
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        ready_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ready At
+      type: object
+      required:
+      - id
+      - doc_type
+      - provider
+      - provider_generation_id
+      - provider_status
+      - provider_payload
+      - inputs
+      - files
+      - metadata
+      - created_at
+      - ready_at
+      title: DocumentJobDetailResponse
+    DocumentJobListItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        doc_type:
+          type: string
+          title: Doc Type
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        scope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope
+        preset:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preset
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        provider_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Status
+        user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Email
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        ready_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ready At
+        available_formats:
+          additionalProperties:
+            type: boolean
+          type: object
+          title: Available Formats
+      type: object
+      required:
+      - id
+      - doc_type
+      - available_formats
+      title: DocumentJobListItem
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,403 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Experiment Packages API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: experiment-packages
+paths:
+  /api/experiment-packages:
+    post:
+      tags:
+      - experiment-packages
+      summary: Create Experiment Package
+      description: Persist a test package from a tuned preview at Create Test Campaign time.
+      operationId: create_experiment_package_api_experiment_packages_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperimentPackageCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Create Experiment Package Api Experiment Packages Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - experiment-packages
+      summary: List Experiment Packages
+      operationId: list_experiment_packages_api_experiment_packages_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: source_upload_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Upload Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Experiment Packages Api Experiment Packages Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/experiment-packages/{package_id}/readout:
+    post:
+      tags:
+      - experiment-packages
+      summary: Compute Experiment Package Readout
+      description: Compute and store the lift readout from a paired post-test upload.
+      operationId: compute_experiment_package_readout_api_experiment_packages__package_id__readout_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: package_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Package Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperimentReadoutRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Compute Experiment Package Readout Api Experiment Packages  Package Id  Readout Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/experiment-packages/{package_id}:
+    get:
+      tags:
+      - experiment-packages
+      summary: Get Experiment Package
+      operationId: get_experiment_package_api_experiment_packages__package_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: package_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Package Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Experiment Package Api Experiment Packages  Package Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/experiment-packages/{package_id}/campaigns/{campaign_id}:
+    delete:
+      tags:
+      - experiment-packages
+      summary: Remove Experiment Package Campaign
+      description: Remove one launched version's campaign from a test (hard delete, scoped).
+      operationId: remove_experiment_package_campaign_api_experiment_packages__package_id__campaigns__campaign_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: package_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Package Id
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Remove Experiment Package Campaign Api Experiment Packages  Package Id  Campaigns  Campaign Id  Delete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/experiment-packages/{package_id}/campaigns/{campaign_id}/refresh:
+    post:
+      tags:
+      - experiment-packages
+      summary: Refresh Experiment Package Campaign
+      description: 'Regenerate one launched version''s creative: re-run just that version
+
+        (image-only) with its stored message/image/budget slice, then replace the old
+
+        campaign with the freshly generated one. Async — returns a job to poll.'
+      operationId: refresh_experiment_package_campaign_api_experiment_packages__package_id__campaigns__campaign_id__refresh_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: package_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Package Id
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Campaign Id
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Refresh Experiment Package Campaign Api Experiment Packages  Package Id  Campaigns  Campaign Id  Refresh Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FirstPartyExperimentVariantAsset:
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Id
+        image_url:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          title: Image Url
+        media_type:
+          type: string
+          maxLength: 24
+          title: Media Type
+          default: image
+        asset_source:
+          type: string
+          maxLength: 24
+          title: Asset Source
+          default: generated
+        width:
+          anyOf:
+          - type: integer
+            maximum: 20000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+            maximum: 20000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Height
+      type: object
+      required:
+      - id
+      - image_url
+      title: FirstPartyExperimentVariantAsset
+      description: 'Client-chosen creative image for one preview variant.
+
+
+        Sent as a DELTA keyed by the stable variant id: the server rebuilds the plan
+
+        from the stored upload on every recompute/persist, so the chosen (generated,
+
+        uploaded, or edited) image must be merged back onto the matching variant.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ExperimentReadoutRequest:
+      properties:
+        post_upload_id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Post Upload Id
+      type: object
+      required:
+      - post_upload_id
+      title: ExperimentReadoutRequest
+      description: Pair a post-test sales upload to a package for the lift readout.
+    FirstPartyExperimentVariantState:
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Id
+        locked:
+          type: boolean
+          title: Locked
+          default: false
+        alternate_index:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Alternate Index
+          default: 0
+      type: object
+      required:
+      - id
+      title: FirstPartyExperimentVariantState
+      description: Client-held state for one preview variant.
+    ExperimentPackageCreateRequest:
+      properties:
+        opportunity_id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Opportunity Id
+        budget_cap:
+          anyOf:
+          - type: number
+            maximum: 1000000.0
+            minimum: 50.0
+          - type: 'null'
+          title: Budget Cap
+        duration_days:
+          anyOf:
+          - type: integer
+            maximum: 30.0
+            minimum: 7.0
+          - type: 'null'
+          title: Duration Days
+        variant_count:
+          anyOf:
+          - type: integer
+            maximum: 3.0
+            minimum: 1.0
+          - type: 'null'
+          title: Variant Count
+        gross_margin:
+          anyOf:
+          - type: number
+            maximum: 0.95
+            minimum: 0.1
+          - type: 'null'
+          title: Gross Margin
+        variant_states:
+          items:
+            $ref: '#/components/schemas/FirstPartyExperimentVariantState'
+          type: array
+          maxItems: 10
+          title: Variant States
+        removed_variant_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 10
+          title: Removed Variant Ids
+        variant_assets:
+          items:
+            $ref: '#/components/schemas/FirstPartyExperimentVariantAsset'
+          type: array
+          maxItems: 10
+          title: Variant Assets
+        regenerate:
+          type: boolean
+          title: Regenerate
+          default: false
+        upload_id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Upload Id
+      type: object
+      required:
+      - opportunity_id
+      - upload_id
+      title: ExperimentPackageCreateRequest
+      description: Persist a test package from a tuned preview.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

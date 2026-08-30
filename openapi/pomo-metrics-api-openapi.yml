@@ -1,0 +1,39 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Metrics API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: metrics
+paths:
+  /metrics:
+    get:
+      tags:
+      - metrics
+      summary: Get Metrics
+      description: 'Expose Prometheus metrics.
+
+
+        This endpoint returns metrics in Prometheus text format.
+
+        Metrics include:
+
+        - SSE connection counts and duration
+
+        - Active SSE connections
+
+        - Other application metrics'
+      operationId: get_metrics_metrics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

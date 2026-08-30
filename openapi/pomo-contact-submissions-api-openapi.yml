@@ -1,0 +1,179 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Contact Submissions API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: contact-submissions
+paths:
+  /api/contact-submissions:
+    post:
+      tags:
+      - contact-submissions
+      summary: Create Contact Submission
+      operationId: create_contact_submission_api_contact_submissions_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactSubmissionCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/contact-submissions/{submission_id}/confirm-scheduling:
+    post:
+      tags:
+      - contact-submissions
+      summary: Confirm Demo Scheduling
+      description: Send the appropriate demo email after the user interacts with the calendar.
+      operationId: confirm_demo_scheduling_api_contact_submissions__submission_id__confirm_scheduling_post
+      parameters:
+      - name: submission_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Submission Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DemoSchedulingConfirmation'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ContactSubmissionCreate:
+      properties:
+        first_name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: First Name
+        last_name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Last Name
+        email:
+          type: string
+          maxLength: 512
+          title: Email
+        company:
+          type: string
+          maxLength: 512
+          minLength: 2
+          title: Company
+        title:
+          type: string
+          maxLength: 512
+          minLength: 2
+          title: Title
+        industry:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Industry
+        phone:
+          type: string
+          maxLength: 64
+          title: Phone
+        message:
+          anyOf:
+          - type: string
+            maxLength: 5000
+          - type: 'null'
+          title: Message
+        submission_type:
+          $ref: '#/components/schemas/SubmissionType'
+        recaptcha_token:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Recaptcha Token
+      type: object
+      required:
+      - first_name
+      - last_name
+      - email
+      - company
+      - title
+      - phone
+      - submission_type
+      title: ContactSubmissionCreate
+      description: Request schema for creating a contact submission.
+    SubmissionType:
+      type: string
+      enum:
+      - book_demo
+      - contact
+      title: SubmissionType
+      description: Type of contact submission.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DemoSchedulingConfirmation:
+      properties:
+        scheduled:
+          type: boolean
+          title: Scheduled
+      type: object
+      required:
+      - scheduled
+      title: DemoSchedulingConfirmation
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

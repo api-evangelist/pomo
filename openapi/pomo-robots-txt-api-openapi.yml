@@ -1,0 +1,28 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Robots.txt API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Robots.txt
+paths:
+  /robots.txt:
+    get:
+      summary: Robots Txt
+      description: Serve robots.txt for search engine crawlers
+      operationId: robots_txt_robots_txt_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Robots.txt
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

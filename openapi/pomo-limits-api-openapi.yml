@@ -1,0 +1,75 @@
+openapi: 3.2.0
+info:
+  title: GPT Backend Limits API
+  version: 0.1.0
+servers:
+- url: https://api.usepomo.ai
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: limits
+paths:
+  /api/limits/company-profile/{profile_id}:
+    get:
+      tags:
+      - limits
+      summary: Get Company Profile Limits
+      description: "Return effective per-plan limits relevant to a specific company profile.\n\nResponse:\n  {\n    \"max_company_profiles\": int | null,\n    \"max_competitors_per_profile\": int | null,\n    \"current_competitors\": int,\n    \"current_tier\": str | null,\n    \"profile_id\": str,\n    \"organization_id\": str\n  }"
+      operationId: get_company_profile_limits_api_limits_company_profile__profile_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer
