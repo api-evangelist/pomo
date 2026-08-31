@@ -372,6 +372,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - AI Policy
+  tags_raw:
   - ai-policy
   properties:
   - type: OpenAPI
@@ -436,6 +438,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - AI Testing
+  tags_raw:
   - ai-testing
   properties:
   - type: OpenAPI
@@ -468,6 +472,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Analytics
+  tags_raw:
   - analytics
   properties:
   - type: OpenAPI
@@ -500,6 +506,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -628,6 +636,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Campaign Analytics
+  tags_raw:
   - campaign-analytics
   properties:
   - type: OpenAPI
@@ -756,6 +766,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Campaigns
+  tags_raw:
   - campaigns
   properties:
   - type: OpenAPI
@@ -788,6 +800,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Change Management
+  tags_raw:
   - change-management
   properties:
   - type: OpenAPI
@@ -820,6 +834,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Chat
+  tags_raw:
   - chat
   properties:
   - type: OpenAPI
@@ -884,6 +900,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Company Profile
+  tags_raw:
   - company-profile
   properties:
   - type: OpenAPI
@@ -1013,6 +1031,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Consumer Group
+  tags_raw:
   - consumer-group
   properties:
   - type: OpenAPI
@@ -1109,6 +1129,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Credits
+  tags_raw:
   - credits
   properties:
   - type: OpenAPI
@@ -1141,6 +1163,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - CRM
+  tags_raw:
   - crm
   properties:
   - type: OpenAPI
@@ -1269,6 +1293,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Debug
+  tags_raw:
   - debug
   properties:
   - type: OpenAPI
@@ -1333,6 +1359,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Earned Media
+  tags_raw:
   - earned-media
   properties:
   - type: OpenAPI
@@ -1493,6 +1521,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Feedback
+  tags_raw:
   - feedback
   properties:
   - type: OpenAPI
@@ -1557,6 +1587,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - First-Party Data
+  tags_raw:
   - first-party-data
   properties:
   - type: OpenAPI
@@ -1589,6 +1621,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Gallery
+  tags_raw:
   - gallery
   properties:
   - type: OpenAPI
@@ -1653,7 +1687,8 @@ apis:
     The google_display_campaigns API from Pomo — 6 operation(s) for google_display_campaigns.
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
-  tags:
+  tags: []
+  tags_raw:
   - google_display_campaigns
   properties:
   - type: OpenAPI
@@ -1685,7 +1720,8 @@ apis:
   description: The google_search_campaigns API from Pomo — 4 operation(s) for google_search_campaigns.
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
-  tags:
+  tags: []
+  tags_raw:
   - google_search_campaigns
   properties:
   - type: OpenAPI
@@ -1878,6 +1914,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Image
+  tags_raw:
   - images
   properties:
   - type: OpenAPI
@@ -2006,6 +2044,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Legal
+  tags_raw:
   - legal
   properties:
   - type: OpenAPI
@@ -2038,6 +2078,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Limits
+  tags_raw:
   - limits
   properties:
   - type: OpenAPI
@@ -2070,7 +2112,8 @@ apis:
     The linkedin_image_campaigns API from Pomo — 4 operation(s) for linkedin_image_campaigns.
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
-  tags:
+  tags: []
+  tags_raw:
   - linkedin_image_campaigns
   properties:
   - type: OpenAPI
@@ -2103,7 +2146,8 @@ apis:
     The linkedin_video_campaigns API from Pomo — 4 operation(s) for linkedin_video_campaigns.
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
-  tags:
+  tags: []
+  tags_raw:
   - linkedin_video_campaigns
   properties:
   - type: OpenAPI
@@ -2136,6 +2180,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - llms-txt
+  tags_raw:
   - Llms.txt
   properties:
   - type: OpenAPI
@@ -2168,6 +2214,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Market Intelligence
+  tags_raw:
   - market-intelligence
   properties:
   - type: OpenAPI
@@ -2264,6 +2312,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - MCP
+  tags_raw:
   - mcp
   properties:
   - type: OpenAPI
@@ -2295,7 +2345,8 @@ apis:
   description: The meta_feed_campaigns API from Pomo — 7 operation(s) for meta_feed_campaigns.
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
-  tags:
+  tags: []
+  tags_raw:
   - meta_feed_campaigns
   properties:
   - type: OpenAPI
@@ -2328,7 +2379,8 @@ apis:
     The meta_stories_reels_campaigns API from Pomo — 5 operation(s) for meta_stories_reels_campaigns.
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
-  tags:
+  tags: []
+  tags_raw:
   - meta_stories_reels_campaigns
   properties:
   - type: OpenAPI
@@ -2361,6 +2413,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Metrics
+  tags_raw:
   - metrics
   properties:
   - type: OpenAPI
@@ -2393,6 +2447,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Notification
+  tags_raw:
   - notifications
   properties:
   - type: OpenAPI
@@ -2457,6 +2513,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Organization
+  tags_raw:
   - organization
   properties:
   - type: OpenAPI
@@ -2489,6 +2547,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Overview
+  tags_raw:
   - overview
   properties:
   - type: OpenAPI
@@ -2521,6 +2581,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Payment
+  tags_raw:
   - payment
   properties:
   - type: OpenAPI
@@ -2553,6 +2615,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Pricing
+  tags_raw:
   - pricing
   properties:
   - type: OpenAPI
@@ -2713,6 +2777,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Programmatic
+  tags_raw:
   - programmatic
   properties:
   - type: OpenAPI
@@ -2777,6 +2843,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - QuickBooks
+  tags_raw:
   - quickbooks
   properties:
   - type: OpenAPI
@@ -2905,6 +2973,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Social Platform
+  tags_raw:
   - social-platform
   properties:
   - type: OpenAPI
@@ -2969,6 +3039,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - SocialPosts
+  tags_raw:
   - social-posts
   properties:
   - type: OpenAPI
@@ -3129,6 +3201,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - URL Shortener
+  tags_raw:
   - url-shortener
   properties:
   - type: OpenAPI
@@ -3161,6 +3235,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - Usage
+  tags_raw:
   - usage
   properties:
   - type: OpenAPI
@@ -3193,6 +3269,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - User Activity
+  tags_raw:
   - user-activity
   properties:
   - type: OpenAPI
@@ -3225,6 +3303,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - User Preferences
+  tags_raw:
   - user-preferences
   properties:
   - type: OpenAPI
@@ -3257,6 +3337,8 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
+  - User
+  tags_raw:
   - users
   properties:
   - type: OpenAPI
