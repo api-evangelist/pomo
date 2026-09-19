@@ -1129,7 +1129,7 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
-  - Credits
+  - Credit
   tags_raw:
   - credits
   properties:
@@ -2581,7 +2581,7 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
-  - Payment
+  - Payments
   tags_raw:
   - payment
   properties:
@@ -3201,7 +3201,7 @@ apis:
   humanURL: https://api.usepomo.ai/docs
   baseURL: https://api.usepomo.ai
   tags:
-  - URL Shortener
+  - URL Shorteners
   tags_raw:
   - url-shortener
   properties:
