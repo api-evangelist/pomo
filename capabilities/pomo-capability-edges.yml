@@ -1,0 +1,356 @@
+slug: pomo
+provider: Pomo
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Media, Entertainment & Telecom Content
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 33
+edges:
+- tag: SEO Analysis
+  spec_file: pomo-seo-analysis-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.9
+  evidence: POST /api/seo/analyze 'Create Seo Analysis'; 'Get Seo Recommendations'; schema SEOAnalysisResponse
+  reason: Site SEO scoring, page analysis and remediation recommendations — squarely web/SEO within Digital
+    Marketing Management.
+- tag: market-intelligence
+  spec_file: pomo-market-intelligence-api-openapi.yml
+  capability_id: BC-400.30
+  capability_id_l1: BC-400
+  capability_name: Market Intelligence Management
+  confidence: 0.9
+  evidence: Get Competitive Intelligence; Get Google Trends Analysis; SocialListeningSummaryResponse;
+    CompetitiveIntelligenceRecord
+  reason: Operations deliver market trend analysis, competitive intelligence and social listening summaries
+    — squarely Market Intelligence Management (market research, competitive intelligence, customer insights).
+- tag: Online Ad Campaigns
+  spec_file: pomo-online-ad-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.88
+  evidence: '''Create Google Search Campaign'', ''Create Meta Stories Reels Campaign'', ''Create Amazon
+    Sponsored Products Campaign'', ''Create Tiktok Campaign'''
+  reason: Creation and lifecycle management of paid online ad campaigns across Google, Meta, Amazon and
+    TikTok — paid media execution under Digital Marketing Management.
+- tag: competitor-tracking
+  spec_file: pomo-competitor-tracking-api-openapi.yml
+  capability_id: BC-400.30
+  capability_id_l1: BC-400
+  capability_name: Market Intelligence Management
+  confidence: 0.88
+  evidence: Setup Competitors / Scan Competitor / Get Competitor Insights / Get Competitor Facebook Ads
+  reason: Ongoing tracking, scanning and insight extraction on a competitor set (including their Facebook
+    ads) is competitive intelligence under Market Intelligence Management.
+- tag: Google Video Ads
+  spec_file: pomo-google-video-ads-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.85
+  evidence: POST /api/campaigns/online-ads/google-video 'Create Google Video Ad Campaign'; schemas GoogleVideoAdRequest,
+    KeywordWithCpc
+  reason: Operations create, update and vary paid Google Video ad campaigns — paid media / digital marketing
+    campaign execution, mapping to Digital Marketing Management.
+- tag: Social Post Campaigns
+  spec_file: pomo-social-post-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.85
+  evidence: POST /api/campaigns/social-post 'Create Social Post Campaign'; 'Generate Social Post Variation';
+    schema SocialScheduleUpsertRequest
+  reason: Creation, editing, scheduling and variation of social media post campaigns — social/marketing
+    automation under Digital Marketing Management.
+- tag: competitive-gap-analysis
+  spec_file: pomo-competitive-gap-analysis-api-openapi.yml
+  capability_id: BC-400.30
+  capability_id_l1: BC-400
+  capability_name: Market Intelligence Management
+  confidence: 0.85
+  evidence: Get Gap Analysis / Get Competitor Insights / Generate Simple Campaign Recommendations
+  reason: The surface generates competitive gap analyses and competitor insights that feed campaign recommendations
+    — competitive intelligence and customer/market insight, i.e. Market Intelligence Management within
+    Marketing.
+- tag: meta_feed_campaigns
+  spec_file: pomo-meta-feed-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.85
+  evidence: POST /api/campaigns/online-ads/meta-feed/create-campaign  Create Meta Feed Campaign; POST
+    /api/campaigns/online-ads/meta-feed/launch  Launch Meta Feed Campaign
+  reason: Operations create, update, add creative imagery to and launch paid social (Meta feed) advertising
+    campaigns — buy-side paid media execution, i.e. Digital Marketing Management. Not ad sales (BC-3760),
+    which is sell-side inventory.
+- tag: meta_stories_reels_campaigns
+  spec_file: pomo-meta-stories-reels-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.85
+  evidence: POST /api/campaigns/online-ads/meta-stories-reels/create-campaign  Create Meta Stories Reels
+    Campaign; .../launch  Launch Meta Stories Reels Campaign
+  reason: 'Same surface for Stories/Reels placements: create, update and launch paid social campaigns
+    — paid media / social campaign execution under Digital Marketing Management.'
+- tag: TikTok Video Ads
+  spec_file: pomo-tiktok-video-ads-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.82
+  evidence: POST /api/campaigns/online-ads/tiktok-video  Create Tiktok Video Ad Campaign; schema TikTokVideoAdRequest
+  reason: Operations create, update and delete paid social ad campaigns on TikTok — buy-side paid media/social
+    campaign management, i.e. digital marketing. Not ad inventory sales (vendor is a marketer's tool,
+    not a publisher's ad server).
+- tag: campaigns
+  spec_file: pomo-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.8
+  evidence: schemas EmailCampaignCreate, SocialPostVariationRequest, TikTokVideoAdRequest, MetaFeedAdRequest,
+    PlatformDaypartingConfig, SocialScheduleUpsertRequest; 'Sync External Campaigns', 'Get Campaign Perf
+    History'
+  reason: Large surface for creating, scheduling, syncing and optimising email, social and paid ad campaigns
+    on Meta/TikTok, including creative variations and dayparting — Digital Marketing Management (paid
+    media, social, marketing automation).
+- tag: google_display_campaigns
+  spec_file: pomo-google-display-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.8
+  evidence: GET /api/campaigns/online-ads/google-display-campaigns  Get Google Display Campaigns; POST
+    .../google-display/generate-variation/{ad_id}
+  reason: Manages Google Display paid-media ad campaigns and their creatives (variations, image edit/upload)
+    — paid media within digital marketing.
+- tag: google_search_campaigns
+  spec_file: pomo-google-search-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.8
+  evidence: PUT /api/campaigns/online-ads/google-search/update-campaign  Update Google Search Campaign;
+    KeywordWithCpc
+  reason: Retrieves and updates Google Search ad campaigns with keyword/CPC data and generates ad variations
+    — paid search execution, a digital marketing capability.
+- tag: payment
+  spec_file: pomo-payment-api-openapi.yml
+  capability_id: BC-4250
+  capability_id_l1: BC-4250
+  capability_name: Subscription Billing & Revenue Management
+  confidence: 0.8
+  evidence: POST /api/payment/subscription/subscribe  Create Subscription; POST /api/payment/subscription/apply-coupon;
+    PaymentHistoryListResponse, BillingPortalSessionResponse
+  reason: 'Subscription billing surface for the SaaS product: plans, payment-element/setup intents, coupons,
+    payment history, billing portal, plan change and cancellation. Spans payment collection, rating/discounting
+    and subscription lifecycle, so L1 only.'
+- tag: brand-workflow
+  spec_file: pomo-brand-workflow-api-openapi.yml
+  capability_id: BC-400
+  capability_id_l1: BC-400
+  capability_name: Marketing Management
+  confidence: 0.75
+  evidence: POST /api/workflow/brand-generation/step1/extract  'Extract Company Info'; POST /api/workflow/brand-generation/step2/discover  'Discover
+    Product Offerings'; schemas MarketingProfileGenerationRequest, CompetitorRegenerateRequest, ConfirmCompetitorsRequest
+  reason: A guided workflow that ingests a company URL and files, extracts company and product-offering
+    information, confirms competitors and generates a marketing/brand profile. Clearly marketing management
+    work, but it straddles brand definition and competitive/market intelligence, so no single L2 is named
+    unambiguously.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: external-platform
+  spec_file: pomo-external-platform-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: POST /api/external-platform/instagram/post-campaign  Post Campaign To Instagram; GoogleLaunchAdCampaignRequest,
+    MetaSyncAdCampaignRequest, KlaviyoAccountsResponse
+  reason: Connects and operates social, paid-media and email platforms (Instagram, Meta, Google Ads, Klaviyo)
+    to publish posts, launch ad campaigns and pull post metrics — digital marketing execution. Some endpoints
+    are pure OAuth plumbing, so 0.75.
+- tag: linkedin_image_campaigns
+  spec_file: pomo-linkedin-image-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: GET /api/campaigns/online-ads/linkedin-image-campaigns  Get Linkedin Image Campaigns; PUT
+    .../linkedin-image/update-campaign
+  reason: Buy-side management of LinkedIn online ad campaigns (paid social) including KeywordWithCpc and
+    AdsCampaignUpdateRequest — paid media within Digital Marketing Management, not media-company ad sales.
+- tag: linkedin_video_campaigns
+  spec_file: pomo-linkedin-video-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: GET /api/campaigns/online-ads/linkedin-video-campaigns  Get Linkedin Video Campaigns; AdsCampaignUpdateRequest
+  reason: 'Same surface for video ad creatives: retrieval and update of LinkedIn paid-media campaigns,
+    i.e. advertiser-side digital marketing execution.'
+- tag: ai-personas
+  spec_file: pomo-ai-personas-api-openapi.yml
+  capability_id: BC-420.20
+  capability_id_l1: BC-420
+  capability_name: Customer Segmentation Management
+  confidence: 0.72
+  evidence: Generate Personas; Get Persona Groups; routes__ai_personas__GeneratePersonasRequest
+  reason: Generates and manages audience personas and persona groups, which is explicitly the content
+    of Customer Segmentation Management ('Segments, personas, treatment strategies').
+- tag: crm
+  spec_file: pomo-crm-api-openapi.yml
+  capability_id: BC-420
+  capability_id_l1: BC-420
+  capability_name: Customer Relationship Management
+  confidence: 0.72
+  evidence: Sync People To Hubspot / Get Audiences / Add To Audience, CrmSettingsResponse
+  reason: Synchronising person records to an external CRM and maintaining audience lists is customer data
+    and audience stewardship under Customer Relationship Management; the mix of data sync, audiences and
+    settings keeps it at L1.
+- tag: Dayparting
+  spec_file: pomo-dayparting-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: Configure Campaign Dayparting; 'Check Meta Rules Health'; GET /api/campaigns/dayparting/performance/{campaign_id}
+  reason: Buyer-side configuration of ad scheduling rules on Meta and paid-media performance retrieval
+    — paid media management within digital marketing, not sell-side ad trafficking for a media owner.
+- tag: Email Campaigns
+  spec_file: pomo-email-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: POST /api/campaigns/email  Create Email Campaign; POST /api/campaigns/email/associate-consumer-group
+  reason: CRUD and asset management for email marketing campaigns including audience-group association
+    — marketing automation within digital marketing. Some ambiguity with demand generation lifecycle marketing.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: Email Campaigns V2
+  spec_file: pomo-email-campaigns-v2-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: POST /api/email-campaigns/v2/send  Send Campaign; 'Send Test Emails'; GET /{campaign_id}/performance;
+    'Complete Ab Test'
+  reason: Execution, testing and performance measurement of email marketing campaigns — clearly marketing
+    campaign execution via digital/automation channels.
+- tag: campaign-analytics
+  spec_file: pomo-campaign-analytics-api-openapi.yml
+  capability_id: BC-400.50
+  capability_id_l1: BC-400
+  capability_name: Marketing Operations Management
+  confidence: 0.7
+  evidence: GET /api/campaign-analytics/dashboard-summary; schemas CampaignAnalyticsSummary, ChannelTrendData,
+    CampaignTypeMetrics, PlatformIntegrationRequest
+  reason: Aggregates campaign performance metrics by channel and campaign type from integrated ad platforms
+    into dashboards — marketing measurement and reporting, which sits under marketing operations. Some
+    chance the intended L2 is demand generation or digital marketing, hence 0.7.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: company-profile
+  spec_file: pomo-company-profile-api-openapi.yml
+  capability_id: BC-400.20
+  capability_id_l1: BC-400
+  capability_name: Brand Management
+  confidence: 0.7
+  evidence: GET /api/company-profile/{profile_id}/stylebook  'Get Company Stylebook'; schemas CompanyStylebookLogo,
+    CompanyStylebookSwatch, CompanyStylebookBrandNuance, CompanyMessageCreate
+  reason: Maintains a company's brand stylebook — logos, colour swatches, hero imagery, brand nuance and
+    company messaging — i.e. brand identity assets and guidelines. Part of the surface is generic profile
+    CRUD and image upload, so 0.7 rather than higher.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: content-editing
+  spec_file: pomo-content-editing-api-openapi.yml
+  capability_id: BC-400.70
+  capability_id_l1: BC-400
+  capability_name: Content Marketing Management
+  confidence: 0.7
+  evidence: Edit Image / Generate Image / Generate Ideas, CreativeIdeasResponse
+  reason: Generation and editing of marketing creative imagery plus creative idea generation supports
+    marketing content production (Content Marketing Management). Could also read as digital marketing
+    creative, hence 0.7.
+- tag: credits
+  spec_file: pomo-credits-api-openapi.yml
+  capability_id: BC-4250
+  capability_id_l1: BC-4250
+  capability_name: Subscription Billing & Revenue Management
+  confidence: 0.7
+  evidence: Purchase Credits; Get Credit Balance; Calculate Ad Charge; Create Credit Hold / Capture /
+    Release; schema TransactionHistoryResponse
+  reason: A prepaid credit wallet with purchase, balance, charge calculation and hold/capture flows is
+    the platform's consumption billing and charging mechanism. Spans purchase (payment), rating (calculate
+    charge) and ledger, so no single L2 is clearly the right one.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: crm-b2b-leads
+  spec_file: pomo-crm-b2b-leads-api-openapi.yml
+  capability_id: BC-410.30
+  capability_id_l1: BC-410
+  capability_name: Opportunity & Pipeline Management
+  confidence: 0.7
+  evidence: Search B2B Leads / Expand B2B Account Contacts / Draft B2B Lead Email / Save B2B Lead Candidate,
+    B2BLeadCandidate
+  reason: Prospect search, contact enrichment, lead candidate saving and outreach drafting is lead generation
+    and lead lifecycle handling; mapped to Opportunity & Pipeline Management, though demand generation
+    is an alternative reading.
+- tag: earned-media
+  spec_file: pomo-earned-media-api-openapi.yml
+  capability_id: BC-850.40
+  capability_id_l1: BC-850
+  capability_name: Media Relations Management
+  confidence: 0.7
+  evidence: EarnedMediaPressCoverageItem, EarnedMediaPressRoom, EarnedMediaPressQuote, EarnedMediaPressRoomContactItem;
+    'Generate Earned Media Project', 'Rewrite Earned Media Draft'
+  reason: Operations create and draft earned-media (PR) projects with press rooms, press coverage tracking,
+    press quotes and media contacts — i.e. media relations / press release authoring. Mapped to Media
+    Relations Management; some ambiguity with broader PR Management, hence 0.7.
+- tag: marketing-docs
+  spec_file: pomo-marketing-docs-api-openapi.yml
+  capability_id: BC-400.10
+  capability_id_l1: BC-400
+  capability_name: Marketing Strategy Management
+  confidence: 0.7
+  evidence: Generate Market Opportunity Document; Generate Gtm Document; Generate Pitch Deck
+  reason: Generates go-to-market and market-opportunity documents plus pitch decks — artefacts of marketing
+    strategy and go-to-market planning. Some overlap with content marketing, so confidence moderate.
+- tag: programmatic-keys
+  spec_file: pomo-programmatic-keys-api-openapi.yml
+  capability_id: BC-4270.40
+  capability_id_l1: BC-4270
+  capability_name: Developer Identity & Credential Management
+  confidence: 0.7
+  evidence: POST /api/programmatic-keys  create_api_key_for_profile ... revoke_api_key ... list_api_key_usage
+  reason: Issuance, revocation and usage tracking of programmatic API keys — developer credential management.
+    This is technical plumbing but maps cleanly to Developer Identity & Credential Management; usage listing
+    also touches API consumption governance.
+- tag: udm
+  spec_file: pomo-udm-api-openapi.yml
+  capability_id: BC-610.50
+  capability_id_l1: BC-610
+  capability_name: Analytics & BI Management
+  confidence: 0.7
+  evidence: Get daily revenue by channel ... Get blended ROAS ... Get customer quality segments ... Get
+    customer 360 view
+  reason: A unified data model reporting surface aggregating revenue, ad performance, and customer analytics
+    across Shopify/Stripe/Square/Klaviyo/QuickBooks — analytics and BI delivery. Marketing measurement
+    (BC-400.50) is a plausible alternative, hence moderate confidence.
+- tag: user-activity
+  spec_file: pomo-user-activity-api-openapi.yml
+  capability_id: BC-4280.10
+  capability_id_l1: BC-4280
+  capability_name: Product Telemetry Instrumentation
+  confidence: 0.7
+  evidence: record_product_events_api_activity_events_post  Record Product Events ... ProductEventsBatchIn,
+    ProductEventRow
+  reason: Ingests product usage events and presence pings and exposes per-user activity timelines — product
+    telemetry instrumentation for the SaaS product itself, not end-customer marketing analytics.
