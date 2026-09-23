@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Dayparting API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Dayparting
 paths:
@@ -193,52 +190,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    PlatformDaypartingConfig:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CampaignDaypartingRequest:
-      properties:
-        campaign_id:
+        enabled:
+          type: boolean
+          title: Enabled
+        timezone:
           type: string
-          format: uuid
-          title: Campaign Id
-        platform_configs:
-          additionalProperties:
-            $ref: '#/components/schemas/PlatformDaypartingConfig'
-          type: object
-          title: Platform Configs
+          title: Timezone
+        schedule:
+          items:
+            $ref: '#/components/schemas/DaypartingSlot'
+          type: array
+          title: Schedule
+        bid_adjustments:
+          anyOf:
+          - additionalProperties:
+              type: number
+            type: object
+          - type: 'null'
+          title: Bid Adjustments
       type: object
       required:
-      - campaign_id
-      - platform_configs
-      title: CampaignDaypartingRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - enabled
+      - timezone
+      - schedule
+      title: PlatformDaypartingConfig
     DaypartingHealthResponse:
       properties:
         ad_id:
@@ -276,6 +253,43 @@ components:
       - missing_rules
       - health_score
       title: DaypartingHealthResponse
+    CampaignDaypartingRequest:
+      properties:
+        campaign_id:
+          type: string
+          format: uuid
+          title: Campaign Id
+        platform_configs:
+          additionalProperties:
+            $ref: '#/components/schemas/PlatformDaypartingConfig'
+          type: object
+          title: Platform Configs
+      type: object
+      required:
+      - campaign_id
+      - platform_configs
+      title: CampaignDaypartingRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DaypartingSlot:
       properties:
         day:
@@ -318,32 +332,15 @@ components:
       - end_hour
       - end_minute
       title: DaypartingSlot
-    PlatformDaypartingConfig:
+    HTTPValidationError:
       properties:
-        enabled:
-          type: boolean
-          title: Enabled
-        timezone:
-          type: string
-          title: Timezone
-        schedule:
+        detail:
           items:
-            $ref: '#/components/schemas/DaypartingSlot'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Schedule
-        bid_adjustments:
-          anyOf:
-          - additionalProperties:
-              type: number
-            type: object
-          - type: 'null'
-          title: Bid Adjustments
+          title: Detail
       type: object
-      required:
-      - enabled
-      - timezone
-      - schedule
-      title: PlatformDaypartingConfig
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

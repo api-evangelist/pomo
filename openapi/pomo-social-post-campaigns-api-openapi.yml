@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Social Post Campaigns API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Social Post Campaigns
 paths:
@@ -449,7 +446,23 @@ paths:
       tags:
       - Social Post Campaigns
       summary: Generate Social Post Variation
-      description: "Generate a variation of an existing social post for the current company profile.\nThis endpoint creates a new variation by generating new text and images based on the original post.\n\nArgs:\n    request: Social post variation request containing campaign_id and idea_number\n    company_profile: Current company profile\n    db: Database session\n\nReturns:\n    dict: Response with the new campaign variation details"
+      description: 'Generate a variation of an existing social post for the current company profile.
+
+        This endpoint creates a new variation by generating new text and images based on the original post.
+
+
+        Args:
+
+        request: Social post variation request containing campaign_id and idea_number
+
+        company_profile: Current company profile
+
+        db: Database session
+
+
+        Returns:
+
+        dict: Response with the new campaign variation details'
       operationId: generate_social_post_variation_api_campaigns_social_post_generate_variation_post
       requestBody:
         content:
@@ -820,109 +833,43 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    Body_upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        file:
+          type: string
+          format: binary
+          title: File
+          description: Image file to upload
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        current_image_url:
+          type: string
+          title: Current Image Url
+          description: URL of the current image (required if replace is True)
+        replace:
+          type: boolean
+          title: Replace
+          description: Whether to replace existing image (True) or append as new image (False)
+          default: true
       type: object
-      title: HTTPValidationError
-    SocialPostCampaignCreate:
+      required:
+      - file
+      - campaign_id
+      - idea_number
+      title: Body_upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post
+    SocialScheduleUpsertRequest:
       properties:
-        name:
+        schedule_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Name
-        caption:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Caption
-        hashtags:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Hashtags
-        target_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Platform
-        post_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Post Type
-        media_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Media Type
-        platform_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Platform Config
-        target_audience:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Target Audience
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform
-        post_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Post Id
-        post_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Post Url
-        posted_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Posted At
-        scheduled_for:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Scheduled For
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        post_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Post Metadata
-        auto_rating:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Auto Rating
+          title: Schedule Id
         campaign_id:
           type: string
           title: Campaign Id
@@ -933,93 +880,35 @@ components:
           type: integer
           title: Variation
           default: 0
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        scheduled_local_date:
+          type: string
+          title: Scheduled Local Date
+        scheduled_local_time:
+          type: string
+          title: Scheduled Local Time
+        schedule_timezone:
+          type: string
+          title: Schedule Timezone
+          default: UTC
+        posting_identity:
+          $ref: '#/components/schemas/SocialSchedulePostingIdentity'
+        validate_only:
+          type: boolean
+          title: Validate Only
+          default: false
       type: object
       required:
       - campaign_id
       - idea_number
-      title: SocialPostCampaignCreate
-    SocialSchedulePostingIdentity:
-      properties:
-        instagram_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Account Id
-        instagram_auth_method:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Auth Method
-        instagram_account_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Account Name
-        instagram_username:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Username
-        facebook_page_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Facebook Page Id
-        facebook_page_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Facebook Page Name
-      type: object
-      title: SocialSchedulePostingIdentity
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Body_direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: Campaign ID of the social post to edit
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Social post idea number
-        variation:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Variation
-          description: Social post variation being edited
-        updated_post:
-          additionalProperties: true
-          type: object
-          title: Updated Post
-          description: Updated post content with name, caption, hashtags, etc.
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      - updated_post
-      title: Body_direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post
+      - scheduled_local_date
+      - scheduled_local_time
+      - posting_identity
+      title: SocialScheduleUpsertRequest
     Body_edit_social_post_content_api_campaigns_social_post_edit_content_post:
       properties:
         campaign_id:
@@ -1182,6 +1071,210 @@ components:
       - creation_date
       - last_modified
       title: SocialPostCampaignResponse
+    SocialPostVariationRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: ID of the campaign to create variations for
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Idea number within the campaign
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      title: SocialPostVariationRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SocialPostCampaignCreate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        caption:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caption
+        hashtags:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Hashtags
+        target_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Platform
+        post_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Type
+        media_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Type
+        platform_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Platform Config
+        target_audience:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Target Audience
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        post_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Id
+        post_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Url
+        posted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Posted At
+        scheduled_for:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled For
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        post_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Post Metadata
+        auto_rating:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Auto Rating
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        variation:
+          type: integer
+          title: Variation
+          default: 0
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      title: SocialPostCampaignCreate
+    Body_direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID of the social post to edit
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Social post idea number
+        variation:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Variation
+          description: Social post variation being edited
+        updated_post:
+          additionalProperties: true
+          type: object
+          title: Updated Post
+          description: Updated post content with name, caption, hashtags, etc.
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - updated_post
+      title: Body_direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post
+    Body_edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        image_url:
+          type: string
+          title: Image Url
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - image_url
+      - edit_prompt
+      title: Body_edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post
+    CampaignPostsResponse:
+      properties:
+        posts:
+          items:
+            $ref: '#/components/schemas/PostModel'
+          type: array
+          title: Posts
+      type: object
+      required:
+      - posts
+      title: CampaignPostsResponse
     PostModel:
       properties:
         id:
@@ -1233,129 +1326,49 @@ components:
       - posted_at
       - status
       title: PostModel
-    Body_upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post:
+    SocialSchedulePostingIdentity:
       properties:
-        file:
-          type: string
-          format: binary
-          title: File
-          description: Image file to upload
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: Campaign ID
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Campaign idea number
-        current_image_url:
-          type: string
-          title: Current Image Url
-          description: URL of the current image (required if replace is True)
-        replace:
-          type: boolean
-          title: Replace
-          description: Whether to replace existing image (True) or append as new image (False)
-          default: true
-      type: object
-      required:
-      - file
-      - campaign_id
-      - idea_number
-      title: Body_upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post
-    Body_edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-        idea_number:
-          type: integer
-          title: Idea Number
-        image_url:
-          type: string
-          title: Image Url
-        edit_prompt:
-          type: string
-          title: Edit Prompt
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      - image_url
-      - edit_prompt
-      title: Body_edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post
-    SocialPostVariationRequest:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: ID of the campaign to create variations for
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Idea number within the campaign
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      title: SocialPostVariationRequest
-    SocialScheduleUpsertRequest:
-      properties:
-        schedule_id:
+        instagram_account_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Schedule Id
-        campaign_id:
-          type: string
-          title: Campaign Id
-        idea_number:
-          type: integer
-          title: Idea Number
-        variation:
-          type: integer
-          title: Variation
-          default: 0
-        platform:
+          title: Instagram Account Id
+        instagram_auth_method:
           anyOf:
           - type: string
           - type: 'null'
-          title: Platform
-        scheduled_local_date:
-          type: string
-          title: Scheduled Local Date
-        scheduled_local_time:
-          type: string
-          title: Scheduled Local Time
-        schedule_timezone:
-          type: string
-          title: Schedule Timezone
-          default: UTC
-        posting_identity:
-          $ref: '#/components/schemas/SocialSchedulePostingIdentity'
-        validate_only:
-          type: boolean
-          title: Validate Only
-          default: false
+          title: Instagram Auth Method
+        instagram_account_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Account Name
+        instagram_username:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Username
+        facebook_page_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Facebook Page Id
+        facebook_page_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Facebook Page Name
       type: object
-      required:
-      - campaign_id
-      - idea_number
-      - scheduled_local_date
-      - scheduled_local_time
-      - posting_identity
-      title: SocialScheduleUpsertRequest
-    CampaignPostsResponse:
+      title: SocialSchedulePostingIdentity
+    HTTPValidationError:
       properties:
-        posts:
+        detail:
           items:
-            $ref: '#/components/schemas/PostModel'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Posts
+          title: Detail
       type: object
-      required:
-      - posts
-      title: CampaignPostsResponse
+      title: HTTPValidationError
     SocialPostCampaignMediaResponse:
       properties:
         media_type:

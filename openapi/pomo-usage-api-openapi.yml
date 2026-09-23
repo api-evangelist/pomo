@@ -2,16 +2,13 @@ openapi: 3.2.0
 info:
   title: GPT Backend Usage API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: usage
+- name: Usage
 paths:
   /api/payment/usage/usage-stats:
     get:
       tags:
-      - usage
+      - Usage
       summary: Get Usage Stats
       description: 'Get usage statistics for the authenticated user.
 
@@ -53,7 +50,7 @@ paths:
   /api/payment/usage/usage-percentage:
     get:
       tags:
-      - usage
+      - Usage
       summary: Get Usage Percentage
       description: 'Get a simple usage percentage for dashboard display.
 
@@ -94,15 +91,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -124,6 +112,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

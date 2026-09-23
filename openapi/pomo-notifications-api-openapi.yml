@@ -2,16 +2,13 @@ openapi: 3.2.0
 info:
   title: GPT Backend Notifications API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: notifications
+- name: Notifications
 paths:
   /api/notifications/organization-inbox:
     get:
       tags:
-      - notifications
+      - Notifications
       summary: Get Organization Notifications
       description: Get a merged notifications inbox for the current user in the active organization.
       operationId: get_organization_notifications_api_notifications_organization_inbox_get
@@ -90,9 +87,29 @@ paths:
   /api/notifications/company-profile/{company_profile_id}:
     get:
       tags:
-      - notifications
+      - Notifications
       summary: Get Notifications
-      description: "Get notifications for a company profile.\n\nArgs:\n    company_profile_id: Company profile ID\n    unread_only: Whether to return only unread notifications\n    limit: Maximum number of notifications to return\n    offset: Offset for pagination\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Dictionary with notifications, total count, and pagination info"
+      description: 'Get notifications for a company profile.
+
+
+        Args:
+
+        company_profile_id: Company profile ID
+
+        unread_only: Whether to return only unread notifications
+
+        limit: Maximum number of notifications to return
+
+        offset: Offset for pagination
+
+        current_user: Current authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        Dictionary with notifications, total count, and pagination info'
       operationId: get_notifications_api_notifications_company_profile__company_profile_id__get
       security:
       - HTTPBearer: []
@@ -161,7 +178,7 @@ paths:
   /api/notifications/{notification_id}/action:
     post:
       tags:
-      - notifications
+      - Notifications
       summary: Apply Notification Action
       description: Apply an action (accepted/declined) to a notification.
       operationId: apply_notification_action_api_notifications__notification_id__action_post
@@ -205,9 +222,23 @@ paths:
   /api/notifications/{notification_id}/read:
     post:
       tags:
-      - notifications
+      - Notifications
       summary: Mark Notification Read
-      description: "Mark a notification as read.\n\nArgs:\n    notification_id: Notification ID\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Success status"
+      description: 'Mark a notification as read.
+
+
+        Args:
+
+        notification_id: Notification ID
+
+        current_user: Current authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        Success status'
       operationId: mark_notification_read_api_notifications__notification_id__read_post
       security:
       - HTTPBearer: []
@@ -237,9 +268,25 @@ paths:
   /api/notifications/company-profile/{company_profile_id}/mark-all-read:
     post:
       tags:
-      - notifications
+      - Notifications
       summary: Mark All Notifications Read
-      description: "Mark all notifications as read for a company profile.\nUses optimized bulk SQL operations.\n\nArgs:\n    company_profile_id: Company profile ID\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Number of notifications marked as read"
+      description: 'Mark all notifications as read for a company profile.
+
+        Uses optimized bulk SQL operations.
+
+
+        Args:
+
+        company_profile_id: Company profile ID
+
+        current_user: Current authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        Number of notifications marked as read'
       operationId: mark_all_notifications_read_api_notifications_company_profile__company_profile_id__mark_all_read_post
       security:
       - HTTPBearer: []
@@ -269,9 +316,25 @@ paths:
   /api/notifications/company-profile/{company_profile_id}/unread-count:
     get:
       tags:
-      - notifications
+      - Notifications
       summary: Get Unread Count
-      description: "Get count of unread notifications with multi-tab deduplication support.\n\nArgs:\n    company_profile_id: Company profile ID\n    session_id: Optional session ID for multi-tab deduplication\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Count of unread notifications"
+      description: 'Get count of unread notifications with multi-tab deduplication support.
+
+
+        Args:
+
+        company_profile_id: Company profile ID
+
+        session_id: Optional session ID for multi-tab deduplication
+
+        current_user: Current authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        Count of unread notifications'
       operationId: get_unread_count_api_notifications_company_profile__company_profile_id__unread_count_get
       security:
       - HTTPBearer: []
@@ -311,9 +374,25 @@ paths:
   /api/notifications/company-profile/{company_profile_id}/stats:
     get:
       tags:
-      - notifications
+      - Notifications
       summary: Get Notification Stats
-      description: "Get notification delivery statistics for monitoring.\n\nArgs:\n    company_profile_id: Company profile ID\n    days: Number of days to look back\n    current_user: Current authenticated user\n    db: Database session\n\nReturns:\n    Delivery statistics"
+      description: 'Get notification delivery statistics for monitoring.
+
+
+        Args:
+
+        company_profile_id: Company profile ID
+
+        days: Number of days to look back
+
+        current_user: Current authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        Delivery statistics'
       operationId: get_notification_stats_api_notifications_company_profile__company_profile_id__stats_get
       security:
       - HTTPBearer: []
@@ -353,15 +432,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -383,6 +453,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

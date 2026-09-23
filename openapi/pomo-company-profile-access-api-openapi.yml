@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Company Profile Access API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: company-profile-access
 paths:
@@ -283,6 +280,138 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ProjectRoleEnum:
+      type: string
+      enum:
+      - admin
+      - contributor
+      - observer
+      title: ProjectRoleEnum
+      description: Project-level role options (for company profiles).
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CompanyProfileAccessGrantRequest:
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+          description: ID of the user to grant access
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+          description: Company profile role to assign
+      type: object
+      required:
+      - user_id
+      - role
+      title: CompanyProfileAccessGrantRequest
+      description: Request to grant company profile access to a user.
+    BulkCompanyProfileAccessRequest:
+      properties:
+        user_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: User Ids
+          description: List of user IDs
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+          description: Role to assign to all users
+      type: object
+      required:
+      - user_ids
+      - role
+      title: BulkCompanyProfileAccessRequest
+      description: Request to grant company profile access to multiple users.
+    CompanyProfileAccessUpdateRequest:
+      properties:
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+          description: New company profile role
+      type: object
+      required:
+      - role
+      title: CompanyProfileAccessUpdateRequest
+      description: Request to update a user's company profile access.
+    BulkCompanyProfileAccessResponse:
+      properties:
+        successful:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Successful
+          description: User IDs successfully granted access
+        failed:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Failed
+          description: User IDs that failed with error messages
+        total_processed:
+          type: integer
+          title: Total Processed
+      type: object
+      required:
+      - total_processed
+      title: BulkCompanyProfileAccessResponse
+      description: Response for bulk company profile access operations.
+    CompanyProfileAccessListResponse:
+      properties:
+        access_list:
+          items:
+            $ref: '#/components/schemas/CompanyProfileAccessResponse'
+          type: array
+          title: Access List
+        total_count:
+          type: integer
+          title: Total Count
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        company_profile_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Name
+      type: object
+      required:
+      - access_list
+      - total_count
+      - company_profile_id
+      title: CompanyProfileAccessListResponse
+      description: Response model for listing company profile access.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     CompanyProfileAccessResponse:
       properties:
         id:
@@ -339,138 +468,6 @@ components:
       - updated_at
       title: CompanyProfileAccessResponse
       description: Response model for company profile access information.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CompanyProfileAccessUpdateRequest:
-      properties:
-        role:
-          $ref: '#/components/schemas/ProjectRoleEnum'
-          description: New company profile role
-      type: object
-      required:
-      - role
-      title: CompanyProfileAccessUpdateRequest
-      description: Request to update a user's company profile access.
-    ProjectRoleEnum:
-      type: string
-      enum:
-      - admin
-      - contributor
-      - observer
-      title: ProjectRoleEnum
-      description: Project-level role options (for company profiles).
-    CompanyProfileAccessListResponse:
-      properties:
-        access_list:
-          items:
-            $ref: '#/components/schemas/CompanyProfileAccessResponse'
-          type: array
-          title: Access List
-        total_count:
-          type: integer
-          title: Total Count
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        company_profile_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Name
-      type: object
-      required:
-      - access_list
-      - total_count
-      - company_profile_id
-      title: CompanyProfileAccessListResponse
-      description: Response model for listing company profile access.
-    BulkCompanyProfileAccessRequest:
-      properties:
-        user_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          title: User Ids
-          description: List of user IDs
-        role:
-          $ref: '#/components/schemas/ProjectRoleEnum'
-          description: Role to assign to all users
-      type: object
-      required:
-      - user_ids
-      - role
-      title: BulkCompanyProfileAccessRequest
-      description: Request to grant company profile access to multiple users.
-    CompanyProfileAccessGrantRequest:
-      properties:
-        user_id:
-          type: string
-          format: uuid
-          title: User Id
-          description: ID of the user to grant access
-        role:
-          $ref: '#/components/schemas/ProjectRoleEnum'
-          description: Company profile role to assign
-      type: object
-      required:
-      - user_id
-      - role
-      title: CompanyProfileAccessGrantRequest
-      description: Request to grant company profile access to a user.
-    BulkCompanyProfileAccessResponse:
-      properties:
-        successful:
-          items:
-            type: string
-            format: uuid
-          type: array
-          title: Successful
-          description: User IDs successfully granted access
-        failed:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Failed
-          description: User IDs that failed with error messages
-        total_processed:
-          type: integer
-          title: Total Processed
-      type: object
-      required:
-      - total_processed
-      title: BulkCompanyProfileAccessResponse
-      description: Response for bulk company profile access operations.
   securitySchemes:
     HTTPBearer:
       type: http

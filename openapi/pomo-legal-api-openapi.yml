@@ -2,16 +2,13 @@ openapi: 3.2.0
 info:
   title: GPT Backend Legal API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: legal
+- name: Legal
 paths:
   /api/legal/tos/latest:
     get:
       tags:
-      - legal
+      - Legal
       summary: Get Latest Terms Of Service
       description: 'Return latest ToS content, version, and server-computed hash.
 

@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Contact Submissions API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: contact-submissions
 paths:
@@ -66,15 +63,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ContactSubmissionCreate:
       properties:
         first_name:
@@ -136,13 +124,6 @@ components:
       - submission_type
       title: ContactSubmissionCreate
       description: Request schema for creating a contact submission.
-    SubmissionType:
-      type: string
-      enum:
-      - book_demo
-      - contact
-      title: SubmissionType
-      description: Type of contact submission.
     ValidationError:
       properties:
         loc:
@@ -164,6 +145,13 @@ components:
       - msg
       - type
       title: ValidationError
+    SubmissionType:
+      type: string
+      enum:
+      - book_demo
+      - contact
+      title: SubmissionType
+      description: Type of contact submission.
     DemoSchedulingConfirmation:
       properties:
         scheduled:
@@ -173,6 +161,15 @@ components:
       required:
       - scheduled
       title: DemoSchedulingConfirmation
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Product Brainstorm API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Product Brainstorm
 paths:
@@ -172,41 +169,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ProductIdeaBrainstormRequest:
-      properties:
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-        user_input:
-          type: string
-          title: User Input
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
-      type: object
-      required:
-      - user_input
-      title: ProductIdeaBrainstormRequest
     ValidationError:
       properties:
         loc:
@@ -228,50 +190,6 @@ components:
       - msg
       - type
       title: ValidationError
-    ProductIdeaResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
-        user_input:
-          type: string
-          title: User Input
-        product_ideas:
-          items:
-            $ref: '#/components/schemas/ProductIdea'
-          type: array
-          title: Product Ideas
-        context_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Context Data
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - session_title
-      - user_input
-      - product_ideas
-      - context_data
-      - created_at
-      title: ProductIdeaResponse
     ProductIdea:
       properties:
         name:
@@ -327,6 +245,85 @@ components:
       - potential_challenges
       - success_metrics
       title: ProductIdea
+    ProductIdeaResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+        user_input:
+          type: string
+          title: User Input
+        product_ideas:
+          items:
+            $ref: '#/components/schemas/ProductIdea'
+          type: array
+          title: Product Ideas
+        context_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Context Data
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - session_title
+      - user_input
+      - product_ideas
+      - context_data
+      - created_at
+      title: ProductIdeaResponse
+    ProductIdeaBrainstormRequest:
+      properties:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        user_input:
+          type: string
+          title: User Input
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+      type: object
+      required:
+      - user_input
+      title: ProductIdeaBrainstormRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

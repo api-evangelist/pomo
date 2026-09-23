@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Document Jobs API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: document-jobs
 paths:
@@ -171,73 +168,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    HtmlPreviewResponse:
-      properties:
-        html:
-          type: string
-          title: Html
-      type: object
-      required:
-      - html
-      title: HtmlPreviewResponse
-    SignedUrlResponse:
-      properties:
-        signed_url:
-          type: string
-          title: Signed Url
-        expires_in_seconds:
-          type: integer
-          title: Expires In Seconds
-      type: object
-      required:
-      - signed_url
-      - expires_in_seconds
-      title: SignedUrlResponse
-    DocumentJobsResponse:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/DocumentJobListItem'
-          type: array
-          title: Items
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - items
-      - total
-      title: DocumentJobsResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     DocumentJobDetailResponse:
       properties:
         id:
@@ -299,6 +229,64 @@ components:
       - created_at
       - ready_at
       title: DocumentJobDetailResponse
+    DocumentJobsResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DocumentJobListItem'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: DocumentJobsResponse
+    SignedUrlResponse:
+      properties:
+        signed_url:
+          type: string
+          title: Signed Url
+        expires_in_seconds:
+          type: integer
+          title: Expires In Seconds
+      type: object
+      required:
+      - signed_url
+      - expires_in_seconds
+      title: SignedUrlResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HtmlPreviewResponse:
+      properties:
+        html:
+          type: string
+          title: Html
+      type: object
+      required:
+      - html
+      title: HtmlPreviewResponse
     DocumentJobListItem:
       properties:
         id:
@@ -358,6 +346,15 @@ components:
       - doc_type
       - available_formats
       title: DocumentJobListItem
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

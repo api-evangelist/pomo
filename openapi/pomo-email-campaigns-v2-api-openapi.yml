@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Email Campaigns V2 API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Email Campaigns V2
 paths:
@@ -229,30 +226,21 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    PersonalizationValidateRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    WorkflowUpdateRequest:
-      properties:
-        campaign_id:
-          type: integer
-          title: Campaign Id
-        new_status:
+        template:
           type: string
-          pattern: ^(draft|review|approved|scheduled|sending|sent|failed)$
-          title: New Status
+          title: Template
+        consumer_group_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Consumer Group Id
       type: object
       required:
-      - campaign_id
-      - new_status
-      title: WorkflowUpdateRequest
-      description: Request to update workflow status
+      - template
+      title: PersonalizationValidateRequest
+      description: Request to validate personalization template
     ValidationError:
       properties:
         loc:
@@ -274,39 +262,32 @@ components:
       - msg
       - type
       title: ValidationError
-    PersonalizationValidateRequest:
-      properties:
-        template:
-          type: string
-          title: Template
-        consumer_group_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Consumer Group Id
-      type: object
-      required:
-      - template
-      title: PersonalizationValidateRequest
-      description: Request to validate personalization template
-    TestEmailRequest:
+    SendCampaignRequest:
       properties:
         campaign_id:
           type: integer
           title: Campaign Id
-        test_emails:
+        consumer_group_ids:
           items:
-            type: string
+            type: integer
           type: array
-          maxItems: 10
-          minItems: 1
-          title: Test Emails
+          title: Consumer Group Ids
+        scheduled_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled Time
+        ab_test_config:
+          anyOf:
+          - $ref: '#/components/schemas/ABTestConfig'
+          - type: 'null'
       type: object
       required:
       - campaign_id
-      - test_emails
-      title: TestEmailRequest
-      description: Request to send test emails
+      - consumer_group_ids
+      title: SendCampaignRequest
+      description: Request to send campaign
     ABTestConfig:
       properties:
         test_type:
@@ -356,32 +337,39 @@ components:
       - variants
       title: ABTestConfig
       description: A/B test configuration
-    SendCampaignRequest:
+    TestEmailRequest:
       properties:
         campaign_id:
           type: integer
           title: Campaign Id
-        consumer_group_ids:
+        test_emails:
           items:
-            type: integer
+            type: string
           type: array
-          title: Consumer Group Ids
-        scheduled_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Scheduled Time
-        ab_test_config:
-          anyOf:
-          - $ref: '#/components/schemas/ABTestConfig'
-          - type: 'null'
+          maxItems: 10
+          minItems: 1
+          title: Test Emails
       type: object
       required:
       - campaign_id
-      - consumer_group_ids
-      title: SendCampaignRequest
-      description: Request to send campaign
+      - test_emails
+      title: TestEmailRequest
+      description: Request to send test emails
+    WorkflowUpdateRequest:
+      properties:
+        campaign_id:
+          type: integer
+          title: Campaign Id
+        new_status:
+          type: string
+          pattern: ^(draft|review|approved|scheduled|sending|sent|failed)$
+          title: New Status
+      type: object
+      required:
+      - campaign_id
+      - new_status
+      title: WorkflowUpdateRequest
+      description: Request to update workflow status
     PreviewRequest:
       properties:
         campaign_id:
@@ -398,6 +386,15 @@ components:
       - campaign_id
       title: PreviewRequest
       description: Request for email preview
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

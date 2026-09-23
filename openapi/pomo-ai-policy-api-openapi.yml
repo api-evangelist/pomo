@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend AI Policy API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: ai-policy
 paths:
@@ -524,16 +521,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AiPolicyDraftUpdateRequest:
-      properties:
-        text:
-          type: string
-          title: Text
-          description: Updated draft policy text
-      type: object
-      required:
-      - text
-      title: AiPolicyDraftUpdateRequest
     AiPolicyEnabledSurfaces:
       properties:
         chat:
@@ -554,153 +541,34 @@ components:
           default: true
       type: object
       title: AiPolicyEnabledSurfaces
-    HTTPValidationError:
+    AiPolicyContextWarningResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AiPolicyStateResponse:
-      properties:
-        policy_purpose:
-          anyOf:
-          - type: string
-            enum:
-            - compliance
-            - brand_guidelines
-          - type: 'null'
-          title: Policy Purpose
-        enabled:
+        found:
           type: boolean
-          title: Enabled
-        mode:
-          type: string
-          title: Mode
-        enabled_surfaces:
-          anyOf:
-          - $ref: '#/components/schemas/AiPolicyEnabledSurfaces'
-          - type: 'null'
-        active_version_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Active Version Id
-        active_version_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Active Version Ids
-        draft:
-          anyOf:
-          - $ref: '#/components/schemas/AiPolicyDraft'
-          - type: 'null'
-        versions:
-          items:
-            $ref: '#/components/schemas/AiPolicyVersion'
-          type: array
-          title: Versions
-      type: object
-      required:
-      - enabled
-      - mode
-      title: AiPolicyStateResponse
-    AiPolicyGenerateVersionNameResponse:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Generated policy version name
-      type: object
-      required:
-      - name
-      title: AiPolicyGenerateVersionNameResponse
-    AiPolicySaveVersionRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        activate:
-          type: boolean
-          title: Activate
+          title: Found
           default: false
-        text:
+        evaluation_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Text
-          description: Optional editor text to save as a version without requiring a separate draft save first
-      type: object
-      title: AiPolicySaveVersionRequest
-    AiPolicyVersion:
-      properties:
-        id:
-          type: string
-          title: Id
-        policy_purpose:
-          anyOf:
-          - type: string
-            enum:
-            - compliance
-            - brand_guidelines
-          - type: 'null'
-          title: Policy Purpose
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        text:
-          type: string
-          title: Text
+          title: Evaluation Id
         created_at:
           anyOf:
           - type: string
           - type: 'null'
           title: Created At
-        created_by_user_id:
+        ai_policy_eval:
           anyOf:
-          - type: string
+          - additionalProperties: true
+            type: object
           - type: 'null'
-          title: Created By User Id
+          title: Ai Policy Eval
       type: object
-      required:
-      - id
-      - text
-      title: AiPolicyVersion
-    AiPolicyDraft:
-      properties:
-        text:
-          type: string
-          title: Text
-          description: Editable draft policy text
-          default: ''
-        source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source
-          description: 'draft source: generated|manual'
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-          description: ISO timestamp
-        updated_by_user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated By User Id
-          description: User ID who last edited the draft
-      type: object
-      title: AiPolicyDraft
+      title: AiPolicyContextWarningResponse
+      description: 'Lightweight lookup for the latest warn-only evaluation matching a UI context.
+
+
+        This is intended for inline warnings in campaign details pages (ads/social) and similar surfaces.'
     AiPolicyViolationEvent:
       properties:
         id:
@@ -759,6 +627,161 @@ components:
       - msg
       - type
       title: ValidationError
+    AiPolicyStateResponse:
+      properties:
+        policy_purpose:
+          anyOf:
+          - type: string
+            enum:
+            - compliance
+            - brand_guidelines
+          - type: 'null'
+          title: Policy Purpose
+        enabled:
+          type: boolean
+          title: Enabled
+        mode:
+          type: string
+          title: Mode
+        enabled_surfaces:
+          anyOf:
+          - $ref: '#/components/schemas/AiPolicyEnabledSurfaces'
+          - type: 'null'
+        active_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Active Version Id
+        active_version_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Active Version Ids
+        draft:
+          anyOf:
+          - $ref: '#/components/schemas/AiPolicyDraft'
+          - type: 'null'
+        versions:
+          items:
+            $ref: '#/components/schemas/AiPolicyVersion'
+          type: array
+          title: Versions
+      type: object
+      required:
+      - enabled
+      - mode
+      title: AiPolicyStateResponse
+    AiPolicyGenerateVersionNameRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: Policy text used to generate a short version name
+        max_length:
+          type: integer
+          maximum: 80.0
+          minimum: 16.0
+          title: Max Length
+          description: Maximum output length for the generated version name
+          default: 48
+      type: object
+      required:
+      - text
+      title: AiPolicyGenerateVersionNameRequest
+    AiPolicyGenerateVersionNameResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Generated policy version name
+      type: object
+      required:
+      - name
+      title: AiPolicyGenerateVersionNameResponse
+    AiPolicySaveVersionRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        activate:
+          type: boolean
+          title: Activate
+          default: false
+        text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text
+          description: Optional editor text to save as a version without requiring a separate draft save first
+      type: object
+      title: AiPolicySaveVersionRequest
+    AiPolicyDraft:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: Editable draft policy text
+          default: ''
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+          description: 'draft source: generated|manual'
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+          description: ISO timestamp
+        updated_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated By User Id
+          description: User ID who last edited the draft
+      type: object
+      title: AiPolicyDraft
+    AiPolicyVersion:
+      properties:
+        id:
+          type: string
+          title: Id
+        policy_purpose:
+          anyOf:
+          - type: string
+            enum:
+            - compliance
+            - brand_guidelines
+          - type: 'null'
+          title: Policy Purpose
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        text:
+          type: string
+          title: Text
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        created_by_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By User Id
+      type: object
+      required:
+      - id
+      - text
+      title: AiPolicyVersion
     AiPolicyActivateVersionRequest:
       properties:
         version_id:
@@ -781,23 +804,25 @@ components:
         - `version_id`: activate a single version
 
         - `version_ids`: activate a policy set (multiple versions), in the provided order'
-    AiPolicyGenerateVersionNameRequest:
+    AiPolicyDraftUpdateRequest:
       properties:
         text:
           type: string
           title: Text
-          description: Policy text used to generate a short version name
-        max_length:
-          type: integer
-          maximum: 80.0
-          minimum: 16.0
-          title: Max Length
-          description: Maximum output length for the generated version name
-          default: 48
+          description: Updated draft policy text
       type: object
       required:
       - text
-      title: AiPolicyGenerateVersionNameRequest
+      title: AiPolicyDraftUpdateRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     AiPolicySettingsUpdateRequest:
       properties:
         enabled:
@@ -811,34 +836,6 @@ components:
       required:
       - enabled
       title: AiPolicySettingsUpdateRequest
-    AiPolicyContextWarningResponse:
-      properties:
-        found:
-          type: boolean
-          title: Found
-          default: false
-        evaluation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Evaluation Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        ai_policy_eval:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ai Policy Eval
-      type: object
-      title: AiPolicyContextWarningResponse
-      description: 'Lightweight lookup for the latest warn-only evaluation matching a UI context.
-
-
-        This is intended for inline warnings in campaign details pages (ads/social) and similar surfaces.'
   securitySchemes:
     HTTPBearer:
       type: http

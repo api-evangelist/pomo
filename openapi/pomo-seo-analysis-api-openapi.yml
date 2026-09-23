@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend SEO Analysis API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: SEO Analysis
 paths:
@@ -13,7 +10,64 @@ paths:
       tags:
       - SEO Analysis
       summary: Create Seo Analysis
-      description: "Create a new SEO analysis for a company profile.\n\nThis endpoint:\n1. Validates user has access to the company profile\n2. Validates workflow prerequisite (current_step >= 2)\n3. Creates the SEO analysis record with status='pending'\n4. Launches background task via TaskSupervisor\n5. Returns the analysis record immediately\n\nFrontend should then:\n- Poll GET /api/seo/analysis/{analysis_id} for status updates\n\nThe analysis process includes:\n- Collecting SEO data from crawled pages\n- Fetching Core Web Vitals from PageSpeed API\n- Calculating scores across multiple categories\n- Generating actionable recommendations\n\nPrerequisites:\n- Workflow must be at Step 2 or later (current_step >= 2)\n- This ensures web crawl inventory data is available for analysis\n\nArgs:\n    request_data: SEOAnalysisCreate with company_profile_id and primary_url\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    SEOAnalysisResponse with analysis record (status='pending')\n\nRaises:\n    HTTPException: 404 if company profile not found, 403 if access denied,\n                  400 if workflow prerequisite not met"
+      description: 'Create a new SEO analysis for a company profile.
+
+
+        This endpoint:
+
+        1. Validates user has access to the company profile
+
+        2. Validates workflow prerequisite (current_step >= 2)
+
+        3. Creates the SEO analysis record with status=''pending''
+
+        4. Launches background task via TaskSupervisor
+
+        5. Returns the analysis record immediately
+
+
+        Frontend should then:
+
+        - Poll GET /api/seo/analysis/{analysis_id} for status updates
+
+
+        The analysis process includes:
+
+        - Collecting SEO data from crawled pages
+
+        - Fetching Core Web Vitals from PageSpeed API
+
+        - Calculating scores across multiple categories
+
+        - Generating actionable recommendations
+
+
+        Prerequisites:
+
+        - Workflow must be at Step 2 or later (current_step >= 2)
+
+        - This ensures web crawl inventory data is available for analysis
+
+
+        Args:
+
+        request_data: SEOAnalysisCreate with company_profile_id and primary_url
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        SEOAnalysisResponse with analysis record (status=''pending'')
+
+
+        Raises:
+
+        HTTPException: 404 if company profile not found, 403 if access denied,
+
+        400 if workflow prerequisite not met'
       operationId: create_seo_analysis_api_seo_analyze_post
       requestBody:
         content:
@@ -41,7 +95,31 @@ paths:
       tags:
       - SEO Analysis
       summary: Get Seo Analysis
-      description: "Get detailed SEO analysis by ID.\n\nReturns complete analysis data including all scores, metrics,\nand metadata. Frontend can poll this endpoint for status updates.\n\nArgs:\n    analysis_id: UUID of the analysis\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    SEOAnalysisResponse with full analysis details\n\nRaises:\n    HTTPException: 404 if not found, 403 if access denied"
+      description: 'Get detailed SEO analysis by ID.
+
+
+        Returns complete analysis data including all scores, metrics,
+
+        and metadata. Frontend can poll this endpoint for status updates.
+
+
+        Args:
+
+        analysis_id: UUID of the analysis
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        SEOAnalysisResponse with full analysis details
+
+
+        Raises:
+
+        HTTPException: 404 if not found, 403 if access denied'
       operationId: get_seo_analysis_api_seo_analysis__analysis_id__get
       security:
       - HTTPBearer: []
@@ -71,7 +149,46 @@ paths:
       tags:
       - SEO Analysis
       summary: Get Score Breakdown
-      description: "Get detailed score breakdown for a specific SEO category.\n\nThis endpoint provides a granular breakdown of how a specific score was calculated,\nincluding individual checks, points awarded, and explanations for each component.\n\nCategories:\n- technical: Technical SEO (HTTPS, robots.txt, sitemap, canonical, viewport, etc.)\n- on_page: On-page SEO (title, description, headings, word count)\n- structured_data: Schema markup and structured data\n- images: Image optimization (alt text, lazy loading, responsive images)\n- social_meta: Social media meta tags (Open Graph, Twitter Cards)\n\nArgs:\n    analysis_id: UUID of the analysis\n    category: Score category (technical|on_page|structured_data|images|social_meta)\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    ScoreBreakdownResponse with detailed scoring breakdown\n\nRaises:\n    HTTPException: 404 if not found, 400 if invalid category, 403 if access denied"
+      description: 'Get detailed score breakdown for a specific SEO category.
+
+
+        This endpoint provides a granular breakdown of how a specific score was calculated,
+
+        including individual checks, points awarded, and explanations for each component.
+
+
+        Categories:
+
+        - technical: Technical SEO (HTTPS, robots.txt, sitemap, canonical, viewport, etc.)
+
+        - on_page: On-page SEO (title, description, headings, word count)
+
+        - structured_data: Schema markup and structured data
+
+        - images: Image optimization (alt text, lazy loading, responsive images)
+
+        - social_meta: Social media meta tags (Open Graph, Twitter Cards)
+
+
+        Args:
+
+        analysis_id: UUID of the analysis
+
+        category: Score category (technical|on_page|structured_data|images|social_meta)
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        ScoreBreakdownResponse with detailed scoring breakdown
+
+
+        Raises:
+
+        HTTPException: 404 if not found, 400 if invalid category, 403 if access denied'
       operationId: get_score_breakdown_api_seo_analysis__analysis_id__score_breakdown__category__get
       security:
       - HTTPBearer: []
@@ -107,7 +224,35 @@ paths:
       tags:
       - SEO Analysis
       summary: List Seo Analyses
-      description: "List all SEO analyses for a company profile with pagination.\n\nReturns analyses in reverse chronological order (newest first).\nEach item contains summary data suitable for display in lists/tables.\n\nArgs:\n    company_profile_id: UUID of the company profile\n    skip: Number of records to skip (for pagination)\n    limit: Number of records to return (default 50, max 100)\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    List[SEOAnalysisListResponse] with paginated analyses\n\nRaises:\n    HTTPException: 404 if company profile not found, 403 if access denied"
+      description: 'List all SEO analyses for a company profile with pagination.
+
+
+        Returns analyses in reverse chronological order (newest first).
+
+        Each item contains summary data suitable for display in lists/tables.
+
+
+        Args:
+
+        company_profile_id: UUID of the company profile
+
+        skip: Number of records to skip (for pagination)
+
+        limit: Number of records to return (default 50, max 100)
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        List[SEOAnalysisListResponse] with paginated analyses
+
+
+        Raises:
+
+        HTTPException: 404 if company profile not found, 403 if access denied'
       operationId: list_seo_analyses_api_seo_company__company_profile_id__analyses_get
       security:
       - HTTPBearer: []
@@ -161,7 +306,46 @@ paths:
       tags:
       - SEO Analysis
       summary: Get Seo Recommendations
-      description: "Get SEO recommendations for an analysis with optional filtering.\n\nRecommendations are actionable suggestions for improving SEO scores.\nEach includes impact assessment, effort estimation, and fix guidance.\n\nFiltering:\n- priority: critical|important|nice_to_have\n- category: technical|on_page|performance|structured_data|images|social\n- include_dismissed: Show dismissed recommendations (default: false)\n\nArgs:\n    analysis_id: UUID of the analysis\n    priority: Optional priority filter\n    category: Optional category filter\n    include_dismissed: Include dismissed recommendations\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    List[SEORecommendationResponse] with filtered recommendations\n\nRaises:\n    HTTPException: 404 if analysis not found, 403 if access denied"
+      description: 'Get SEO recommendations for an analysis with optional filtering.
+
+
+        Recommendations are actionable suggestions for improving SEO scores.
+
+        Each includes impact assessment, effort estimation, and fix guidance.
+
+
+        Filtering:
+
+        - priority: critical|important|nice_to_have
+
+        - category: technical|on_page|performance|structured_data|images|social
+
+        - include_dismissed: Show dismissed recommendations (default: false)
+
+
+        Args:
+
+        analysis_id: UUID of the analysis
+
+        priority: Optional priority filter
+
+        category: Optional category filter
+
+        include_dismissed: Include dismissed recommendations
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        List[SEORecommendationResponse] with filtered recommendations
+
+
+        Raises:
+
+        HTTPException: 404 if analysis not found, 403 if access denied'
       operationId: get_seo_recommendations_api_seo_analysis__analysis_id__recommendations_get
       security:
       - HTTPBearer: []
@@ -223,7 +407,35 @@ paths:
       tags:
       - SEO Analysis
       summary: Dismiss Recommendation
-      description: "Dismiss an SEO recommendation.\n\nMarks a recommendation as dismissed, optionally adding user notes.\nDismissed recommendations are excluded from default queries unless\nexplicitly requested via include_dismissed=true.\n\nArgs:\n    rec_id: UUID of the recommendation\n    update_data: SEORecommendationUpdate with is_dismissed=true and optional user_notes\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    SEORecommendationResponse with updated recommendation\n\nRaises:\n    HTTPException: 404 if not found, 403 if access denied"
+      description: 'Dismiss an SEO recommendation.
+
+
+        Marks a recommendation as dismissed, optionally adding user notes.
+
+        Dismissed recommendations are excluded from default queries unless
+
+        explicitly requested via include_dismissed=true.
+
+
+        Args:
+
+        rec_id: UUID of the recommendation
+
+        update_data: SEORecommendationUpdate with is_dismissed=true and optional user_notes
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        SEORecommendationResponse with updated recommendation
+
+
+        Raises:
+
+        HTTPException: 404 if not found, 403 if access denied'
       operationId: dismiss_recommendation_api_seo_recommendation__rec_id__dismiss_put
       security:
       - HTTPBearer: []
@@ -259,7 +471,33 @@ paths:
       tags:
       - SEO Analysis
       summary: Complete Recommendation
-      description: "Mark an SEO recommendation as completed.\n\nRecords that the user has implemented the recommended fix.\nOptionally include notes about the implementation.\n\nArgs:\n    rec_id: UUID of the recommendation\n    update_data: SEORecommendationUpdate with is_completed=true and optional user_notes\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    SEORecommendationResponse with updated recommendation\n\nRaises:\n    HTTPException: 404 if not found, 403 if access denied"
+      description: 'Mark an SEO recommendation as completed.
+
+
+        Records that the user has implemented the recommended fix.
+
+        Optionally include notes about the implementation.
+
+
+        Args:
+
+        rec_id: UUID of the recommendation
+
+        update_data: SEORecommendationUpdate with is_completed=true and optional user_notes
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        SEORecommendationResponse with updated recommendation
+
+
+        Raises:
+
+        HTTPException: 404 if not found, 403 if access denied'
       operationId: complete_recommendation_api_seo_recommendation__rec_id__complete_put
       security:
       - HTTPBearer: []
@@ -295,7 +533,41 @@ paths:
       tags:
       - SEO Analysis
       summary: Get Analysis Pages
-      description: "Get per-page SEO analysis with screenshots for a specific analysis.\n\nThis endpoint returns detailed SEO metrics for each page analyzed,\nincluding:\n- Page URL and title\n- SEO issues (critical and important)\n- Content metrics (word count, links, images)\n- Screenshot URL from the crawler\n- Schema markup and social meta presence\n\nArgs:\n    analysis_id: UUID of the analysis\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    List of SEOPageResponse with per-page details and screenshots\n\nRaises:\n    HTTPException: 404 if analysis not found, 403 if access denied"
+      description: 'Get per-page SEO analysis with screenshots for a specific analysis.
+
+
+        This endpoint returns detailed SEO metrics for each page analyzed,
+
+        including:
+
+        - Page URL and title
+
+        - SEO issues (critical and important)
+
+        - Content metrics (word count, links, images)
+
+        - Screenshot URL from the crawler
+
+        - Schema markup and social meta presence
+
+
+        Args:
+
+        analysis_id: UUID of the analysis
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        List of SEOPageResponse with per-page details and screenshots
+
+
+        Raises:
+
+        HTTPException: 404 if analysis not found, 403 if access denied'
       operationId: get_analysis_pages_api_seo_analysis__analysis_id__pages_get
       security:
       - HTTPBearer: []
@@ -328,7 +600,31 @@ paths:
       tags:
       - SEO Analysis
       summary: Get Latest Seo Analysis
-      description: "Get the most recent SEO analysis for a company profile.\n\nReturns the latest completed or in-progress analysis.\nUseful for dashboards and quick status checks.\n\nArgs:\n    company_profile_id: UUID of the company profile\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    SEOAnalysisResponse with latest analysis\n\nRaises:\n    HTTPException: 404 if no analysis found or company profile not found, 403 if access denied"
+      description: 'Get the most recent SEO analysis for a company profile.
+
+
+        Returns the latest completed or in-progress analysis.
+
+        Useful for dashboards and quick status checks.
+
+
+        Args:
+
+        company_profile_id: UUID of the company profile
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        SEOAnalysisResponse with latest analysis
+
+
+        Raises:
+
+        HTTPException: 404 if no analysis found or company profile not found, 403 if access denied'
       operationId: get_latest_seo_analysis_api_seo_company__company_profile_id__latest_get
       security:
       - HTTPBearer: []
@@ -358,7 +654,50 @@ paths:
       tags:
       - SEO Analysis
       summary: Recalculate Category Score
-      description: "Recalculate score for a specific SEO category.\n\nThis endpoint recalculates the score for a single category using the stored\nanalysis data. Useful for fixing scoring issues without re-running the entire\nanalysis.\n\nValid categories:\n- technical: Technical SEO score\n- on_page: On-page SEO score\n- structured_data: Schema markup score\n- images: Image optimization score\n- social_meta: Social media meta tags score\n- performance: Performance score (Core Web Vitals)\n\nArgs:\n    analysis_id: UUID of the analysis\n    category: Category to recalculate\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    dict with recalculated category score\n\nRaises:\n    HTTPException: 404 if not found, 400 if invalid category, 403 if access denied"
+      description: 'Recalculate score for a specific SEO category.
+
+
+        This endpoint recalculates the score for a single category using the stored
+
+        analysis data. Useful for fixing scoring issues without re-running the entire
+
+        analysis.
+
+
+        Valid categories:
+
+        - technical: Technical SEO score
+
+        - on_page: On-page SEO score
+
+        - structured_data: Schema markup score
+
+        - images: Image optimization score
+
+        - social_meta: Social media meta tags score
+
+        - performance: Performance score (Core Web Vitals)
+
+
+        Args:
+
+        analysis_id: UUID of the analysis
+
+        category: Category to recalculate
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        dict with recalculated category score
+
+
+        Raises:
+
+        HTTPException: 404 if not found, 400 if invalid category, 403 if access denied'
       operationId: recalculate_category_score_api_seo_analysis__analysis_id__recalculate__category__post
       security:
       - HTTPBearer: []
@@ -396,7 +735,33 @@ paths:
       tags:
       - SEO Analysis
       summary: Recalculate All Scores
-      description: "Recalculate all SEO scores for an analysis.\n\nThis endpoint recalculates all category scores and the overall score using the\nstored analysis data. Useful for fixing scoring issues after algorithm updates\nor bug fixes.\n\nArgs:\n    analysis_id: UUID of the analysis\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    dict with all recalculated scores\n\nRaises:\n    HTTPException: 404 if not found, 403 if access denied"
+      description: 'Recalculate all SEO scores for an analysis.
+
+
+        This endpoint recalculates all category scores and the overall score using the
+
+        stored analysis data. Useful for fixing scoring issues after algorithm updates
+
+        or bug fixes.
+
+
+        Args:
+
+        analysis_id: UUID of the analysis
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        dict with all recalculated scores
+
+
+        Raises:
+
+        HTTPException: 404 if not found, 403 if access denied'
       operationId: recalculate_all_scores_api_seo_analysis__analysis_id__recalculate_all_post
       security:
       - HTTPBearer: []
@@ -428,7 +793,52 @@ paths:
       tags:
       - SEO Analysis
       summary: Get Category Debug Info
-      description: "Get detailed debug information for a specific SEO category.\n\nThis endpoint provides comprehensive debugging information including:\n- Current score\n- Input data used for scoring\n- Detailed breakdown of how the score was calculated\n- Validation issues if any\n\nValid categories:\n- technical: Technical SEO\n- on_page: On-page SEO\n- structured_data: Schema markup\n- images: Image optimization\n- social_meta: Social media meta tags\n\nArgs:\n    analysis_id: UUID of the analysis\n    category: Category to debug\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    dict with detailed debug information\n\nRaises:\n    HTTPException: 404 if not found, 400 if invalid category, 403 if access denied"
+      description: 'Get detailed debug information for a specific SEO category.
+
+
+        This endpoint provides comprehensive debugging information including:
+
+        - Current score
+
+        - Input data used for scoring
+
+        - Detailed breakdown of how the score was calculated
+
+        - Validation issues if any
+
+
+        Valid categories:
+
+        - technical: Technical SEO
+
+        - on_page: On-page SEO
+
+        - structured_data: Schema markup
+
+        - images: Image optimization
+
+        - social_meta: Social media meta tags
+
+
+        Args:
+
+        analysis_id: UUID of the analysis
+
+        category: Category to debug
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        dict with detailed debug information
+
+
+        Raises:
+
+        HTTPException: 404 if not found, 400 if invalid category, 403 if access denied'
       operationId: get_category_debug_info_api_seo_analysis__analysis_id__debug__category__get
       security:
       - HTTPBearer: []
@@ -466,7 +876,37 @@ paths:
       tags:
       - SEO Analysis
       summary: Cleanup Stuck Analyses Endpoint
-      description: "Admin endpoint to cleanup stuck SEO analyses.\n\nThis endpoint allows administrators to manually trigger cleanup of stuck analyses\nthat are in processing/pending state for too long.\n\nRequires authentication. Typically used for:\n- Manual recovery after server crashes\n- Monitoring/alerting integrations\n- Debugging stuck analyses\n\nArgs:\n    threshold_minutes: Minutes before considering an analysis stuck (5-1440, default: 60)\n    dry_run: If true, only report stuck analyses without marking them as failed\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    dict: Summary of cleanup operation including count and details"
+      description: 'Admin endpoint to cleanup stuck SEO analyses.
+
+
+        This endpoint allows administrators to manually trigger cleanup of stuck analyses
+
+        that are in processing/pending state for too long.
+
+
+        Requires authentication. Typically used for:
+
+        - Manual recovery after server crashes
+
+        - Monitoring/alerting integrations
+
+        - Debugging stuck analyses
+
+
+        Args:
+
+        threshold_minutes: Minutes before considering an analysis stuck (5-1440, default: 60)
+
+        dry_run: If true, only report stuck analyses without marking them as failed
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        dict: Summary of cleanup operation including count and details'
       operationId: cleanup_stuck_analyses_endpoint_api_seo_admin_cleanup_stuck_post
       security:
       - HTTPBearer: []
@@ -511,7 +951,52 @@ paths:
       tags:
       - SEO Analysis
       summary: Compute Content Quality
-      description: "Compute content quality metrics for a specific page on-demand.\n\nThis endpoint allows computing or recomputing content quality metrics\n(readability, E-E-A-T, originality) for a specific page. This is useful\nwhen content quality was skipped during initial analysis for performance\nreasons, or when you want to refresh the metrics after content updates.\n\nContent quality metrics include:\n- Readability score (Flesch Reading Ease)\n- Readability grade (Flesch-Kincaid Grade Level)\n- E-E-A-T signals score\n- Content originality score\n- AI-generated content detection\n- Duplicate content detection\n\nArgs:\n    analysis_id: UUID of the SEO analysis\n    page_id: UUID of the specific page\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    SEOPageResponse with updated content quality metrics\n\nRaises:\n    HTTPException: 404 if analysis/page not found, 403 if access denied"
+      description: 'Compute content quality metrics for a specific page on-demand.
+
+
+        This endpoint allows computing or recomputing content quality metrics
+
+        (readability, E-E-A-T, originality) for a specific page. This is useful
+
+        when content quality was skipped during initial analysis for performance
+
+        reasons, or when you want to refresh the metrics after content updates.
+
+
+        Content quality metrics include:
+
+        - Readability score (Flesch Reading Ease)
+
+        - Readability grade (Flesch-Kincaid Grade Level)
+
+        - E-E-A-T signals score
+
+        - Content originality score
+
+        - AI-generated content detection
+
+        - Duplicate content detection
+
+
+        Args:
+
+        analysis_id: UUID of the SEO analysis
+
+        page_id: UUID of the specific page
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        SEOPageResponse with updated content quality metrics
+
+
+        Raises:
+
+        HTTPException: 404 if analysis/page not found, 403 if access denied'
       operationId: compute_content_quality_api_seo_analysis__analysis_id__pages__page_id__compute_content_quality_post
       security:
       - HTTPBearer: []
@@ -545,281 +1030,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SEORecommendationUpdate:
-      properties:
-        is_dismissed:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Dismissed
-        is_completed:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Completed
-        user_notes:
-          anyOf:
-          - type: string
-            maxLength: 1000
-          - type: 'null'
-          title: User Notes
-      type: object
-      title: SEORecommendationUpdate
-      description: 'Schema for updating SEO recommendation user actions.
-
-        Allows marking recommendations as dismissed or completed.'
-    SEOAnalysisResponse:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-        user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Id
-        workflow_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Workflow Id
-        primary_url:
-          type: string
-          title: Primary Url
-        domain:
-          type: string
-          title: Domain
-        status:
-          type: string
-          title: Status
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-        overall_score:
-          anyOf:
-          - type: number
-            maximum: 100.0
-            minimum: 0.0
-          - type: 'null'
-          title: Overall Score
-          description: Overall SEO score (0-100)
-        previous_score:
-          anyOf:
-          - type: number
-            maximum: 100.0
-            minimum: 0.0
-          - type: 'null'
-          title: Previous Score
-          description: Previous overall score (0-100)
-        score_change:
-          anyOf:
-          - type: number
-            maximum: 100.0
-            minimum: -100.0
-          - type: 'null'
-          title: Score Change
-          description: Score change from previous analysis
-        technical_seo_score:
-          anyOf:
-          - type: number
-            maximum: 100.0
-            minimum: 0.0
-          - type: 'null'
-          title: Technical Seo Score
-          description: Technical SEO score (0-100)
-        on_page_seo_score:
-          anyOf:
-          - type: number
-            maximum: 100.0
-            minimum: 0.0
-          - type: 'null'
-          title: On Page Seo Score
-          description: On-page SEO score (0-100)
-        performance_score:
-          anyOf:
-          - type: number
-            maximum: 100.0
-            minimum: 0.0
-          - type: 'null'
-          title: Performance Score
-          description: Performance score (0-100)
-        structured_data_score:
-          anyOf:
-          - type: number
-            maximum: 100.0
-            minimum: 0.0
-          - type: 'null'
-          title: Structured Data Score
-          description: Structured data score (0-100)
-        image_optimization_score:
-          anyOf:
-          - type: number
-            maximum: 100.0
-            minimum: 0.0
-          - type: 'null'
-          title: Image Optimization Score
-          description: Image optimization score (0-100)
-        social_meta_score:
-          anyOf:
-          - type: number
-            maximum: 100.0
-            minimum: 0.0
-          - type: 'null'
-          title: Social Meta Score
-          description: Social meta tags score (0-100)
-        core_web_vitals:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Core Web Vitals
-        technical_seo_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Technical Seo Data
-        on_page_seo_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: On Page Seo Data
-        image_optimization_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Image Optimization Data
-        structured_data_analysis:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Structured Data Analysis
-        social_meta_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Social Meta Data
-        analysis_scope:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Analysis Scope
-        pages_analyzed:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Pages Analyzed
-          default: 0
-        pages_with_issues:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Pages With Issues
-          default: 0
-        critical_issues_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Critical Issues Count
-          default: 0
-        important_issues_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Important Issues Count
-          default: 0
-        nice_to_have_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Nice To Have Count
-          default: 0
-        competitive_position:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Competitive Position
-        started_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Started At
-        completed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Completed At
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      type: object
-      required:
-      - id
-      - company_profile_id
-      - user_id
-      - primary_url
-      - domain
-      - status
-      - created_at
-      title: SEOAnalysisResponse
-      description: 'Response schema for SEO analysis.
-
-        Includes all analysis data, scores, and metadata.
-
-        Follows pattern from campaigns/email.py EmailCampaignResponse'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     ScoreCheckResponse:
       properties:
         name:
@@ -852,186 +1062,50 @@ components:
       - reason
       title: ScoreCheckResponse
       description: Individual scoring check result for score breakdown.
-    SEOAnalysisListResponse:
+    ValidationError:
       properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-        primary_url:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Primary Url
-        domain:
+          title: Message
+        type:
           type: string
-          title: Domain
-        status:
-          type: string
-          title: Status
-        overall_score:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Overall Score
-        previous_score:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Previous Score
-        score_change:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Score Change
-        critical_issues_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Critical Issues Count
-          default: 0
-        important_issues_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Important Issues Count
-          default: 0
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        completed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Completed At
+          title: Error Type
       type: object
       required:
-      - id
-      - company_profile_id
-      - primary_url
-      - domain
-      - status
-      - created_at
-      title: SEOAnalysisListResponse
-      description: 'Lightweight schema for listing SEO analyses.
-
-        Contains only key fields for display in lists/tables.
-
-        Follows pattern from consumer.py ConsumerGroupListResponse'
-    SEORecommendationResponse:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SEORecommendationUpdate:
       properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        analysis_id:
-          type: string
-          format: uuid
-          title: Analysis Id
-        category:
-          type: string
-          title: Category
-        priority:
-          type: string
-          title: Priority
-        title:
-          type: string
-          title: Title
-        description:
-          type: string
-          title: Description
-        impact:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Impact
-        effort:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Effort
-        how_to_fix:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: How To Fix
-        example:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Example
-        pages_affected:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Pages Affected
-          default: 0
-        affected_urls:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Affected Urls
-          default: []
-        potential_score_improvement:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Potential Score Improvement
-        estimated_fix_time_hours:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Estimated Fix Time Hours
         is_dismissed:
-          type: boolean
-          title: Is Dismissed
-          default: false
-        is_completed:
-          type: boolean
-          title: Is Completed
-          default: false
-        completed_at:
           anyOf:
-          - type: string
+          - type: boolean
           - type: 'null'
-          title: Completed At
+          title: Is Dismissed
+        is_completed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Completed
         user_notes:
           anyOf:
           - type: string
+            maxLength: 1000
           - type: 'null'
           title: User Notes
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
       type: object
-      required:
-      - id
-      - analysis_id
-      - category
-      - priority
-      - title
-      - description
-      - created_at
-      title: SEORecommendationResponse
-      description: 'Response schema for SEO recommendation.
+      title: SEORecommendationUpdate
+      description: 'Schema for updating SEO recommendation user actions.
 
-        Contains all recommendation data including user actions.'
+        Allows marking recommendations as dismissed or completed.'
     SEOAnalysisCreate:
       properties:
         company_profile_id:
@@ -1055,47 +1129,6 @@ components:
       description: 'Request schema for creating a new SEO analysis.
 
         Follows pattern from campaigns/email.py EmailCampaignCreate'
-    ScoreBreakdownResponse:
-      properties:
-        category:
-          type: string
-          title: Category
-        score:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Score
-        max_score:
-          type: number
-          title: Max Score
-        percentage:
-          type: number
-          title: Percentage
-        checks:
-          items:
-            $ref: '#/components/schemas/ScoreCheckResponse'
-          type: array
-          title: Checks
-        warnings:
-          items:
-            type: string
-          type: array
-          title: Warnings
-          default: []
-        errors:
-          items:
-            type: string
-          type: array
-          title: Errors
-          default: []
-      type: object
-      required:
-      - category
-      - max_score
-      - percentage
-      - checks
-      title: ScoreBreakdownResponse
-      description: Detailed breakdown of a score calculation for a specific category.
     SEOPageResponse:
       properties:
         id:
@@ -1441,6 +1474,458 @@ components:
       description: 'Response schema for individual page SEO analysis.
 
         Contains detailed SEO metrics for a single page.'
+    SEOAnalysisResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        workflow_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+        primary_url:
+          type: string
+          title: Primary Url
+        domain:
+          type: string
+          title: Domain
+        status:
+          type: string
+          title: Status
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        overall_score:
+          anyOf:
+          - type: number
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Overall Score
+          description: Overall SEO score (0-100)
+        previous_score:
+          anyOf:
+          - type: number
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Previous Score
+          description: Previous overall score (0-100)
+        score_change:
+          anyOf:
+          - type: number
+            maximum: 100.0
+            minimum: -100.0
+          - type: 'null'
+          title: Score Change
+          description: Score change from previous analysis
+        technical_seo_score:
+          anyOf:
+          - type: number
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Technical Seo Score
+          description: Technical SEO score (0-100)
+        on_page_seo_score:
+          anyOf:
+          - type: number
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: On Page Seo Score
+          description: On-page SEO score (0-100)
+        performance_score:
+          anyOf:
+          - type: number
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Performance Score
+          description: Performance score (0-100)
+        structured_data_score:
+          anyOf:
+          - type: number
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Structured Data Score
+          description: Structured data score (0-100)
+        image_optimization_score:
+          anyOf:
+          - type: number
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Image Optimization Score
+          description: Image optimization score (0-100)
+        social_meta_score:
+          anyOf:
+          - type: number
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Social Meta Score
+          description: Social meta tags score (0-100)
+        core_web_vitals:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Core Web Vitals
+        technical_seo_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Technical Seo Data
+        on_page_seo_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: On Page Seo Data
+        image_optimization_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Image Optimization Data
+        structured_data_analysis:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Structured Data Analysis
+        social_meta_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Social Meta Data
+        analysis_scope:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Analysis Scope
+        pages_analyzed:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Pages Analyzed
+          default: 0
+        pages_with_issues:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Pages With Issues
+          default: 0
+        critical_issues_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Critical Issues Count
+          default: 0
+        important_issues_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Important Issues Count
+          default: 0
+        nice_to_have_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Nice To Have Count
+          default: 0
+        competitive_position:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Competitive Position
+        started_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Completed At
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - company_profile_id
+      - user_id
+      - primary_url
+      - domain
+      - status
+      - created_at
+      title: SEOAnalysisResponse
+      description: 'Response schema for SEO analysis.
+
+        Includes all analysis data, scores, and metadata.
+
+        Follows pattern from campaigns/email.py EmailCampaignResponse'
+    SEOAnalysisListResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        primary_url:
+          type: string
+          title: Primary Url
+        domain:
+          type: string
+          title: Domain
+        status:
+          type: string
+          title: Status
+        overall_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Overall Score
+        previous_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Previous Score
+        score_change:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Score Change
+        critical_issues_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Critical Issues Count
+          default: 0
+        important_issues_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Important Issues Count
+          default: 0
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Completed At
+      type: object
+      required:
+      - id
+      - company_profile_id
+      - primary_url
+      - domain
+      - status
+      - created_at
+      title: SEOAnalysisListResponse
+      description: 'Lightweight schema for listing SEO analyses.
+
+        Contains only key fields for display in lists/tables.
+
+        Follows pattern from consumer.py ConsumerGroupListResponse'
+    SEORecommendationResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        analysis_id:
+          type: string
+          format: uuid
+          title: Analysis Id
+        category:
+          type: string
+          title: Category
+        priority:
+          type: string
+          title: Priority
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+        impact:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact
+        effort:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Effort
+        how_to_fix:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: How To Fix
+        example:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Example
+        pages_affected:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Pages Affected
+          default: 0
+        affected_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Affected Urls
+          default: []
+        potential_score_improvement:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Potential Score Improvement
+        estimated_fix_time_hours:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Fix Time Hours
+        is_dismissed:
+          type: boolean
+          title: Is Dismissed
+          default: false
+        is_completed:
+          type: boolean
+          title: Is Completed
+          default: false
+        completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Completed At
+        user_notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Notes
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - analysis_id
+      - category
+      - priority
+      - title
+      - description
+      - created_at
+      title: SEORecommendationResponse
+      description: 'Response schema for SEO recommendation.
+
+        Contains all recommendation data including user actions.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ScoreBreakdownResponse:
+      properties:
+        category:
+          type: string
+          title: Category
+        score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Score
+        max_score:
+          type: number
+          title: Max Score
+        percentage:
+          type: number
+          title: Percentage
+        checks:
+          items:
+            $ref: '#/components/schemas/ScoreCheckResponse'
+          type: array
+          title: Checks
+        warnings:
+          items:
+            type: string
+          type: array
+          title: Warnings
+          default: []
+        errors:
+          items:
+            type: string
+          type: array
+          title: Errors
+          default: []
+      type: object
+      required:
+      - category
+      - max_score
+      - percentage
+      - checks
+      title: ScoreBreakdownResponse
+      description: Detailed breakdown of a score calculation for a specific category.
   securitySchemes:
     HTTPBearer:
       type: http

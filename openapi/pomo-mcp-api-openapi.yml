@@ -2,18 +2,32 @@ openapi: 3.2.0
 info:
   title: GPT Backend MCP API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: mcp
+- name: MCP
 paths:
   /api/mcp/resources/read:
     post:
       tags:
-      - mcp
+      - MCP
       summary: Read Resource
-      description: "Read a specific resource by ID.\n\nExample:\n```json\n{\n    \"resource_type\": \"company-profile\",\n    \"resource_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"params\": {\"include_products\": true}\n}\n```"
+      description: 'Read a specific resource by ID.
+
+
+        Example:
+
+        ```json
+
+        {
+
+        "resource_type": "company-profile",
+
+        "resource_id": "123e4567-e89b-12d3-a456-426614174000",
+
+        "params": {"include_products": true}
+
+        }
+
+        ```'
       operationId: read_resource_api_mcp_resources_read_post
       requestBody:
         content:
@@ -39,9 +53,24 @@ paths:
   /api/mcp/resources/list:
     post:
       tags:
-      - mcp
+      - MCP
       summary: List Resources
-      description: "List available resources of a specific type.\n\nExample:\n```json\n{\n    \"resource_type\": \"company-profile\",\n    \"params\": {\"limit\": 10, \"offset\": 0}\n}\n```"
+      description: 'List available resources of a specific type.
+
+
+        Example:
+
+        ```json
+
+        {
+
+        "resource_type": "company-profile",
+
+        "params": {"limit": 10, "offset": 0}
+
+        }
+
+        ```'
       operationId: list_resources_api_mcp_resources_list_post
       requestBody:
         content:
@@ -67,9 +96,36 @@ paths:
   /api/mcp/tools/execute:
     post:
       tags:
-      - mcp
+      - MCP
       summary: Execute Tool
-      description: "Execute an MCP tool.\n\nExample:\n```json\n{\n    \"tool_name\": \"generate_campaign_ideas\",\n    \"company_profile_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"arguments\": {\n        \"customer_goal\": \"increase brand awareness\",\n        \"target_audiences\": [\n            {\"description\": \"Tech-savvy millennials\"}\n        ]\n    }\n}\n```"
+      description: 'Execute an MCP tool.
+
+
+        Example:
+
+        ```json
+
+        {
+
+        "tool_name": "generate_campaign_ideas",
+
+        "company_profile_id": "123e4567-e89b-12d3-a456-426614174000",
+
+        "arguments": {
+
+        "customer_goal": "increase brand awareness",
+
+        "target_audiences": [
+
+        {"description": "Tech-savvy millennials"}
+
+        ]
+
+        }
+
+        }
+
+        ```'
       operationId: execute_tool_api_mcp_tools_execute_post
       requestBody:
         content:
@@ -95,7 +151,7 @@ paths:
   /api/mcp/tools/list:
     get:
       tags:
-      - mcp
+      - MCP
       summary: List Tools
       description: 'List all available MCP tools with their schemas.
 
@@ -116,9 +172,19 @@ paths:
   /api/mcp/prompts/list:
     get:
       tags:
-      - mcp
+      - MCP
       summary: List Prompt Templates
-      description: "List available prompt templates.\n\nArgs:\n    category: Optional category filter (e.g., 'analytics', 'planning')\n\nReturns:\n    List of available prompts"
+      description: 'List available prompt templates.
+
+
+        Args:
+
+        category: Optional category filter (e.g., ''analytics'', ''planning'')
+
+
+        Returns:
+
+        List of available prompts'
       operationId: list_prompt_templates_api_mcp_prompts_list_get
       security:
       - HTTPBearer: []
@@ -149,9 +215,19 @@ paths:
   /api/mcp/prompts/{prompt_name}:
     get:
       tags:
-      - mcp
+      - MCP
       summary: Get Prompt Template
-      description: "Get a specific prompt template.\n\nArgs:\n    prompt_name: Name of the prompt template\n\nReturns:\n    Full prompt template with variables"
+      description: 'Get a specific prompt template.
+
+
+        Args:
+
+        prompt_name: Name of the prompt template
+
+
+        Returns:
+
+        Full prompt template with variables'
       operationId: get_prompt_template_api_mcp_prompts__prompt_name__get
       security:
       - HTTPBearer: []
@@ -180,7 +256,7 @@ paths:
   /api/mcp/capabilities:
     get:
       tags:
-      - mcp
+      - MCP
       summary: Get Capabilities
       description: 'Get MCP server capabilities and configuration.
 
@@ -200,15 +276,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ResourceListRequest:
       properties:
         resource_type:
@@ -239,41 +306,15 @@ components:
       - resource_type
       title: ResourceListRequest
       description: Request to list resources
-    ResourceReadRequest:
+    HTTPValidationError:
       properties:
-        resource_type:
-          type: string
-          title: Resource Type
-          description: Type of resource (e.g., 'company-profile')
-        resource_id:
-          type: string
-          title: Resource Id
-          description: UUID of the resource
-        organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Id
-          description: Organization context
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-          description: Company profile context
-        params:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Params
-          description: Additional parameters
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - resource_type
-      - resource_id
-      title: ResourceReadRequest
-      description: Request to read a specific resource
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -295,33 +336,6 @@ components:
       - msg
       - type
       title: ValidationError
-    MCPResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Data
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - success
-      title: MCPResponse
-      description: Standard MCP response
     ToolExecuteRequest:
       properties:
         tool_name:
@@ -360,6 +374,68 @@ components:
       - company_profile_id
       title: ToolExecuteRequest
       description: Request to execute a tool
+    ResourceReadRequest:
+      properties:
+        resource_type:
+          type: string
+          title: Resource Type
+          description: Type of resource (e.g., 'company-profile')
+        resource_id:
+          type: string
+          title: Resource Id
+          description: UUID of the resource
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+          description: Organization context
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+          description: Company profile context
+        params:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Params
+          description: Additional parameters
+      type: object
+      required:
+      - resource_type
+      - resource_id
+      title: ResourceReadRequest
+      description: Request to read a specific resource
+    MCPResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Data
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - success
+      title: MCPResponse
+      description: Standard MCP response
   securitySchemes:
     HTTPBearer:
       type: http

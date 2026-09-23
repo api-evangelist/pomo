@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Unified Data Model API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Unified Data Model
 paths:
@@ -2046,46 +2043,401 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SHFulfillmentStatusResponse:
+    RevenueByChannelResponse:
       properties:
         metric_date:
           type: string
           format: date
           title: Metric Date
-        pending_count:
+        source_vendor:
+          type: string
+          title: Source Vendor
+        source_channel:
+          type: string
+          title: Source Channel
+        gross_revenue_cents:
           type: integer
-          title: Pending Count
-        fulfilled_count:
+          title: Gross Revenue Cents
+        discount_cents:
           type: integer
-          title: Fulfilled Count
-        partial_count:
+          title: Discount Cents
+        refund_cents:
           type: integer
-          title: Partial Count
-        unfulfilled_count:
+          title: Refund Cents
+        net_revenue_cents:
           type: integer
-          title: Unfulfilled Count
-        fulfillment_rate:
-          type: number
-          title: Fulfillment Rate
+          title: Net Revenue Cents
+        transaction_count:
+          type: integer
+          title: Transaction Count
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
       type: object
       required:
       - metric_date
-      - pending_count
-      - fulfilled_count
-      - partial_count
-      - unfulfilled_count
-      - fulfillment_rate
-      title: SHFulfillmentStatusResponse
-      description: Daily Shopify fulfillment status response.
+      - source_vendor
+      - source_channel
+      - gross_revenue_cents
+      - discount_cents
+      - refund_cents
+      - net_revenue_cents
+      - transaction_count
+      - avg_order_value_cents
+      title: RevenueByChannelResponse
+      description: Response model for revenue by channel.
+    SHProductCatalogResponse:
+      properties:
+        product_id:
+          type: string
+          title: Product Id
+        product_name:
+          type: string
+          title: Product Name
+        product_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Type
+        vendor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vendor
+        status:
+          type: string
+          title: Status
+        variant_count:
+          type: integer
+          title: Variant Count
+        total_inventory:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Inventory
+        shopify_product_gid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shopify Product Gid
+      type: object
+      required:
+      - product_id
+      - product_name
+      - status
+      - variant_count
+      title: SHProductCatalogResponse
+      description: Shopify product catalog entry.
+    SHCustomerOverviewResponse:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        total_customers:
+          type: integer
+          title: Total Customers
+        new_customers:
+          type: integer
+          title: New Customers
+        returning_customers:
+          type: integer
+          title: Returning Customers
+        avg_orders_per_customer:
+          type: number
+          title: Avg Orders Per Customer
+        avg_lifetime_value_cents:
+          type: integer
+          title: Avg Lifetime Value Cents
+        marketing_opted_in:
+          type: integer
+          title: Marketing Opted In
+      type: object
+      required:
+      - year_month
+      - total_customers
+      - new_customers
+      - returning_customers
+      - avg_orders_per_customer
+      - avg_lifetime_value_cents
+      - marketing_opted_in
+      title: SHCustomerOverviewResponse
+      description: Monthly Shopify customer overview response.
+    SHTransactionResponse:
+      properties:
+        sh_token:
+          type: string
+          title: Sh Token
+        order_id:
+          type: string
+          title: Order Id
+        customer_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Id
+        financial_status:
+          type: string
+          title: Financial Status
+        fulfillment_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fulfillment Status
+        total_price_cents:
+          type: integer
+          title: Total Price Cents
+        order_date:
+          type: string
+          format: date
+          title: Order Date
+        shopify_order_gid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shopify Order Gid
+        shopify_customer_gid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shopify Customer Gid
+      type: object
+      required:
+      - sh_token
+      - order_id
+      - financial_status
+      - total_price_cents
+      - order_date
+      title: SHTransactionResponse
+      description: Single Shopify order from Silver tables.
+    RevenueSummaryResponse:
+      properties:
+        total_net_revenue_cents:
+          type: integer
+          title: Total Net Revenue Cents
+        total_gross_revenue_cents:
+          type: integer
+          title: Total Gross Revenue Cents
+        total_discount_cents:
+          type: integer
+          title: Total Discount Cents
+        total_refund_cents:
+          type: integer
+          title: Total Refund Cents
+        total_transactions:
+          type: integer
+          title: Total Transactions
+        total_orders:
+          type: integer
+          title: Total Orders
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+        start_date:
+          type: string
+          title: Start Date
+        end_date:
+          type: string
+          title: End Date
+      type: object
+      required:
+      - total_net_revenue_cents
+      - total_gross_revenue_cents
+      - total_discount_cents
+      - total_refund_cents
+      - total_transactions
+      - total_orders
+      - avg_order_value_cents
+      - start_date
+      - end_date
+      title: RevenueSummaryResponse
+      description: Response model for revenue summary.
+    StripeDailySalesResponse:
+      properties:
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        charge_count:
+          type: integer
+          title: Charge Count
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        refunded_charge_count:
+          type: integer
+          title: Refunded Charge Count
+        total_refunded_cents:
+          type: integer
+          title: Total Refunded Cents
+        net_revenue_cents:
+          type: integer
+          title: Net Revenue Cents
+        unique_customers:
+          type: integer
+          title: Unique Customers
+      type: object
+      required:
+      - company_profile_id
+      - metric_date
+      - charge_count
+      - gross_sales_cents
+      - refunded_charge_count
+      - total_refunded_cents
+      - net_revenue_cents
+      - unique_customers
+      title: StripeDailySalesResponse
+      description: Daily Stripe sales metrics response.
+    SQLocationSalesResponse:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        location_id:
+          type: string
+          title: Location Id
+        location_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location Name
+        order_count:
+          type: integer
+          title: Order Count
+        unique_customers:
+          type: integer
+          title: Unique Customers
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+      type: object
+      required:
+      - year_month
+      - location_id
+      - order_count
+      - unique_customers
+      - gross_sales_cents
+      - net_sales_cents
+      - avg_order_value_cents
+      title: SQLocationSalesResponse
+      description: Monthly location-level Square sales response.
+    QBDailyMarketingSpendResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        total_marketing_cents:
+          type: integer
+          title: Total Marketing Cents
+      type: object
+      required:
+      - metric_date
+      - total_marketing_cents
+      title: QBDailyMarketingSpendResponse
+      description: Daily marketing spend total response.
+    KLRangeSummaryResponse:
+      properties:
+        total_sends:
+          type: integer
+          title: Total Sends
+        total_opens:
+          type: integer
+          title: Total Opens
+        total_clicks:
+          type: integer
+          title: Total Clicks
+        avg_open_rate:
+          type: number
+          title: Avg Open Rate
+        avg_click_rate:
+          type: number
+          title: Avg Click Rate
+        total_revenue_cents:
+          type: integer
+          title: Total Revenue Cents
+        active_campaigns:
+          type: integer
+          title: Active Campaigns
+        active_flows:
+          type: integer
+          title: Active Flows
+        total_subscribers:
+          type: integer
+          title: Total Subscribers
+      type: object
+      required:
+      - total_sends
+      - total_opens
+      - total_clicks
+      - avg_open_rate
+      - avg_click_rate
+      - total_revenue_cents
+      - active_campaigns
+      - active_flows
+      - total_subscribers
+      title: KLRangeSummaryResponse
+      description: Klaviyo summary for a date range response.
+    SQDailySalesByLocationResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        location_id:
+          type: string
+          title: Location Id
+        location_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location Name
+        order_count:
+          type: integer
+          title: Order Count
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        payment_count:
+          type: integer
+          title: Payment Count
+        total_collected_cents:
+          type: integer
+          title: Total Collected Cents
+        refund_count:
+          type: integer
+          title: Refund Count
+        total_refunded_cents:
+          type: integer
+          title: Total Refunded Cents
+        unique_customers:
+          type: integer
+          title: Unique Customers
+      type: object
+      required:
+      - metric_date
+      - location_id
+      - order_count
+      - gross_sales_cents
+      - net_sales_cents
+      - payment_count
+      - total_collected_cents
+      - refund_count
+      - total_refunded_cents
+      - unique_customers
+      title: SQDailySalesByLocationResponse
+      description: Daily Square sales by location response.
     QBRangeSummaryResponse:
       properties:
         total_gross_sales_cents:
@@ -2140,895 +2492,55 @@ components:
       - total_marketing_cents
       title: QBRangeSummaryResponse
       description: QuickBooks summary for a date range response.
-    StripeDailySalesResponse:
+    SQProductSalesResponse:
       properties:
-        company_profile_id:
+        year_month:
           type: string
-          title: Company Profile Id
-        metric_date:
-          type: string
-          format: date
-          title: Metric Date
-        charge_count:
+          title: Year Month
+        catalog_object_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Catalog Object Id
+        product_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Name
+        variation_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variation Name
+        units_sold:
+          type: number
+          title: Units Sold
+        order_count:
           type: integer
-          title: Charge Count
-        gross_sales_cents:
+          title: Order Count
+        gross_revenue_cents:
           type: integer
-          title: Gross Sales Cents
-        refunded_charge_count:
+          title: Gross Revenue Cents
+        discount_cents:
           type: integer
-          title: Refunded Charge Count
-        total_refunded_cents:
-          type: integer
-          title: Total Refunded Cents
+          title: Discount Cents
         net_revenue_cents:
           type: integer
           title: Net Revenue Cents
-        unique_customers:
-          type: integer
-          title: Unique Customers
-      type: object
-      required:
-      - company_profile_id
-      - metric_date
-      - charge_count
-      - gross_sales_cents
-      - refunded_charge_count
-      - total_refunded_cents
-      - net_revenue_cents
-      - unique_customers
-      title: StripeDailySalesResponse
-      description: Daily Stripe sales metrics response.
-    SQRangeSummaryResponse:
-      properties:
-        total_gross_sales_cents:
-          type: integer
-          title: Total Gross Sales Cents
-        total_net_revenue_cents:
-          type: integer
-          title: Total Net Revenue Cents
-        total_orders:
-          type: integer
-          title: Total Orders
-        total_refunds:
-          type: integer
-          title: Total Refunds
-        avg_order_value_cents:
-          type: integer
-          title: Avg Order Value Cents
-        total_unique_customers:
-          type: integer
-          title: Total Unique Customers
-        total_collected_cents:
-          type: integer
-          title: Total Collected Cents
-        total_refunded_cents:
-          type: integer
-          title: Total Refunded Cents
-      type: object
-      required:
-      - total_gross_sales_cents
-      - total_net_revenue_cents
-      - total_orders
-      - total_refunds
-      - avg_order_value_cents
-      - total_unique_customers
-      - total_collected_cents
-      - total_refunded_cents
-      title: SQRangeSummaryResponse
-      description: Square summary for a date range response.
-    KLListGrowthResponse:
-      properties:
-        list_id:
-          type: string
-          title: List Id
-        list_name:
-          type: string
-          title: List Name
-        metric_date:
-          type: string
-          format: date
-          title: Metric Date
-        profile_count:
-          type: integer
-          title: Profile Count
-        new_subscribers:
-          type: integer
-          title: New Subscribers
-        unsubscribes:
-          type: integer
-          title: Unsubscribes
-        net_growth:
-          type: integer
-          title: Net Growth
-      type: object
-      required:
-      - list_id
-      - list_name
-      - metric_date
-      - profile_count
-      - new_subscribers
-      - unsubscribes
-      - net_growth
-      title: KLListGrowthResponse
-      description: Klaviyo list growth response.
-    CrossChannelMetricsResponse:
-      properties:
-        metric_date:
-          type: string
-          format: date
-          title: Metric Date
-        total_revenue_cents:
-          type: integer
-          title: Total Revenue Cents
-        total_ad_spend_cents:
-          type: integer
-          title: Total Ad Spend Cents
-        blended_roas:
-          type: number
-          title: Blended Roas
-        total_transactions:
-          type: integer
-          title: Total Transactions
-        total_conversions:
-          type: integer
-          title: Total Conversions
-      type: object
-      required:
-      - metric_date
-      - total_revenue_cents
-      - total_ad_spend_cents
-      - blended_roas
-      - total_transactions
-      - total_conversions
-      title: CrossChannelMetricsResponse
-      description: Response model for cross-channel metrics.
-    QBSalesByProductResponse:
-      properties:
-        item_ref_id:
-          type: string
-          title: Item Ref Id
-        item_ref_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Item Ref Name
-        quantity_sold:
-          type: number
-          title: Quantity Sold
-        total_revenue_cents:
-          type: integer
-          title: Total Revenue Cents
         avg_unit_price_cents:
           type: integer
           title: Avg Unit Price Cents
-        first_sale_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: First Sale Date
-        last_sale_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Last Sale Date
-        invoice_count:
-          type: integer
-          title: Invoice Count
       type: object
       required:
-      - item_ref_id
-      - item_ref_name
-      - quantity_sold
-      - total_revenue_cents
+      - year_month
+      - units_sold
+      - order_count
+      - gross_revenue_cents
+      - discount_cents
+      - net_revenue_cents
       - avg_unit_price_cents
-      - first_sale_date
-      - last_sale_date
-      - invoice_count
-      title: QBSalesByProductResponse
-      description: Product-level sales summary response.
-    RevenueSummaryResponse:
-      properties:
-        total_net_revenue_cents:
-          type: integer
-          title: Total Net Revenue Cents
-        total_gross_revenue_cents:
-          type: integer
-          title: Total Gross Revenue Cents
-        total_discount_cents:
-          type: integer
-          title: Total Discount Cents
-        total_refund_cents:
-          type: integer
-          title: Total Refund Cents
-        total_transactions:
-          type: integer
-          title: Total Transactions
-        total_orders:
-          type: integer
-          title: Total Orders
-        avg_order_value_cents:
-          type: integer
-          title: Avg Order Value Cents
-        start_date:
-          type: string
-          title: Start Date
-        end_date:
-          type: string
-          title: End Date
-      type: object
-      required:
-      - total_net_revenue_cents
-      - total_gross_revenue_cents
-      - total_discount_cents
-      - total_refund_cents
-      - total_transactions
-      - total_orders
-      - avg_order_value_cents
-      - start_date
-      - end_date
-      title: RevenueSummaryResponse
-      description: Response model for revenue summary.
-    SHTransactionResponse:
-      properties:
-        sh_token:
-          type: string
-          title: Sh Token
-        order_id:
-          type: string
-          title: Order Id
-        customer_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Id
-        financial_status:
-          type: string
-          title: Financial Status
-        fulfillment_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fulfillment Status
-        total_price_cents:
-          type: integer
-          title: Total Price Cents
-        order_date:
-          type: string
-          format: date
-          title: Order Date
-        shopify_order_gid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Shopify Order Gid
-        shopify_customer_gid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Shopify Customer Gid
-      type: object
-      required:
-      - sh_token
-      - order_id
-      - financial_status
-      - total_price_cents
-      - order_date
-      title: SHTransactionResponse
-      description: Single Shopify order from Silver tables.
-    SQDailySalesByLocationResponse:
-      properties:
-        metric_date:
-          type: string
-          format: date
-          title: Metric Date
-        location_id:
-          type: string
-          title: Location Id
-        location_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location Name
-        order_count:
-          type: integer
-          title: Order Count
-        gross_sales_cents:
-          type: integer
-          title: Gross Sales Cents
-        net_sales_cents:
-          type: integer
-          title: Net Sales Cents
-        payment_count:
-          type: integer
-          title: Payment Count
-        total_collected_cents:
-          type: integer
-          title: Total Collected Cents
-        refund_count:
-          type: integer
-          title: Refund Count
-        total_refunded_cents:
-          type: integer
-          title: Total Refunded Cents
-        unique_customers:
-          type: integer
-          title: Unique Customers
-      type: object
-      required:
-      - metric_date
-      - location_id
-      - order_count
-      - gross_sales_cents
-      - net_sales_cents
-      - payment_count
-      - total_collected_cents
-      - refund_count
-      - total_refunded_cents
-      - unique_customers
-      title: SQDailySalesByLocationResponse
-      description: Daily Square sales by location response.
-    SQLocationSalesResponse:
-      properties:
-        year_month:
-          type: string
-          title: Year Month
-        location_id:
-          type: string
-          title: Location Id
-        location_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location Name
-        order_count:
-          type: integer
-          title: Order Count
-        unique_customers:
-          type: integer
-          title: Unique Customers
-        gross_sales_cents:
-          type: integer
-          title: Gross Sales Cents
-        net_sales_cents:
-          type: integer
-          title: Net Sales Cents
-        avg_order_value_cents:
-          type: integer
-          title: Avg Order Value Cents
-      type: object
-      required:
-      - year_month
-      - location_id
-      - order_count
-      - unique_customers
-      - gross_sales_cents
-      - net_sales_cents
-      - avg_order_value_cents
-      title: SQLocationSalesResponse
-      description: Monthly location-level Square sales response.
-    CustomerSummaryResponse:
-      properties:
-        customer_key:
-          type: string
-          title: Customer Key
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        first_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: First Name
-        last_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Name
-        acquisition_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Acquisition Date
-        total_orders:
-          type: integer
-          title: Total Orders
-        total_spent_cents:
-          type: integer
-          title: Total Spent Cents
-        ltv_cents:
-          type: integer
-          title: Ltv Cents
-        rfm_segment:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rfm Segment
-        days_since_last_order:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Days Since Last Order
-        warehouse_customer_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Warehouse Customer Key
-      type: object
-      required:
-      - customer_key
-      - email
-      - first_name
-      - last_name
-      - acquisition_date
-      - total_orders
-      - total_spent_cents
-      - ltv_cents
-      - rfm_segment
-      - days_since_last_order
-      title: CustomerSummaryResponse
-      description: Response model for customer summary.
-    QBMonthlyFinancialsResponse:
-      properties:
-        year_month:
-          type: string
-          title: Year Month
-        total_transaction_count:
-          type: integer
-          title: Total Transaction Count
-        gross_sales_cents:
-          type: integer
-          title: Gross Sales Cents
-        payments_received_cents:
-          type: integer
-          title: Payments Received Cents
-        total_adjustments_cents:
-          type: integer
-          title: Total Adjustments Cents
-        net_sales_cents:
-          type: integer
-          title: Net Sales Cents
-        total_expenses_cents:
-          type: integer
-          title: Total Expenses Cents
-        net_cash_flow_cents:
-          type: integer
-          title: Net Cash Flow Cents
-        gross_sales_mom_pct:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Gross Sales Mom Pct
-        expenses_mom_pct:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Expenses Mom Pct
-      type: object
-      required:
-      - year_month
-      - total_transaction_count
-      - gross_sales_cents
-      - payments_received_cents
-      - total_adjustments_cents
-      - net_sales_cents
-      - total_expenses_cents
-      - net_cash_flow_cents
-      - gross_sales_mom_pct
-      - expenses_mom_pct
-      title: QBMonthlyFinancialsResponse
-      description: Monthly QuickBooks financials with MoM trends response.
-    SHRangeSummaryResponse:
-      properties:
-        total_orders:
-          type: integer
-          title: Total Orders
-        total_gross_sales_cents:
-          type: integer
-          title: Total Gross Sales Cents
-        total_net_revenue_cents:
-          type: integer
-          title: Total Net Revenue Cents
-        avg_order_value_cents:
-          type: integer
-          title: Avg Order Value Cents
-        total_unique_customers:
-          type: integer
-          title: Total Unique Customers
-        total_products:
-          type: integer
-          title: Total Products
-        total_inventory:
-          type: integer
-          title: Total Inventory
-        fulfillment_rate:
-          type: number
-          title: Fulfillment Rate
-      type: object
-      required:
-      - total_orders
-      - total_gross_sales_cents
-      - total_net_revenue_cents
-      - avg_order_value_cents
-      - total_unique_customers
-      - total_products
-      - total_inventory
-      - fulfillment_rate
-      title: SHRangeSummaryResponse
-      description: Shopify summary for a date range response.
-    KLTransactionRowResponse:
-      properties:
-        kl_token:
-          type: string
-          title: Kl Token
-        entity_type:
-          type: string
-          title: Entity Type
-        event_id:
-          type: string
-          title: Event Id
-        metric_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Metric Name
-        profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Profile Id
-        value_cents:
-          type: integer
-          title: Value Cents
-        event_date:
-          type: string
-          title: Event Date
-      type: object
-      required:
-      - kl_token
-      - entity_type
-      - event_id
-      - value_cents
-      - event_date
-      title: KLTransactionRowResponse
-      description: Single Klaviyo event from Silver tables.
-    KLCampaignPerformanceResponse:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-        campaign_name:
-          type: string
-          title: Campaign Name
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        send_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Send Time
-        total_sent:
-          type: integer
-          title: Total Sent
-        opens:
-          type: integer
-          title: Opens
-        clicks:
-          type: integer
-          title: Clicks
-        bounces:
-          type: integer
-          title: Bounces
-        unsubscribes:
-          type: integer
-          title: Unsubscribes
-        revenue_cents:
-          type: integer
-          title: Revenue Cents
-        open_rate:
-          type: number
-          title: Open Rate
-        click_rate:
-          type: number
-          title: Click Rate
-        bounce_rate:
-          type: number
-          title: Bounce Rate
-        unsub_rate:
-          type: number
-          title: Unsub Rate
-      type: object
-      required:
-      - campaign_id
-      - campaign_name
-      - total_sent
-      - opens
-      - clicks
-      - bounces
-      - unsubscribes
-      - revenue_cents
-      - open_rate
-      - click_rate
-      - bounce_rate
-      - unsub_rate
-      title: KLCampaignPerformanceResponse
-      description: Klaviyo campaign performance response.
-    KLFlowPerformanceResponse:
-      properties:
-        flow_id:
-          type: string
-          title: Flow Id
-        flow_name:
-          type: string
-          title: Flow Name
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        trigger_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Trigger Type
-        total_sent:
-          type: integer
-          title: Total Sent
-        opens:
-          type: integer
-          title: Opens
-        clicks:
-          type: integer
-          title: Clicks
-        conversions:
-          type: integer
-          title: Conversions
-        revenue_cents:
-          type: integer
-          title: Revenue Cents
-        open_rate:
-          type: number
-          title: Open Rate
-        click_rate:
-          type: number
-          title: Click Rate
-        conversion_rate:
-          type: number
-          title: Conversion Rate
-      type: object
-      required:
-      - flow_id
-      - flow_name
-      - total_sent
-      - opens
-      - clicks
-      - conversions
-      - revenue_cents
-      - open_rate
-      - click_rate
-      - conversion_rate
-      title: KLFlowPerformanceResponse
-      description: Klaviyo flow performance response.
-    KLRangeSummaryResponse:
-      properties:
-        total_sends:
-          type: integer
-          title: Total Sends
-        total_opens:
-          type: integer
-          title: Total Opens
-        total_clicks:
-          type: integer
-          title: Total Clicks
-        avg_open_rate:
-          type: number
-          title: Avg Open Rate
-        avg_click_rate:
-          type: number
-          title: Avg Click Rate
-        total_revenue_cents:
-          type: integer
-          title: Total Revenue Cents
-        active_campaigns:
-          type: integer
-          title: Active Campaigns
-        active_flows:
-          type: integer
-          title: Active Flows
-        total_subscribers:
-          type: integer
-          title: Total Subscribers
-      type: object
-      required:
-      - total_sends
-      - total_opens
-      - total_clicks
-      - avg_open_rate
-      - avg_click_rate
-      - total_revenue_cents
-      - active_campaigns
-      - active_flows
-      - total_subscribers
-      title: KLRangeSummaryResponse
-      description: Klaviyo summary for a date range response.
-    KLDailyEmailPerformanceResponse:
-      properties:
-        metric_date:
-          type: string
-          format: date
-          title: Metric Date
-        email_sends:
-          type: integer
-          title: Email Sends
-        opens:
-          type: integer
-          title: Opens
-        clicks:
-          type: integer
-          title: Clicks
-        bounces:
-          type: integer
-          title: Bounces
-        unsubscribes:
-          type: integer
-          title: Unsubscribes
-        spam_complaints:
-          type: integer
-          title: Spam Complaints
-        revenue_cents:
-          type: integer
-          title: Revenue Cents
-        open_rate:
-          type: number
-          title: Open Rate
-        click_rate:
-          type: number
-          title: Click Rate
-      type: object
-      required:
-      - metric_date
-      - email_sends
-      - opens
-      - clicks
-      - bounces
-      - unsubscribes
-      - spam_complaints
-      - revenue_cents
-      - open_rate
-      - click_rate
-      title: KLDailyEmailPerformanceResponse
-      description: Daily Klaviyo email performance response.
-    SHProductCatalogResponse:
-      properties:
-        product_id:
-          type: string
-          title: Product Id
-        product_name:
-          type: string
-          title: Product Name
-        product_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Type
-        vendor:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Vendor
-        status:
-          type: string
-          title: Status
-        variant_count:
-          type: integer
-          title: Variant Count
-        total_inventory:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Total Inventory
-        shopify_product_gid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Shopify Product Gid
-      type: object
-      required:
-      - product_id
-      - product_name
-      - status
-      - variant_count
-      title: SHProductCatalogResponse
-      description: Shopify product catalog entry.
-    QBCustomerSummaryResponse:
-      properties:
-        customer_id:
-          type: string
-          title: Customer Id
-        customer_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Name
-        total_invoiced_cents:
-          type: integer
-          title: Total Invoiced Cents
-        total_received_cents:
-          type: integer
-          title: Total Received Cents
-        outstanding_balance_cents:
-          type: integer
-          title: Outstanding Balance Cents
-        invoice_count:
-          type: integer
-          title: Invoice Count
-        first_transaction_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: First Transaction Date
-        last_transaction_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Last Transaction Date
-      type: object
-      required:
-      - customer_id
-      - customer_name
-      - total_invoiced_cents
-      - total_received_cents
-      - outstanding_balance_cents
-      - invoice_count
-      - first_transaction_date
-      - last_transaction_date
-      title: QBCustomerSummaryResponse
-      description: Customer sales summary response.
-    StripeRangeSummaryResponse:
-      properties:
-        total_gross_sales_cents:
-          type: integer
-          title: Total Gross Sales Cents
-        total_refunded_cents:
-          type: integer
-          title: Total Refunded Cents
-        total_net_revenue_cents:
-          type: integer
-          title: Total Net Revenue Cents
-        total_charges:
-          type: integer
-          title: Total Charges
-        total_refunded_charges:
-          type: integer
-          title: Total Refunded Charges
-        avg_charge_value_cents:
-          type: integer
-          title: Avg Charge Value Cents
-        total_unique_customers:
-          type: integer
-          title: Total Unique Customers
-      type: object
-      required:
-      - total_gross_sales_cents
-      - total_refunded_cents
-      - total_net_revenue_cents
-      - total_charges
-      - total_refunded_charges
-      - avg_charge_value_cents
-      - total_unique_customers
-      title: StripeRangeSummaryResponse
-      description: Stripe summary for a date range response.
+      title: SQProductSalesResponse
+      description: Product-level Square sales response.
     GoogleAnalyticsChannelInputResponse:
       properties:
         company_profile_id:
@@ -3120,6 +2632,317 @@ components:
       - data_quality_score
       title: GoogleAnalyticsChannelInputResponse
       description: GA4 daily channel input row from the Gold MMM feature table.
+    KLListGrowthResponse:
+      properties:
+        list_id:
+          type: string
+          title: List Id
+        list_name:
+          type: string
+          title: List Name
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        profile_count:
+          type: integer
+          title: Profile Count
+        new_subscribers:
+          type: integer
+          title: New Subscribers
+        unsubscribes:
+          type: integer
+          title: Unsubscribes
+        net_growth:
+          type: integer
+          title: Net Growth
+      type: object
+      required:
+      - list_id
+      - list_name
+      - metric_date
+      - profile_count
+      - new_subscribers
+      - unsubscribes
+      - net_growth
+      title: KLListGrowthResponse
+      description: Klaviyo list growth response.
+    SHFulfillmentStatusResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        pending_count:
+          type: integer
+          title: Pending Count
+        fulfilled_count:
+          type: integer
+          title: Fulfilled Count
+        partial_count:
+          type: integer
+          title: Partial Count
+        unfulfilled_count:
+          type: integer
+          title: Unfulfilled Count
+        fulfillment_rate:
+          type: number
+          title: Fulfillment Rate
+      type: object
+      required:
+      - metric_date
+      - pending_count
+      - fulfilled_count
+      - partial_count
+      - unfulfilled_count
+      - fulfillment_rate
+      title: SHFulfillmentStatusResponse
+      description: Daily Shopify fulfillment status response.
+    QBMonthlyFinancialsResponse:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        total_transaction_count:
+          type: integer
+          title: Total Transaction Count
+        gross_sales_cents:
+          type: integer
+          title: Gross Sales Cents
+        payments_received_cents:
+          type: integer
+          title: Payments Received Cents
+        total_adjustments_cents:
+          type: integer
+          title: Total Adjustments Cents
+        net_sales_cents:
+          type: integer
+          title: Net Sales Cents
+        total_expenses_cents:
+          type: integer
+          title: Total Expenses Cents
+        net_cash_flow_cents:
+          type: integer
+          title: Net Cash Flow Cents
+        gross_sales_mom_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Gross Sales Mom Pct
+        expenses_mom_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Expenses Mom Pct
+      type: object
+      required:
+      - year_month
+      - total_transaction_count
+      - gross_sales_cents
+      - payments_received_cents
+      - total_adjustments_cents
+      - net_sales_cents
+      - total_expenses_cents
+      - net_cash_flow_cents
+      - gross_sales_mom_pct
+      - expenses_mom_pct
+      title: QBMonthlyFinancialsResponse
+      description: Monthly QuickBooks financials with MoM trends response.
+    QBCustomerSummaryResponse:
+      properties:
+        customer_id:
+          type: string
+          title: Customer Id
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        total_invoiced_cents:
+          type: integer
+          title: Total Invoiced Cents
+        total_received_cents:
+          type: integer
+          title: Total Received Cents
+        outstanding_balance_cents:
+          type: integer
+          title: Outstanding Balance Cents
+        invoice_count:
+          type: integer
+          title: Invoice Count
+        first_transaction_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: First Transaction Date
+        last_transaction_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Transaction Date
+      type: object
+      required:
+      - customer_id
+      - customer_name
+      - total_invoiced_cents
+      - total_received_cents
+      - outstanding_balance_cents
+      - invoice_count
+      - first_transaction_date
+      - last_transaction_date
+      title: QBCustomerSummaryResponse
+      description: Customer sales summary response.
+    QBVendorSummaryResponse:
+      properties:
+        vendor_id:
+          type: string
+          title: Vendor Id
+        vendor_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vendor Name
+        total_expenses_cents:
+          type: integer
+          title: Total Expenses Cents
+        outstanding_balance_cents:
+          type: integer
+          title: Outstanding Balance Cents
+        bill_count:
+          type: integer
+          title: Bill Count
+        purchase_count:
+          type: integer
+          title: Purchase Count
+        first_transaction_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: First Transaction Date
+        last_transaction_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Last Transaction Date
+      type: object
+      required:
+      - vendor_id
+      - vendor_name
+      - total_expenses_cents
+      - outstanding_balance_cents
+      - bill_count
+      - purchase_count
+      - first_transaction_date
+      - last_transaction_date
+      title: QBVendorSummaryResponse
+      description: Vendor expense summary response.
+    KLCampaignPerformanceResponse:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign_name:
+          type: string
+          title: Campaign Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        send_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Send Time
+        total_sent:
+          type: integer
+          title: Total Sent
+        opens:
+          type: integer
+          title: Opens
+        clicks:
+          type: integer
+          title: Clicks
+        bounces:
+          type: integer
+          title: Bounces
+        unsubscribes:
+          type: integer
+          title: Unsubscribes
+        revenue_cents:
+          type: integer
+          title: Revenue Cents
+        open_rate:
+          type: number
+          title: Open Rate
+        click_rate:
+          type: number
+          title: Click Rate
+        bounce_rate:
+          type: number
+          title: Bounce Rate
+        unsub_rate:
+          type: number
+          title: Unsub Rate
+      type: object
+      required:
+      - campaign_id
+      - campaign_name
+      - total_sent
+      - opens
+      - clicks
+      - bounces
+      - unsubscribes
+      - revenue_cents
+      - open_rate
+      - click_rate
+      - bounce_rate
+      - unsub_rate
+      title: KLCampaignPerformanceResponse
+      description: Klaviyo campaign performance response.
+    SHRangeSummaryResponse:
+      properties:
+        total_orders:
+          type: integer
+          title: Total Orders
+        total_gross_sales_cents:
+          type: integer
+          title: Total Gross Sales Cents
+        total_net_revenue_cents:
+          type: integer
+          title: Total Net Revenue Cents
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+        total_unique_customers:
+          type: integer
+          title: Total Unique Customers
+        total_products:
+          type: integer
+          title: Total Products
+        total_inventory:
+          type: integer
+          title: Total Inventory
+        fulfillment_rate:
+          type: number
+          title: Fulfillment Rate
+      type: object
+      required:
+      - total_orders
+      - total_gross_sales_cents
+      - total_net_revenue_cents
+      - avg_order_value_cents
+      - total_unique_customers
+      - total_products
+      - total_inventory
+      - fulfillment_rate
+      title: SHRangeSummaryResponse
+      description: Shopify summary for a date range response.
     SQTransactionResponse:
       properties:
         sq_token:
@@ -3171,6 +2994,319 @@ components:
       - transaction_date
       title: SQTransactionResponse
       description: Single Square transaction from Silver tables.
+    SQRangeSummaryResponse:
+      properties:
+        total_gross_sales_cents:
+          type: integer
+          title: Total Gross Sales Cents
+        total_net_revenue_cents:
+          type: integer
+          title: Total Net Revenue Cents
+        total_orders:
+          type: integer
+          title: Total Orders
+        total_refunds:
+          type: integer
+          title: Total Refunds
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+        total_unique_customers:
+          type: integer
+          title: Total Unique Customers
+        total_collected_cents:
+          type: integer
+          title: Total Collected Cents
+        total_refunded_cents:
+          type: integer
+          title: Total Refunded Cents
+      type: object
+      required:
+      - total_gross_sales_cents
+      - total_net_revenue_cents
+      - total_orders
+      - total_refunds
+      - avg_order_value_cents
+      - total_unique_customers
+      - total_collected_cents
+      - total_refunded_cents
+      title: SQRangeSummaryResponse
+      description: Square summary for a date range response.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    QBTransactionResponse:
+      properties:
+        entity_type:
+          type: string
+          title: Entity Type
+        qb_token:
+          type: string
+          title: Qb Token
+        qb_id:
+          type: string
+          title: Qb Id
+        txn_date:
+          type: string
+          format: date
+          title: Txn Date
+        doc_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Doc Number
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        vendor_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vendor Name
+        account_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Name
+        total_cents:
+          type: integer
+          title: Total Cents
+        balance_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Balance Cents
+        is_marketing:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Marketing
+        marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Marketing Category
+        marketing_confidence:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Marketing Confidence
+        marketing_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Marketing Source
+        has_splits:
+          type: boolean
+          title: Has Splits
+          default: false
+      type: object
+      required:
+      - entity_type
+      - qb_token
+      - qb_id
+      - txn_date
+      - total_cents
+      title: QBTransactionResponse
+      description: Single QuickBooks transaction from Silver tables.
+    CustomerSummaryResponse:
+      properties:
+        customer_key:
+          type: string
+          title: Customer Key
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+        acquisition_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Acquisition Date
+        total_orders:
+          type: integer
+          title: Total Orders
+        total_spent_cents:
+          type: integer
+          title: Total Spent Cents
+        ltv_cents:
+          type: integer
+          title: Ltv Cents
+        rfm_segment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rfm Segment
+        days_since_last_order:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Days Since Last Order
+        warehouse_customer_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Warehouse Customer Key
+      type: object
+      required:
+      - customer_key
+      - email
+      - first_name
+      - last_name
+      - acquisition_date
+      - total_orders
+      - total_spent_cents
+      - ltv_cents
+      - rfm_segment
+      - days_since_last_order
+      title: CustomerSummaryResponse
+      description: Response model for customer summary.
+    AdPerformanceResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        source_platform:
+          type: string
+          title: Source Platform
+        impressions:
+          type: integer
+          title: Impressions
+        clicks:
+          type: integer
+          title: Clicks
+        spend_cents:
+          type: integer
+          title: Spend Cents
+        conversions:
+          type: integer
+          title: Conversions
+        purchase_value_cents:
+          type: integer
+          title: Purchase Value Cents
+        roas:
+          type: number
+          title: Roas
+        cpc_cents:
+          type: integer
+          title: Cpc Cents
+        cpm_cents:
+          type: integer
+          title: Cpm Cents
+      type: object
+      required:
+      - metric_date
+      - source_platform
+      - impressions
+      - clicks
+      - spend_cents
+      - conversions
+      - purchase_value_cents
+      - roas
+      - cpc_cents
+      - cpm_cents
+      title: AdPerformanceResponse
+      description: Response model for ad performance.
+    KLTransactionRowResponse:
+      properties:
+        kl_token:
+          type: string
+          title: Kl Token
+        entity_type:
+          type: string
+          title: Entity Type
+        event_id:
+          type: string
+          title: Event Id
+        metric_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Metric Name
+        profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Profile Id
+        value_cents:
+          type: integer
+          title: Value Cents
+        event_date:
+          type: string
+          title: Event Date
+      type: object
+      required:
+      - kl_token
+      - entity_type
+      - event_id
+      - value_cents
+      - event_date
+      title: KLTransactionRowResponse
+      description: Single Klaviyo event from Silver tables.
+    CrossChannelMetricsResponse:
+      properties:
+        metric_date:
+          type: string
+          format: date
+          title: Metric Date
+        total_revenue_cents:
+          type: integer
+          title: Total Revenue Cents
+        total_ad_spend_cents:
+          type: integer
+          title: Total Ad Spend Cents
+        blended_roas:
+          type: number
+          title: Blended Roas
+        total_transactions:
+          type: integer
+          title: Total Transactions
+        total_conversions:
+          type: integer
+          title: Total Conversions
+      type: object
+      required:
+      - metric_date
+      - total_revenue_cents
+      - total_ad_spend_cents
+      - blended_roas
+      - total_transactions
+      - total_conversions
+      title: CrossChannelMetricsResponse
+      description: Response model for cross-channel metrics.
     SQDailySalesResponse:
       properties:
         metric_date:
@@ -3242,27 +3378,36 @@ components:
       - unique_customers
       title: SQDailySalesResponse
       description: Daily Square sales metrics response.
-    ValidationError:
+    QBMarketingByCategoryResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        year_month:
           type: string
-          title: Message
-        type:
+          title: Year Month
+        marketing_category:
           type: string
-          title: Error Type
+          title: Marketing Category
+        entity_type:
+          type: string
+          title: Entity Type
+        expense_count:
+          type: integer
+          title: Expense Count
+        total_marketing_cents:
+          type: integer
+          title: Total Marketing Cents
+        split_count:
+          type: integer
+          title: Split Count
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - year_month
+      - marketing_category
+      - entity_type
+      - expense_count
+      - total_marketing_cents
+      - split_count
+      title: QBMarketingByCategoryResponse
+      description: Monthly marketing spend by category response.
     QBDailyFinancialsResponse:
       properties:
         metric_date:
@@ -3298,160 +3443,140 @@ components:
       - bill_count
       title: QBDailyFinancialsResponse
       description: Daily QuickBooks financial metrics response.
-    BlendedROASResponse:
-      properties:
-        total_spend_cents:
-          type: integer
-          title: Total Spend Cents
-        total_purchase_value_cents:
-          type: integer
-          title: Total Purchase Value Cents
-        total_impressions:
-          type: integer
-          title: Total Impressions
-        total_clicks:
-          type: integer
-          title: Total Clicks
-        total_conversions:
-          type: integer
-          title: Total Conversions
-        blended_roas:
-          type: number
-          title: Blended Roas
-        start_date:
-          type: string
-          title: Start Date
-        end_date:
-          type: string
-          title: End Date
-      type: object
-      required:
-      - total_spend_cents
-      - total_purchase_value_cents
-      - total_impressions
-      - total_clicks
-      - total_conversions
-      - blended_roas
-      - start_date
-      - end_date
-      title: BlendedROASResponse
-      description: Response model for blended ROAS.
-    SHDailySalesResponse:
+    KLDailyEmailPerformanceResponse:
       properties:
         metric_date:
           type: string
           format: date
           title: Metric Date
-        order_count:
+        email_sends:
           type: integer
-          title: Order Count
-        gross_sales_cents:
+          title: Email Sends
+        opens:
           type: integer
-          title: Gross Sales Cents
-        net_sales_cents:
+          title: Opens
+        clicks:
           type: integer
-          title: Net Sales Cents
-        total_discount_cents:
+          title: Clicks
+        bounces:
           type: integer
-          title: Total Discount Cents
-        total_tax_cents:
+          title: Bounces
+        unsubscribes:
           type: integer
-          title: Total Tax Cents
-        avg_order_value_cents:
+          title: Unsubscribes
+        spam_complaints:
           type: integer
-          title: Avg Order Value Cents
-        unique_customers:
+          title: Spam Complaints
+        revenue_cents:
           type: integer
-          title: Unique Customers
+          title: Revenue Cents
+        open_rate:
+          type: number
+          title: Open Rate
+        click_rate:
+          type: number
+          title: Click Rate
       type: object
       required:
       - metric_date
-      - order_count
-      - gross_sales_cents
-      - net_sales_cents
-      - total_discount_cents
-      - total_tax_cents
-      - avg_order_value_cents
-      - unique_customers
-      title: SHDailySalesResponse
-      description: Daily Shopify sales metrics response.
-    RevenueByChannelResponse:
+      - email_sends
+      - opens
+      - clicks
+      - bounces
+      - unsubscribes
+      - spam_complaints
+      - revenue_cents
+      - open_rate
+      - click_rate
+      title: KLDailyEmailPerformanceResponse
+      description: Daily Klaviyo email performance response.
+    KLFlowPerformanceResponse:
+      properties:
+        flow_id:
+          type: string
+          title: Flow Id
+        flow_name:
+          type: string
+          title: Flow Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        trigger_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trigger Type
+        total_sent:
+          type: integer
+          title: Total Sent
+        opens:
+          type: integer
+          title: Opens
+        clicks:
+          type: integer
+          title: Clicks
+        conversions:
+          type: integer
+          title: Conversions
+        revenue_cents:
+          type: integer
+          title: Revenue Cents
+        open_rate:
+          type: number
+          title: Open Rate
+        click_rate:
+          type: number
+          title: Click Rate
+        conversion_rate:
+          type: number
+          title: Conversion Rate
+      type: object
+      required:
+      - flow_id
+      - flow_name
+      - total_sent
+      - opens
+      - clicks
+      - conversions
+      - revenue_cents
+      - open_rate
+      - click_rate
+      - conversion_rate
+      title: KLFlowPerformanceResponse
+      description: Klaviyo flow performance response.
+    QBDailyMarketingByCategoryResponse:
       properties:
         metric_date:
           type: string
           format: date
           title: Metric Date
-        source_vendor:
+        marketing_category:
           type: string
-          title: Source Vendor
-        source_channel:
+          title: Marketing Category
+        entity_type:
           type: string
-          title: Source Channel
-        gross_revenue_cents:
+          title: Entity Type
+        expense_count:
           type: integer
-          title: Gross Revenue Cents
-        discount_cents:
+          title: Expense Count
+        total_marketing_cents:
           type: integer
-          title: Discount Cents
-        refund_cents:
+          title: Total Marketing Cents
+        split_count:
           type: integer
-          title: Refund Cents
-        net_revenue_cents:
-          type: integer
-          title: Net Revenue Cents
-        transaction_count:
-          type: integer
-          title: Transaction Count
-        avg_order_value_cents:
-          type: integer
-          title: Avg Order Value Cents
+          title: Split Count
       type: object
       required:
       - metric_date
-      - source_vendor
-      - source_channel
-      - gross_revenue_cents
-      - discount_cents
-      - refund_cents
-      - net_revenue_cents
-      - transaction_count
-      - avg_order_value_cents
-      title: RevenueByChannelResponse
-      description: Response model for revenue by channel.
-    SHCustomerOverviewResponse:
-      properties:
-        year_month:
-          type: string
-          title: Year Month
-        total_customers:
-          type: integer
-          title: Total Customers
-        new_customers:
-          type: integer
-          title: New Customers
-        returning_customers:
-          type: integer
-          title: Returning Customers
-        avg_orders_per_customer:
-          type: number
-          title: Avg Orders Per Customer
-        avg_lifetime_value_cents:
-          type: integer
-          title: Avg Lifetime Value Cents
-        marketing_opted_in:
-          type: integer
-          title: Marketing Opted In
-      type: object
-      required:
-      - year_month
-      - total_customers
-      - new_customers
-      - returning_customers
-      - avg_orders_per_customer
-      - avg_lifetime_value_cents
-      - marketing_opted_in
-      title: SHCustomerOverviewResponse
-      description: Monthly Shopify customer overview response.
+      - marketing_category
+      - entity_type
+      - expense_count
+      - total_marketing_cents
+      - split_count
+      title: QBDailyMarketingByCategoryResponse
+      description: Daily marketing spend by category response.
     QBDailyFinancialsFullResponse:
       properties:
         metric_date:
@@ -3543,300 +3668,172 @@ components:
       - purchase_count
       title: QBDailyFinancialsFullResponse
       description: Full daily QuickBooks financials with all entity-level columns.
-    QBMarketingByCategoryResponse:
-      properties:
-        year_month:
-          type: string
-          title: Year Month
-        marketing_category:
-          type: string
-          title: Marketing Category
-        entity_type:
-          type: string
-          title: Entity Type
-        expense_count:
-          type: integer
-          title: Expense Count
-        total_marketing_cents:
-          type: integer
-          title: Total Marketing Cents
-        split_count:
-          type: integer
-          title: Split Count
-      type: object
-      required:
-      - year_month
-      - marketing_category
-      - entity_type
-      - expense_count
-      - total_marketing_cents
-      - split_count
-      title: QBMarketingByCategoryResponse
-      description: Monthly marketing spend by category response.
-    QBVendorSummaryResponse:
-      properties:
-        vendor_id:
-          type: string
-          title: Vendor Id
-        vendor_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Vendor Name
-        total_expenses_cents:
-          type: integer
-          title: Total Expenses Cents
-        outstanding_balance_cents:
-          type: integer
-          title: Outstanding Balance Cents
-        bill_count:
-          type: integer
-          title: Bill Count
-        purchase_count:
-          type: integer
-          title: Purchase Count
-        first_transaction_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: First Transaction Date
-        last_transaction_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Last Transaction Date
-      type: object
-      required:
-      - vendor_id
-      - vendor_name
-      - total_expenses_cents
-      - outstanding_balance_cents
-      - bill_count
-      - purchase_count
-      - first_transaction_date
-      - last_transaction_date
-      title: QBVendorSummaryResponse
-      description: Vendor expense summary response.
-    QBDailyMarketingSpendResponse:
+    SHDailySalesResponse:
       properties:
         metric_date:
           type: string
           format: date
           title: Metric Date
-        total_marketing_cents:
-          type: integer
-          title: Total Marketing Cents
-      type: object
-      required:
-      - metric_date
-      - total_marketing_cents
-      title: QBDailyMarketingSpendResponse
-      description: Daily marketing spend total response.
-    QBDailyMarketingByCategoryResponse:
-      properties:
-        metric_date:
-          type: string
-          format: date
-          title: Metric Date
-        marketing_category:
-          type: string
-          title: Marketing Category
-        entity_type:
-          type: string
-          title: Entity Type
-        expense_count:
-          type: integer
-          title: Expense Count
-        total_marketing_cents:
-          type: integer
-          title: Total Marketing Cents
-        split_count:
-          type: integer
-          title: Split Count
-      type: object
-      required:
-      - metric_date
-      - marketing_category
-      - entity_type
-      - expense_count
-      - total_marketing_cents
-      - split_count
-      title: QBDailyMarketingByCategoryResponse
-      description: Daily marketing spend by category response.
-    AdPerformanceResponse:
-      properties:
-        metric_date:
-          type: string
-          format: date
-          title: Metric Date
-        source_platform:
-          type: string
-          title: Source Platform
-        impressions:
-          type: integer
-          title: Impressions
-        clicks:
-          type: integer
-          title: Clicks
-        spend_cents:
-          type: integer
-          title: Spend Cents
-        conversions:
-          type: integer
-          title: Conversions
-        purchase_value_cents:
-          type: integer
-          title: Purchase Value Cents
-        roas:
-          type: number
-          title: Roas
-        cpc_cents:
-          type: integer
-          title: Cpc Cents
-        cpm_cents:
-          type: integer
-          title: Cpm Cents
-      type: object
-      required:
-      - metric_date
-      - source_platform
-      - impressions
-      - clicks
-      - spend_cents
-      - conversions
-      - purchase_value_cents
-      - roas
-      - cpc_cents
-      - cpm_cents
-      title: AdPerformanceResponse
-      description: Response model for ad performance.
-    SQProductSalesResponse:
-      properties:
-        year_month:
-          type: string
-          title: Year Month
-        catalog_object_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Catalog Object Id
-        product_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Name
-        variation_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Variation Name
-        units_sold:
-          type: number
-          title: Units Sold
         order_count:
           type: integer
           title: Order Count
-        gross_revenue_cents:
+        gross_sales_cents:
           type: integer
-          title: Gross Revenue Cents
-        discount_cents:
+          title: Gross Sales Cents
+        net_sales_cents:
           type: integer
-          title: Discount Cents
-        net_revenue_cents:
+          title: Net Sales Cents
+        total_discount_cents:
           type: integer
-          title: Net Revenue Cents
+          title: Total Discount Cents
+        total_tax_cents:
+          type: integer
+          title: Total Tax Cents
+        avg_order_value_cents:
+          type: integer
+          title: Avg Order Value Cents
+        unique_customers:
+          type: integer
+          title: Unique Customers
+      type: object
+      required:
+      - metric_date
+      - order_count
+      - gross_sales_cents
+      - net_sales_cents
+      - total_discount_cents
+      - total_tax_cents
+      - avg_order_value_cents
+      - unique_customers
+      title: SHDailySalesResponse
+      description: Daily Shopify sales metrics response.
+    QBSalesByProductResponse:
+      properties:
+        item_ref_id:
+          type: string
+          title: Item Ref Id
+        item_ref_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Item Ref Name
+        quantity_sold:
+          type: number
+          title: Quantity Sold
+        total_revenue_cents:
+          type: integer
+          title: Total Revenue Cents
         avg_unit_price_cents:
           type: integer
           title: Avg Unit Price Cents
-      type: object
-      required:
-      - year_month
-      - units_sold
-      - order_count
-      - gross_revenue_cents
-      - discount_cents
-      - net_revenue_cents
-      - avg_unit_price_cents
-      title: SQProductSalesResponse
-      description: Product-level Square sales response.
-    QBTransactionResponse:
-      properties:
-        entity_type:
-          type: string
-          title: Entity Type
-        qb_token:
-          type: string
-          title: Qb Token
-        qb_id:
-          type: string
-          title: Qb Id
-        txn_date:
-          type: string
-          format: date
-          title: Txn Date
-        doc_number:
+        first_sale_date:
           anyOf:
           - type: string
+            format: date
           - type: 'null'
-          title: Doc Number
-        customer_name:
+          title: First Sale Date
+        last_sale_date:
           anyOf:
           - type: string
+            format: date
           - type: 'null'
-          title: Customer Name
-        vendor_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Vendor Name
-        account_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Name
-        total_cents:
+          title: Last Sale Date
+        invoice_count:
           type: integer
-          title: Total Cents
-        balance_cents:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Balance Cents
-        is_marketing:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Marketing
-        marketing_category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Marketing Category
-        marketing_confidence:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Marketing Confidence
-        marketing_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Marketing Source
-        has_splits:
-          type: boolean
-          title: Has Splits
-          default: false
+          title: Invoice Count
       type: object
       required:
-      - entity_type
-      - qb_token
-      - qb_id
-      - txn_date
-      - total_cents
-      title: QBTransactionResponse
-      description: Single QuickBooks transaction from Silver tables.
+      - item_ref_id
+      - item_ref_name
+      - quantity_sold
+      - total_revenue_cents
+      - avg_unit_price_cents
+      - first_sale_date
+      - last_sale_date
+      - invoice_count
+      title: QBSalesByProductResponse
+      description: Product-level sales summary response.
+    BlendedROASResponse:
+      properties:
+        total_spend_cents:
+          type: integer
+          title: Total Spend Cents
+        total_purchase_value_cents:
+          type: integer
+          title: Total Purchase Value Cents
+        total_impressions:
+          type: integer
+          title: Total Impressions
+        total_clicks:
+          type: integer
+          title: Total Clicks
+        total_conversions:
+          type: integer
+          title: Total Conversions
+        blended_roas:
+          type: number
+          title: Blended Roas
+        start_date:
+          type: string
+          title: Start Date
+        end_date:
+          type: string
+          title: End Date
+      type: object
+      required:
+      - total_spend_cents
+      - total_purchase_value_cents
+      - total_impressions
+      - total_clicks
+      - total_conversions
+      - blended_roas
+      - start_date
+      - end_date
+      title: BlendedROASResponse
+      description: Response model for blended ROAS.
+    StripeRangeSummaryResponse:
+      properties:
+        total_gross_sales_cents:
+          type: integer
+          title: Total Gross Sales Cents
+        total_refunded_cents:
+          type: integer
+          title: Total Refunded Cents
+        total_net_revenue_cents:
+          type: integer
+          title: Total Net Revenue Cents
+        total_charges:
+          type: integer
+          title: Total Charges
+        total_refunded_charges:
+          type: integer
+          title: Total Refunded Charges
+        avg_charge_value_cents:
+          type: integer
+          title: Avg Charge Value Cents
+        total_unique_customers:
+          type: integer
+          title: Total Unique Customers
+      type: object
+      required:
+      - total_gross_sales_cents
+      - total_refunded_cents
+      - total_net_revenue_cents
+      - total_charges
+      - total_refunded_charges
+      - avg_charge_value_cents
+      - total_unique_customers
+      title: StripeRangeSummaryResponse
+      description: Stripe summary for a date range response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

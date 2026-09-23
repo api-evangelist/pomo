@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Brand Workflow API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: brand-workflow
 paths:
@@ -836,109 +833,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    OnboardingNarrativeRequest:
-      properties:
-        stage:
-          type: string
-          enum:
-          - assessment
-          - competitors
-          - gaps
-          - ads
-          - insights
-          title: Stage
-        context:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Context
-        force_refresh:
-          type: boolean
-          title: Force Refresh
-          default: false
-      type: object
-      required:
-      - stage
-      title: OnboardingNarrativeRequest
-    MarketingProfileGenerationRequest:
-      properties:
-        scope_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope Key
-      type: object
-      title: MarketingProfileGenerationRequest
-    CompetitorRegenerateRequest:
-      properties:
-        workflow_id:
-          type: string
-          format: uuid
-          title: Workflow Id
-        scope_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope Key
-      type: object
-      required:
-      - workflow_id
-      title: CompetitorRegenerateRequest
-    ConfirmCompetitorsRequest:
-      properties:
-        workflow_id:
-          type: string
-          format: uuid
-          title: Workflow Id
-        selected_competitors:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Selected Competitors
-      type: object
-      required:
-      - workflow_id
-      - selected_competitors
-      title: ConfirmCompetitorsRequest
-    Step2DiscoverRequest:
-      properties:
-        company_url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Company Url
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-      type: object
-      required:
-      - company_url
-      - company_profile_id
-      title: Step2DiscoverRequest
-    Step1ConfirmRequest:
-      properties:
-        company_url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Company Url
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        company_info:
-          $ref: '#/components/schemas/CompanyInfo'
-      type: object
-      required:
-      - company_url
-      - company_profile_id
-      - company_info
-      title: Step1ConfirmRequest
     CompanyUrlPreflightRequest:
       properties:
         company_url:
@@ -948,209 +842,6 @@ components:
       required:
       - company_url
       title: CompanyUrlPreflightRequest
-    ProductOfferingExtractUrlRequest:
-      properties:
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        page_url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Page Url
-        workflow_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Workflow Id
-        force_recrawl:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Force Recrawl
-          default: false
-      type: object
-      required:
-      - company_profile_id
-      - page_url
-      title: ProductOfferingExtractUrlRequest
-    Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post:
-      properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-        company_url:
-          type: string
-          title: Company Url
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-      type: object
-      required:
-      - files
-      - company_url
-      - company_profile_id
-      title: Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CompanyInfo:
-      properties:
-        name:
-          type: string
-          title: Name
-        description:
-          type: string
-          title: Description
-        industry:
-          type: string
-          title: Industry
-        location:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location
-        company_size:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Size
-        target_market:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Target Market
-        unique_selling_proposition:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Unique Selling Proposition
-        primary_business_model:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Primary Business Model
-        secondary_business_models:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Secondary Business Models
-        business_model_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Business Model Metadata
-        marketing_goal:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Marketing Goal
-        average_monthly_campaign_budget:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Average Monthly Campaign Budget
-        average_monthly_campaign_budget_currency:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Average Monthly Campaign Budget Currency
-        operating_cities:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Operating Cities
-      additionalProperties: true
-      type: object
-      required:
-      - name
-      - description
-      - industry
-      title: CompanyInfo
-    Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post:
-      properties:
-        url:
-          type: string
-          title: Url
-      type: object
-      required:
-      - url
-      title: Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post
-    Step1ExtractRequest:
-      properties:
-        company_url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Company Url
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-      type: object
-      required:
-      - company_url
-      - company_profile_id
-      title: Step1ExtractRequest
-    ProductOfferingAugmentItem:
-      properties:
-        source:
-          type: string
-          enum:
-          - inventory
-          - custom
-          title: Source
-        inventory_offering_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Inventory Offering Id
-        custom_offering:
-          anyOf:
-          - $ref: '#/components/schemas/SKU'
-          - type: 'null'
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-      type: object
-      required:
-      - source
-      title: ProductOfferingAugmentItem
     AgentModeStartRequest:
       properties:
         company_url:
@@ -1185,6 +876,157 @@ components:
       - company_profile_id
       title: AgentModeStartRequest
       description: Request payload for starting agent mode on a brand workflow.
+    ProductOfferingExtractUrlRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        page_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Page Url
+        workflow_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+        force_recrawl:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Force Recrawl
+          default: false
+      type: object
+      required:
+      - company_profile_id
+      - page_url
+      title: ProductOfferingExtractUrlRequest
+    OnboardingNarrativeRequest:
+      properties:
+        stage:
+          type: string
+          enum:
+          - assessment
+          - competitors
+          - gaps
+          - ads
+          - insights
+          title: Stage
+        context:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Context
+        force_refresh:
+          type: boolean
+          title: Force Refresh
+          default: false
+      type: object
+      required:
+      - stage
+      title: OnboardingNarrativeRequest
+    Step1ConfirmRequest:
+      properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        company_info:
+          $ref: '#/components/schemas/CompanyInfo'
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      - company_info
+      title: Step1ConfirmRequest
+    MarketingProfileGenerationRequest:
+      properties:
+        scope_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Key
+      type: object
+      title: MarketingProfileGenerationRequest
+    Step2DiscoverRequest:
+      properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      title: Step2DiscoverRequest
+    Step1ExtractRequest:
+      properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      title: Step1ExtractRequest
+    Step2ConfirmRequest:
+      properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        skus:
+          items:
+            $ref: '#/components/schemas/SKU'
+          type: array
+          title: Skus
+        force_competitor_refresh:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Force Competitor Refresh
+          default: false
+        scope_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Key
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      - skus
+      title: Step2ConfirmRequest
     SKU:
       properties:
         name:
@@ -1289,40 +1131,57 @@ components:
       - name
       - description
       title: SKU
-    Step2ConfirmRequest:
+    Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post:
       properties:
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - url
+      title: Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post
+    Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
         company_url:
           type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
           title: Company Url
         company_profile_id:
           type: string
           format: uuid
           title: Company Profile Id
-        skus:
-          items:
-            $ref: '#/components/schemas/SKU'
-          type: array
-          title: Skus
-        force_competitor_refresh:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Force Competitor Refresh
-          default: false
-        scope_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope Key
       type: object
       required:
+      - files
       - company_url
       - company_profile_id
-      - skus
-      title: Step2ConfirmRequest
+      title: Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ProductOfferingAugmentRequest:
       properties:
         company_profile_id:
@@ -1339,6 +1198,144 @@ components:
       - company_profile_id
       - items
       title: ProductOfferingAugmentRequest
+    CompanyInfo:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        industry:
+          type: string
+          title: Industry
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+        company_size:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Size
+        target_market:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Market
+        unique_selling_proposition:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Unique Selling Proposition
+        primary_business_model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Business Model
+        secondary_business_models:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Secondary Business Models
+        business_model_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Business Model Metadata
+        marketing_goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Marketing Goal
+        average_monthly_campaign_budget:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Average Monthly Campaign Budget
+        average_monthly_campaign_budget_currency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Average Monthly Campaign Budget Currency
+        operating_cities:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Operating Cities
+      additionalProperties: true
+      type: object
+      required:
+      - name
+      - description
+      - industry
+      title: CompanyInfo
+    CompetitorRegenerateRequest:
+      properties:
+        workflow_id:
+          type: string
+          format: uuid
+          title: Workflow Id
+        scope_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Key
+      type: object
+      required:
+      - workflow_id
+      title: CompetitorRegenerateRequest
+    ProductOfferingAugmentItem:
+      properties:
+        source:
+          type: string
+          enum:
+          - inventory
+          - custom
+          title: Source
+        inventory_offering_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Inventory Offering Id
+        custom_offering:
+          anyOf:
+          - $ref: '#/components/schemas/SKU'
+          - type: 'null'
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      type: object
+      required:
+      - source
+      title: ProductOfferingAugmentItem
+    ConfirmCompetitorsRequest:
+      properties:
+        workflow_id:
+          type: string
+          format: uuid
+          title: Workflow Id
+        selected_competitors:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Selected Competitors
+      type: object
+      required:
+      - workflow_id
+      - selected_competitors
+      title: ConfirmCompetitorsRequest
   securitySchemes:
     HTTPBearer:
       type: http

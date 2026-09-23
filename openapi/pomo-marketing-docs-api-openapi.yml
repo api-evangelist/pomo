@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Marketing Docs API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: marketing-docs
 paths:
@@ -166,6 +163,22 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post:
+      properties:
+        request_json:
+          type: string
+          title: Request Json
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+          default: []
+      type: object
+      required:
+      - request_json
+      title: Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post
     HTTPValidationError:
       properties:
         detail:
@@ -175,6 +188,85 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GenerateGTMRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        product_offering_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Product Offering Ids
+        audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Audience
+        goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal
+        tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tone
+          default: professional
+        expected_length:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Length
+          default: standard
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        attachments:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Attachments
+      type: object
+      required:
+      - company_profile_id
+      title: GenerateGTMRequest
     GenerateDeckRequest:
       properties:
         company_profile_id:
@@ -245,80 +337,65 @@ components:
       - slides_total
       - sections
       title: GenerateDeckRequest
-    Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post:
+    DeckSection:
       properties:
-        request_json:
+        name:
           type: string
-          title: Request Json
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-          default: []
+          title: Name
+        target_slides:
+          type: integer
+          minimum: 1.0
+          title: Target Slides
+          description: Target slides in this section
+        must_include:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Must Include
+          default: false
       type: object
       required:
-      - request_json
-      title: Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post
-    GenerateGTMRequest:
+      - name
+      - target_slides
+      title: DeckSection
+    DeckStyle:
       properties:
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        product_offering_ids:
+        palette:
           anyOf:
           - items:
               type: string
-              format: uuid
             type: array
           - type: 'null'
-          title: Product Offering Ids
-        audience:
+          title: Palette
+        fonts:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Fonts
+        logo_url:
           anyOf:
           - type: string
           - type: 'null'
-          title: Audience
-        goal:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Goal
+          title: Logo Url
         tone:
           anyOf:
           - type: string
           - type: 'null'
           title: Tone
-          default: professional
-        expected_length:
+        density:
           anyOf:
           - type: string
           - type: 'null'
-          title: Expected Length
-          default: standard
-        notes:
+          title: Density
+        icon_style:
           anyOf:
           - type: string
           - type: 'null'
-          title: Notes
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        attachments:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Attachments
+          title: Icon Style
       type: object
-      required:
-      - company_profile_id
-      title: GenerateGTMRequest
+      title: DeckStyle
     DeckStatusResponse:
       properties:
         success:
@@ -369,44 +446,6 @@ components:
       - ready
       - doc_id
       title: DeckStatusResponse
-    DeckStyle:
-      properties:
-        palette:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Palette
-        fonts:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Fonts
-        logo_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Logo Url
-        tone:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tone
-        density:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Density
-        icon_style:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon Style
-      type: object
-      title: DeckStyle
     DeckExport:
       properties:
         pptx:
@@ -423,27 +462,6 @@ components:
           default: false
       type: object
       title: DeckExport
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     DeckFileDescriptor:
       properties:
         format:
@@ -473,27 +491,6 @@ components:
       required:
       - format
       title: DeckFileDescriptor
-    DeckSection:
-      properties:
-        name:
-          type: string
-          title: Name
-        target_slides:
-          type: integer
-          minimum: 1.0
-          title: Target Slides
-          description: Target slides in this section
-        must_include:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Must Include
-          default: false
-      type: object
-      required:
-      - name
-      - target_slides
-      title: DeckSection
     JobResponse:
       properties:
         job_id:

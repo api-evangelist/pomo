@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Competitive Gap Analysis API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: competitive-gap-analysis
 paths:
@@ -13,7 +10,19 @@ paths:
       tags:
       - competitive-gap-analysis
       summary: Get Gap Analysis
-      description: "Get competitive gap analysis for a company profile.\n\nArgs:\n    company_profile_id: ID of the company profile\n    version: Optional specific version to retrieve\n    \nReturns:\n    Gap analysis data formatted for API response"
+      description: 'Get competitive gap analysis for a company profile.
+
+
+        Args:
+
+        company_profile_id: ID of the company profile
+
+        version: Optional specific version to retrieve
+
+
+        Returns:
+
+        Gap analysis data formatted for API response'
       operationId: get_gap_analysis_api_competitive_gap_analysis__company_profile_id__get
       security:
       - HTTPBearer: []
@@ -89,7 +98,12 @@ paths:
       tags:
       - competitive-gap-analysis
       summary: Get Analysis Versions
-      description: "Get all versions of gap analysis for a company profile.\n\nReturns:\n    List of analysis versions with summary data"
+      description: 'Get all versions of gap analysis for a company profile.
+
+
+        Returns:
+
+        List of analysis versions with summary data'
       operationId: get_analysis_versions_api_competitive_gap_analysis__company_profile_id__versions_get
       security:
       - HTTPBearer: []
@@ -274,7 +288,31 @@ paths:
       tags:
       - competitive-gap-analysis
       summary: Generate Simple Campaign Recommendations
-      description: "Simplified endpoint to generate 5-8 campaign recommendations based on:\n- Target audiences (from request body)\n- Customer goal (from request body)\n\nThis bypasses the full competitive analysis and focuses purely on campaign generation.\nResults are cached to avoid regenerating for identical parameters.\n\nRequest body should contain:\n{\n    \"target_audiences\": [...],\n    \"customer_goal\": \"string\",\n    \"additional_context\": \"string\" (optional),\n    \"force_refresh\": false (optional - bypasses cache)\n}"
+      description: 'Simplified endpoint to generate 5-8 campaign recommendations based on:
+
+        - Target audiences (from request body)
+
+        - Customer goal (from request body)
+
+
+        This bypasses the full competitive analysis and focuses purely on campaign generation.
+
+        Results are cached to avoid regenerating for identical parameters.
+
+
+        Request body should contain:
+
+        {
+
+        "target_audiences": [...],
+
+        "customer_goal": "string",
+
+        "additional_context": "string" (optional),
+
+        "force_refresh": false (optional - bypasses cache)
+
+        }'
       operationId: generate_simple_campaign_recommendations_api_competitive_gap_analysis__company_profile_id__generate_simple_campaigns_post
       security:
       - HTTPBearer: []
@@ -311,15 +349,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -341,6 +370,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

@@ -2,16 +2,13 @@ openapi: 3.2.0
 info:
   title: GPT Backend Gallery API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: gallery
+- name: Gallery
 paths:
   /api/gallery/images:
     get:
       tags:
-      - gallery
+      - Gallery
       summary: Get Gallery Images
       description: Get paginated gallery images with filtering and sorting options
       operationId: get_gallery_images_api_gallery_images_get
@@ -143,7 +140,7 @@ paths:
   /api/gallery/images/{image_id}:
     get:
       tags:
-      - gallery
+      - Gallery
       summary: Get Gallery Image
       description: Get a specific gallery image by ID
       operationId: get_gallery_image_api_gallery_images__image_id__get
@@ -172,7 +169,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     put:
       tags:
-      - gallery
+      - Gallery
       summary: Update Gallery Image
       description: Update gallery image metadata
       operationId: update_gallery_image_api_gallery_images__image_id__put
@@ -235,7 +232,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     delete:
       tags:
-      - gallery
+      - Gallery
       summary: Delete Gallery Image
       description: Delete a gallery image (soft delete by default, permanent if specified)
       operationId: delete_gallery_image_api_gallery_images__image_id__delete
@@ -271,7 +268,7 @@ paths:
   /api/gallery/images/{image_id}/preview:
     get:
       tags:
-      - gallery
+      - Gallery
       summary: Get Gallery Image Preview
       description: Proxy a gallery image or managed video poster through profile-scoped auth.
       operationId: get_gallery_image_preview_api_gallery_images__image_id__preview_get
@@ -300,7 +297,7 @@ paths:
   /api/gallery/images/{image_id}/media-playback:
     get:
       tags:
-      - gallery
+      - Gallery
       summary: Get Gallery Video Playback
       description: Mint a short-lived, asset- and profile-scoped URL for native video playback.
       operationId: get_gallery_video_playback_api_gallery_images__image_id__media_playback_get
@@ -329,7 +326,7 @@ paths:
   /api/gallery/images/{image_id}/media:
     get:
       tags:
-      - gallery
+      - Gallery
       summary: Stream Gallery Video
       description: Authenticated range endpoint for canonical Gallery video assets.
       operationId: stream_gallery_video_api_gallery_images__image_id__media_get
@@ -358,7 +355,7 @@ paths:
   /api/gallery/images/{image_id}/campaign-asset-intelligence:
     post:
       tags:
-      - gallery
+      - Gallery
       summary: Analyze Gallery Image For Campaign
       description: Score a gallery image/video as user-provided creative for a campaign idea.
       operationId: analyze_gallery_image_for_campaign_api_gallery_images__image_id__campaign_asset_intelligence_post
@@ -394,7 +391,7 @@ paths:
   /api/gallery/create-with-ai:
     post:
       tags:
-      - gallery
+      - Gallery
       summary: Create Gallery Image With Ai
       description: 'Create images using AI and add them to the gallery.
 
@@ -424,7 +421,7 @@ paths:
   /api/gallery/upload:
     post:
       tags:
-      - gallery
+      - Gallery
       summary: Upload Gallery Image
       description: Upload a new image to the gallery
       operationId: upload_gallery_image_api_gallery_upload_post
@@ -452,7 +449,7 @@ paths:
   /api/gallery/upload-bulk:
     post:
       tags:
-      - gallery
+      - Gallery
       summary: Upload Gallery Images Bulk
       description: Upload multiple images to the gallery at once (up to 9 images)
       operationId: upload_gallery_images_bulk_api_gallery_upload_bulk_post
@@ -480,7 +477,7 @@ paths:
   /api/gallery/create-with-ai/job:
     post:
       tags:
-      - gallery
+      - Gallery
       summary: Create Gallery Image With Ai Job
       description: 'Start an async AI Studio generation job (agent job pattern).
 
@@ -510,7 +507,7 @@ paths:
   /api/gallery/images/bulk-delete:
     post:
       tags:
-      - gallery
+      - Gallery
       summary: Bulk Delete Gallery Images
       description: Delete multiple gallery images at once
       operationId: bulk_delete_gallery_images_api_gallery_images_bulk_delete_post
@@ -549,7 +546,7 @@ paths:
   /api/gallery/categories:
     get:
       tags:
-      - gallery
+      - Gallery
       summary: Get Gallery Categories
       description: Get all available categories and subcategories for the company's gallery
       operationId: get_gallery_categories_api_gallery_categories_get
@@ -568,134 +565,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    Body_create_gallery_image_with_ai_job_api_gallery_create_with_ai_job_post:
-      properties:
-        prompt:
-          type: string
-          title: Prompt
-        size:
-          type: string
-          title: Size
-          default: 1024x1024
-        aspect_ratio:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Aspect Ratio
-        num_images:
-          type: integer
-          title: Num Images
-          default: 1
-        use_company_style:
-          type: boolean
-          title: Use Company Style
-          default: true
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        tags:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tags
-        reference_gallery_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: string
-          - type: 'null'
-          title: Reference Gallery Ids
-      type: object
-      required:
-      - prompt
-      title: Body_create_gallery_image_with_ai_job_api_gallery_create_with_ai_job_post
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    GalleryUploadResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        uploaded_images:
-          items:
-            $ref: '#/components/schemas/GalleryImageResponse'
-          type: array
-          title: Uploaded Images
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - success
-      - uploaded_images
-      - total
-      title: GalleryUploadResponse
-      description: Response for gallery upload endpoints
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Body_upload_gallery_image_api_gallery_upload_post:
-      properties:
-        file:
-          type: string
-          format: binary
-          title: File
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        category:
-          type: string
-          title: Category
-          default: uploaded
-        tags:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tags
-      type: object
-      required:
-      - file
-      title: Body_upload_gallery_image_api_gallery_upload_post
     ExternalAdMetadata:
       properties:
         platform:
@@ -755,190 +624,28 @@ components:
       - attribution_scope
       - usage_count
       title: ExternalAdMetadata
-    ExternalAdUsageMetadata:
+    ValidationError:
       properties:
-        observation_id:
-          type: string
-          title: Observation Id
-        platform:
-          type: string
-          title: Platform
-        native_type:
-          type: string
-          title: Native Type
-        account_id:
-          type: string
-          title: Account Id
-        campaign_id:
-          type: string
-          title: Campaign Id
-        campaign_name:
-          type: string
-          title: Campaign Name
-        currency_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Currency Code
-        ad_group_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Group Id
-        ad_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Id
-        creative_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creative Id
-        creative_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creative Name
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        inventory_state:
-          type: string
-          title: Inventory State
-          default: current
-        media_role:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Media Role
-        provider_asset_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Provider Asset Id
-        source_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source Url
-        thumbnail_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Thumbnail Url
-        performance_tier:
-          type: string
-          title: Performance Tier
-        performance_reason:
-          type: string
-          title: Performance Reason
-        attribution_scope:
-          type: string
-          title: Attribution Scope
-        metrics:
-          additionalProperties: true
-          type: object
-          title: Metrics
-        benchmark:
-          additionalProperties: true
-          type: object
-          title: Benchmark
-        metric_window:
-          additionalProperties: true
-          type: object
-          title: Metric Window
-        analysis:
-          additionalProperties: true
-          type: object
-          title: Analysis
-      type: object
-      required:
-      - observation_id
-      - platform
-      - native_type
-      - account_id
-      - campaign_id
-      - campaign_name
-      - performance_tier
-      - performance_reason
-      - attribution_scope
-      title: ExternalAdUsageMetadata
-    GalleryListResponse:
-      properties:
-        images:
+        loc:
           items:
-            $ref: '#/components/schemas/GalleryImageResponse'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Images
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        limit:
-          type: integer
-          title: Limit
-        total_pages:
-          type: integer
-          title: Total Pages
-        category_stats:
-          additionalProperties:
-            additionalProperties:
-              type: integer
-            type: object
-          type: object
-          title: Category Stats
-      type: object
-      required:
-      - images
-      - total
-      - page
-      - limit
-      - total_pages
-      title: GalleryListResponse
-      description: Response for gallery list endpoint
-    Body_upload_gallery_images_bulk_api_gallery_upload_bulk_post:
-      properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-        titles:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: string
-          - type: 'null'
-          title: Titles
-        descriptions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: string
-          - type: 'null'
-          title: Descriptions
-        category:
+          title: Location
+        msg:
           type: string
-          title: Category
-          default: uploaded
-        tags:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tags
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - files
-      title: Body_upload_gallery_images_bulk_api_gallery_upload_bulk_post
-    Body_create_gallery_image_with_ai_api_gallery_create_with_ai_post:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Body_create_gallery_image_with_ai_job_api_gallery_create_with_ai_job_post:
       properties:
         prompt:
           type: string
@@ -983,18 +690,100 @@ components:
           - type: string
           - type: 'null'
           title: Reference Gallery Ids
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-              format: binary
-            type: array
-          - type: 'null'
-          title: Reference Images
       type: object
       required:
       - prompt
-      title: Body_create_gallery_image_with_ai_api_gallery_create_with_ai_post
+      title: Body_create_gallery_image_with_ai_job_api_gallery_create_with_ai_job_post
+    Body_upload_gallery_image_api_gallery_upload_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        category:
+          type: string
+          title: Category
+          default: uploaded
+        tags:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tags
+      type: object
+      required:
+      - file
+      title: Body_upload_gallery_image_api_gallery_upload_post
+    GalleryCreateResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        images:
+          items:
+            $ref: '#/components/schemas/GalleryImageResponse'
+          type: array
+          title: Images
+        total:
+          type: integer
+          title: Total
+        ai_policy_eval:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Policy Eval
+      type: object
+      required:
+      - success
+      - images
+      - total
+      title: GalleryCreateResponse
+      description: Response for gallery image creation endpoints
+    GalleryListResponse:
+      properties:
+        images:
+          items:
+            $ref: '#/components/schemas/GalleryImageResponse'
+          type: array
+          title: Images
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        limit:
+          type: integer
+          title: Limit
+        total_pages:
+          type: integer
+          title: Total Pages
+        category_stats:
+          additionalProperties:
+            additionalProperties:
+              type: integer
+            type: object
+          type: object
+          title: Category Stats
+      type: object
+      required:
+      - images
+      - total
+      - page
+      - limit
+      - total_pages
+      title: GalleryListResponse
+      description: Response for gallery list endpoint
     GalleryImageResponse:
       properties:
         id:
@@ -1133,32 +922,117 @@ components:
       - source_type
       title: GalleryImageResponse
       description: Response schema for gallery images with signed URL support
-    GalleryCreateResponse:
+    ExternalAdUsageMetadata:
       properties:
-        success:
-          type: boolean
-          title: Success
-        images:
-          items:
-            $ref: '#/components/schemas/GalleryImageResponse'
-          type: array
-          title: Images
-        total:
-          type: integer
-          title: Total
-        ai_policy_eval:
+        observation_id:
+          type: string
+          title: Observation Id
+        platform:
+          type: string
+          title: Platform
+        native_type:
+          type: string
+          title: Native Type
+        account_id:
+          type: string
+          title: Account Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign_name:
+          type: string
+          title: Campaign Name
+        currency_code:
           anyOf:
-          - additionalProperties: true
-            type: object
+          - type: string
           - type: 'null'
-          title: Ai Policy Eval
+          title: Currency Code
+        ad_group_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Group Id
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+        creative_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creative Id
+        creative_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creative Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        inventory_state:
+          type: string
+          title: Inventory State
+          default: current
+        media_role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Role
+        provider_asset_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Asset Id
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        performance_tier:
+          type: string
+          title: Performance Tier
+        performance_reason:
+          type: string
+          title: Performance Reason
+        attribution_scope:
+          type: string
+          title: Attribution Scope
+        metrics:
+          additionalProperties: true
+          type: object
+          title: Metrics
+        benchmark:
+          additionalProperties: true
+          type: object
+          title: Benchmark
+        metric_window:
+          additionalProperties: true
+          type: object
+          title: Metric Window
+        analysis:
+          additionalProperties: true
+          type: object
+          title: Analysis
       type: object
       required:
-      - success
-      - images
-      - total
-      title: GalleryCreateResponse
-      description: Response for gallery image creation endpoints
+      - observation_id
+      - platform
+      - native_type
+      - account_id
+      - campaign_id
+      - campaign_name
+      - performance_tier
+      - performance_reason
+      - attribution_scope
+      title: ExternalAdUsageMetadata
     JobResponse:
       properties:
         job_id:
@@ -1190,6 +1064,129 @@ components:
         poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
         status: running
         stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    Body_create_gallery_image_with_ai_api_gallery_create_with_ai_post:
+      properties:
+        prompt:
+          type: string
+          title: Prompt
+        size:
+          type: string
+          title: Size
+          default: 1024x1024
+        aspect_ratio:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aspect Ratio
+        num_images:
+          type: integer
+          title: Num Images
+          default: 1
+        use_company_style:
+          type: boolean
+          title: Use Company Style
+          default: true
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        tags:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tags
+        reference_gallery_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          - type: 'null'
+          title: Reference Gallery Ids
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+              format: binary
+            type: array
+          - type: 'null'
+          title: Reference Images
+      type: object
+      required:
+      - prompt
+      title: Body_create_gallery_image_with_ai_api_gallery_create_with_ai_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_upload_gallery_images_bulk_api_gallery_upload_bulk_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+        titles:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          - type: 'null'
+          title: Titles
+        descriptions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          - type: 'null'
+          title: Descriptions
+        category:
+          type: string
+          title: Category
+          default: uploaded
+        tags:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tags
+      type: object
+      required:
+      - files
+      title: Body_upload_gallery_images_bulk_api_gallery_upload_bulk_post
+    GalleryUploadResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        uploaded_images:
+          items:
+            $ref: '#/components/schemas/GalleryImageResponse'
+          type: array
+          title: Uploaded Images
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - success
+      - uploaded_images
+      - total
+      title: GalleryUploadResponse
+      description: Response for gallery upload endpoints
   securitySchemes:
     HTTPBearer:
       type: http

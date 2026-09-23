@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Competitor Tracking API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: competitor-tracking
 paths:
@@ -51,7 +48,12 @@ paths:
       tags:
       - competitor-tracking
       summary: List Competitors
-      description: "List all competitors being tracked by the user.\n\nReturns:\n    List of competitor information with active campaign counts"
+      description: 'List all competitors being tracked by the user.
+
+
+        Returns:
+
+        List of competitor information with active campaign counts'
       operationId: list_competitors_api_competitor_tracking_list_get
       responses:
         '200':
@@ -180,7 +182,19 @@ paths:
       tags:
       - competitor-tracking
       summary: Scan Competitor
-      description: "Scan a specific competitor for new campaigns.\n\nArgs:\n    competitor_id: ID of the competitor to scan\n    scan_types: Optional list of scan types (website, facebook, social)\n\nReturns:\n    Scan results with campaigns found"
+      description: 'Scan a specific competitor for new campaigns.
+
+
+        Args:
+
+        competitor_id: ID of the competitor to scan
+
+        scan_types: Optional list of scan types (website, facebook, social)
+
+
+        Returns:
+
+        Scan results with campaigns found'
       operationId: scan_competitor_api_competitor_tracking_scan__competitor_id__post
       security:
       - HTTPBearer: []
@@ -258,7 +272,17 @@ paths:
       tags:
       - competitor-tracking
       summary: Get Competitor Details
-      description: "Get detailed information about a competitor including campaigns.\n\nArgs:\n    competitor_id: ID of the competitor\n\nReturns:\n    Detailed competitor information with campaigns"
+      description: 'Get detailed information about a competitor including campaigns.
+
+
+        Args:
+
+        competitor_id: ID of the competitor
+
+
+        Returns:
+
+        Detailed competitor information with campaigns'
       operationId: get_competitor_details_api_competitor_tracking__competitor_id__get
       security:
       - HTTPBearer: []
@@ -426,7 +450,17 @@ paths:
       tags:
       - competitor-tracking
       summary: Get Competitor Facebook Ads
-      description: "Get all Facebook ads for a competitor (debug endpoint).\n\nArgs:\n    competitor_id: ID of the competitor\n\nReturns:\n    List of Facebook ads with full details"
+      description: 'Get all Facebook ads for a competitor (debug endpoint).
+
+
+        Args:
+
+        competitor_id: ID of the competitor
+
+
+        Returns:
+
+        List of Facebook ads with full details'
       operationId: get_competitor_facebook_ads_api_competitor_tracking__competitor_id__facebook_ads_get
       security:
       - HTTPBearer: []
@@ -455,7 +489,17 @@ paths:
       tags:
       - competitor-tracking
       summary: Update Competitor Handles
-      description: "Update competitor's social media handles using web search.\n\nArgs:\n    competitor_id: ID of the competitor\n\nReturns:\n    Update results with found handles"
+      description: 'Update competitor''s social media handles using web search.
+
+
+        Args:
+
+        competitor_id: ID of the competitor
+
+
+        Returns:
+
+        Update results with found handles'
       operationId: update_competitor_handles_api_competitor_tracking__competitor_id__update_handles_post
       security:
       - HTTPBearer: []
@@ -542,7 +586,12 @@ paths:
       tags:
       - competitor-tracking
       summary: Scan All Competitors
-      description: "Scan all competitors for the company profile.\n\nReturns:\n    Summary of scan results"
+      description: 'Scan all competitors for the company profile.
+
+
+        Returns:
+
+        Summary of scan results'
       operationId: scan_all_competitors_api_competitor_tracking_scan_all_post
       responses:
         '200':
@@ -686,7 +735,21 @@ paths:
       tags:
       - competitor-tracking
       summary: Get Competitor Social Posts
-      description: "Get social media posts for a competitor.\n\nArgs:\n    competitor_id: ID of the competitor\n    platform: Filter by platform (instagram, facebook, twitter, linkedin)\n    days: Number of days to look back (default 30)\n\nReturns:\n    List of social media posts with engagement metrics"
+      description: 'Get social media posts for a competitor.
+
+
+        Args:
+
+        competitor_id: ID of the competitor
+
+        platform: Filter by platform (instagram, facebook, twitter, linkedin)
+
+        days: Number of days to look back (default 30)
+
+
+        Returns:
+
+        List of social media posts with engagement metrics'
       operationId: get_competitor_social_posts_api_competitor_tracking__competitor_id__social_posts_get
       security:
       - HTTPBearer: []
@@ -906,49 +969,504 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    CompetitorInsightsResponse:
       properties:
-        detail:
+        competitor_id:
+          type: string
+          format: uuid
+          title: Competitor Id
+        competitor_name:
+          type: string
+          title: Competitor Name
+        headline:
+          type: string
+          title: Headline
+        subline:
+          type: string
+          title: Subline
+        summary:
+          type: string
+          title: Summary
+        key_takeaways:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            type: string
           type: array
-          title: Detail
+          title: Key Takeaways
+        supporting_evidence:
+          items:
+            type: string
+          type: array
+          title: Supporting Evidence
+        generated_at:
+          type: string
+          title: Generated At
+        expires_at:
+          type: string
+          title: Expires At
+        is_cached:
+          type: boolean
+          title: Is Cached
+        model_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model Name
+        prompt_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prompt Version
       type: object
-      title: HTTPValidationError
-    MarketingProfileAxisResponse:
+      required:
+      - competitor_id
+      - competitor_name
+      - headline
+      - subline
+      - summary
+      - generated_at
+      - expires_at
+      - is_cached
+      title: CompetitorInsightsResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CampaignInfo:
       properties:
         id:
           type: string
+          format: uuid
           title: Id
-        label:
+        ad_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Type
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+        ad_creative_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Creative Id
+        headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        cta_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cta Text
+        ad_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Format
+        creative_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creative Type
+        ad_creative_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Ad Creative Urls
+        cached_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cached Url
+        video_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Url
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        page_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Name
+        page_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Id
+        publisher_platforms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Publisher Platforms
+        ad_snapshot_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Snapshot Url
+        width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Height
+        duration_days:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Days
+        detected_at:
           type: string
-          title: Label
-        self_score:
-          type: integer
-          title: Self Score
-        competitor_score:
-          type: integer
-          title: Competitor Score
-        similarity:
-          type: integer
-          title: Similarity
-        gap:
-          type: integer
-          title: Gap
-        leader:
-          type: string
-          title: Leader
+          format: date-time
+          title: Detected At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        posted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Posted At
+        first_shown:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: First Shown
+        last_shown:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Shown
+        is_active:
+          type: boolean
+          title: Is Active
+        confidence_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Confidence Score
+        matched_product_offering_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Matched Product Offering Ids
+        matched_offerings:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Matched Offerings
+        competition_reasons:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Competition Reasons
+        ai_analysis:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Analysis
+        detected_offers:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Detected Offers
+        detected_products:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Detected Products
       type: object
       required:
       - id
-      - label
-      - self_score
-      - competitor_score
-      - similarity
-      - gap
-      - leader
-      title: MarketingProfileAxisResponse
-      description: Single radar axis for the persisted marketing profile.
+      - detected_at
+      - is_active
+      title: CampaignInfo
+      description: Competitor ad campaign (aligned to CompetitorAd fields).
+    CompetitorInfo:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        domain:
+          type: string
+          title: Domain
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+        industry:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Industry
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        categories:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Categories
+        subcategories:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Subcategories
+        business_characteristics:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Business Characteristics
+        target_market:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Market
+        status:
+          type: string
+          title: Status
+        last_scanned_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Scanned At
+        active_campaigns_count:
+          type: integer
+          title: Active Campaigns Count
+          default: 0
+        is_self:
+          type: boolean
+          title: Is Self
+          default: false
+        company_size:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Size
+        operating_regions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Operating Regions
+        match_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Match Score
+        match_percentage:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Match Percentage
+        match_breakdown:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Match Breakdown
+        audience_overlap_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Audience Overlap Score
+        offer_overlap_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Offer Overlap Score
+        positioning_overlap_score:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Positioning Overlap Score
+        scoring_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Scoring Metadata
+        discovery_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Discovery Metadata
+        website_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Website Url
+        contact_page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Contact Page Url
+        facebook_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Facebook Url
+        instagram_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Handle
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+        twitter_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Twitter Handle
+        tiktok_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tiktok Url
+        youtube_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Youtube Url
+        is_scanning:
+          type: boolean
+          title: Is Scanning
+          default: false
+        last_scan_started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Scan Started At
+        last_scan_completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Scan Completed At
+        setup_pending:
+          type: boolean
+          title: Setup Pending
+          default: false
+      type: object
+      required:
+      - id
+      - name
+      - domain
+      - status
+      title: CompetitorInfo
+      description: Basic competitor information.
+    CompetitorAdListResponse:
+      properties:
+        ads:
+          items:
+            $ref: '#/components/schemas/CompetitorAdResponse'
+          type: array
+          title: Ads
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        limit:
+          type: integer
+          title: Limit
+        total_pages:
+          type: integer
+          title: Total Pages
+        filters_applied:
+          additionalProperties: true
+          type: object
+          title: Filters Applied
+      type: object
+      required:
+      - ads
+      - total
+      - page
+      - limit
+      - total_pages
+      title: CompetitorAdListResponse
+      description: Response for competitor ad list endpoint
     CompetitorAdResponse:
       properties:
         id:
@@ -1147,38 +1665,6 @@ components:
       - detected_at
       title: CompetitorAdResponse
       description: Response schema for competitor ads with signed URL support
-    ScanResponse:
-      properties:
-        competitor_id:
-          type: string
-          format: uuid
-          title: Competitor Id
-        competitor_name:
-          type: string
-          title: Competitor Name
-        scanned_at:
-          type: string
-          title: Scanned At
-        campaigns_found:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Campaigns Found
-        errors:
-          items:
-            type: string
-          type: array
-          title: Errors
-      type: object
-      required:
-      - competitor_id
-      - competitor_name
-      - scanned_at
-      - campaigns_found
-      - errors
-      title: ScanResponse
-      description: Response from competitor scan.
     BrandFacebookOfficialUrlResponse:
       properties:
         facebook_url:
@@ -1224,451 +1710,40 @@ components:
       - source
       title: BrandFacebookOfficialUrlResponse
       description: Facebook official URL resolution status for the active brand profile.
-    CampaignInfo:
+    MarketingProfileAxisResponse:
       properties:
         id:
           type: string
-          format: uuid
           title: Id
-        ad_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Type
-        source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source
-        ad_creative_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Creative Id
-        headline:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Headline
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        cta_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cta Text
-        ad_format:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Format
-        creative_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creative Type
-        ad_creative_urls:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Ad Creative Urls
-        cached_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cached Url
-        video_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Video Url
-        thumbnail_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Thumbnail Url
-        page_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Page Name
-        page_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Page Id
-        publisher_platforms:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Publisher Platforms
-        ad_snapshot_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Snapshot Url
-        width:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Width
-        height:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Height
-        duration_days:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Duration Days
-        detected_at:
+        label:
           type: string
-          format: date-time
-          title: Detected At
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-        posted_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Posted At
-        first_shown:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: First Shown
-        last_shown:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Shown
-        is_active:
-          type: boolean
-          title: Is Active
-        confidence_score:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Confidence Score
-        matched_product_offering_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Matched Product Offering Ids
-        matched_offerings:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Matched Offerings
-        competition_reasons:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Competition Reasons
-        ai_analysis:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ai Analysis
-        detected_offers:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Detected Offers
-        detected_products:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Detected Products
-      type: object
-      required:
-      - id
-      - detected_at
-      - is_active
-      title: CampaignInfo
-      description: Competitor ad campaign (aligned to CompetitorAd fields).
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CompetitorInfo:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        name:
-          type: string
-          title: Name
-        domain:
-          type: string
-          title: Domain
-        logo_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Logo Url
-        industry:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Industry
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        categories:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Categories
-        subcategories:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Subcategories
-        business_characteristics:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Business Characteristics
-        target_market:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Target Market
-        status:
-          type: string
-          title: Status
-        last_scanned_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Scanned At
-        active_campaigns_count:
+          title: Label
+        self_score:
           type: integer
-          title: Active Campaigns Count
-          default: 0
-        is_self:
-          type: boolean
-          title: Is Self
-          default: false
-        company_size:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Size
-        operating_regions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Operating Regions
-        match_score:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Match Score
-        match_percentage:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Match Percentage
-        match_breakdown:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Match Breakdown
-        audience_overlap_score:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Audience Overlap Score
-        offer_overlap_score:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Offer Overlap Score
-        positioning_overlap_score:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Positioning Overlap Score
-        scoring_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Scoring Metadata
-        discovery_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Discovery Metadata
-        website_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Website Url
-        contact_page_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Contact Page Url
-        facebook_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Facebook Url
-        instagram_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Handle
-        linkedin_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Linkedin Url
-        twitter_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Twitter Handle
-        tiktok_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tiktok Url
-        youtube_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Youtube Url
-        is_scanning:
-          type: boolean
-          title: Is Scanning
-          default: false
-        last_scan_started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Scan Started At
-        last_scan_completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Scan Completed At
-        setup_pending:
-          type: boolean
-          title: Setup Pending
-          default: false
+          title: Self Score
+        competitor_score:
+          type: integer
+          title: Competitor Score
+        similarity:
+          type: integer
+          title: Similarity
+        gap:
+          type: integer
+          title: Gap
+        leader:
+          type: string
+          title: Leader
       type: object
       required:
       - id
-      - name
-      - domain
-      - status
-      title: CompetitorInfo
-      description: Basic competitor information.
-    CompetitorDetailsResponse:
-      properties:
-        competitor:
-          $ref: '#/components/schemas/CompetitorInfo'
-        campaigns:
-          items:
-            $ref: '#/components/schemas/CampaignInfo'
-          type: array
-          title: Campaigns
-        last_scan:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Last Scan
-        strategy_summary:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Strategy Summary
-        swot:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Swot
-        marketing_profile:
-          anyOf:
-          - $ref: '#/components/schemas/MarketingProfileResponse'
-          - type: 'null'
-      type: object
-      required:
-      - competitor
-      - campaigns
-      title: CompetitorDetailsResponse
-      description: Detailed competitor information with campaigns.
+      - label
+      - self_score
+      - competitor_score
+      - similarity
+      - gap
+      - leader
+      title: MarketingProfileAxisResponse
+      description: Single radar axis for the persisted marketing profile.
     CompetitorLiveStatus:
       properties:
         id:
@@ -1710,6 +1785,101 @@ components:
       - id
       title: CompetitorLiveStatus
       description: Lightweight persisted live state for competitors.
+    CompetitorSetupRequest:
+      properties:
+        competitor_urls:
+          items:
+            type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          type: array
+          maxItems: 10
+          title: Competitor Urls
+          description: List of competitor website URLs (max 10)
+      type: object
+      required:
+      - competitor_urls
+      title: CompetitorSetupRequest
+      description: Request to set up competitor tracking.
+    ScanResponse:
+      properties:
+        competitor_id:
+          type: string
+          format: uuid
+          title: Competitor Id
+        competitor_name:
+          type: string
+          title: Competitor Name
+        scanned_at:
+          type: string
+          title: Scanned At
+        campaigns_found:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Campaigns Found
+        errors:
+          items:
+            type: string
+          type: array
+          title: Errors
+      type: object
+      required:
+      - competitor_id
+      - competitor_name
+      - scanned_at
+      - campaigns_found
+      - errors
+      title: ScanResponse
+      description: Response from competitor scan.
+    CompetitorDetailsResponse:
+      properties:
+        competitor:
+          $ref: '#/components/schemas/CompetitorInfo'
+        campaigns:
+          items:
+            $ref: '#/components/schemas/CampaignInfo'
+          type: array
+          title: Campaigns
+        last_scan:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Last Scan
+        strategy_summary:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Strategy Summary
+        swot:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Swot
+        marketing_profile:
+          anyOf:
+          - $ref: '#/components/schemas/MarketingProfileResponse'
+          - type: 'null'
+      type: object
+      required:
+      - competitor
+      - campaigns
+      title: CompetitorDetailsResponse
+      description: Detailed competitor information with campaigns.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     MarketingProfileResponse:
       properties:
         algorithm_version:
@@ -1749,113 +1919,6 @@ components:
       - can_render
       title: MarketingProfileResponse
       description: Persisted marketing-profile snapshot returned with competitor details.
-    CompetitorInsightsResponse:
-      properties:
-        competitor_id:
-          type: string
-          format: uuid
-          title: Competitor Id
-        competitor_name:
-          type: string
-          title: Competitor Name
-        headline:
-          type: string
-          title: Headline
-        subline:
-          type: string
-          title: Subline
-        summary:
-          type: string
-          title: Summary
-        key_takeaways:
-          items:
-            type: string
-          type: array
-          title: Key Takeaways
-        supporting_evidence:
-          items:
-            type: string
-          type: array
-          title: Supporting Evidence
-        generated_at:
-          type: string
-          title: Generated At
-        expires_at:
-          type: string
-          title: Expires At
-        is_cached:
-          type: boolean
-          title: Is Cached
-        model_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Model Name
-        prompt_version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Prompt Version
-      type: object
-      required:
-      - competitor_id
-      - competitor_name
-      - headline
-      - subline
-      - summary
-      - generated_at
-      - expires_at
-      - is_cached
-      title: CompetitorInsightsResponse
-    CompetitorAdListResponse:
-      properties:
-        ads:
-          items:
-            $ref: '#/components/schemas/CompetitorAdResponse'
-          type: array
-          title: Ads
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        limit:
-          type: integer
-          title: Limit
-        total_pages:
-          type: integer
-          title: Total Pages
-        filters_applied:
-          additionalProperties: true
-          type: object
-          title: Filters Applied
-      type: object
-      required:
-      - ads
-      - total
-      - page
-      - limit
-      - total_pages
-      title: CompetitorAdListResponse
-      description: Response for competitor ad list endpoint
-    CompetitorSetupRequest:
-      properties:
-        competitor_urls:
-          items:
-            type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          type: array
-          maxItems: 10
-          title: Competitor Urls
-          description: List of competitor website URLs (max 10)
-      type: object
-      required:
-      - competitor_urls
-      title: CompetitorSetupRequest
-      description: Request to set up competitor tracking.
   securitySchemes:
     HTTPBearer:
       type: http

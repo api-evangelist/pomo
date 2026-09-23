@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Brand Workflow Sse API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: brand-workflow-sse
 paths:
@@ -13,7 +10,23 @@ paths:
       tags:
       - brand-workflow-sse
       summary: Stream Brand Workflow Events
-      description: "Stream brand workflow events for a specific process.\n\nArgs:\n    request: FastAPI request\n    process_id: Workflow process ID\n    last_event_id: Last event ID for reconnection\n    current_user: Authenticated user\n    \nReturns:\n    EventSourceResponse streaming workflow events"
+      description: 'Stream brand workflow events for a specific process.
+
+
+        Args:
+
+        request: FastAPI request
+
+        process_id: Workflow process ID
+
+        last_event_id: Last event ID for reconnection
+
+        current_user: Authenticated user
+
+
+        Returns:
+
+        EventSourceResponse streaming workflow events'
       operationId: stream_brand_workflow_events_api_brand_workflow_sse_stream__process_id__get
       security:
       - HTTPBearer: []
@@ -49,7 +62,21 @@ paths:
       tags:
       - brand-workflow-sse
       summary: Stream All Workflow Events
-      description: "Stream all brand workflow events for the current user.\n\nArgs:\n    request: FastAPI request\n    last_event_id: Last event ID for reconnection\n    current_user: Authenticated user\n    \nReturns:\n    EventSourceResponse streaming all user's workflow events"
+      description: 'Stream all brand workflow events for the current user.
+
+
+        Args:
+
+        request: FastAPI request
+
+        last_event_id: Last event ID for reconnection
+
+        current_user: Authenticated user
+
+
+        Returns:
+
+        EventSourceResponse streaming all user''s workflow events'
       operationId: stream_all_workflow_events_api_brand_workflow_sse_stream_get
       security:
       - HTTPBearer: []
@@ -172,15 +199,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -202,6 +220,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

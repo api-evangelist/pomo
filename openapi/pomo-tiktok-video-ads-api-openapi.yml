@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend TikTok Video Ads API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: TikTok Video Ads
 paths:
@@ -176,30 +173,27 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    KeywordWithCpc:
-      properties:
-        keyword:
+          title: Location
+        msg:
           type: string
-          title: Keyword
-        estimated_cpc:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Estimated Cpc
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - keyword
-      title: KeywordWithCpc
-      description: Model for keyword with CPC data
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CampaignMediaOperation:
       properties:
         action:
@@ -235,27 +229,21 @@ components:
       - selected_url
       title: CampaignMediaOperation
       description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
-    ValidationError:
+    KeywordWithCpc:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        keyword:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
     AdsCampaignUpdateRequest:
       properties:
         campaign_id:
@@ -575,6 +563,15 @@ components:
       - campaign_id
       title: AdsCampaignUpdateRequest
       description: Request model for updating ad campaign data
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     TikTokVideoAdRequest:
       properties:
         product_description:

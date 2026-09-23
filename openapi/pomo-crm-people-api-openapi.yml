@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend CRM People API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: crm-people
 paths:
@@ -457,15 +454,70 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CrmPeopleFilters:
+      properties:
+        source_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Source Counts
+        stage_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Stage Counts
+        hubspot_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Hubspot Counts
+      type: object
+      title: CrmPeopleFilters
+    CrmPeopleListResponse:
+      properties:
+        access:
+          additionalProperties: true
+          type: object
+          title: Access
+        people:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: People
+        pagination:
+          $ref: '#/components/schemas/CrmPeoplePagination'
+        filters:
+          $ref: '#/components/schemas/CrmPeopleFilters'
+        summary:
+          additionalProperties: true
+          type: object
+          title: Summary
+      type: object
+      required:
+      - access
+      title: CrmPeopleListResponse
     CrmSplitSourceRequest:
       properties:
         source_ref:
@@ -513,27 +565,6 @@ components:
       required:
       - access
       title: CrmPersonDetailResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     CrmSetStageRequest:
       properties:
         stage:
@@ -551,30 +582,6 @@ components:
       - stage
       title: CrmSetStageRequest
       description: Body for ``PUT /api/crm/people/{person_ref}/stage`` — a manual override.
-    CrmPeopleListResponse:
-      properties:
-        access:
-          additionalProperties: true
-          type: object
-          title: Access
-        people:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: People
-        pagination:
-          $ref: '#/components/schemas/CrmPeoplePagination'
-        filters:
-          $ref: '#/components/schemas/CrmPeopleFilters'
-        summary:
-          additionalProperties: true
-          type: object
-          title: Summary
-      type: object
-      required:
-      - access
-      title: CrmPeopleListResponse
     CrmMarkContactedRequest:
       properties:
         note:
@@ -597,25 +604,15 @@ components:
         Both fields are optional — an empty body logs a manual touch with no note.
 
         ``channel`` defaults to ``manual`` (I reached out myself, off-platform).'
-    CrmPeopleFilters:
+    HTTPValidationError:
       properties:
-        source_counts:
-          additionalProperties:
-            type: integer
-          type: object
-          title: Source Counts
-        stage_counts:
-          additionalProperties:
-            type: integer
-          type: object
-          title: Stage Counts
-        hubspot_counts:
-          additionalProperties:
-            type: integer
-          type: object
-          title: Hubspot Counts
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      title: CrmPeopleFilters
+      title: HTTPValidationError
     CrmPeoplePagination:
       properties:
         limit:

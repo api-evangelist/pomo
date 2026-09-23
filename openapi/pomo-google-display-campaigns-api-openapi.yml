@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Google Display Campaigns API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: google_display_campaigns
 paths:
@@ -155,6 +152,77 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CampaignMediaOperation:
+      properties:
+        action:
+          type: string
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Action
+        media_type:
+          type: string
+          enum:
+          - image
+          - video
+          title: Media Type
+        selected_url:
+          type: string
+          title: Selected Url
+        previous_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous Url
+        source_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Source Index
+      type: object
+      required:
+      - action
+      - media_type
+      - selected_url
+      title: CampaignMediaOperation
+      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
+    KeywordWithCpc:
+      properties:
+        keyword:
+          type: string
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
+      type: object
+      required:
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
     CampaignResponse:
       properties:
         id:
@@ -236,86 +304,6 @@ components:
       - target_platforms
       title: CampaignResponse
       description: Base class for campaign metadata response.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    KeywordWithCpc:
-      properties:
-        keyword:
-          type: string
-          title: Keyword
-        estimated_cpc:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Estimated Cpc
-      type: object
-      required:
-      - keyword
-      title: KeywordWithCpc
-      description: Model for keyword with CPC data
-    CampaignMediaOperation:
-      properties:
-        action:
-          type: string
-          enum:
-          - replace
-          - add
-          - add_and_set_primary
-          title: Action
-        media_type:
-          type: string
-          enum:
-          - image
-          - video
-          title: Media Type
-        selected_url:
-          type: string
-          title: Selected Url
-        previous_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous Url
-        source_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Source Index
-      type: object
-      required:
-      - action
-      - media_type
-      - selected_url
-      title: CampaignMediaOperation
-      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     AdsCampaignUpdateRequest:
       properties:
         campaign_id:
@@ -662,6 +650,15 @@ components:
       - campaign_id
       title: AdsCampaignUpdateResponse
       description: Standardized response for ad update operations within a campaign.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

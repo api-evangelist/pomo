@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Product Offerings API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: product-offerings
 paths:
@@ -724,6 +721,100 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ProductOfferingRewriteRequest:
+      properties:
+        field:
+          type: string
+          enum:
+          - description
+          - key_features
+          title: Field
+        instructions:
+          anyOf:
+          - type: string
+            maxLength: 1500
+          - type: 'null'
+          title: Instructions
+      type: object
+      required:
+      - field
+      title: ProductOfferingRewriteRequest
+    ExternalAdMetadata:
+      properties:
+        platform:
+          type: string
+          title: Platform
+        native_type:
+          type: string
+          title: Native Type
+        performance_tier:
+          type: string
+          title: Performance Tier
+        performance_reason:
+          type: string
+          title: Performance Reason
+        attribution_scope:
+          type: string
+          title: Attribution Scope
+        currency_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Currency Code
+        metrics:
+          additionalProperties: true
+          type: object
+          title: Metrics
+        benchmark:
+          additionalProperties: true
+          type: object
+          title: Benchmark
+        usage_count:
+          type: integer
+          title: Usage Count
+        current_usage_count:
+          type: integer
+          title: Current Usage Count
+          default: 0
+        historical_usage_count:
+          type: integer
+          title: Historical Usage Count
+          default: 0
+        usages:
+          items:
+            $ref: '#/components/schemas/ExternalAdUsageMetadata'
+          type: array
+          title: Usages
+        analysis:
+          additionalProperties: true
+          type: object
+          title: Analysis
+      type: object
+      required:
+      - platform
+      - native_type
+      - performance_tier
+      - performance_reason
+      - attribution_scope
+      - usage_count
+      title: ExternalAdMetadata
+    ProductOfferingCurrentPriceUpdateRequest:
+      properties:
+        price:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Price
+        unit:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Unit
+      type: object
+      required:
+      - price
+      title: ProductOfferingCurrentPriceUpdateRequest
     HTTPValidationError:
       properties:
         detail:
@@ -744,53 +835,6 @@ components:
       required:
       - image_url
       title: ProductOfferingDeleteImageRequest
-    Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post:
-      properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-        titles:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: string
-          - type: 'null'
-          title: Titles
-        descriptions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: string
-          - type: 'null'
-          title: Descriptions
-        tags:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tags
-      type: object
-      required:
-      - files
-      title: Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post
-    ProductRefreshPreviewRequest:
-      properties:
-        source_urls:
-          items:
-            type: string
-          type: array
-          title: Source Urls
-        refresh_urls:
-          items:
-            type: string
-          type: array
-          title: Refresh Urls
-      type: object
-      title: ProductRefreshPreviewRequest
     ProductOfferingUpdateRequest:
       properties:
         name:
@@ -852,6 +896,39 @@ components:
           title: Status
       type: object
       title: ProductOfferingUpdateRequest
+    Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+        titles:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          - type: 'null'
+          title: Titles
+        descriptions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: string
+          - type: 'null'
+          title: Descriptions
+        tags:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tags
+      type: object
+      required:
+      - files
+      title: Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post
     ValidationError:
       properties:
         loc:
@@ -873,269 +950,6 @@ components:
       - msg
       - type
       title: ValidationError
-    ProductOfferingRewriteRequest:
-      properties:
-        field:
-          type: string
-          enum:
-          - description
-          - key_features
-          title: Field
-        instructions:
-          anyOf:
-          - type: string
-            maxLength: 1500
-          - type: 'null'
-          title: Instructions
-      type: object
-      required:
-      - field
-      title: ProductOfferingRewriteRequest
-    ProductOfferingCurrentPriceUpdateRequest:
-      properties:
-        price:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Price
-        unit:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Unit
-      type: object
-      required:
-      - price
-      title: ProductOfferingCurrentPriceUpdateRequest
-    ExternalAdMetadata:
-      properties:
-        platform:
-          type: string
-          title: Platform
-        native_type:
-          type: string
-          title: Native Type
-        performance_tier:
-          type: string
-          title: Performance Tier
-        performance_reason:
-          type: string
-          title: Performance Reason
-        attribution_scope:
-          type: string
-          title: Attribution Scope
-        currency_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Currency Code
-        metrics:
-          additionalProperties: true
-          type: object
-          title: Metrics
-        benchmark:
-          additionalProperties: true
-          type: object
-          title: Benchmark
-        usage_count:
-          type: integer
-          title: Usage Count
-        current_usage_count:
-          type: integer
-          title: Current Usage Count
-          default: 0
-        historical_usage_count:
-          type: integer
-          title: Historical Usage Count
-          default: 0
-        usages:
-          items:
-            $ref: '#/components/schemas/ExternalAdUsageMetadata'
-          type: array
-          title: Usages
-        analysis:
-          additionalProperties: true
-          type: object
-          title: Analysis
-      type: object
-      required:
-      - platform
-      - native_type
-      - performance_tier
-      - performance_reason
-      - attribution_scope
-      - usage_count
-      title: ExternalAdMetadata
-    ProductRefreshApplyRequest:
-      properties:
-        source_urls:
-          items:
-            type: string
-          type: array
-          title: Source Urls
-        refresh_urls:
-          items:
-            type: string
-          type: array
-          title: Refresh Urls
-        selected_fields:
-          items:
-            type: string
-            enum:
-            - name
-            - description
-            - primary_category
-            - subcategories
-            - tags
-            - key_features
-            - price_list
-            - images
-            - pricing_analysis
-            - feature_comparison
-            - swot_analysis
-          type: array
-          title: Selected Fields
-        preview_patch:
-          additionalProperties: true
-          type: object
-          title: Preview Patch
-      type: object
-      title: ProductRefreshApplyRequest
-    ProductOfferingUploadImagesResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        uploaded_images:
-          items:
-            $ref: '#/components/schemas/GalleryImageResponse'
-          type: array
-          title: Uploaded Images
-        total:
-          type: integer
-          title: Total
-          default: 0
-        offering:
-          additionalProperties: true
-          type: object
-          title: Offering
-      type: object
-      required:
-      - success
-      - offering
-      title: ProductOfferingUploadImagesResponse
-    ExternalAdUsageMetadata:
-      properties:
-        observation_id:
-          type: string
-          title: Observation Id
-        platform:
-          type: string
-          title: Platform
-        native_type:
-          type: string
-          title: Native Type
-        account_id:
-          type: string
-          title: Account Id
-        campaign_id:
-          type: string
-          title: Campaign Id
-        campaign_name:
-          type: string
-          title: Campaign Name
-        currency_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Currency Code
-        ad_group_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Group Id
-        ad_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Id
-        creative_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creative Id
-        creative_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creative Name
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        inventory_state:
-          type: string
-          title: Inventory State
-          default: current
-        media_role:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Media Role
-        provider_asset_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Provider Asset Id
-        source_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source Url
-        thumbnail_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Thumbnail Url
-        performance_tier:
-          type: string
-          title: Performance Tier
-        performance_reason:
-          type: string
-          title: Performance Reason
-        attribution_scope:
-          type: string
-          title: Attribution Scope
-        metrics:
-          additionalProperties: true
-          type: object
-          title: Metrics
-        benchmark:
-          additionalProperties: true
-          type: object
-          title: Benchmark
-        metric_window:
-          additionalProperties: true
-          type: object
-          title: Metric Window
-        analysis:
-          additionalProperties: true
-          type: object
-          title: Analysis
-      type: object
-      required:
-      - observation_id
-      - platform
-      - native_type
-      - account_id
-      - campaign_id
-      - campaign_name
-      - performance_tier
-      - performance_reason
-      - attribution_scope
-      title: ExternalAdUsageMetadata
     GalleryImageResponse:
       properties:
         id:
@@ -1274,6 +1088,189 @@ components:
       - source_type
       title: GalleryImageResponse
       description: Response schema for gallery images with signed URL support
+    ExternalAdUsageMetadata:
+      properties:
+        observation_id:
+          type: string
+          title: Observation Id
+        platform:
+          type: string
+          title: Platform
+        native_type:
+          type: string
+          title: Native Type
+        account_id:
+          type: string
+          title: Account Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign_name:
+          type: string
+          title: Campaign Name
+        currency_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Currency Code
+        ad_group_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Group Id
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+        creative_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creative Id
+        creative_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creative Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        inventory_state:
+          type: string
+          title: Inventory State
+          default: current
+        media_role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Role
+        provider_asset_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Asset Id
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        performance_tier:
+          type: string
+          title: Performance Tier
+        performance_reason:
+          type: string
+          title: Performance Reason
+        attribution_scope:
+          type: string
+          title: Attribution Scope
+        metrics:
+          additionalProperties: true
+          type: object
+          title: Metrics
+        benchmark:
+          additionalProperties: true
+          type: object
+          title: Benchmark
+        metric_window:
+          additionalProperties: true
+          type: object
+          title: Metric Window
+        analysis:
+          additionalProperties: true
+          type: object
+          title: Analysis
+      type: object
+      required:
+      - observation_id
+      - platform
+      - native_type
+      - account_id
+      - campaign_id
+      - campaign_name
+      - performance_tier
+      - performance_reason
+      - attribution_scope
+      title: ExternalAdUsageMetadata
+    ProductRefreshPreviewRequest:
+      properties:
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+        refresh_urls:
+          items:
+            type: string
+          type: array
+          title: Refresh Urls
+      type: object
+      title: ProductRefreshPreviewRequest
+    ProductOfferingUploadImagesResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        uploaded_images:
+          items:
+            $ref: '#/components/schemas/GalleryImageResponse'
+          type: array
+          title: Uploaded Images
+        total:
+          type: integer
+          title: Total
+          default: 0
+        offering:
+          additionalProperties: true
+          type: object
+          title: Offering
+      type: object
+      required:
+      - success
+      - offering
+      title: ProductOfferingUploadImagesResponse
+    ProductRefreshApplyRequest:
+      properties:
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+        refresh_urls:
+          items:
+            type: string
+          type: array
+          title: Refresh Urls
+        selected_fields:
+          items:
+            type: string
+            enum:
+            - name
+            - description
+            - primary_category
+            - subcategories
+            - tags
+            - key_features
+            - price_list
+            - images
+            - pricing_analysis
+            - feature_comparison
+            - swot_analysis
+          type: array
+          title: Selected Fields
+        preview_patch:
+          additionalProperties: true
+          type: object
+          title: Preview Patch
+      type: object
+      title: ProductRefreshApplyRequest
     JobResponse:
       properties:
         job_id:

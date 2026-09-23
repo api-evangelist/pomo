@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Meta Stories Reels Campaigns API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: meta_stories_reels_campaigns
 paths:
@@ -244,87 +241,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    CampaignResponse:
-      properties:
-        id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Id
-        campaign_id:
-          type: string
-          title: Campaign Id
-        name:
-          type: string
-          title: Name
-        target_platforms:
-          items:
-            type: string
-          type: array
-          title: Target Platforms
-        target_audience:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Audience
-        user_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Prompt
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-        creation_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creation Date
-        last_modified:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Modified
-        deployed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Deployed At
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-        creation_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creation Source
-      type: object
-      required:
-      - campaign_id
-      - name
-      - target_platforms
-      title: CampaignResponse
-      description: Base class for campaign metadata response.
     HTTPValidationError:
       properties:
         detail:
@@ -334,21 +250,27 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    KeywordWithCpc:
+    ValidationError:
       properties:
-        keyword:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Keyword
-        estimated_cpc:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Estimated Cpc
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - keyword
-      title: KeywordWithCpc
-      description: Model for keyword with CPC data
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CampaignMediaOperation:
       properties:
         action:
@@ -384,27 +306,21 @@ components:
       - selected_url
       title: CampaignMediaOperation
       description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
-    ValidationError:
+    KeywordWithCpc:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        keyword:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
     MetaStoriesReelsCampaignUpdateRequest:
       properties:
         campaign_id:
@@ -723,6 +639,87 @@ components:
       - campaign_id
       - ad_id
       title: MetaStoriesReelsCampaignUpdateRequest
+    CampaignResponse:
+      properties:
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        name:
+          type: string
+          title: Name
+        target_platforms:
+          items:
+            type: string
+          type: array
+          title: Target Platforms
+        target_audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Audience
+        user_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Prompt
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+        last_modified:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Modified
+        deployed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deployed At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+        creation_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Source
+      type: object
+      required:
+      - campaign_id
+      - name
+      - target_platforms
+      title: CampaignResponse
+      description: Base class for campaign metadata response.
     AdsCampaignUpdateResponse:
       properties:
         status:

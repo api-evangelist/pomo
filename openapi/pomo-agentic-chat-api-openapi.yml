@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Agentic Chat API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: agentic-chat
 paths:
@@ -122,6 +119,26 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ChatFollowUpSelection:
+      properties:
+        source_message_id:
+          type: string
+          format: uuid
+          title: Source Message Id
+        option_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 5
+          minItems: 1
+          title: Option Ids
+      additionalProperties: false
+      type: object
+      required:
+      - source_message_id
+      - option_ids
+      title: ChatFollowUpSelection
+      description: Untrusted identities for selecting a persisted v2 follow-up panel.
     HTTPValidationError:
       properties:
         detail:
@@ -169,187 +186,6 @@ components:
       - label
       - type
       title: MentionTarget
-    AgentMessageResponse:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-          description: Message ID
-        conversation_id:
-          type: string
-          format: uuid
-          title: Conversation Id
-          description: Parent conversation ID
-        producer_job_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Producer Job Id
-          description: Durable chat job that produced this message pair
-        role:
-          type: string
-          title: Role
-          description: 'Message role: ''user'' or ''assistant'''
-        content:
-          type: string
-          title: Content
-          description: Message text content
-        ui_tool_calls:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Ui Tool Calls
-          description: User-facing tool payloads rendered as chat cards
-        web_citations:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Web Citations
-          description: Web citations extracted from tool payloads for message-level rendering.
-        citations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/ResolvedCitationResponse'
-            type: array
-          - type: 'null'
-          title: Citations
-          description: Canonical claim-linked Markee v2 citations. Internal evidence locators are intentionally excluded.
-        workspace_attributions:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/ResolvedWorkspaceAttributionResponse'
-            type: array
-          - type: 'null'
-          title: Workspace Attributions
-          description: Server-resolved workspace source labels without private locators.
-        message_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Message Metadata
-          description: Structured UI metadata for message-level affordances.
-        tokens_used:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Tokens Used
-          description: Total tokens consumed (input + output)
-        turns:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Turns
-          description: Number of agentic iterations
-        user_feedback:
-          anyOf:
-          - type: string
-            enum:
-            - up
-            - down
-          - type: 'null'
-          title: User Feedback
-          description: User feedback on response quality
-        sender_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sender Key
-          description: Who produced this message (agent_key or 'user')
-        target_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Key
-          description: Who this message was directed at via @mention
-        agent_trace:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/AgentTraceStep'
-            type: array
-          - type: 'null'
-          title: Agent Trace
-          description: Inter-agent delegation trace for direct agent chat messages
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Message creation timestamp
-      type: object
-      required:
-      - id
-      - conversation_id
-      - role
-      - content
-      - created_at
-      title: AgentMessageResponse
-      description: 'Response schema for agent message.
-
-
-        Includes:
-
-        - Message content (role, content)
-
-        - MCP tool execution history (tool_calls)
-
-        - Cost tracking (tokens_used)
-
-        - Agentic iteration count (turns)'
-      example:
-        content: Your campaigns have an average ROAS of 3.2 over the last 30 days.
-        conversation_id: 123e4567-e89b-12d3-a456-426614174002
-        created_at: '2025-11-05T20:30:00Z'
-        id: 123e4567-e89b-12d3-a456-426614174004
-        role: assistant
-        tokens_used: 450
-        turns: 2
-        ui_tool_calls:
-        - arguments:
-            date_range_days: 30
-          execution_time_ms: 245
-          result:
-            clicks: 1500
-            roas: 3.2
-          success: true
-          tool: get_campaign_analytics
-    ChatAttachmentHandle:
-      properties:
-        handle:
-          type: string
-          maxLength: 500
-          minLength: 16
-          title: Handle
-        name:
-          type: string
-          maxLength: 500
-          minLength: 1
-          title: Name
-        media_type:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Media Type
-        size_bytes:
-          type: integer
-          minimum: 0.0
-          title: Size Bytes
-      type: object
-      required:
-      - handle
-      - name
-      - media_type
-      - size_bytes
-      title: ChatAttachmentHandle
-      description: Opaque Core-issued attachment metadata accepted by the async bridge.
     AgentTraceStep:
       properties:
         agent_key:
@@ -387,26 +223,6 @@ components:
       - message_type
       title: AgentTraceStep
       description: One step in the agent delegation trace (specialist analysis or manager synthesis).
-    ChatFollowUpSelection:
-      properties:
-        source_message_id:
-          type: string
-          format: uuid
-          title: Source Message Id
-        option_ids:
-          items:
-            type: string
-          type: array
-          maxItems: 5
-          minItems: 1
-          title: Option Ids
-      additionalProperties: false
-      type: object
-      required:
-      - source_message_id
-      - option_ids
-      title: ChatFollowUpSelection
-      description: Untrusted identities for selecting a persisted v2 follow-up panel.
     ValidationError:
       properties:
         loc:
@@ -428,266 +244,6 @@ components:
       - msg
       - type
       title: ValidationError
-    PageContext:
-      properties:
-        source:
-          type: string
-          title: Source
-          description: Current Pomo page key where Markee was opened (e.g., product-detail)
-        route:
-          anyOf:
-          - type: string
-            maxLength: 2048
-          - type: 'null'
-          title: Route
-          description: Markee v2-only browser pathname; excluded from the v1 payload
-        entity_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Entity Id
-          description: Optional entity identifier (not exposed to users)
-        entity_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Entity Name
-          description: Human-readable entity name
-        tab:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tab
-          description: Active tab/section when chat opened
-        content:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Content
-          description: Optional page content summary for additional grounding
-        extra:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Extra
-          description: Structured page-specific context for grounding
-      type: object
-      required:
-      - source
-      title: PageContext
-      description: Lightweight page context sent from the UI to help Markee ground responses.
-    EvidenceLineageClass:
-      type: string
-      enum:
-      - user_authored
-      - first_party_observed
-      - imported
-      - system_derived
-      - unknown
-      title: EvidenceLineageClass
-      description: 'How a workspace field entered the evidence plane.
-
-
-        Lineage is descriptive metadata, not a truth ranking.  In particular,
-
-        ``system_derived`` facts still require support from their underlying
-
-        evidence and ``user_authored`` facts are authoritative only as statements
-
-        of user intent.'
-    ChatResponse:
-      properties:
-        conversation_id:
-          type: string
-          format: uuid
-          title: Conversation Id
-          description: Conversation ID (created or existing)
-        conversation:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Conversation
-          description: Full conversation object with updated metadata
-        user_message:
-          $ref: '#/components/schemas/AgentMessageResponse'
-          description: User message that was saved
-        assistant_message:
-          $ref: '#/components/schemas/AgentMessageResponse'
-          description: Assistant response that was saved
-        response:
-          type: string
-          title: Response
-          description: Assistant's response text (convenience field)
-        ui_tool_calls:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Ui Tool Calls
-          description: User-facing tool payloads for this turn
-        web_citations:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Web Citations
-          description: Web citations extracted from tool payloads for this turn
-        tokens_used:
-          type: integer
-          title: Tokens Used
-          description: Total tokens consumed
-        turns:
-          type: integer
-          title: Turns
-          description: Number of agentic iterations
-        referenced_documents:
-          items:
-            $ref: '#/components/schemas/ReferencedDocument'
-          type: array
-          title: Referenced Documents
-          description: Documents referenced in generating this response (for UI display)
-        ai_policy_eval:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ai Policy Eval
-          description: Org AI policy evaluation result for this response (warn-only)
-        sender_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sender Key
-          description: 'Who responded: agent_key or null for general chatbot'
-        sender_display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sender Display Name
-          description: Human-readable name of responding agent
-        sender_role:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sender Role
-          description: 'Role of responding agent: manager, strategist, specialist'
-        target_mode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Mode
-          description: 'Routing mode: ''agent_chat'' or null for general chatbot'
-        agent_trace:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/AgentTraceStep'
-            type: array
-          - type: 'null'
-          title: Agent Trace
-          description: Inter-agent delegation trace for direct agent chat (specialist analysis + manager synthesis)
-      type: object
-      required:
-      - conversation_id
-      - user_message
-      - assistant_message
-      - response
-      - tokens_used
-      - turns
-      title: ChatResponse
-      description: 'Response schema for agentic chat.
-
-
-        Includes:
-
-        - conversation_id: ID of conversation (created or existing)
-
-        - conversation: Full conversation object with updated title
-
-        - user_message: The user''s message that was saved
-
-        - assistant_message: The assistant''s response that was saved
-
-        - response: The assistant''s response text (convenience field)
-
-        - tool_calls: MCP tools that were executed
-
-        - tokens_used: Total tokens for this turn
-
-        - turns: Number of agentic iterations
-
-        - referenced_documents: Documents used to generate the response (for UI display)'
-      example:
-        assistant_message:
-          content: Your top campaigns have ROAS of 3.2
-          conversation_id: 123e4567-e89b-12d3-a456-426614174002
-          created_at: '2025-11-05T20:30:01Z'
-          id: 123e4567-e89b-12d3-a456-426614174006
-          role: assistant
-          tokens_used: 450
-          turns: 2
-          ui_tool_calls:
-          - arguments:
-              date_range_days: 30
-            result:
-              roas: 3.2
-            success: true
-            tool: get_campaign_analytics
-        conversation_id: 123e4567-e89b-12d3-a456-426614174002
-        response: Your top campaigns have ROAS of 3.2
-        tokens_used: 450
-        turns: 2
-        ui_tool_calls:
-        - arguments:
-            date_range_days: 30
-          result:
-            roas: 3.2
-          success: true
-          tool: get_campaign_analytics
-        user_message:
-          content: What are my top performing campaigns?
-          conversation_id: 123e4567-e89b-12d3-a456-426614174002
-          created_at: '2025-11-05T20:30:00Z'
-          id: 123e4567-e89b-12d3-a456-426614174005
-          role: user
-    ReferencedDocument:
-      properties:
-        document_id:
-          type: string
-          title: Document Id
-          description: Source document ID (CompanyAnalysisFile)
-        filename:
-          type: string
-          title: Filename
-          description: Original filename
-        file_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: File Type
-          description: MIME type of the file
-        type:
-          type: string
-          title: Type
-          description: 'Content type: ''document'' or ''image'''
-          default: document
-      type: object
-      required:
-      - document_id
-      - filename
-      title: ReferencedDocument
-      description: 'Document referenced in a chat response.
-
-
-        Tracks which company documents were used to generate the response,
-
-        allowing the UI to display file references.'
-      example:
-        document_id: 123e4567-e89b-12d3-a456-426614174010
-        file_type: application/pdf
-        filename: pitch_deck.pdf
-        type: document
     ResolvedWorkspaceAttributionResponse:
       properties:
         ordinal:
@@ -739,6 +295,35 @@ components:
       - lineage_class
       title: ResolvedWorkspaceAttributionResponse
       description: Public source label with all private evidence locators removed.
+    ChatAttachmentHandle:
+      properties:
+        handle:
+          type: string
+          maxLength: 500
+          minLength: 16
+          title: Handle
+        name:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Name
+        media_type:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Media Type
+        size_bytes:
+          type: integer
+          minimum: 0.0
+          title: Size Bytes
+      type: object
+      required:
+      - handle
+      - name
+      - media_type
+      - size_bytes
+      title: ChatAttachmentHandle
+      description: Opaque Core-issued attachment metadata accepted by the async bridge.
     ResolvedCitationResponse:
       properties:
         ordinal:
@@ -905,6 +490,25 @@ components:
           source: product-detail
           tab: marketing
         workflow_stage: campaign_analysis
+    EvidenceLineageClass:
+      type: string
+      enum:
+      - user_authored
+      - first_party_observed
+      - imported
+      - system_derived
+      - unknown
+      title: EvidenceLineageClass
+      description: 'How a workspace field entered the evidence plane.
+
+
+        Lineage is descriptive metadata, not a truth ranking.  In particular,
+
+        ``system_derived`` facts still require support from their underlying
+
+        evidence and ``user_authored`` facts are authoritative only as statements
+
+        of user intent.'
     MentionTargetsResponse:
       properties:
         teams:
@@ -919,6 +523,399 @@ components:
           title: Agents
       type: object
       title: MentionTargetsResponse
+    PageContext:
+      properties:
+        source:
+          type: string
+          title: Source
+          description: Current Pomo page key where Markee was opened (e.g., product-detail)
+        route:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Route
+          description: Markee v2-only browser pathname; excluded from the v1 payload
+        entity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Id
+          description: Optional entity identifier (not exposed to users)
+        entity_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Name
+          description: Human-readable entity name
+        tab:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tab
+          description: Active tab/section when chat opened
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+          description: Optional page content summary for additional grounding
+        extra:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Extra
+          description: Structured page-specific context for grounding
+      type: object
+      required:
+      - source
+      title: PageContext
+      description: Lightweight page context sent from the UI to help Markee ground responses.
+    ReferencedDocument:
+      properties:
+        document_id:
+          type: string
+          title: Document Id
+          description: Source document ID (CompanyAnalysisFile)
+        filename:
+          type: string
+          title: Filename
+          description: Original filename
+        file_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: File Type
+          description: MIME type of the file
+        type:
+          type: string
+          title: Type
+          description: 'Content type: ''document'' or ''image'''
+          default: document
+      type: object
+      required:
+      - document_id
+      - filename
+      title: ReferencedDocument
+      description: 'Document referenced in a chat response.
+
+
+        Tracks which company documents were used to generate the response,
+
+        allowing the UI to display file references.'
+      example:
+        document_id: 123e4567-e89b-12d3-a456-426614174010
+        file_type: application/pdf
+        filename: pitch_deck.pdf
+        type: document
+    ChatResponse:
+      properties:
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+          description: Conversation ID (created or existing)
+        conversation:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Conversation
+          description: Full conversation object with updated metadata
+        user_message:
+          $ref: '#/components/schemas/AgentMessageResponse'
+          description: User message that was saved
+        assistant_message:
+          $ref: '#/components/schemas/AgentMessageResponse'
+          description: Assistant response that was saved
+        response:
+          type: string
+          title: Response
+          description: Assistant's response text (convenience field)
+        ui_tool_calls:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Ui Tool Calls
+          description: User-facing tool payloads for this turn
+        web_citations:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Web Citations
+          description: Web citations extracted from tool payloads for this turn
+        tokens_used:
+          type: integer
+          title: Tokens Used
+          description: Total tokens consumed
+        turns:
+          type: integer
+          title: Turns
+          description: Number of agentic iterations
+        referenced_documents:
+          items:
+            $ref: '#/components/schemas/ReferencedDocument'
+          type: array
+          title: Referenced Documents
+          description: Documents referenced in generating this response (for UI display)
+        ai_policy_eval:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Policy Eval
+          description: Org AI policy evaluation result for this response (warn-only)
+        sender_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sender Key
+          description: 'Who responded: agent_key or null for general chatbot'
+        sender_display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sender Display Name
+          description: Human-readable name of responding agent
+        sender_role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sender Role
+          description: 'Role of responding agent: manager, strategist, specialist'
+        target_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Mode
+          description: 'Routing mode: ''agent_chat'' or null for general chatbot'
+        agent_trace:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AgentTraceStep'
+            type: array
+          - type: 'null'
+          title: Agent Trace
+          description: Inter-agent delegation trace for direct agent chat (specialist analysis + manager synthesis)
+      type: object
+      required:
+      - conversation_id
+      - user_message
+      - assistant_message
+      - response
+      - tokens_used
+      - turns
+      title: ChatResponse
+      description: 'Response schema for agentic chat.
+
+
+        Includes:
+
+        - conversation_id: ID of conversation (created or existing)
+
+        - conversation: Full conversation object with updated title
+
+        - user_message: The user''s message that was saved
+
+        - assistant_message: The assistant''s response that was saved
+
+        - response: The assistant''s response text (convenience field)
+
+        - tool_calls: MCP tools that were executed
+
+        - tokens_used: Total tokens for this turn
+
+        - turns: Number of agentic iterations
+
+        - referenced_documents: Documents used to generate the response (for UI display)'
+      example:
+        assistant_message:
+          content: Your top campaigns have ROAS of 3.2
+          conversation_id: 123e4567-e89b-12d3-a456-426614174002
+          created_at: '2025-11-05T20:30:01Z'
+          id: 123e4567-e89b-12d3-a456-426614174006
+          role: assistant
+          tokens_used: 450
+          turns: 2
+          ui_tool_calls:
+          - arguments:
+              date_range_days: 30
+            result:
+              roas: 3.2
+            success: true
+            tool: get_campaign_analytics
+        conversation_id: 123e4567-e89b-12d3-a456-426614174002
+        response: Your top campaigns have ROAS of 3.2
+        tokens_used: 450
+        turns: 2
+        ui_tool_calls:
+        - arguments:
+            date_range_days: 30
+          result:
+            roas: 3.2
+          success: true
+          tool: get_campaign_analytics
+        user_message:
+          content: What are my top performing campaigns?
+          conversation_id: 123e4567-e89b-12d3-a456-426614174002
+          created_at: '2025-11-05T20:30:00Z'
+          id: 123e4567-e89b-12d3-a456-426614174005
+          role: user
+    AgentMessageResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+          description: Message ID
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+          description: Parent conversation ID
+        producer_job_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Producer Job Id
+          description: Durable chat job that produced this message pair
+        role:
+          type: string
+          title: Role
+          description: 'Message role: ''user'' or ''assistant'''
+        content:
+          type: string
+          title: Content
+          description: Message text content
+        ui_tool_calls:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Ui Tool Calls
+          description: User-facing tool payloads rendered as chat cards
+        web_citations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Web Citations
+          description: Web citations extracted from tool payloads for message-level rendering.
+        citations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ResolvedCitationResponse'
+            type: array
+          - type: 'null'
+          title: Citations
+          description: Canonical claim-linked Markee v2 citations. Internal evidence locators are intentionally excluded.
+        workspace_attributions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ResolvedWorkspaceAttributionResponse'
+            type: array
+          - type: 'null'
+          title: Workspace Attributions
+          description: Server-resolved workspace source labels without private locators.
+        message_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Message Metadata
+          description: Structured UI metadata for message-level affordances.
+        tokens_used:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Tokens Used
+          description: Total tokens consumed (input + output)
+        turns:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Turns
+          description: Number of agentic iterations
+        user_feedback:
+          anyOf:
+          - type: string
+            enum:
+            - up
+            - down
+          - type: 'null'
+          title: User Feedback
+          description: User feedback on response quality
+        sender_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sender Key
+          description: Who produced this message (agent_key or 'user')
+        target_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Key
+          description: Who this message was directed at via @mention
+        agent_trace:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AgentTraceStep'
+            type: array
+          - type: 'null'
+          title: Agent Trace
+          description: Inter-agent delegation trace for direct agent chat messages
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Message creation timestamp
+      type: object
+      required:
+      - id
+      - conversation_id
+      - role
+      - content
+      - created_at
+      title: AgentMessageResponse
+      description: 'Response schema for agent message.
+
+
+        Includes:
+
+        - Message content (role, content)
+
+        - MCP tool execution history (tool_calls)
+
+        - Cost tracking (tokens_used)
+
+        - Agentic iteration count (turns)'
+      example:
+        content: Your campaigns have an average ROAS of 3.2 over the last 30 days.
+        conversation_id: 123e4567-e89b-12d3-a456-426614174002
+        created_at: '2025-11-05T20:30:00Z'
+        id: 123e4567-e89b-12d3-a456-426614174004
+        role: assistant
+        tokens_used: 450
+        turns: 2
+        ui_tool_calls:
+        - arguments:
+            date_range_days: 30
+          execution_time_ms: 245
+          result:
+            clicks: 1500
+            roas: 3.2
+          success: true
+          tool: get_campaign_analytics
     JobResponse:
       properties:
         job_id:

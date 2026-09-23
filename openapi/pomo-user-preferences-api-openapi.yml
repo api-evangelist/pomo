@@ -2,16 +2,13 @@ openapi: 3.2.0
 info:
   title: GPT Backend User Preferences API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: user-preferences
+- name: User Preferences
 paths:
   /api/preferences:
     get:
       tags:
-      - user-preferences
+      - User Preferences
       summary: Get User Preferences
       description: 'Get current user''s preferences.
 
@@ -31,9 +28,31 @@ paths:
       - HTTPBearer: []
     put:
       tags:
-      - user-preferences
+      - User Preferences
       summary: Update User Preferences
-      description: "Update user preferences.\n\nMerges the provided preferences with existing preferences.\nDoes not replace the entire preferences object.\nRequires authentication.\n\nExample request:\n{\n  \"preferences\": {\n    \"tutorial_completed\": true,\n    \"daily_digest_theme\": \"dark\"\n  }\n}"
+      description: 'Update user preferences.
+
+
+        Merges the provided preferences with existing preferences.
+
+        Does not replace the entire preferences object.
+
+        Requires authentication.
+
+
+        Example request:
+
+        {
+
+        "preferences": {
+
+        "tutorial_completed": true,
+
+        "daily_digest_theme": "dark"
+
+        }
+
+        }'
       operationId: update_user_preferences_api_preferences_put
       requestBody:
         content:
@@ -58,7 +77,7 @@ paths:
       - HTTPBearer: []
     delete:
       tags:
-      - user-preferences
+      - User Preferences
       summary: Reset User Preferences
       description: 'Reset user preferences to empty object.
 
@@ -78,7 +97,7 @@ paths:
   /api/preferences/config:
     get:
       tags:
-      - user-preferences
+      - User Preferences
       summary: Get User Preferences Config
       description: 'Get only the preferences configuration object (without metadata).
 
@@ -99,7 +118,7 @@ paths:
   /api/preferences/release-announcements/claim:
     post:
       tags:
-      - user-preferences
+      - User Preferences
       summary: Claim Release Announcement
       description: 'Atomically claim a release spotlight and mark its visible digest as
 
@@ -143,15 +162,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     UserPreferencesResponse:
       properties:
         id:
@@ -218,6 +228,50 @@ components:
       - preferences
       title: UserPreferencesUpdate
       description: "Schema for updating user preferences.\nAccepts a dictionary of preferences to merge with existing preferences.\n\nExample:\n{\n  \"tutorial_completed\": true,\n  \"daily_digest_theme\": \"dark\",\n  \"onboarding_dismissed\": true\n}"
+    UserPreferencesPartial:
+      properties:
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          description: User preferences as key-value pairs
+      type: object
+      title: UserPreferencesPartial
+      description: 'Response schema that returns only the preferences object without metadata.
+
+        Useful for lightweight responses.'
+    ReleaseAnnouncementClaimRequest:
+      properties:
+        spotlight_release_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Spotlight Release Id
+          description: Stable ID of the release shown as the digest spotlight
+        release_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 50
+          minItems: 1
+          title: Release Ids
+          description: Stable IDs covered by the announcement digest
+      additionalProperties: false
+      type: object
+      required:
+      - spotlight_release_id
+      - release_ids
+      title: ReleaseAnnouncementClaimRequest
+      description: Claim one release-announcement spotlight and its visible digest.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ReleaseAnnouncementClaimResponse:
       properties:
         claimed:
@@ -243,41 +297,6 @@ components:
       - claimed_at
       title: ReleaseAnnouncementClaimResponse
       description: Result of atomically claiming a release-announcement spotlight.
-    ReleaseAnnouncementClaimRequest:
-      properties:
-        spotlight_release_id:
-          type: string
-          maxLength: 128
-          minLength: 1
-          title: Spotlight Release Id
-          description: Stable ID of the release shown as the digest spotlight
-        release_ids:
-          items:
-            type: string
-          type: array
-          maxItems: 50
-          minItems: 1
-          title: Release Ids
-          description: Stable IDs covered by the announcement digest
-      additionalProperties: false
-      type: object
-      required:
-      - spotlight_release_id
-      - release_ids
-      title: ReleaseAnnouncementClaimRequest
-      description: Claim one release-announcement spotlight and its visible digest.
-    UserPreferencesPartial:
-      properties:
-        preferences:
-          additionalProperties: true
-          type: object
-          title: Preferences
-          description: User preferences as key-value pairs
-      type: object
-      title: UserPreferencesPartial
-      description: 'Response schema that returns only the preferences object without metadata.
-
-        Useful for lightweight responses.'
   securitySchemes:
     HTTPBearer:
       type: http

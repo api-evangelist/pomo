@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Test Logging API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Test Logging
 paths:

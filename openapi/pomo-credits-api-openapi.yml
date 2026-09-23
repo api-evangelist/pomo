@@ -2,16 +2,13 @@ openapi: 3.2.0
 info:
   title: GPT Backend Credits API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: credits
+- name: Credits
 paths:
   /api/payment/credits/purchase:
     post:
       tags:
-      - credits
+      - Credits
       summary: Purchase Credits
       description: 'Create Stripe Payment Intent for credit purchase.
 
@@ -41,7 +38,7 @@ paths:
   /api/payment/credits/balance:
     get:
       tags:
-      - credits
+      - Credits
       summary: Get Credit Balance
       description: Get current credit balance for an organization.
       operationId: get_credit_balance_api_payment_credits_balance_get
@@ -72,7 +69,7 @@ paths:
   /api/payment/credits/calculate-charge:
     post:
       tags:
-      - credits
+      - Credits
       summary: Calculate Ad Charge
       description: 'Calculate charge for an ad campaign including commission.
 
@@ -102,7 +99,7 @@ paths:
   /api/payment/credits/transactions:
     get:
       tags:
-      - credits
+      - Credits
       summary: Get Credit Transactions
       description: 'Get credit transaction history for an organization.
 
@@ -165,7 +162,7 @@ paths:
   /api/payment/credits/hold:
     post:
       tags:
-      - credits
+      - Credits
       summary: Create Credit Hold
       description: 'Create a credit hold for ad campaign launch.
 
@@ -195,7 +192,7 @@ paths:
   /api/payment/credits/capture:
     post:
       tags:
-      - credits
+      - Credits
       summary: Capture Credit Hold
       description: 'Capture a credit hold after successful campaign launch.
 
@@ -227,7 +224,7 @@ paths:
   /api/payment/credits/release:
     post:
       tags:
-      - credits
+      - Credits
       summary: Release Credit Hold
       description: 'Release a credit hold and refund.
 
@@ -258,59 +255,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    TransactionHistoryResponse:
-      properties:
-        transactions:
-          items: {}
-          type: array
-          title: Transactions
-        total:
-          type: integer
-          title: Total
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-      type: object
-      required:
-      - transactions
-      - total
-      - limit
-      - offset
-      title: TransactionHistoryResponse
-      description: Credit transaction history response.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     CreditReleaseRequest:
       properties:
         hold_id:
@@ -346,6 +290,30 @@ components:
       - last_updated
       title: CreditBalanceResponse
       description: Current credit balance response.
+    CreditHoldRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        amount:
+          type: number
+          title: Amount
+        description:
+          type: string
+          title: Description
+        platform_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Type
+          description: 'Platform type: google_search, google_display, etc'
+      type: object
+      required:
+      - organization_id
+      - amount
+      - description
+      title: CreditHoldRequest
+      description: Request to create a credit hold.
     CalculateChargeResponse:
       properties:
         ad_spend:
@@ -392,6 +360,27 @@ components:
       - fx_rate_to_usd
       title: CalculateChargeResponse
       description: Response with calculated charges.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CalculateChargeRequest:
       properties:
         organization_id:
@@ -466,30 +455,38 @@ components:
       - expires_at
       title: CreditHoldResponse
       description: Response from credit hold creation.
-    CreditHoldRequest:
+    TransactionHistoryResponse:
       properties:
-        organization_id:
-          type: string
-          title: Organization Id
-        amount:
-          type: number
-          title: Amount
-        description:
-          type: string
-          title: Description
-        platform_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform Type
-          description: 'Platform type: google_search, google_display, etc'
+        transactions:
+          items: {}
+          type: array
+          title: Transactions
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
       type: object
       required:
-      - organization_id
-      - amount
-      - description
-      title: CreditHoldRequest
-      description: Request to create a credit hold.
+      - transactions
+      - total
+      - limit
+      - offset
+      title: TransactionHistoryResponse
+      description: Credit transaction history response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     CreditPurchaseRequest:
       properties:
         organization_id:

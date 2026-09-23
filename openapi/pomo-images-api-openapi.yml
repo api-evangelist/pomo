@@ -2,18 +2,25 @@ openapi: 3.2.0
 info:
   title: GPT Backend Images API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: images
+- name: Images
 paths:
   /api/images/replace:
     post:
       tags:
-      - images
+      - Images
       summary: Replace Image
-      description: "Replace an existing image in GCS with new image data.\n\nArgs:\n    request: Request object containing URL and image data\n\nReturns:\n    JSONResponse with result"
+      description: 'Replace an existing image in GCS with new image data.
+
+
+        Args:
+
+        request: Request object containing URL and image data
+
+
+        Returns:
+
+        JSONResponse with result'
       operationId: replace_image_api_images_replace_post
       requestBody:
         content:
@@ -40,9 +47,23 @@ paths:
   /api/images/replace-upload:
     post:
       tags:
-      - images
+      - Images
       summary: Replace Image Upload
-      description: "Replace an existing image in GCS with a new uploaded file.\n\nArgs:\n    url: GCS URL of the image to replace\n    file: New image file to upload\n    content_type: Optional MIME type override\n\nReturns:\n    JSONResponse with result"
+      description: 'Replace an existing image in GCS with a new uploaded file.
+
+
+        Args:
+
+        url: GCS URL of the image to replace
+
+        file: New image file to upload
+
+        content_type: Optional MIME type override
+
+
+        Returns:
+
+        JSONResponse with result'
       operationId: replace_image_upload_api_images_replace_upload_post
       requestBody:
         content:
@@ -68,15 +89,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ReplaceImageRequest:
       properties:
         url:
@@ -96,25 +108,6 @@ components:
       - image_data
       title: ReplaceImageRequest
       description: Request model for replacing an image.
-    Body_replace_image_upload_api_images_replace_upload_post:
-      properties:
-        url:
-          type: string
-          title: Url
-        file:
-          type: string
-          format: binary
-          title: File
-        content_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Content Type
-      type: object
-      required:
-      - url
-      - file
-      title: Body_replace_image_upload_api_images_replace_upload_post
     ValidationError:
       properties:
         loc:
@@ -136,6 +129,34 @@ components:
       - msg
       - type
       title: ValidationError
+    Body_replace_image_upload_api_images_replace_upload_post:
+      properties:
+        url:
+          type: string
+          title: Url
+        file:
+          type: string
+          format: binary
+          title: File
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+      type: object
+      required:
+      - url
+      - file
+      title: Body_replace_image_upload_api_images_replace_upload_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

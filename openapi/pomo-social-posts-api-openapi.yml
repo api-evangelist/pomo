@@ -2,16 +2,13 @@ openapi: 3.2.0
 info:
   title: GPT Backend Social Posts API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: social-posts
+- name: Social Posts
 paths:
   /api/social-posts/platforms:
     get:
       tags:
-      - social-posts
+      - Social Posts
       summary: Get Platforms
       description: Get all supported platforms and their configurations.
       operationId: get_platforms_api_social_posts_platforms_get
@@ -24,7 +21,7 @@ paths:
   /api/social-posts/platforms/{platform}/post-types:
     get:
       tags:
-      - social-posts
+      - Social Posts
       summary: Get Platform Post Types
       description: Get supported post types for a specific platform.
       operationId: get_platform_post_types_api_social_posts_platforms__platform__post_types_get
@@ -50,7 +47,7 @@ paths:
   /api/social-posts/generate:
     post:
       tags:
-      - social-posts
+      - Social Posts
       summary: Generate Social Posts
       description: Generate social media posts for a specific platform and format.
       operationId: generate_social_posts_api_social_posts_generate_post
@@ -77,7 +74,7 @@ paths:
   /api/social-posts/batch-generate:
     post:
       tags:
-      - social-posts
+      - Social Posts
       summary: Batch Generate Posts
       description: Generate posts for multiple platforms in one request.
       operationId: batch_generate_posts_api_social_posts_batch_generate_post
@@ -104,7 +101,7 @@ paths:
   /api/social-posts/campaigns:
     get:
       tags:
-      - social-posts
+      - Social Posts
       summary: Get Campaigns
       description: Get user's social media campaigns with filtering.
       operationId: get_campaigns_api_social_posts_campaigns_get
@@ -164,7 +161,7 @@ paths:
   /api/social-posts/campaigns/{campaign_id}:
     get:
       tags:
-      - social-posts
+      - Social Posts
       summary: Get Campaign Details
       description: Get detailed information about a specific campaign.
       operationId: get_campaign_details_api_social_posts_campaigns__campaign_id__get
@@ -191,7 +188,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     put:
       tags:
-      - social-posts
+      - Social Posts
       summary: Update Campaign
       description: Update a campaign's content.
       operationId: update_campaign_api_social_posts_campaigns__campaign_id__put
@@ -224,7 +221,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     delete:
       tags:
-      - social-posts
+      - Social Posts
       summary: Delete Campaign
       description: Delete a campaign and all its variations.
       operationId: delete_campaign_api_social_posts_campaigns__campaign_id__delete
@@ -252,7 +249,7 @@ paths:
   /api/social-posts/campaigns/{campaign_id}/variation:
     post:
       tags:
-      - social-posts
+      - Social Posts
       summary: Generate Variation
       description: Generate a variation of an existing post.
       operationId: generate_variation_api_social_posts_campaigns__campaign_id__variation_post
@@ -285,15 +282,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -315,76 +303,6 @@ components:
       - msg
       - type
       title: ValidationError
-    GenerateVariationRequest:
-      properties:
-        post_id:
-          type: integer
-          title: Post Id
-          description: ID of the original post
-        variation_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Variation Prompt
-          description: Optional prompt for variation
-      type: object
-      required:
-      - post_id
-      title: GenerateVariationRequest
-      description: Request model for generating post variations.
-    BatchGenerateRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-        target_audience:
-          type: string
-          title: Target Audience
-        platforms:
-          items:
-            additionalProperties:
-              type: string
-            type: object
-          type: array
-          title: Platforms
-          description: List of platform configurations
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-        key_selling_points:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Key Selling Points
-          default: ''
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Reference Images
-        use_brand_style:
-          type: boolean
-          title: Use Brand Style
-          default: false
-        num_posts:
-          type: integer
-          maximum: 5.0
-          minimum: 1.0
-          title: Num Posts
-          default: 1
-      type: object
-      required:
-      - product_description
-      - target_audience
-      - platforms
-      title: BatchGenerateRequest
-      description: Request model for batch generation across multiple platforms.
     SocialPostRequest:
       properties:
         product_description:
@@ -471,6 +389,85 @@ components:
       - post_type
       title: SocialPostRequest
       description: Request model for generating social posts.
+    GenerateVariationRequest:
+      properties:
+        post_id:
+          type: integer
+          title: Post Id
+          description: ID of the original post
+        variation_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variation Prompt
+          description: Optional prompt for variation
+      type: object
+      required:
+      - post_id
+      title: GenerateVariationRequest
+      description: Request model for generating post variations.
+    BatchGenerateRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+        target_audience:
+          type: string
+          title: Target Audience
+        platforms:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type: array
+          title: Platforms
+          description: List of platform configurations
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+        key_selling_points:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Selling Points
+          default: ''
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Reference Images
+        use_brand_style:
+          type: boolean
+          title: Use Brand Style
+          default: false
+        num_posts:
+          type: integer
+          maximum: 5.0
+          minimum: 1.0
+          title: Num Posts
+          default: 1
+      type: object
+      required:
+      - product_description
+      - target_audience
+      - platforms
+      title: BatchGenerateRequest
+      description: Request model for batch generation across multiple platforms.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     UpdatePostRequest:
       properties:
         caption:

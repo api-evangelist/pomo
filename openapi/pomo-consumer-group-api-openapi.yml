@@ -2,16 +2,13 @@ openapi: 3.2.0
 info:
   title: GPT Backend Consumer Group API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: consumer-group
+- name: Consumer Group
 paths:
   /api/consumer-group/create_group:
     post:
       tags:
-      - consumer-group
+      - Consumer Group
       summary: Create User Group
       description: Create a new consumer group for the current company profile.
       operationId: create_user_group_api_consumer_group_create_group_post
@@ -26,7 +23,7 @@ paths:
   /api/consumer-group/fetch_groups:
     get:
       tags:
-      - consumer-group
+      - Consumer Group
       summary: Fetch Consumer Groups
       description: Fetch all consumer groups for the current company profile.
       operationId: fetch_consumer_groups_api_consumer_group_fetch_groups_get
@@ -62,7 +59,7 @@ paths:
   /api/consumer-group/delete_group/{group_id}:
     delete:
       tags:
-      - consumer-group
+      - Consumer Group
       summary: Delete Consumer Group
       description: Delete a consumer group and all its consumers.
       operationId: delete_consumer_group_api_consumer_group_delete_group__group_id__delete
@@ -91,7 +88,7 @@ paths:
   /api/consumer-group/upload_consumers/{group_id}:
     post:
       tags:
-      - consumer-group
+      - Consumer Group
       summary: Upload Consumers To Group
       description: Upload consumers from a CSV or Excel file to a consumer group.
       operationId: upload_consumers_to_group_api_consumer_group_upload_consumers__group_id__post
@@ -126,7 +123,7 @@ paths:
   /api/consumer-group/remove_consumers/{group_id}:
     post:
       tags:
-      - consumer-group
+      - Consumer Group
       summary: Remove Consumers From Group
       description: Remove specific consumers from a group.
       operationId: remove_consumers_from_group_api_consumer_group_remove_consumers__group_id__post
@@ -155,7 +152,7 @@ paths:
   /api/consumer-group/get_consumers/{group_id}:
     get:
       tags:
-      - consumer-group
+      - Consumer Group
       summary: Get Consumers
       description: Get consumers in a group with pagination.
       operationId: get_consumers_api_consumer_group_get_consumers__group_id__get
@@ -200,15 +197,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -240,6 +228,15 @@ components:
       required:
       - file
       title: Body_upload_consumers_to_group_api_consumer_group_upload_consumers__group_id__post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

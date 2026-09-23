@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Online Ad Campaigns API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Online Ad Campaigns
 paths:
@@ -1568,7 +1565,21 @@ paths:
       tags:
       - Online Ad Campaigns
       summary: Generate Ad Variation
-      description: "Generate a new variation of an existing ad campaign.\n\nArgs:\n    request: Variation request data\n    company_profile: Authenticated company profile\n    db: Database session\n\nReturns:\n    Structured response with campaign metadata and variation data"
+      description: 'Generate a new variation of an existing ad campaign.
+
+
+        Args:
+
+        request: Variation request data
+
+        company_profile: Authenticated company profile
+
+        db: Database session
+
+
+        Returns:
+
+        Structured response with campaign metadata and variation data'
       operationId: generate_ad_variation_api_campaigns_online_ads_generate_variation_post
       requestBody:
         content:
@@ -1651,7 +1662,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AmazonSponsoredBrandsAdRequest:
+    schemas__campaigns__ads__google__GoogleDisplayAdRequest:
       properties:
         product_description:
           type: string
@@ -1773,17 +1784,300 @@ components:
           - type: 'null'
           title: Dayparting Config
           description: Dayparting configuration including schedule, timezone, and platform-specific settings
-        brand_name:
-          type: string
-          title: Brand Name
-          description: Brand name
         num_images_per_ad:
           type: integer
-          maximum: 3.0
+          maximum: 5.0
           minimum: 1.0
           title: Num Images Per Ad
           description: Number of images per ad
-          default: 1
+          default: 2
+      type: object
+      required:
+      - product_description
+      - target_audience
+      - company_profile_id
+      title: GoogleDisplayAdRequest
+      description: Request model for Google Display ads
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CampaignMediaOperation:
+      properties:
+        action:
+          type: string
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Action
+        media_type:
+          type: string
+          enum:
+          - image
+          - video
+          title: Media Type
+        selected_url:
+          type: string
+          title: Selected Url
+        previous_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous Url
+        source_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Source Index
+      type: object
+      required:
+      - action
+      - media_type
+      - selected_url
+      title: CampaignMediaOperation
+      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
+    MetaFeedCampaignUpdateRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        ad_id:
+          type: string
+          title: Ad Id
+          description: Normalized platform ad UUID
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline
+        long_headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Long Headline
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        ad_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Name
+        call_to_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Call To Action
+        keywords:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - items:
+              $ref: '#/components/schemas/KeywordWithCpc'
+            type: array
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Keywords
+        negative_keywords:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - items:
+              $ref: '#/components/schemas/KeywordWithCpc'
+            type: array
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Negative Keywords
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        recommended_daily_budget:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Recommended Daily Budget
+        total_budget:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Budget
+        duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration
+        target_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Platform
+        start_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
+        business_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Name
+        final_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Final Url
+        headlines:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Headlines
+        descriptions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Descriptions
+        format_setting:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Format Setting
+        primary_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Text
+        destination_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Destination Url
+        ad_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Format
+        placements:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Placements
+        introductory_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Introductory Text
+        alt_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alt Text
+        aspect_ratio:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aspect Ratio
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        linkedin_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Linkedin Lead Form Config
+        google_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Google Lead Form Config
+        meta_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta Lead Form Config
+        asin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asin
+        sku:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sku
+        targeting_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Targeting Type
+        bidding_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bidding Strategy
+        default_bid:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Default Bid
+        brand_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Brand Name
+        landing_page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Landing Page Url
         showcase_products:
           anyOf:
           - items:
@@ -1791,13 +2085,242 @@ components:
             type: array
           - type: 'null'
           title: Showcase Products
-          description: Products to showcase
-        ad_format:
+        targeting_products:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Targeting Products
+        audience_segments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Audience Segments
+        interests:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Interests
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+        bid_strategy:
           anyOf:
           - type: string
           - type: 'null'
+          title: Bid Strategy
+        max_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Cpc
+        ad_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Text
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        objective_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Objective Type
+        video_length:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Length
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: string
+          - type: 'null'
+          title: Dayparting Config
+        media_operations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CampaignMediaOperation'
+            type: array
+          - type: 'null'
+          title: Media Operations
+      type: object
+      required:
+      - campaign_id
+      - ad_id
+      title: MetaFeedCampaignUpdateRequest
+    AdsCampaignUpdateResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign:
+          anyOf:
+          - $ref: '#/components/schemas/CampaignResponse'
+          - type: 'null'
+        ad:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Ad
+      type: object
+      required:
+      - status
+      - message
+      - campaign_id
+      title: AdsCampaignUpdateResponse
+      description: Standardized response for ad update operations within a campaign.
+    AmazonSponsoredDisplayAdRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+          description: Description of the product or service
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Target audience description
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+          description: Company profile ID (required)
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+          description: List of campaign goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          description: Key selling points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          description: Number of ad variations to generate
+          default: 3
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          description: Bidding strategy
+          default: maximize_conversions
+        budget_range:
+          type: string
+          title: Budget Range
+          description: Budget range (low, medium, high, custom)
+          default: medium
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+          description: Target country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+          description: Target state/province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+          description: Target city
+        locations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/LocationItem'
+            type: array
+          - type: 'null'
+          title: Locations
+          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Reference Images
+          description: List of reference image base64 data URLs (max 3)
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+          description: Whether to use lead form extension where supported
+          default: false
+        max_cpc:
+          anyOf:
+          - type: number
+            minimum: 0.01
+          - type: 'null'
+          title: Max Cpc
+          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
+        experiment_package_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Experiment Package Id
+          description: Test package id; created campaigns are stamped with this linkage
+        launch_strategy_mode:
+          anyOf:
+          - type: string
+            pattern: ^(test_learn_pilot|direct_campaign)$
+          - type: 'null'
+          title: Launch Strategy Mode
+          description: test_learn_pilot or direct_campaign
+        dayparting_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Dayparting Enabled
+          description: Whether dayparting/ad scheduling is enabled for this campaign
+          default: false
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Dayparting Config
+          description: Dayparting configuration including schedule, timezone, and platform-specific settings
+        ad_format:
+          type: string
           title: Ad Format
-          description: Selected ad format (product_collection, store_spotlight, or video)
+          description: Ad format (image or video)
+          default: image
+        num_images_per_ad:
+          type: integer
+          maximum: 5.0
+          minimum: 1.0
+          title: Num Images Per Ad
+          description: Number of images per ad (for image format)
+          default: 2
         video_length:
           anyOf:
           - type: integer
@@ -1809,33 +2332,545 @@ components:
       - product_description
       - target_audience
       - company_profile_id
-      - brand_name
-      title: AmazonSponsoredBrandsAdRequest
-      description: Request model for Amazon Sponsored Brands ads
-    HTTPValidationError:
+      title: AmazonSponsoredDisplayAdRequest
+      description: Request model for Amazon Sponsored Display ads
+    GoogleVideoAdRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    KeywordWithCpc:
-      properties:
-        keyword:
+        product_description:
           type: string
-          title: Keyword
-        estimated_cpc:
+          title: Product Description
+          description: Description of the product or service
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Target audience description
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          default: 3
+        video_length:
+          type: integer
+          maximum: 10.0
+          minimum: 10.0
+          title: Video Length
+          description: Video duration is fixed at 10 seconds
+          default: 10
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          default: automatic
+        budget_range:
+          type: string
+          title: Budget Range
+          default: medium
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        locations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Locations
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Reference Images
+      type: object
+      required:
+      - product_description
+      - target_audience
+      title: GoogleVideoAdRequest
+    MetaStoriesReelsAdRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+          description: Description of the product or service
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Target audience description
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+          description: Company profile ID (required)
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+          description: List of campaign goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          description: Key selling points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          description: Number of ad variations to generate
+          default: 3
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          description: Bidding strategy
+          default: maximize_conversions
+        budget_range:
+          type: string
+          title: Budget Range
+          description: Budget range (low, medium, high, custom)
+          default: medium
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+          description: Target country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+          description: Target state/province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+          description: Target city
+        locations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/LocationItem'
+            type: array
+          - type: 'null'
+          title: Locations
+          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Reference Images
+          description: List of reference image base64 data URLs (max 3)
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+          description: Whether to use lead form extension where supported
+          default: false
+        max_cpc:
+          anyOf:
+          - type: number
+            minimum: 0.01
+          - type: 'null'
+          title: Max Cpc
+          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
+        experiment_package_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Experiment Package Id
+          description: Test package id; created campaigns are stamped with this linkage
+        launch_strategy_mode:
+          anyOf:
+          - type: string
+            pattern: ^(test_learn_pilot|direct_campaign)$
+          - type: 'null'
+          title: Launch Strategy Mode
+          description: test_learn_pilot or direct_campaign
+        dayparting_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Dayparting Enabled
+          description: Whether dayparting/ad scheduling is enabled for this campaign
+          default: false
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Dayparting Config
+          description: Dayparting configuration including schedule, timezone, and platform-specific settings
+        ad_format:
+          type: string
+          title: Ad Format
+          description: 'Meta Stories & Reels creative format: ''Video'' or ''Single Image'''
+          default: Video
+        video_length:
+          type: integer
+          maximum: 10.0
+          minimum: 10.0
+          title: Video Length
+          description: Video duration is fixed at 10 seconds
+          default: 10
+      type: object
+      required:
+      - product_description
+      - target_audience
+      - company_profile_id
+      title: MetaStoriesReelsAdRequest
+      description: Request model for Meta Stories & Reels ads
+    MetaStoriesReelsCampaignUpdateRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        ad_id:
+          type: string
+          title: Ad Id
+          description: Normalized platform ad UUID
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Headline
+        long_headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Long Headline
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        ad_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Name
+        call_to_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Call To Action
+        keywords:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - items:
+              $ref: '#/components/schemas/KeywordWithCpc'
+            type: array
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Keywords
+        negative_keywords:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - items:
+              $ref: '#/components/schemas/KeywordWithCpc'
+            type: array
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Negative Keywords
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        recommended_daily_budget:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Recommended Daily Budget
+        total_budget:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Budget
+        duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration
+        target_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Platform
+        start_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
+        business_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Name
+        final_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Final Url
+        headlines:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Headlines
+        descriptions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Descriptions
+        format_setting:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Format Setting
+        primary_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Text
+        destination_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Destination Url
+        ad_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Format
+        placements:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Placements
+        introductory_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Introductory Text
+        alt_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alt Text
+        aspect_ratio:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aspect Ratio
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        linkedin_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Linkedin Lead Form Config
+        google_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Google Lead Form Config
+        meta_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta Lead Form Config
+        asin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asin
+        sku:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sku
+        targeting_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Targeting Type
+        bidding_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bidding Strategy
+        default_bid:
           anyOf:
           - type: number
           - type: 'null'
-          title: Estimated Cpc
+          title: Default Bid
+        brand_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Brand Name
+        landing_page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Landing Page Url
+        showcase_products:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Showcase Products
+        targeting_products:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Targeting Products
+        audience_segments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Audience Segments
+        interests:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Interests
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+        bid_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bid Strategy
+        max_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Cpc
+        ad_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Text
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        objective_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Objective Type
+        video_length:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Length
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: string
+          - type: 'null'
+          title: Dayparting Config
+        media_operations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CampaignMediaOperation'
+            type: array
+          - type: 'null'
+          title: Media Operations
       type: object
       required:
-      - keyword
-      title: KeywordWithCpc
-      description: Model for keyword with CPC data
+      - campaign_id
+      - ad_id
+      title: MetaStoriesReelsCampaignUpdateRequest
     MetaFeedAdRequest:
       properties:
         product_description:
@@ -1992,357 +3027,6 @@ components:
       - company_profile_id
       title: MetaFeedAdRequest
       description: Request model for Meta Feed ads
-    TikTokVideoAdRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-        target_audience:
-          type: string
-          title: Target Audience
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-        key_selling_points:
-          type: string
-          title: Key Selling Points
-          default: ''
-        num_ads:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Num Ads
-          default: 3
-        video_length:
-          type: integer
-          maximum: 10.0
-          minimum: 10.0
-          title: Video Length
-          description: Video duration is fixed at 10 seconds
-          default: 10
-        bid_strategy:
-          type: string
-          title: Bid Strategy
-          default: automatic
-        budget_range:
-          type: string
-          title: Budget Range
-          default: medium
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-            maxItems: 3
-          - type: 'null'
-          title: Reference Images
-      type: object
-      required:
-      - product_description
-      - target_audience
-      title: TikTokVideoAdRequest
-    AmazonSponsoredDisplayAdRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-          description: Description of the product or service
-        target_audience:
-          type: string
-          title: Target Audience
-          description: Target audience description
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-          description: Company profile ID (required)
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-          description: List of campaign goals
-        key_selling_points:
-          type: string
-          title: Key Selling Points
-          description: Key selling points
-          default: ''
-        num_ads:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Num Ads
-          description: Number of ad variations to generate
-          default: 3
-        bid_strategy:
-          type: string
-          title: Bid Strategy
-          description: Bidding strategy
-          default: maximize_conversions
-        budget_range:
-          type: string
-          title: Budget Range
-          description: Budget range (low, medium, high, custom)
-          default: medium
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-          description: Target country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-          description: Target state/province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-          description: Target city
-        locations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/LocationItem'
-            type: array
-          - type: 'null'
-          title: Locations
-          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-            maxItems: 3
-          - type: 'null'
-          title: Reference Images
-          description: List of reference image base64 data URLs (max 3)
-        lead_form_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Lead Form Enabled
-          description: Whether to use lead form extension where supported
-          default: false
-        max_cpc:
-          anyOf:
-          - type: number
-            minimum: 0.01
-          - type: 'null'
-          title: Max Cpc
-          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
-        experiment_package_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Experiment Package Id
-          description: Test package id; created campaigns are stamped with this linkage
-        launch_strategy_mode:
-          anyOf:
-          - type: string
-            pattern: ^(test_learn_pilot|direct_campaign)$
-          - type: 'null'
-          title: Launch Strategy Mode
-          description: test_learn_pilot or direct_campaign
-        dayparting_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Dayparting Enabled
-          description: Whether dayparting/ad scheduling is enabled for this campaign
-          default: false
-        dayparting_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Dayparting Config
-          description: Dayparting configuration including schedule, timezone, and platform-specific settings
-        ad_format:
-          type: string
-          title: Ad Format
-          description: Ad format (image or video)
-          default: image
-        num_images_per_ad:
-          type: integer
-          maximum: 5.0
-          minimum: 1.0
-          title: Num Images Per Ad
-          description: Number of images per ad (for image format)
-          default: 2
-        video_length:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Video Length
-          description: Video duration in seconds (for video format)
-      type: object
-      required:
-      - product_description
-      - target_audience
-      - company_profile_id
-      title: AmazonSponsoredDisplayAdRequest
-      description: Request model for Amazon Sponsored Display ads
-    GoogleSearchAdRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-          description: Description of the product or service
-        target_audience:
-          type: string
-          title: Target Audience
-          description: Target audience description
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-          description: Company profile ID (required)
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-          description: List of campaign goals
-        key_selling_points:
-          type: string
-          title: Key Selling Points
-          description: Key selling points
-          default: ''
-        num_ads:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Num Ads
-          description: Number of ad variations to generate
-          default: 3
-        bid_strategy:
-          type: string
-          title: Bid Strategy
-          description: Bidding strategy
-          default: maximize_conversions
-        budget_range:
-          type: string
-          title: Budget Range
-          description: Budget range (low, medium, high, custom)
-          default: medium
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-          description: Target country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-          description: Target state/province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-          description: Target city
-        locations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/LocationItem'
-            type: array
-          - type: 'null'
-          title: Locations
-          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-            maxItems: 3
-          - type: 'null'
-          title: Reference Images
-          description: List of reference image base64 data URLs (max 3)
-        lead_form_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Lead Form Enabled
-          description: Whether to use lead form extension where supported
-          default: false
-        max_cpc:
-          anyOf:
-          - type: number
-            minimum: 0.01
-          - type: 'null'
-          title: Max Cpc
-          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
-        experiment_package_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Experiment Package Id
-          description: Test package id; created campaigns are stamped with this linkage
-        launch_strategy_mode:
-          anyOf:
-          - type: string
-            pattern: ^(test_learn_pilot|direct_campaign)$
-          - type: 'null'
-          title: Launch Strategy Mode
-          description: test_learn_pilot or direct_campaign
-        dayparting_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Dayparting Enabled
-          description: Whether dayparting/ad scheduling is enabled for this campaign
-          default: false
-        dayparting_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Dayparting Config
-          description: Dayparting configuration including schedule, timezone, and platform-specific settings
-        google_lead_form_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Google Lead Form Config
-          description: Google Search Lead Form configuration
-      type: object
-      required:
-      - product_description
-      - target_audience
-      - company_profile_id
-      title: GoogleSearchAdRequest
-      description: Request model for Google Search ads
     AdsCampaignUpdateRequest:
       properties:
         campaign_id:
@@ -2662,124 +3346,6 @@ components:
       - campaign_id
       title: AdsCampaignUpdateRequest
       description: Request model for updating ad campaign data
-    GoogleVideoAdRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-          description: Description of the product or service
-        target_audience:
-          type: string
-          title: Target Audience
-          description: Target audience description
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-        key_selling_points:
-          type: string
-          title: Key Selling Points
-          default: ''
-        num_ads:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Num Ads
-          default: 3
-        video_length:
-          type: integer
-          maximum: 10.0
-          minimum: 10.0
-          title: Video Length
-          description: Video duration is fixed at 10 seconds
-          default: 10
-        bid_strategy:
-          type: string
-          title: Bid Strategy
-          default: automatic
-        budget_range:
-          type: string
-          title: Budget Range
-          default: medium
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-        locations:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Locations
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-            maxItems: 3
-          - type: 'null'
-          title: Reference Images
-      type: object
-      required:
-      - product_description
-      - target_audience
-      title: GoogleVideoAdRequest
-    GenerateAdVariationRequest:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-        variation_count:
-          type: integer
-          title: Variation Count
-          description: Number of variations to generate
-          default: 1
-        generate_new_images:
-          type: boolean
-          title: Generate New Images
-          description: Whether to generate new images for the variation
-          default: true
-      type: object
-      required:
-      - campaign_id
-      title: GenerateAdVariationRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     AmazonSponsoredProductsAdRequest:
       properties:
         product_description:
@@ -2921,6 +3487,485 @@ components:
       - company_profile_id
       title: AmazonSponsoredProductsAdRequest
       description: Request model for Amazon Sponsored Products ads
+    TikTokVideoAdRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+        target_audience:
+          type: string
+          title: Target Audience
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          default: 3
+        video_length:
+          type: integer
+          maximum: 10.0
+          minimum: 10.0
+          title: Video Length
+          description: Video duration is fixed at 10 seconds
+          default: 10
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          default: automatic
+        budget_range:
+          type: string
+          title: Budget Range
+          default: medium
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Reference Images
+      type: object
+      required:
+      - product_description
+      - target_audience
+      title: TikTokVideoAdRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GenerateAdVariationRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        variation_count:
+          type: integer
+          title: Variation Count
+          description: Number of variations to generate
+          default: 1
+        generate_new_images:
+          type: boolean
+          title: Generate New Images
+          description: Whether to generate new images for the variation
+          default: true
+      type: object
+      required:
+      - campaign_id
+      title: GenerateAdVariationRequest
+    BaseAdsCampaignRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+          description: Description of the product or service
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Target audience description
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+          description: Company profile ID (required)
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+          description: List of campaign goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          description: Key selling points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          description: Number of ad variations to generate
+          default: 3
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          description: Bidding strategy
+          default: maximize_conversions
+        budget_range:
+          type: string
+          title: Budget Range
+          description: Budget range (low, medium, high, custom)
+          default: medium
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+          description: Target country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+          description: Target state/province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+          description: Target city
+        locations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/LocationItem'
+            type: array
+          - type: 'null'
+          title: Locations
+          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Reference Images
+          description: List of reference image base64 data URLs (max 3)
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+          description: Whether to use lead form extension where supported
+          default: false
+        max_cpc:
+          anyOf:
+          - type: number
+            minimum: 0.01
+          - type: 'null'
+          title: Max Cpc
+          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
+        experiment_package_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Experiment Package Id
+          description: Test package id; created campaigns are stamped with this linkage
+        launch_strategy_mode:
+          anyOf:
+          - type: string
+            pattern: ^(test_learn_pilot|direct_campaign)$
+          - type: 'null'
+          title: Launch Strategy Mode
+          description: test_learn_pilot or direct_campaign
+        dayparting_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Dayparting Enabled
+          description: Whether dayparting/ad scheduling is enabled for this campaign
+          default: false
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Dayparting Config
+          description: Dayparting configuration including schedule, timezone, and platform-specific settings
+      type: object
+      required:
+      - product_description
+      - target_audience
+      - company_profile_id
+      title: BaseAdsCampaignRequest
+      description: Base request model for creating ad campaigns.
+    AmazonSponsoredBrandsAdRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+          description: Description of the product or service
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Target audience description
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+          description: Company profile ID (required)
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+          description: List of campaign goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          description: Key selling points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          description: Number of ad variations to generate
+          default: 3
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          description: Bidding strategy
+          default: maximize_conversions
+        budget_range:
+          type: string
+          title: Budget Range
+          description: Budget range (low, medium, high, custom)
+          default: medium
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+          description: Target country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+          description: Target state/province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+          description: Target city
+        locations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/LocationItem'
+            type: array
+          - type: 'null'
+          title: Locations
+          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Reference Images
+          description: List of reference image base64 data URLs (max 3)
+        lead_form_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lead Form Enabled
+          description: Whether to use lead form extension where supported
+          default: false
+        max_cpc:
+          anyOf:
+          - type: number
+            minimum: 0.01
+          - type: 'null'
+          title: Max Cpc
+          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
+        experiment_package_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Experiment Package Id
+          description: Test package id; created campaigns are stamped with this linkage
+        launch_strategy_mode:
+          anyOf:
+          - type: string
+            pattern: ^(test_learn_pilot|direct_campaign)$
+          - type: 'null'
+          title: Launch Strategy Mode
+          description: test_learn_pilot or direct_campaign
+        dayparting_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Dayparting Enabled
+          description: Whether dayparting/ad scheduling is enabled for this campaign
+          default: false
+        dayparting_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Dayparting Config
+          description: Dayparting configuration including schedule, timezone, and platform-specific settings
+        brand_name:
+          type: string
+          title: Brand Name
+          description: Brand name
+        num_images_per_ad:
+          type: integer
+          maximum: 3.0
+          minimum: 1.0
+          title: Num Images Per Ad
+          description: Number of images per ad
+          default: 1
+        showcase_products:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Showcase Products
+          description: Products to showcase
+        ad_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Format
+          description: Selected ad format (product_collection, store_spotlight, or video)
+        video_length:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Length
+          description: Video duration in seconds (for video format)
+      type: object
+      required:
+      - product_description
+      - target_audience
+      - company_profile_id
+      - brand_name
+      title: AmazonSponsoredBrandsAdRequest
+      description: Request model for Amazon Sponsored Brands ads
+    CampaignResponse:
+      properties:
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        name:
+          type: string
+          title: Name
+        target_platforms:
+          items:
+            type: string
+          type: array
+          title: Target Platforms
+        target_audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Audience
+        user_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Prompt
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+        last_modified:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Modified
+        deployed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deployed At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+        creation_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Source
+      type: object
+      required:
+      - campaign_id
+      - name
+      - target_platforms
+      title: CampaignResponse
+      description: Base class for campaign metadata response.
     LocationItem:
       properties:
         level:
@@ -3055,1191 +4100,157 @@ components:
       - name
       title: LocationItem
       description: Canonical location input for multi-geo campaigns with one shared budget.
-    MetaStoriesReelsCampaignUpdateRequest:
+    GoogleSearchAdRequest:
       properties:
-        campaign_id:
+        product_description:
           type: string
-          title: Campaign Id
-        ad_id:
+          title: Product Description
+          description: Description of the product or service
+        target_audience:
           type: string
-          title: Ad Id
-          description: Normalized platform ad UUID
-        name:
+          title: Target Audience
+          description: Target audience description
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+          description: Company profile ID (required)
+        campaign_goals:
           anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        headline:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Headline
-        long_headline:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Long Headline
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        ad_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Name
-        call_to_action:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Call To Action
-        keywords:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - items:
-              $ref: '#/components/schemas/KeywordWithCpc'
-            type: array
           - items:
               type: string
             type: array
           - type: 'null'
-          title: Keywords
-        negative_keywords:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - items:
-              $ref: '#/components/schemas/KeywordWithCpc'
-            type: array
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Negative Keywords
+          title: Campaign Goals
+          description: List of campaign goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          description: Key selling points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          description: Number of ad variations to generate
+          default: 3
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          description: Bidding strategy
+          default: maximize_conversions
+        budget_range:
+          type: string
+          title: Budget Range
+          description: Budget range (low, medium, high, custom)
+          default: medium
         country:
           anyOf:
           - type: string
           - type: 'null'
           title: Country
+          description: Target country
         state_province:
           anyOf:
           - type: string
           - type: 'null'
           title: State Province
+          description: Target state/province
         city:
           anyOf:
           - type: string
           - type: 'null'
           title: City
-        recommended_daily_budget:
+          description: Target city
+        locations:
           anyOf:
-          - type: integer
+          - items:
+              $ref: '#/components/schemas/LocationItem'
+            type: array
           - type: 'null'
-          title: Recommended Daily Budget
-        total_budget:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Total Budget
-        duration:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Duration
-        target_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Platform
-        start_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Start Date
-        end_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: End Date
-        business_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Business Name
-        final_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Final Url
-        headlines:
+          title: Locations
+          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
+        reference_images:
           anyOf:
           - items:
               type: string
             type: array
+            maxItems: 3
           - type: 'null'
-          title: Headlines
-        descriptions:
+          title: Reference Images
+          description: List of reference image base64 data URLs (max 3)
+        lead_form_enabled:
           anyOf:
-          - items:
-              type: string
-            type: array
+          - type: boolean
           - type: 'null'
-          title: Descriptions
-        format_setting:
+          title: Lead Form Enabled
+          description: Whether to use lead form extension where supported
+          default: false
+        max_cpc:
           anyOf:
-          - type: string
+          - type: number
+            minimum: 0.01
           - type: 'null'
-          title: Format Setting
-        primary_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Primary Text
-        destination_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Destination Url
-        ad_format:
+          title: Max Cpc
+          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
+        experiment_package_id:
           anyOf:
           - type: string
+            maxLength: 64
           - type: 'null'
-          title: Ad Format
-        placements:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Placements
-        introductory_text:
+          title: Experiment Package Id
+          description: Test package id; created campaigns are stamped with this linkage
+        launch_strategy_mode:
           anyOf:
           - type: string
+            pattern: ^(test_learn_pilot|direct_campaign)$
           - type: 'null'
-          title: Introductory Text
-        alt_text:
+          title: Launch Strategy Mode
+          description: test_learn_pilot or direct_campaign
+        dayparting_enabled:
           anyOf:
-          - type: string
+          - type: boolean
           - type: 'null'
-          title: Alt Text
-        aspect_ratio:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Aspect Ratio
-        thumbnail_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Thumbnail Url
-        linkedin_lead_form_config:
+          title: Dayparting Enabled
+          description: Whether dayparting/ad scheduling is enabled for this campaign
+          default: false
+        dayparting_config:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
-          title: Linkedin Lead Form Config
+          title: Dayparting Config
+          description: Dayparting configuration including schedule, timezone, and platform-specific settings
         google_lead_form_config:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
           title: Google Lead Form Config
-        meta_lead_form_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Meta Lead Form Config
-        asin:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Asin
-        sku:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sku
-        targeting_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Targeting Type
-        bidding_strategy:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Bidding Strategy
-        default_bid:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Default Bid
-        brand_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Brand Name
-        landing_page_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Landing Page Url
-        showcase_products:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Showcase Products
-        targeting_products:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Targeting Products
-        audience_segments:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Audience Segments
-        interests:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Interests
-        lead_form_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Lead Form Enabled
-        bid_strategy:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Bid Strategy
-        max_cpc:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Max Cpc
-        ad_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Text
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-        objective_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Objective Type
-        video_length:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Video Length
-        dayparting_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: string
-          - type: 'null'
-          title: Dayparting Config
-        media_operations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/CampaignMediaOperation'
-            type: array
-          - type: 'null'
-          title: Media Operations
-      type: object
-      required:
-      - campaign_id
-      - ad_id
-      title: MetaStoriesReelsCampaignUpdateRequest
-    AdsCampaignUpdateResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        message:
-          type: string
-          title: Message
-        campaign_id:
-          type: string
-          title: Campaign Id
-        campaign:
-          anyOf:
-          - $ref: '#/components/schemas/CampaignResponse'
-          - type: 'null'
-        ad:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Ad
-      type: object
-      required:
-      - status
-      - message
-      - campaign_id
-      title: AdsCampaignUpdateResponse
-      description: Standardized response for ad update operations within a campaign.
-    CampaignResponse:
-      properties:
-        id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Id
-        campaign_id:
-          type: string
-          title: Campaign Id
-        name:
-          type: string
-          title: Name
-        target_platforms:
-          items:
-            type: string
-          type: array
-          title: Target Platforms
-        target_audience:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Audience
-        user_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Prompt
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-        creation_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creation Date
-        last_modified:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Modified
-        deployed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Deployed At
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-        creation_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creation Source
-      type: object
-      required:
-      - campaign_id
-      - name
-      - target_platforms
-      title: CampaignResponse
-      description: Base class for campaign metadata response.
-    BaseAdsCampaignRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-          description: Description of the product or service
-        target_audience:
-          type: string
-          title: Target Audience
-          description: Target audience description
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-          description: Company profile ID (required)
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-          description: List of campaign goals
-        key_selling_points:
-          type: string
-          title: Key Selling Points
-          description: Key selling points
-          default: ''
-        num_ads:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Num Ads
-          description: Number of ad variations to generate
-          default: 3
-        bid_strategy:
-          type: string
-          title: Bid Strategy
-          description: Bidding strategy
-          default: maximize_conversions
-        budget_range:
-          type: string
-          title: Budget Range
-          description: Budget range (low, medium, high, custom)
-          default: medium
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-          description: Target country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-          description: Target state/province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-          description: Target city
-        locations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/LocationItem'
-            type: array
-          - type: 'null'
-          title: Locations
-          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-            maxItems: 3
-          - type: 'null'
-          title: Reference Images
-          description: List of reference image base64 data URLs (max 3)
-        lead_form_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Lead Form Enabled
-          description: Whether to use lead form extension where supported
-          default: false
-        max_cpc:
-          anyOf:
-          - type: number
-            minimum: 0.01
-          - type: 'null'
-          title: Max Cpc
-          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
-        experiment_package_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Experiment Package Id
-          description: Test package id; created campaigns are stamped with this linkage
-        launch_strategy_mode:
-          anyOf:
-          - type: string
-            pattern: ^(test_learn_pilot|direct_campaign)$
-          - type: 'null'
-          title: Launch Strategy Mode
-          description: test_learn_pilot or direct_campaign
-        dayparting_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Dayparting Enabled
-          description: Whether dayparting/ad scheduling is enabled for this campaign
-          default: false
-        dayparting_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Dayparting Config
-          description: Dayparting configuration including schedule, timezone, and platform-specific settings
+          description: Google Search Lead Form configuration
       type: object
       required:
       - product_description
       - target_audience
       - company_profile_id
-      title: BaseAdsCampaignRequest
-      description: Base request model for creating ad campaigns.
-    CampaignMediaOperation:
+      title: GoogleSearchAdRequest
+      description: Request model for Google Search ads
+    KeywordWithCpc:
       properties:
-        action:
+        keyword:
           type: string
-          enum:
-          - replace
-          - add
-          - add_and_set_primary
-          title: Action
-        media_type:
-          type: string
-          enum:
-          - image
-          - video
-          title: Media Type
-        selected_url:
-          type: string
-          title: Selected Url
-        previous_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous Url
-        source_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Source Index
-      type: object
-      required:
-      - action
-      - media_type
-      - selected_url
-      title: CampaignMediaOperation
-      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
-    schemas__campaigns__ads__google__GoogleDisplayAdRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-          description: Description of the product or service
-        target_audience:
-          type: string
-          title: Target Audience
-          description: Target audience description
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-          description: Company profile ID (required)
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-          description: List of campaign goals
-        key_selling_points:
-          type: string
-          title: Key Selling Points
-          description: Key selling points
-          default: ''
-        num_ads:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Num Ads
-          description: Number of ad variations to generate
-          default: 3
-        bid_strategy:
-          type: string
-          title: Bid Strategy
-          description: Bidding strategy
-          default: maximize_conversions
-        budget_range:
-          type: string
-          title: Budget Range
-          description: Budget range (low, medium, high, custom)
-          default: medium
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-          description: Target country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-          description: Target state/province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-          description: Target city
-        locations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/LocationItem'
-            type: array
-          - type: 'null'
-          title: Locations
-          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-            maxItems: 3
-          - type: 'null'
-          title: Reference Images
-          description: List of reference image base64 data URLs (max 3)
-        lead_form_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Lead Form Enabled
-          description: Whether to use lead form extension where supported
-          default: false
-        max_cpc:
-          anyOf:
-          - type: number
-            minimum: 0.01
-          - type: 'null'
-          title: Max Cpc
-          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
-        experiment_package_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Experiment Package Id
-          description: Test package id; created campaigns are stamped with this linkage
-        launch_strategy_mode:
-          anyOf:
-          - type: string
-            pattern: ^(test_learn_pilot|direct_campaign)$
-          - type: 'null'
-          title: Launch Strategy Mode
-          description: test_learn_pilot or direct_campaign
-        dayparting_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Dayparting Enabled
-          description: Whether dayparting/ad scheduling is enabled for this campaign
-          default: false
-        dayparting_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Dayparting Config
-          description: Dayparting configuration including schedule, timezone, and platform-specific settings
-        num_images_per_ad:
-          type: integer
-          maximum: 5.0
-          minimum: 1.0
-          title: Num Images Per Ad
-          description: Number of images per ad
-          default: 2
-      type: object
-      required:
-      - product_description
-      - target_audience
-      - company_profile_id
-      title: GoogleDisplayAdRequest
-      description: Request model for Google Display ads
-    MetaFeedCampaignUpdateRequest:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-        ad_id:
-          type: string
-          title: Ad Id
-          description: Normalized platform ad UUID
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        headline:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Headline
-        long_headline:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Long Headline
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        ad_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Name
-        call_to_action:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Call To Action
-        keywords:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - items:
-              $ref: '#/components/schemas/KeywordWithCpc'
-            type: array
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Keywords
-        negative_keywords:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - items:
-              $ref: '#/components/schemas/KeywordWithCpc'
-            type: array
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Negative Keywords
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-        recommended_daily_budget:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Recommended Daily Budget
-        total_budget:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Total Budget
-        duration:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Duration
-        target_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Platform
-        start_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Start Date
-        end_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: End Date
-        business_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Business Name
-        final_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Final Url
-        headlines:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Headlines
-        descriptions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Descriptions
-        format_setting:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Format Setting
-        primary_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Primary Text
-        destination_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Destination Url
-        ad_format:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Format
-        placements:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Placements
-        introductory_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Introductory Text
-        alt_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Alt Text
-        aspect_ratio:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Aspect Ratio
-        thumbnail_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Thumbnail Url
-        linkedin_lead_form_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Linkedin Lead Form Config
-        google_lead_form_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Google Lead Form Config
-        meta_lead_form_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Meta Lead Form Config
-        asin:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Asin
-        sku:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sku
-        targeting_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Targeting Type
-        bidding_strategy:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Bidding Strategy
-        default_bid:
+          title: Keyword
+        estimated_cpc:
           anyOf:
           - type: number
           - type: 'null'
-          title: Default Bid
-        brand_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Brand Name
-        landing_page_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Landing Page Url
-        showcase_products:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Showcase Products
-        targeting_products:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Targeting Products
-        audience_segments:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Audience Segments
-        interests:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Interests
-        lead_form_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Lead Form Enabled
-        bid_strategy:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Bid Strategy
-        max_cpc:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Max Cpc
-        ad_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Text
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-        objective_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Objective Type
-        video_length:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Video Length
-        dayparting_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: string
-          - type: 'null'
-          title: Dayparting Config
-        media_operations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/CampaignMediaOperation'
-            type: array
-          - type: 'null'
-          title: Media Operations
+          title: Estimated Cpc
       type: object
       required:
-      - campaign_id
-      - ad_id
-      title: MetaFeedCampaignUpdateRequest
-    MetaStoriesReelsAdRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-          description: Description of the product or service
-        target_audience:
-          type: string
-          title: Target Audience
-          description: Target audience description
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-          description: Company profile ID (required)
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-          description: List of campaign goals
-        key_selling_points:
-          type: string
-          title: Key Selling Points
-          description: Key selling points
-          default: ''
-        num_ads:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Num Ads
-          description: Number of ad variations to generate
-          default: 3
-        bid_strategy:
-          type: string
-          title: Bid Strategy
-          description: Bidding strategy
-          default: maximize_conversions
-        budget_range:
-          type: string
-          title: Budget Range
-          description: Budget range (low, medium, high, custom)
-          default: medium
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-          description: Target country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-          description: Target state/province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-          description: Target city
-        locations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/LocationItem'
-            type: array
-          - type: 'null'
-          title: Locations
-          description: List of locations to target (countries/regions/states/cities/postal codes/proximities). This does not split budget per location; all locations share the campaign budget.
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-            maxItems: 3
-          - type: 'null'
-          title: Reference Images
-          description: List of reference image base64 data URLs (max 3)
-        lead_form_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Lead Form Enabled
-          description: Whether to use lead form extension where supported
-          default: false
-        max_cpc:
-          anyOf:
-          - type: number
-            minimum: 0.01
-          - type: 'null'
-          title: Max Cpc
-          description: Maximum cost per click in dollars (e.g., 1.50 for $1.50). Required when bid_strategy is 'MANUAL_CPC'
-        experiment_package_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Experiment Package Id
-          description: Test package id; created campaigns are stamped with this linkage
-        launch_strategy_mode:
-          anyOf:
-          - type: string
-            pattern: ^(test_learn_pilot|direct_campaign)$
-          - type: 'null'
-          title: Launch Strategy Mode
-          description: test_learn_pilot or direct_campaign
-        dayparting_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Dayparting Enabled
-          description: Whether dayparting/ad scheduling is enabled for this campaign
-          default: false
-        dayparting_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Dayparting Config
-          description: Dayparting configuration including schedule, timezone, and platform-specific settings
-        ad_format:
-          type: string
-          title: Ad Format
-          description: 'Meta Stories & Reels creative format: ''Video'' or ''Single Image'''
-          default: Video
-        video_length:
-          type: integer
-          maximum: 10.0
-          minimum: 10.0
-          title: Video Length
-          description: Video duration is fixed at 10 seconds
-          default: 10
-      type: object
-      required:
-      - product_description
-      - target_audience
-      - company_profile_id
-      title: MetaStoriesReelsAdRequest
-      description: Request model for Meta Stories & Reels ads
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
   securitySchemes:
     HTTPBearer:
       type: http

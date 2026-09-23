@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Email Campaigns API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Email Campaigns
 paths:
@@ -165,7 +162,29 @@ paths:
       tags:
       - Email Campaigns
       summary: Upload Campaign Image
-      description: "Upload a new campaign image and update database records.\nThis endpoint is used for manual image edits instead of replacing an existing image.\n\nArgs:\n    file: The image file to upload\n    campaign_id: Campaign ID\n    idea_number: Campaign idea number\n    image_type: Type of image (defaults to EMAIL_IMAGE)\n    current_user: The authenticated user\n    db: Database session\n\nReturns:\n    JSON response with the result including new image URL"
+      description: 'Upload a new campaign image and update database records.
+
+        This endpoint is used for manual image edits instead of replacing an existing image.
+
+
+        Args:
+
+        file: The image file to upload
+
+        campaign_id: Campaign ID
+
+        idea_number: Campaign idea number
+
+        image_type: Type of image (defaults to EMAIL_IMAGE)
+
+        current_user: The authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        JSON response with the result including new image URL'
       operationId: upload_campaign_image_api_campaigns_email_upload_campaign_image_post
       requestBody:
         content:
@@ -192,7 +211,29 @@ paths:
       tags:
       - Email Campaigns
       summary: Upload Campaign Images
-      description: "Upload campaign images (up to 15) and update database records.\nThis endpoint allows batch uploading of images for a specific campaign idea.\n\nArgs:\n    files: List of image files to upload (max 15)\n    campaign_id: Campaign ID\n    idea_number: Campaign idea number\n    image_type: Type of image (defaults to EMAIL_IMAGE)\n    current_user: The authenticated user\n    db: Database session\n\nReturns:\n    JSON response with the result including new image URLs"
+      description: 'Upload campaign images (up to 15) and update database records.
+
+        This endpoint allows batch uploading of images for a specific campaign idea.
+
+
+        Args:
+
+        files: List of image files to upload (max 15)
+
+        campaign_id: Campaign ID
+
+        idea_number: Campaign idea number
+
+        image_type: Type of image (defaults to EMAIL_IMAGE)
+
+        current_user: The authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        JSON response with the result including new image URLs'
       operationId: upload_campaign_images_api_campaigns_email_upload_campaign_images_post
       requestBody:
         content:
@@ -500,15 +541,350 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    EmailCampaignImageResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        image_type:
+          type: string
+          title: Image Type
+        image_url:
+          type: string
+          title: Image Url
+        original_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Original Prompt
+        enhanced_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Enhanced Prompt
+        width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Height
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        email_campaign_id:
+          type: string
+          format: uuid
+          title: Email Campaign Id
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
       type: object
-      title: HTTPValidationError
+      required:
+      - image_type
+      - image_url
+      - id
+      - email_campaign_id
+      - creation_date
+      title: EmailCampaignImageResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Body_edit_campaign_content_api_campaigns_email_edit_content_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID of the content to edit
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        content:
+          type: string
+          title: Content
+          description: Existing HTML content to edit
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+          description: Instructions for editing the content
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - content
+      - edit_prompt
+      title: Body_edit_campaign_content_api_campaigns_email_edit_content_post
+    EmailCampaignImageCreate:
+      properties:
+        image_type:
+          type: string
+          title: Image Type
+        image_url:
+          type: string
+          title: Image Url
+        original_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Original Prompt
+        enhanced_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Enhanced Prompt
+        width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Height
+      type: object
+      required:
+      - image_type
+      - image_url
+      title: EmailCampaignImageCreate
+    Body_upload_campaign_image_api_campaigns_email_upload_campaign_image_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+          description: New image file to upload
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        image_type:
+          type: string
+          title: Image Type
+          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
+          default: EMAIL_IMAGE
+      type: object
+      required:
+      - file
+      - campaign_id
+      - idea_number
+      title: Body_upload_campaign_image_api_campaigns_email_upload_campaign_image_post
+    EmailCampaignCreate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        subject_line:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Line
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+        preview_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preview Text
+        call_to_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Call To Action
+        target_audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Audience
+        key_selling_points:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Selling Points
+        from_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: From Name
+        reply_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reply To
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        workflow_status:
+          anyOf:
+          - $ref: '#/components/schemas/WorkflowStatus'
+          - type: 'null'
+          default: draft
+        scheduled_send_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled Send Time
+        sent_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Sent At
+        personalization_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Personalization Level
+          default: medium
+        merge_variables:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Merge Variables
+        dynamic_blocks:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Dynamic Blocks
+        ab_test_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ab Test Config
+        performance_metrics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Performance Metrics
+        optimization_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Optimization Config
+        company_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Id
+        consumer_group_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Consumer Group Ids
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        variation:
+          type: integer
+          title: Variation
+          default: 0
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      title: EmailCampaignCreate
+    Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+          description: List of image files to upload (max 15)
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        image_type:
+          type: string
+          title: Image Type
+          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
+          default: EMAIL_IMAGE
+      type: object
+      required:
+      - files
+      - campaign_id
+      - idea_number
+      title: Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post
+    Body_upload_email_campaign_image_general_api_campaigns_email_upload_image_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+          description: New image file to upload
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        image_type:
+          type: string
+          title: Image Type
+          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
+          default: EMAIL_IMAGE
+      type: object
+      required:
+      - file
+      - campaign_id
+      - idea_number
+      title: Body_upload_email_campaign_image_general_api_campaigns_email_upload_image_post
     EmailCampaignResponse:
       properties:
         name:
@@ -684,362 +1060,6 @@ components:
       - creation_date
       - last_modified
       title: EmailCampaignResponse
-    EmailCampaignCreate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        subject_line:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subject Line
-        content:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Content
-        preview_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Preview Text
-        call_to_action:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Call To Action
-        target_audience:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Audience
-        key_selling_points:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Key Selling Points
-        from_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: From Name
-        reply_to:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reply To
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        workflow_status:
-          anyOf:
-          - $ref: '#/components/schemas/WorkflowStatus'
-          - type: 'null'
-          default: draft
-        scheduled_send_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Scheduled Send Time
-        sent_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Sent At
-        personalization_level:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Personalization Level
-          default: medium
-        merge_variables:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Merge Variables
-        dynamic_blocks:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Dynamic Blocks
-        ab_test_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ab Test Config
-        performance_metrics:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Performance Metrics
-        optimization_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Optimization Config
-        company_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Id
-        consumer_group_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Consumer Group Ids
-        campaign_id:
-          type: string
-          title: Campaign Id
-        idea_number:
-          type: integer
-          title: Idea Number
-        variation:
-          type: integer
-          title: Variation
-          default: 0
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      title: EmailCampaignCreate
-    Body_edit_campaign_content_api_campaigns_email_edit_content_post:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: Campaign ID of the content to edit
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Campaign idea number
-        content:
-          type: string
-          title: Content
-          description: Existing HTML content to edit
-        edit_prompt:
-          type: string
-          title: Edit Prompt
-          description: Instructions for editing the content
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      - content
-      - edit_prompt
-      title: Body_edit_campaign_content_api_campaigns_email_edit_content_post
-    Body_upload_email_campaign_image_general_api_campaigns_email_upload_image_post:
-      properties:
-        file:
-          type: string
-          format: binary
-          title: File
-          description: New image file to upload
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: Campaign ID
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Campaign idea number
-        image_type:
-          type: string
-          title: Image Type
-          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
-          default: EMAIL_IMAGE
-      type: object
-      required:
-      - file
-      - campaign_id
-      - idea_number
-      title: Body_upload_email_campaign_image_general_api_campaigns_email_upload_image_post
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    EmailCampaignImageCreate:
-      properties:
-        image_type:
-          type: string
-          title: Image Type
-        image_url:
-          type: string
-          title: Image Url
-        original_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Original Prompt
-        enhanced_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Enhanced Prompt
-        width:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Width
-        height:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Height
-      type: object
-      required:
-      - image_type
-      - image_url
-      title: EmailCampaignImageCreate
-    WorkflowStatus:
-      type: string
-      enum:
-      - draft
-      - review
-      - approved
-      - scheduled
-      - sending
-      - sent
-      - failed
-      title: WorkflowStatus
-      description: Email campaign workflow status values.
-    EmailCampaignImageResponse:
-      properties:
-        image_type:
-          type: string
-          title: Image Type
-        image_url:
-          type: string
-          title: Image Url
-        original_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Original Prompt
-        enhanced_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Enhanced Prompt
-        width:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Width
-        height:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Height
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        email_campaign_id:
-          type: string
-          format: uuid
-          title: Email Campaign Id
-        creation_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creation Date
-      type: object
-      required:
-      - image_type
-      - image_url
-      - id
-      - email_campaign_id
-      - creation_date
-      title: EmailCampaignImageResponse
-    Body_upload_campaign_image_api_campaigns_email_upload_campaign_image_post:
-      properties:
-        file:
-          type: string
-          format: binary
-          title: File
-          description: New image file to upload
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: Campaign ID
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Campaign idea number
-        image_type:
-          type: string
-          title: Image Type
-          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
-          default: EMAIL_IMAGE
-      type: object
-      required:
-      - file
-      - campaign_id
-      - idea_number
-      title: Body_upload_campaign_image_api_campaigns_email_upload_campaign_image_post
-    Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post:
-      properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-          description: List of image files to upload (max 15)
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: Campaign ID
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Campaign idea number
-        image_type:
-          type: string
-          title: Image Type
-          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
-          default: EMAIL_IMAGE
-      type: object
-      required:
-      - files
-      - campaign_id
-      - idea_number
-      title: Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post
     Body_edit_campaign_image_api_campaigns_email_edit_image_post:
       properties:
         campaign_id:
@@ -1065,6 +1085,27 @@ components:
       - image_url
       - edit_prompt
       title: Body_edit_campaign_image_api_campaigns_email_edit_image_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    WorkflowStatus:
+      type: string
+      enum:
+      - draft
+      - review
+      - approved
+      - scheduled
+      - sending
+      - sent
+      - failed
+      title: WorkflowStatus
+      description: Email campaign workflow status values.
   securitySchemes:
     HTTPBearer:
       type: http

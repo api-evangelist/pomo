@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Marketing Wizard API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: marketing-wizard
 paths:
@@ -161,7 +158,25 @@ paths:
       tags:
       - marketing-wizard
       summary: Get Product Intelligence
-      description: "Get market intelligence for a specific product\n\nArgs:\n    product_id: ID of the product\n    intelligence_type: Optional filter for intelligence type\n    limit: Maximum number of results\n    current_user: Authenticated user\n    db: Database session\n\nReturns:\n    Dictionary with grouped intelligence data"
+      description: 'Get market intelligence for a specific product
+
+
+        Args:
+
+        product_id: ID of the product
+
+        intelligence_type: Optional filter for intelligence type
+
+        limit: Maximum number of results
+
+        current_user: Authenticated user
+
+        db: Database session
+
+
+        Returns:
+
+        Dictionary with grouped intelligence data'
       operationId: get_product_intelligence_api_marketing_wizard_intelligence_product__product_id__get
       security:
       - HTTPBearer: []
@@ -206,36 +221,53 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    PDPHistoryItem:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+          description: Record identifier for the stored PDP.
+        tier:
+          $ref: '#/components/schemas/PDPExperienceTier'
+          description: Experience tier used for the generation.
+        tone:
           type: string
-          title: Message
-        type:
+          title: Tone
+          description: Tone used for the copy.
+        include_marketplace:
+          type: boolean
+          title: Include Marketplace
+          description: Whether a marketplace variant was requested.
+        marketplace_generated:
+          type: boolean
+          title: Marketplace Generated
+          description: True if a marketplace variant was produced.
+        created_at:
           type: string
-          title: Error Type
+          format: date-time
+          title: Created At
+          description: Timestamp when the PDP was generated.
+        used_images:
+          items:
+            type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          type: array
+          title: Used Images
+          description: Images that informed the generation.
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - id
+      - tier
+      - tone
+      - include_marketplace
+      - marketplace_generated
+      - created_at
+      title: PDPHistoryItem
+      description: Summary of a previously generated PDP.
     PDPVariantResponse:
       properties:
         variant:
@@ -287,32 +319,52 @@ components:
       - html
       title: PDPVariantResponse
       description: Single PDP variant response.
-    PDPExperienceTier:
-      type: string
-      enum:
-      - premium
-      - standard
-      - value
-      - luxury
-      title: PDPExperienceTier
-      description: Available experience tiers for PDP generation.
-    PDPSectionSummary:
+    PDPGenerationRequest:
       properties:
-        heading:
+        tier:
+          $ref: '#/components/schemas/PDPExperienceTier'
+          description: Experience tier that determines aesthetic and layout density.
+        tone:
           type: string
-          title: Heading
-          description: Human-friendly heading for the section.
-        intent:
+          minLength: 2
+          title: Tone
+          description: Copywriting tone (e.g., 'Bold & Confident', 'Friendly and Warm').
+        selected_images:
+          items:
+            type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          type: array
+          maxItems: 5
+          title: Selected Images
+          description: Ordered list of up to five image URLs to embed in the PDP.
+        include_marketplace:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Include Marketplace
+          description: Override to force marketplace variant generation.
+        additional_context:
           anyOf:
           - type: string
           - type: 'null'
-          title: Intent
-          description: Goal or purpose of the section (e.g., 'Social proof', 'Feature showcase').
+          title: Additional Context
+          description: Optional extra instructions or nuances about the PDP.
+        target_audience_segments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Audience Segments
+          description: Optional list of audience segments to tailor messaging (from cached target audience).
       type: object
       required:
-      - heading
-      title: PDPSectionSummary
-      description: Summary of a key section returned by the generator.
+      - tier
+      - tone
+      title: PDPGenerationRequest
+      description: Request payload for PDP generation.
     PDPGenerationResponse:
       properties:
         success:
@@ -374,99 +426,44 @@ components:
       - modern_page
       title: PDPGenerationResponse
       description: Response payload returned after PDP generation.
-    PDPGenerationRequest:
+    PDPSectionSummary:
       properties:
-        tier:
-          $ref: '#/components/schemas/PDPExperienceTier'
-          description: Experience tier that determines aesthetic and layout density.
-        tone:
+        heading:
           type: string
-          minLength: 2
-          title: Tone
-          description: Copywriting tone (e.g., 'Bold & Confident', 'Friendly and Warm').
-        selected_images:
-          items:
-            type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          type: array
-          maxItems: 5
-          title: Selected Images
-          description: Ordered list of up to five image URLs to embed in the PDP.
-        include_marketplace:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Include Marketplace
-          description: Override to force marketplace variant generation.
-        additional_context:
+          title: Heading
+          description: Human-friendly heading for the section.
+        intent:
           anyOf:
           - type: string
           - type: 'null'
-          title: Additional Context
-          description: Optional extra instructions or nuances about the PDP.
-        target_audience_segments:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Target Audience Segments
-          description: Optional list of audience segments to tailor messaging (from cached target audience).
+          title: Intent
+          description: Goal or purpose of the section (e.g., 'Social proof', 'Feature showcase').
       type: object
       required:
-      - tier
-      - tone
-      title: PDPGenerationRequest
-      description: Request payload for PDP generation.
-    PDPHistoryItem:
+      - heading
+      title: PDPSectionSummary
+      description: Summary of a key section returned by the generator.
+    ValidationError:
       properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-          description: Record identifier for the stored PDP.
-        tier:
-          $ref: '#/components/schemas/PDPExperienceTier'
-          description: Experience tier used for the generation.
-        tone:
-          type: string
-          title: Tone
-          description: Tone used for the copy.
-        include_marketplace:
-          type: boolean
-          title: Include Marketplace
-          description: Whether a marketplace variant was requested.
-        marketplace_generated:
-          type: boolean
-          title: Marketplace Generated
-          description: True if a marketplace variant was produced.
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Timestamp when the PDP was generated.
-        used_images:
+        loc:
           items:
-            type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Used Images
-          description: Images that informed the generation.
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - id
-      - tier
-      - tone
-      - include_marketplace
-      - marketplace_generated
-      - created_at
-      title: PDPHistoryItem
-      description: Summary of a previously generated PDP.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     PDPVariantType:
       type: string
       enum:
@@ -474,6 +471,24 @@ components:
       - marketplace
       title: PDPVariantType
       description: Supported PDP layout variants.
+    PDPExperienceTier:
+      type: string
+      enum:
+      - premium
+      - standard
+      - value
+      - luxury
+      title: PDPExperienceTier
+      description: Available experience tiers for PDP generation.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     JobResponse:
       properties:
         job_id:

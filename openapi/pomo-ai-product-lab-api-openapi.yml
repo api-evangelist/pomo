@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend AI Product Lab API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: ai-product-lab
 paths:
@@ -365,15 +362,208 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProductIdea:
+      properties:
+        name:
+          type: string
+          title: Name
+        tagline:
+          type: string
+          title: Tagline
+        description:
+          type: string
+          title: Description
+        target_audience:
+          type: string
+          title: Target Audience
+        key_features:
+          items:
+            type: string
+          type: array
+          title: Key Features
+        unique_value_proposition:
+          type: string
+          title: Unique Value Proposition
+        market_opportunity:
+          type: string
+          title: Market Opportunity
+        competitive_advantage:
+          type: string
+          title: Competitive Advantage
+        price_range:
+          type: string
+          title: Price Range
+        potential_challenges:
+          items:
+            type: string
+          type: array
+          title: Potential Challenges
+        success_metrics:
+          items:
+            type: string
+          type: array
+          title: Success Metrics
+      type: object
+      required:
+      - name
+      - tagline
+      - description
+      - target_audience
+      - key_features
+      - unique_value_proposition
+      - market_opportunity
+      - competitive_advantage
+      - price_range
+      - potential_challenges
+      - success_metrics
+      title: ProductIdea
+    ProductIdeaResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+        user_input:
+          type: string
+          title: User Input
+        product_ideas:
+          items:
+            $ref: '#/components/schemas/ProductIdea'
+          type: array
+          title: Product Ideas
+        context_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Context Data
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - session_title
+      - user_input
+      - product_ideas
+      - context_data
+      - created_at
+      title: ProductIdeaResponse
+    ProductIdeaBrainstormRequest:
+      properties:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        user_input:
+          type: string
+          title: User Input
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+      type: object
+      required:
+      - user_input
+      title: ProductIdeaBrainstormRequest
+    PersonaResponseData:
+      properties:
+        persona_id:
+          type: string
+          format: uuid
+          title: Persona Id
+        persona_name:
+          type: string
+          title: Persona Name
+        interest_level:
+          type: number
+          title: Interest Level
+        purchase_likelihood:
+          type: number
+          title: Purchase Likelihood
+        price_sensitivity:
+          type: string
+          title: Price Sensitivity
+        initial_reaction:
+          type: string
+          title: Initial Reaction
+        perceived_benefits:
+          items:
+            type: string
+          type: array
+          title: Perceived Benefits
+        concerns:
+          items:
+            type: string
+          type: array
+          title: Concerns
+        feature_requests:
+          items:
+            type: string
+          type: array
+          title: Feature Requests
+        would_recommend:
+          type: boolean
+          title: Would Recommend
+        recommendation_reason:
+          type: string
+          title: Recommendation Reason
+      type: object
+      required:
+      - persona_id
+      - persona_name
+      - interest_level
+      - purchase_likelihood
+      - price_sensitivity
+      - initial_reaction
+      - perceived_benefits
+      - concerns
+      - feature_requests
+      - would_recommend
+      - recommendation_reason
+      title: PersonaResponseData
     ProductLaunchTestResult:
       properties:
         id:
@@ -458,208 +648,15 @@ components:
       - started_at
       - completed_at
       title: ProductLaunchTestResult
-    ProductIdeaBrainstormRequest:
+    HTTPValidationError:
       properties:
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-        user_input:
-          type: string
-          title: User Input
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - user_input
-      title: ProductIdeaBrainstormRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ProductIdeaResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
-        user_input:
-          type: string
-          title: User Input
-        product_ideas:
-          items:
-            $ref: '#/components/schemas/ProductIdea'
-          type: array
-          title: Product Ideas
-        context_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Context Data
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - session_title
-      - user_input
-      - product_ideas
-      - context_data
-      - created_at
-      title: ProductIdeaResponse
-    PersonaResponseData:
-      properties:
-        persona_id:
-          type: string
-          format: uuid
-          title: Persona Id
-        persona_name:
-          type: string
-          title: Persona Name
-        interest_level:
-          type: number
-          title: Interest Level
-        purchase_likelihood:
-          type: number
-          title: Purchase Likelihood
-        price_sensitivity:
-          type: string
-          title: Price Sensitivity
-        initial_reaction:
-          type: string
-          title: Initial Reaction
-        perceived_benefits:
-          items:
-            type: string
-          type: array
-          title: Perceived Benefits
-        concerns:
-          items:
-            type: string
-          type: array
-          title: Concerns
-        feature_requests:
-          items:
-            type: string
-          type: array
-          title: Feature Requests
-        would_recommend:
-          type: boolean
-          title: Would Recommend
-        recommendation_reason:
-          type: string
-          title: Recommendation Reason
-      type: object
-      required:
-      - persona_id
-      - persona_name
-      - interest_level
-      - purchase_likelihood
-      - price_sensitivity
-      - initial_reaction
-      - perceived_benefits
-      - concerns
-      - feature_requests
-      - would_recommend
-      - recommendation_reason
-      title: PersonaResponseData
-    ProductIdea:
-      properties:
-        name:
-          type: string
-          title: Name
-        tagline:
-          type: string
-          title: Tagline
-        description:
-          type: string
-          title: Description
-        target_audience:
-          type: string
-          title: Target Audience
-        key_features:
-          items:
-            type: string
-          type: array
-          title: Key Features
-        unique_value_proposition:
-          type: string
-          title: Unique Value Proposition
-        market_opportunity:
-          type: string
-          title: Market Opportunity
-        competitive_advantage:
-          type: string
-          title: Competitive Advantage
-        price_range:
-          type: string
-          title: Price Range
-        potential_challenges:
-          items:
-            type: string
-          type: array
-          title: Potential Challenges
-        success_metrics:
-          items:
-            type: string
-          type: array
-          title: Success Metrics
-      type: object
-      required:
-      - name
-      - tagline
-      - description
-      - target_audience
-      - key_features
-      - unique_value_proposition
-      - market_opportunity
-      - competitive_advantage
-      - price_range
-      - potential_challenges
-      - success_metrics
-      title: ProductIdea
+      title: HTTPValidationError
     ProductLaunchTestRequest:
       properties:
         launch_session_id:

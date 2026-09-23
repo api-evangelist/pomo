@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Budget Estimate API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Budget Estimate
 paths:
@@ -38,55 +35,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    BudgetEstimateRequest:
-      properties:
-        goal:
-          type: string
-          title: Goal
-          description: User's marketing goal
-        currency:
-          type: string
-          title: Currency
-          description: Currency code (e.g., USD)
-        locations:
-          items:
-            $ref: '#/components/schemas/LocationItem'
-          type: array
-          title: Locations
-          description: List of target locations
-        product_offering_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Offering Id
-          description: Optional product offering identifier
-        start_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Start Date
-          description: Optional start date in ISO format (YYYY-MM-DD)
-        end_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: End Date
-          description: Optional end date in ISO format (YYYY-MM-DD)
-      type: object
-      required:
-      - goal
-      - currency
-      title: BudgetEstimateRequest
-      description: Input payload for budget estimation.
     BudgetRecommendationRange:
       properties:
         min_value:
@@ -129,6 +77,46 @@ components:
       - msg
       - type
       title: ValidationError
+    BudgetEstimateRequest:
+      properties:
+        goal:
+          type: string
+          title: Goal
+          description: User's marketing goal
+        currency:
+          type: string
+          title: Currency
+          description: Currency code (e.g., USD)
+        locations:
+          items:
+            $ref: '#/components/schemas/LocationItem'
+          type: array
+          title: Locations
+          description: List of target locations
+        product_offering_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Offering Id
+          description: Optional product offering identifier
+        start_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Date
+          description: Optional start date in ISO format (YYYY-MM-DD)
+        end_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
+          description: Optional end date in ISO format (YYYY-MM-DD)
+      type: object
+      required:
+      - goal
+      - currency
+      title: BudgetEstimateRequest
+      description: Input payload for budget estimation.
     BudgetEstimateResponse:
       properties:
         currency:
@@ -288,6 +276,15 @@ components:
       - name
       title: LocationItem
       description: Canonical location input for multi-geo campaigns with one shared budget.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

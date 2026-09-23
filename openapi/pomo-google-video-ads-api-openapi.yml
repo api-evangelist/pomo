@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Google Video Ads API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Google Video Ads
 paths:
@@ -193,30 +190,105 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
+    GoogleVideoAdRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    KeywordWithCpc:
-      properties:
-        keyword:
+        product_description:
           type: string
-          title: Keyword
-        estimated_cpc:
+          title: Product Description
+          description: Description of the product or service
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Target audience description
+        campaign_goals:
           anyOf:
-          - type: number
+          - items:
+              type: string
+            type: array
           - type: 'null'
-          title: Estimated Cpc
+          title: Campaign Goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          default: 3
+        video_length:
+          type: integer
+          maximum: 10.0
+          minimum: 10.0
+          title: Video Length
+          description: Video duration is fixed at 10 seconds
+          default: 10
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          default: automatic
+        budget_range:
+          type: string
+          title: Budget Range
+          default: medium
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        locations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Locations
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Reference Images
       type: object
       required:
-      - keyword
-      title: KeywordWithCpc
-      description: Model for keyword with CPC data
+      - product_description
+      - target_audience
+      title: GoogleVideoAdRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CampaignMediaOperation:
       properties:
         action:
@@ -252,27 +324,21 @@ components:
       - selected_url
       title: CampaignMediaOperation
       description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
-    ValidationError:
+    KeywordWithCpc:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        keyword:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
     AdsCampaignUpdateRequest:
       properties:
         campaign_id:
@@ -592,84 +658,15 @@ components:
       - campaign_id
       title: AdsCampaignUpdateRequest
       description: Request model for updating ad campaign data
-    GoogleVideoAdRequest:
+    HTTPValidationError:
       properties:
-        product_description:
-          type: string
-          title: Product Description
-          description: Description of the product or service
-        target_audience:
-          type: string
-          title: Target Audience
-          description: Target audience description
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-        key_selling_points:
-          type: string
-          title: Key Selling Points
-          default: ''
-        num_ads:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Num Ads
-          default: 3
-        video_length:
-          type: integer
-          maximum: 10.0
-          minimum: 10.0
-          title: Video Length
-          description: Video duration is fixed at 10 seconds
-          default: 10
-        bid_strategy:
-          type: string
-          title: Bid Strategy
-          default: automatic
-        budget_range:
-          type: string
-          title: Budget Range
-          default: medium
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-        locations:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Locations
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-            maxItems: 3
-          - type: 'null'
-          title: Reference Images
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - product_description
-      - target_audience
-      title: GoogleVideoAdRequest
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

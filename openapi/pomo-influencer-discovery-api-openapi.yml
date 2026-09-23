@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Influencer Discovery API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: influencer-discovery
 paths:
@@ -1447,148 +1444,37 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    UpdateCreatorListMembershipRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    UpdateCreatorContactsRequest:
-      properties:
-        contacts_json:
-          additionalProperties: true
-          type: object
-          title: Contacts Json
-      type: object
-      required:
-      - contacts_json
-      title: UpdateCreatorContactsRequest
-    InfluencerDeliverablePricingEstimate:
-      properties:
-        deliverable_type:
-          type: string
-          title: Deliverable Type
-        deliverable_label:
-          type: string
-          title: Deliverable Label
-        deliverable_description:
-          type: string
-          title: Deliverable Description
-        pricing_basis:
-          type: string
-          title: Pricing Basis
-        confidence:
-          type: string
-          enum:
-          - low
-          - medium
-          - high
-          title: Confidence
-        expected_views:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Expected Views
-        expected_views_min:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Expected Views Min
-        expected_views_max:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Expected Views Max
-        expected_views_source:
+        outreach_stage:
           anyOf:
           - type: string
             enum:
-            - recent_media_direct_views
-            - provider_avg_video_views
-            - avg_interactions_fallback
-            - followers_fallback
+            - saved
+            - outreached
+            - replied
+            - negotiating
+            - confirmed
+            - rejected
           - type: 'null'
-          title: Expected Views Source
-        expected_views_confidence:
-          anyOf:
-          - type: string
-            enum:
-            - low
-            - medium
-            - high
-          - type: 'null'
-          title: Expected Views Confidence
-        expected_views_basis:
+          title: Outreach Stage
+        priority:
           anyOf:
           - type: string
           - type: 'null'
-          title: Expected Views Basis
-        cpm_min_usd:
+          title: Priority
+        notes:
           anyOf:
-          - type: number
-            minimum: 0.0
+          - type: string
           - type: 'null'
-          title: Cpm Min Usd
-        cpm_max_usd:
+          title: Notes
+        position:
           anyOf:
-          - type: number
-            minimum: 0.0
+          - type: integer
           - type: 'null'
-          title: Cpm Max Usd
-        cpm_suggested_usd:
-          anyOf:
-          - type: number
-            minimum: 0.0
-          - type: 'null'
-          title: Cpm Suggested Usd
-        canonical_range:
-          $ref: '#/components/schemas/InfluencerPricingRange'
-        local_range:
-          anyOf:
-          - $ref: '#/components/schemas/InfluencerPricingRange'
-          - type: 'null'
-        display_ranges:
-          items:
-            $ref: '#/components/schemas/InfluencerPricingRange'
-          type: array
-          title: Display Ranges
-        factors:
-          items:
-            type: string
-          type: array
-          title: Factors
-        assumptions:
-          items:
-            type: string
-          type: array
-          title: Assumptions
-        missing_data:
-          items:
-            type: string
-          type: array
-          title: Missing Data
-        caveats:
-          items:
-            type: string
-          type: array
-          title: Caveats
+          title: Position
       type: object
-      required:
-      - deliverable_type
-      - deliverable_label
-      - deliverable_description
-      - pricing_basis
-      - confidence
-      - canonical_range
-      - display_ranges
-      title: InfluencerDeliverablePricingEstimate
-      description: Structured price estimate for one deliverable type.
+      title: UpdateCreatorListMembershipRequest
     UpdateCreatorLocationsRequest:
       properties:
         creator_locations_json:
@@ -1599,47 +1485,59 @@ components:
           title: Creator Locations Json
       type: object
       title: UpdateCreatorLocationsRequest
-    InfluencerPricingRange:
+    AddCreatorsToListRequest:
       properties:
-        currency:
-          type: string
-          maxLength: 3
-          minLength: 3
-          title: Currency
-        min_amount:
-          type: number
-          minimum: 0.0
-          title: Min Amount
-        max_amount:
-          type: number
-          minimum: 0.0
-          title: Max Amount
-        suggested_amount:
-          type: number
-          minimum: 0.0
-          title: Suggested Amount
-        label:
-          type: string
-          title: Label
-        is_local:
-          type: boolean
-          title: Is Local
-          default: false
-        exchange_rate_per_usd:
+        creator_ids:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Creator Ids
+        positions_by_creator_id:
           anyOf:
-          - type: number
-            exclusiveMinimum: 0.0
+          - additionalProperties:
+              type: integer
+            type: object
           - type: 'null'
-          title: Exchange Rate Per Usd
+          title: Positions By Creator Id
       type: object
       required:
-      - currency
-      - min_amount
-      - max_amount
-      - suggested_amount
-      - label
-      title: InfluencerPricingRange
-      description: Price range in one display currency.
+      - creator_ids
+      title: AddCreatorsToListRequest
+    CreateCreatorListRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        list_type:
+          type: string
+          title: List Type
+          default: manual
+        campaign_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Id
+        campaign_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Type
+        metadata_json:
+          additionalProperties: true
+          type: object
+          title: Metadata Json
+      type: object
+      required:
+      - name
+      title: CreateCreatorListRequest
     ValidationError:
       properties:
         loc:
@@ -1661,6 +1559,54 @@ components:
       - msg
       - type
       title: ValidationError
+    UpdateOutreachStageRequest:
+      properties:
+        outreach_stage:
+          type: string
+          enum:
+          - saved
+          - outreached
+          - replied
+          - negotiating
+          - confirmed
+          - rejected
+          title: Outreach Stage
+      type: object
+      required:
+      - outreach_stage
+      title: UpdateOutreachStageRequest
+    UpdateCreatorContactsRequest:
+      properties:
+        contacts_json:
+          additionalProperties: true
+          type: object
+          title: Contacts Json
+      type: object
+      required:
+      - contacts_json
+      title: UpdateCreatorContactsRequest
+    InfluencerPricingEstimateResponse:
+      properties:
+        market_country_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Market Country Code
+        market_country_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Market Country Name
+        estimates:
+          items:
+            $ref: '#/components/schemas/InfluencerDeliverablePricingEstimate'
+          type: array
+          title: Estimates
+      type: object
+      required:
+      - estimates
+      title: InfluencerPricingEstimateResponse
+      description: Structured influencer price estimates grouped by deliverable type.
     DraftCreatorOutreachMessageRequest:
       properties:
         channel:
@@ -1786,124 +1732,6 @@ components:
       - channel
       - creator_name
       title: DraftCreatorOutreachMessageRequest
-    AddCreatorToListsRequest:
-      properties:
-        list_ids:
-          items:
-            type: string
-          type: array
-          minItems: 1
-          title: List Ids
-      type: object
-      required:
-      - list_ids
-      title: AddCreatorToListsRequest
-    UpdateCreatorListMembershipRequest:
-      properties:
-        outreach_stage:
-          anyOf:
-          - type: string
-            enum:
-            - saved
-            - outreached
-            - replied
-            - negotiating
-            - confirmed
-            - rejected
-          - type: 'null'
-          title: Outreach Stage
-        priority:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Priority
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-        position:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Position
-      type: object
-      title: UpdateCreatorListMembershipRequest
-    CreateCreatorListRequest:
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        list_type:
-          type: string
-          title: List Type
-          default: manual
-        campaign_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Campaign Id
-        campaign_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Campaign Type
-        metadata_json:
-          additionalProperties: true
-          type: object
-          title: Metadata Json
-      type: object
-      required:
-      - name
-      title: CreateCreatorListRequest
-    SaveCreatorOutreachDraftRequest:
-      properties:
-        channel:
-          type: string
-          maxLength: 64
-          minLength: 1
-          title: Channel
-        target_label:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Target Label
-        target_value:
-          type: string
-          maxLength: 500
-          minLength: 1
-          title: Target Value
-        subject:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Subject
-        message:
-          type: string
-          maxLength: 4000
-          minLength: 1
-          title: Message
-        last_prompt:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Last Prompt
-      type: object
-      required:
-      - channel
-      - target_value
-      - message
-      title: SaveCreatorOutreachDraftRequest
     InfluencerPricingEstimateRequest:
       properties:
         creator_id:
@@ -2094,63 +1922,232 @@ components:
           title: Metadata Json
       type: object
       title: UpdateCreatorListRequest
-    AddCreatorsToListRequest:
+    InfluencerPricingRange:
       properties:
-        creator_ids:
+        currency:
+          type: string
+          maxLength: 3
+          minLength: 3
+          title: Currency
+        min_amount:
+          type: number
+          minimum: 0.0
+          title: Min Amount
+        max_amount:
+          type: number
+          minimum: 0.0
+          title: Max Amount
+        suggested_amount:
+          type: number
+          minimum: 0.0
+          title: Suggested Amount
+        label:
+          type: string
+          title: Label
+        is_local:
+          type: boolean
+          title: Is Local
+          default: false
+        exchange_rate_per_usd:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Exchange Rate Per Usd
+      type: object
+      required:
+      - currency
+      - min_amount
+      - max_amount
+      - suggested_amount
+      - label
+      title: InfluencerPricingRange
+      description: Price range in one display currency.
+    AddCreatorToListsRequest:
+      properties:
+        list_ids:
           items:
             type: string
           type: array
           minItems: 1
-          title: Creator Ids
-        positions_by_creator_id:
-          anyOf:
-          - additionalProperties:
-              type: integer
-            type: object
-          - type: 'null'
-          title: Positions By Creator Id
+          title: List Ids
       type: object
       required:
-      - creator_ids
-      title: AddCreatorsToListRequest
-    UpdateOutreachStageRequest:
+      - list_ids
+      title: AddCreatorToListsRequest
+    InfluencerDeliverablePricingEstimate:
       properties:
-        outreach_stage:
+        deliverable_type:
+          type: string
+          title: Deliverable Type
+        deliverable_label:
+          type: string
+          title: Deliverable Label
+        deliverable_description:
+          type: string
+          title: Deliverable Description
+        pricing_basis:
+          type: string
+          title: Pricing Basis
+        confidence:
           type: string
           enum:
-          - saved
-          - outreached
-          - replied
-          - negotiating
-          - confirmed
-          - rejected
-          title: Outreach Stage
-      type: object
-      required:
-      - outreach_stage
-      title: UpdateOutreachStageRequest
-    InfluencerPricingEstimateResponse:
-      properties:
-        market_country_code:
+          - low
+          - medium
+          - high
+          title: Confidence
+        expected_views:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Expected Views
+        expected_views_min:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Expected Views Min
+        expected_views_max:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Expected Views Max
+        expected_views_source:
+          anyOf:
+          - type: string
+            enum:
+            - recent_media_direct_views
+            - provider_avg_video_views
+            - avg_interactions_fallback
+            - followers_fallback
+          - type: 'null'
+          title: Expected Views Source
+        expected_views_confidence:
+          anyOf:
+          - type: string
+            enum:
+            - low
+            - medium
+            - high
+          - type: 'null'
+          title: Expected Views Confidence
+        expected_views_basis:
           anyOf:
           - type: string
           - type: 'null'
-          title: Market Country Code
-        market_country_name:
+          title: Expected Views Basis
+        cpm_min_usd:
           anyOf:
-          - type: string
+          - type: number
+            minimum: 0.0
           - type: 'null'
-          title: Market Country Name
-        estimates:
+          title: Cpm Min Usd
+        cpm_max_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Cpm Max Usd
+        cpm_suggested_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Cpm Suggested Usd
+        canonical_range:
+          $ref: '#/components/schemas/InfluencerPricingRange'
+        local_range:
+          anyOf:
+          - $ref: '#/components/schemas/InfluencerPricingRange'
+          - type: 'null'
+        display_ranges:
           items:
-            $ref: '#/components/schemas/InfluencerDeliverablePricingEstimate'
+            $ref: '#/components/schemas/InfluencerPricingRange'
           type: array
-          title: Estimates
+          title: Display Ranges
+        factors:
+          items:
+            type: string
+          type: array
+          title: Factors
+        assumptions:
+          items:
+            type: string
+          type: array
+          title: Assumptions
+        missing_data:
+          items:
+            type: string
+          type: array
+          title: Missing Data
+        caveats:
+          items:
+            type: string
+          type: array
+          title: Caveats
       type: object
       required:
-      - estimates
-      title: InfluencerPricingEstimateResponse
-      description: Structured influencer price estimates grouped by deliverable type.
+      - deliverable_type
+      - deliverable_label
+      - deliverable_description
+      - pricing_basis
+      - confidence
+      - canonical_range
+      - display_ranges
+      title: InfluencerDeliverablePricingEstimate
+      description: Structured price estimate for one deliverable type.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SaveCreatorOutreachDraftRequest:
+      properties:
+        channel:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Channel
+        target_label:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Target Label
+        target_value:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Target Value
+        subject:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Subject
+        message:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Message
+        last_prompt:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Last Prompt
+      type: object
+      required:
+      - channel
+      - target_value
+      - message
+      title: SaveCreatorOutreachDraftRequest
   securitySchemes:
     HTTPBearer:
       type: http

@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Product Brainstorm Test API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Product Brainstorm Test
 paths:
@@ -203,15 +200,83 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PersonaResponseData:
+      properties:
+        persona_id:
+          type: string
+          format: uuid
+          title: Persona Id
+        persona_name:
+          type: string
+          title: Persona Name
+        interest_level:
+          type: number
+          title: Interest Level
+        purchase_likelihood:
+          type: number
+          title: Purchase Likelihood
+        price_sensitivity:
+          type: string
+          title: Price Sensitivity
+        initial_reaction:
+          type: string
+          title: Initial Reaction
+        perceived_benefits:
+          items:
+            type: string
+          type: array
+          title: Perceived Benefits
+        concerns:
+          items:
+            type: string
+          type: array
+          title: Concerns
+        feature_requests:
+          items:
+            type: string
+          type: array
+          title: Feature Requests
+        would_recommend:
+          type: boolean
+          title: Would Recommend
+        recommendation_reason:
+          type: string
+          title: Recommendation Reason
+      type: object
+      required:
+      - persona_id
+      - persona_name
+      - interest_level
+      - purchase_likelihood
+      - price_sensitivity
+      - initial_reaction
+      - perceived_benefits
+      - concerns
+      - feature_requests
+      - would_recommend
+      - recommendation_reason
+      title: PersonaResponseData
     ProductLaunchTestResult:
       properties:
         id:
@@ -296,83 +361,15 @@ components:
       - started_at
       - completed_at
       title: ProductLaunchTestResult
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    PersonaResponseData:
-      properties:
-        persona_id:
-          type: string
-          format: uuid
-          title: Persona Id
-        persona_name:
-          type: string
-          title: Persona Name
-        interest_level:
-          type: number
-          title: Interest Level
-        purchase_likelihood:
-          type: number
-          title: Purchase Likelihood
-        price_sensitivity:
-          type: string
-          title: Price Sensitivity
-        initial_reaction:
-          type: string
-          title: Initial Reaction
-        perceived_benefits:
-          items:
-            type: string
-          type: array
-          title: Perceived Benefits
-        concerns:
-          items:
-            type: string
-          type: array
-          title: Concerns
-        feature_requests:
-          items:
-            type: string
-          type: array
-          title: Feature Requests
-        would_recommend:
-          type: boolean
-          title: Would Recommend
-        recommendation_reason:
-          type: string
-          title: Recommendation Reason
-      type: object
-      required:
-      - persona_id
-      - persona_name
-      - interest_level
-      - purchase_likelihood
-      - price_sensitivity
-      - initial_reaction
-      - perceived_benefits
-      - concerns
-      - feature_requests
-      - would_recommend
-      - recommendation_reason
-      title: PersonaResponseData
+      title: HTTPValidationError
     ProductLaunchTestRequest:
       properties:
         launch_session_id:

@@ -2,16 +2,13 @@ openapi: 3.2.0
 info:
   title: GPT Backend Users API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
-- name: users
+- name: Users
 paths:
   /api/users/analytics/genai-usage:
     get:
       tags:
-      - users
+      - Users
       summary: Get Genai Usage Stats
       description: 'Get GenAI usage statistics for the current user.
 
@@ -63,7 +60,7 @@ paths:
   /api/users/analytics/genai-usage-with-quota:
     get:
       tags:
-      - users
+      - Users
       summary: Get Genai Usage With Quota
       description: 'Get GenAI usage statistics with quota information for the current user.
 
@@ -126,15 +123,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -156,6 +144,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

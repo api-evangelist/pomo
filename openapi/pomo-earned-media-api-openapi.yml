@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Earned Media API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: earned-media
 paths:
@@ -742,58 +739,305 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    EarnedMediaTargetUpdateRequest:
+    EarnedMediaCoverageUrlRequest:
       properties:
-        status:
-          anyOf:
-          - type: string
-            enum:
-            - recommended
-            - shortlisted
-            - dismissed
-          - type: 'null'
-          title: Status
-        outreach_status:
-          anyOf:
-          - type: string
-            enum:
-            - not_started
-            - pitch_ready
-            - contacted
-            - follow_up_due
-            - replied
-            - interview
-            - published
-            - not_pursuing
-          - type: 'null'
-          title: Outreach Status
-        last_contacted_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Contacted At
-        next_follow_up_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Next Follow Up At
-        coverage_url:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Coverage Url
-        notes:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Notes
+        url:
+          type: string
+          maxLength: 2000
+          minLength: 8
+          title: Url
       additionalProperties: false
       type: object
-      title: EarnedMediaTargetUpdateRequest
+      required:
+      - url
+      title: EarnedMediaCoverageUrlRequest
+      description: One page a person already knows about.
+    EarnedMediaPressRoomGenerateRequest:
+      properties:
+        refresh:
+          type: boolean
+          title: Refresh
+          default: false
+      additionalProperties: false
+      type: object
+      title: EarnedMediaPressRoomGenerateRequest
+    EarnedMediaPressAsset:
+      properties:
+        label:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Label
+        url:
+          type: string
+          maxLength: 2000
+          minLength: 8
+          title: Url
+      additionalProperties: false
+      type: object
+      required:
+      - label
+      - url
+      title: EarnedMediaPressAsset
+    EarnedMediaPressRoomDateItem:
+      properties:
+        value:
+          type: string
+          format: date
+          title: Value
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - value
+      title: EarnedMediaPressRoomDateItem
+    EarnedMediaContact:
+      properties:
+        name:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Name
+        title:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Title
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+        phone:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Phone
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: EarnedMediaContact
+    EarnedMediaProjectUpdateRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 220
+            minLength: 3
+          - type: 'null'
+          title: Title
+        story_format:
+          anyOf:
+          - type: string
+            enum:
+            - press_release
+            - bylined_article
+            - journalist_pitch
+            - local_story
+          - type: 'null'
+          title: Story Format
+        objective:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Objective
+        audience:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Audience
+        market:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Market
+        primary_angle:
+          anyOf:
+          - type: string
+            maxLength: 2500
+          - type: 'null'
+          title: Primary Angle
+        source_context:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaSourceContext'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      title: EarnedMediaProjectUpdateRequest
+    EarnedMediaPressRoomSaveRequest:
+      properties:
+        content:
+          $ref: '#/components/schemas/EarnedMediaPressRoomProfileContent'
+        base_updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Base Updated At
+      additionalProperties: false
+      type: object
+      required:
+      - content
+      title: EarnedMediaPressRoomSaveRequest
+    EarnedMediaGenerateRequest:
+      properties:
+        draft_count:
+          type: integer
+          enum:
+          - 1
+          - 2
+          title: Draft Count
+          default: 2
+        instruction:
+          anyOf:
+          - type: string
+            maxLength: 2500
+          - type: 'null'
+          title: Instruction
+      additionalProperties: false
+      type: object
+      title: EarnedMediaGenerateRequest
+    EarnedMediaSourceContext:
+      properties:
+        article_scope:
+          type: string
+          enum:
+          - company
+          - single_product
+          - product_portfolio
+          title: Article Scope
+          default: company
+        product_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          maxItems: 8
+          title: Product Ids
+        selected_products:
+          items:
+            $ref: '#/components/schemas/EarnedMediaSelectedProduct'
+          type: array
+          maxItems: 8
+          title: Selected Products
+        press_room:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoom'
+          - type: 'null'
+      additionalProperties: true
+      type: object
+      title: EarnedMediaSourceContext
+      description: Typed article grounding while retaining existing workspace context keys.
+    EarnedMediaDraftRewriteRequest:
+      properties:
+        base_version:
+          type: integer
+          minimum: 1.0
+          title: Base Version
+        instruction:
+          type: string
+          maxLength: 2500
+          minLength: 3
+          title: Instruction
+        scope:
+          type: string
+          enum:
+          - full
+          - section
+          - selection
+          title: Scope
+          default: full
+        selected_text:
+          anyOf:
+          - type: string
+            maxLength: 12000
+          - type: 'null'
+          title: Selected Text
+        section:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Section
+        additional_evidence_ids:
+          items:
+            type: string
+            maxLength: 200
+            minLength: 1
+          type: array
+          maxItems: 40
+          title: Additional Evidence Ids
+      additionalProperties: false
+      type: object
+      required:
+      - base_version
+      - instruction
+      title: EarnedMediaDraftRewriteRequest
+    EarnedMediaProjectCreateRequest:
+      properties:
+        title:
+          type: string
+          maxLength: 220
+          minLength: 3
+          title: Title
+        story_format:
+          type: string
+          enum:
+          - press_release
+          - bylined_article
+          - journalist_pitch
+          - local_story
+          title: Story Format
+          default: bylined_article
+        objective:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Objective
+        audience:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Audience
+        market:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Market
+        primary_angle:
+          anyOf:
+          - type: string
+            maxLength: 2500
+          - type: 'null'
+          title: Primary Angle
+        source_context:
+          $ref: '#/components/schemas/EarnedMediaSourceContext'
+      additionalProperties: false
+      type: object
+      required:
+      - title
+      title: EarnedMediaProjectCreateRequest
     EarnedMediaPressCoverageItem:
       properties:
         id:
@@ -862,6 +1106,199 @@ components:
       - title
       title: EarnedMediaPressCoverageItem
       description: A page that already exists about this brand.
+    EarnedMediaPressRoomQuoteItem:
+      properties:
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Id
+        speaker_name:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Speaker Name
+        speaker_title:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Speaker Title
+        quote:
+          type: string
+          maxLength: 2000
+          minLength: 20
+          title: Quote
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - speaker_name
+      - quote
+      title: EarnedMediaPressRoomQuoteItem
+    EarnedMediaPressRoomSource:
+      properties:
+        label:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Label
+        reference:
+          type: string
+          maxLength: 300
+          minLength: 1
+          title: Reference
+        url:
+          anyOf:
+          - type: string
+            maxLength: 2000
+            minLength: 8
+          - type: 'null'
+          title: Url
+      additionalProperties: false
+      type: object
+      required:
+      - label
+      - reference
+      title: EarnedMediaPressRoomSource
+    EarnedMediaPressRoomTextItem:
+      properties:
+        text:
+          type: string
+          maxLength: 2500
+          minLength: 1
+          title: Text
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - text
+      title: EarnedMediaPressRoomTextItem
+    EarnedMediaDraftSaveRequest:
+      properties:
+        base_version:
+          type: integer
+          minimum: 1.0
+          title: Base Version
+        headline:
+          type: string
+          maxLength: 320
+          minLength: 1
+          title: Headline
+        dek:
+          anyOf:
+          - type: string
+            maxLength: 1200
+          - type: 'null'
+          title: Dek
+        body_markdown:
+          type: string
+          maxLength: 80000
+          minLength: 1
+          title: Body Markdown
+        locked_fields:
+          additionalProperties: true
+          type: object
+          title: Locked Fields
+        change_summary:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Change Summary
+      additionalProperties: false
+      type: object
+      required:
+      - base_version
+      - headline
+      - body_markdown
+      title: EarnedMediaDraftSaveRequest
+    EarnedMediaPressRoomContactItem:
+      properties:
+        name:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Name
+        title:
+          anyOf:
+          - type: string
+            maxLength: 220
+          - type: 'null'
+          title: Title
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+        phone:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Phone
+        review_status:
+          type: string
+          enum:
+          - suggested
+          - verified
+          - approved
+          title: Review Status
+          default: suggested
+        source:
+          anyOf:
+          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: EarnedMediaPressRoomContactItem
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     EarnedMediaPressRoom:
       properties:
         approved_for_publication:
@@ -920,45 +1357,17 @@ components:
       type: object
       title: EarnedMediaPressRoom
       description: Brand-approved facts and assets kept out of public web search.
-    HTTPValidationError:
+    EarnedMediaVersionRestoreRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    EarnedMediaContact:
-      properties:
-        name:
-          type: string
-          maxLength: 220
-          minLength: 1
-          title: Name
-        title:
-          anyOf:
-          - type: string
-            maxLength: 220
-          - type: 'null'
-          title: Title
-        email:
-          anyOf:
-          - type: string
-            maxLength: 320
-          - type: 'null'
-          title: Email
-        phone:
-          anyOf:
-          - type: string
-            maxLength: 80
-          - type: 'null'
-          title: Phone
+        base_version:
+          type: integer
+          minimum: 1.0
+          title: Base Version
       additionalProperties: false
       type: object
       required:
-      - name
-      title: EarnedMediaContact
+      - base_version
+      title: EarnedMediaVersionRestoreRequest
     EarnedMediaPressQuote:
       properties:
         speaker_name:
@@ -994,284 +1403,6 @@ components:
       - quote
       title: EarnedMediaPressQuote
       description: A quote explicitly cleared by the brand for external publication.
-    EarnedMediaProjectUpdateRequest:
-      properties:
-        title:
-          anyOf:
-          - type: string
-            maxLength: 220
-            minLength: 3
-          - type: 'null'
-          title: Title
-        story_format:
-          anyOf:
-          - type: string
-            enum:
-            - press_release
-            - bylined_article
-            - journalist_pitch
-            - local_story
-          - type: 'null'
-          title: Story Format
-        objective:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Objective
-        audience:
-          anyOf:
-          - type: string
-            maxLength: 220
-          - type: 'null'
-          title: Audience
-        market:
-          anyOf:
-          - type: string
-            maxLength: 220
-          - type: 'null'
-          title: Market
-        primary_angle:
-          anyOf:
-          - type: string
-            maxLength: 2500
-          - type: 'null'
-          title: Primary Angle
-        source_context:
-          anyOf:
-          - $ref: '#/components/schemas/EarnedMediaSourceContext'
-          - type: 'null'
-      additionalProperties: false
-      type: object
-      title: EarnedMediaProjectUpdateRequest
-    EarnedMediaPressRoomSource:
-      properties:
-        label:
-          type: string
-          maxLength: 220
-          minLength: 1
-          title: Label
-        reference:
-          type: string
-          maxLength: 300
-          minLength: 1
-          title: Reference
-        url:
-          anyOf:
-          - type: string
-            maxLength: 2000
-            minLength: 8
-          - type: 'null'
-          title: Url
-      additionalProperties: false
-      type: object
-      required:
-      - label
-      - reference
-      title: EarnedMediaPressRoomSource
-    EarnedMediaPressRoomSaveRequest:
-      properties:
-        content:
-          $ref: '#/components/schemas/EarnedMediaPressRoomProfileContent'
-        base_updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Base Updated At
-      additionalProperties: false
-      type: object
-      required:
-      - content
-      title: EarnedMediaPressRoomSaveRequest
-    EarnedMediaGenerateRequest:
-      properties:
-        draft_count:
-          type: integer
-          enum:
-          - 1
-          - 2
-          title: Draft Count
-          default: 2
-        instruction:
-          anyOf:
-          - type: string
-            maxLength: 2500
-          - type: 'null'
-          title: Instruction
-      additionalProperties: false
-      type: object
-      title: EarnedMediaGenerateRequest
-    EarnedMediaCoverageUrlRequest:
-      properties:
-        url:
-          type: string
-          maxLength: 2000
-          minLength: 8
-          title: Url
-      additionalProperties: false
-      type: object
-      required:
-      - url
-      title: EarnedMediaCoverageUrlRequest
-      description: One page a person already knows about.
-    EarnedMediaPressRoomQuoteItem:
-      properties:
-        id:
-          type: string
-          maxLength: 80
-          minLength: 1
-          title: Id
-        speaker_name:
-          type: string
-          maxLength: 220
-          minLength: 1
-          title: Speaker Name
-        speaker_title:
-          anyOf:
-          - type: string
-            maxLength: 220
-          - type: 'null'
-          title: Speaker Title
-        quote:
-          type: string
-          maxLength: 2000
-          minLength: 20
-          title: Quote
-        review_status:
-          type: string
-          enum:
-          - suggested
-          - verified
-          - approved
-          title: Review Status
-          default: suggested
-        source:
-          anyOf:
-          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
-          - type: 'null'
-      additionalProperties: false
-      type: object
-      required:
-      - id
-      - speaker_name
-      - quote
-      title: EarnedMediaPressRoomQuoteItem
-    EarnedMediaPressRoomGenerateRequest:
-      properties:
-        refresh:
-          type: boolean
-          title: Refresh
-          default: false
-      additionalProperties: false
-      type: object
-      title: EarnedMediaPressRoomGenerateRequest
-    EarnedMediaDraftRewriteRequest:
-      properties:
-        base_version:
-          type: integer
-          minimum: 1.0
-          title: Base Version
-        instruction:
-          type: string
-          maxLength: 2500
-          minLength: 3
-          title: Instruction
-        scope:
-          type: string
-          enum:
-          - full
-          - section
-          - selection
-          title: Scope
-          default: full
-        selected_text:
-          anyOf:
-          - type: string
-            maxLength: 12000
-          - type: 'null'
-          title: Selected Text
-        section:
-          anyOf:
-          - type: string
-            maxLength: 320
-          - type: 'null'
-          title: Section
-        additional_evidence_ids:
-          items:
-            type: string
-            maxLength: 200
-            minLength: 1
-          type: array
-          maxItems: 40
-          title: Additional Evidence Ids
-      additionalProperties: false
-      type: object
-      required:
-      - base_version
-      - instruction
-      title: EarnedMediaDraftRewriteRequest
-    EarnedMediaSelectedProduct:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        name:
-          type: string
-          maxLength: 220
-          minLength: 1
-          title: Name
-      type: object
-      required:
-      - id
-      - name
-      title: EarnedMediaSelectedProduct
-      description: Server-verified display snapshot for a selected product.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    EarnedMediaPressRoomDateItem:
-      properties:
-        value:
-          type: string
-          format: date
-          title: Value
-        review_status:
-          type: string
-          enum:
-          - suggested
-          - verified
-          - approved
-          title: Review Status
-          default: suggested
-        source:
-          anyOf:
-          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
-          - type: 'null'
-      additionalProperties: false
-      type: object
-      required:
-      - value
-      title: EarnedMediaPressRoomDateItem
     EarnedMediaPressRoomFactItem:
       properties:
         id:
@@ -1302,48 +1433,6 @@ components:
       - id
       - text
       title: EarnedMediaPressRoomFactItem
-    EarnedMediaPressRoomContactItem:
-      properties:
-        name:
-          type: string
-          maxLength: 220
-          minLength: 1
-          title: Name
-        title:
-          anyOf:
-          - type: string
-            maxLength: 220
-          - type: 'null'
-          title: Title
-        email:
-          anyOf:
-          - type: string
-            maxLength: 320
-          - type: 'null'
-          title: Email
-        phone:
-          anyOf:
-          - type: string
-            maxLength: 80
-          - type: 'null'
-          title: Phone
-        review_status:
-          type: string
-          enum:
-          - suggested
-          - verified
-          - approved
-          title: Review Status
-          default: suggested
-        source:
-          anyOf:
-          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
-          - type: 'null'
-      additionalProperties: false
-      type: object
-      required:
-      - name
-      title: EarnedMediaPressRoomContactItem
     EarnedMediaRefreshResearchRequest:
       properties:
         instruction:
@@ -1371,6 +1460,23 @@ components:
       additionalProperties: false
       type: object
       title: EarnedMediaRefreshResearchRequest
+    EarnedMediaSelectedProduct:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          maxLength: 220
+          minLength: 1
+          title: Name
+      type: object
+      required:
+      - id
+      - name
+      title: EarnedMediaSelectedProduct
+      description: Server-verified display snapshot for a selected product.
     EarnedMediaPressRoomAssetItem:
       properties:
         id:
@@ -1407,129 +1513,6 @@ components:
       - label
       - url
       title: EarnedMediaPressRoomAssetItem
-    EarnedMediaVersionRestoreRequest:
-      properties:
-        base_version:
-          type: integer
-          minimum: 1.0
-          title: Base Version
-      additionalProperties: false
-      type: object
-      required:
-      - base_version
-      title: EarnedMediaVersionRestoreRequest
-    EarnedMediaDraftSaveRequest:
-      properties:
-        base_version:
-          type: integer
-          minimum: 1.0
-          title: Base Version
-        headline:
-          type: string
-          maxLength: 320
-          minLength: 1
-          title: Headline
-        dek:
-          anyOf:
-          - type: string
-            maxLength: 1200
-          - type: 'null'
-          title: Dek
-        body_markdown:
-          type: string
-          maxLength: 80000
-          minLength: 1
-          title: Body Markdown
-        locked_fields:
-          additionalProperties: true
-          type: object
-          title: Locked Fields
-        change_summary:
-          anyOf:
-          - type: string
-            maxLength: 1000
-          - type: 'null'
-          title: Change Summary
-      additionalProperties: false
-      type: object
-      required:
-      - base_version
-      - headline
-      - body_markdown
-      title: EarnedMediaDraftSaveRequest
-    EarnedMediaPressRoomTextItem:
-      properties:
-        text:
-          type: string
-          maxLength: 2500
-          minLength: 1
-          title: Text
-        review_status:
-          type: string
-          enum:
-          - suggested
-          - verified
-          - approved
-          title: Review Status
-          default: suggested
-        source:
-          anyOf:
-          - $ref: '#/components/schemas/EarnedMediaPressRoomSource'
-          - type: 'null'
-      additionalProperties: false
-      type: object
-      required:
-      - text
-      title: EarnedMediaPressRoomTextItem
-    EarnedMediaSourceContext:
-      properties:
-        article_scope:
-          type: string
-          enum:
-          - company
-          - single_product
-          - product_portfolio
-          title: Article Scope
-          default: company
-        product_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          maxItems: 8
-          title: Product Ids
-        selected_products:
-          items:
-            $ref: '#/components/schemas/EarnedMediaSelectedProduct'
-          type: array
-          maxItems: 8
-          title: Selected Products
-        press_room:
-          anyOf:
-          - $ref: '#/components/schemas/EarnedMediaPressRoom'
-          - type: 'null'
-      additionalProperties: true
-      type: object
-      title: EarnedMediaSourceContext
-      description: Typed article grounding while retaining existing workspace context keys.
-    EarnedMediaPressAsset:
-      properties:
-        label:
-          type: string
-          maxLength: 220
-          minLength: 1
-          title: Label
-        url:
-          type: string
-          maxLength: 2000
-          minLength: 8
-          title: Url
-      additionalProperties: false
-      type: object
-      required:
-      - label
-      - url
-      title: EarnedMediaPressAsset
     EarnedMediaPressRoomProfileContent:
       properties:
         facts:
@@ -1582,53 +1565,67 @@ components:
       type: object
       title: EarnedMediaPressRoomProfileContent
       description: Editable profile-level facts; only approved entries enter generated copy.
-    EarnedMediaProjectCreateRequest:
+    HTTPValidationError:
       properties:
-        title:
-          type: string
-          maxLength: 220
-          minLength: 3
-          title: Title
-        story_format:
-          type: string
-          enum:
-          - press_release
-          - bylined_article
-          - journalist_pitch
-          - local_story
-          title: Story Format
-          default: bylined_article
-        objective:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EarnedMediaTargetUpdateRequest:
+      properties:
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - recommended
+            - shortlisted
+            - dismissed
+          - type: 'null'
+          title: Status
+        outreach_status:
+          anyOf:
+          - type: string
+            enum:
+            - not_started
+            - pitch_ready
+            - contacted
+            - follow_up_due
+            - replied
+            - interview
+            - published
+            - not_pursuing
+          - type: 'null'
+          title: Outreach Status
+        last_contacted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Contacted At
+        next_follow_up_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Follow Up At
+        coverage_url:
           anyOf:
           - type: string
             maxLength: 2000
           - type: 'null'
-          title: Objective
-        audience:
+          title: Coverage Url
+        notes:
           anyOf:
           - type: string
-            maxLength: 220
+            maxLength: 2000
           - type: 'null'
-          title: Audience
-        market:
-          anyOf:
-          - type: string
-            maxLength: 220
-          - type: 'null'
-          title: Market
-        primary_angle:
-          anyOf:
-          - type: string
-            maxLength: 2500
-          - type: 'null'
-          title: Primary Angle
-        source_context:
-          $ref: '#/components/schemas/EarnedMediaSourceContext'
+          title: Notes
       additionalProperties: false
       type: object
-      required:
-      - title
-      title: EarnedMediaProjectCreateRequest
+      title: EarnedMediaTargetUpdateRequest
   securitySchemes:
     HTTPBearer:
       type: http

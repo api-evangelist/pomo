@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Content Editing API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: content-editing
 paths:
@@ -140,15 +137,40 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    Body_edit_image_api_content_editing_edit_image_post:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        image:
+          type: string
+          format: binary
+          title: Image
+        prompt:
+          type: string
+          title: Prompt
+        use_company_style:
+          type: boolean
+          title: Use Company Style
+          default: false
+        product_image:
+          anyOf:
+          - type: string
+            format: binary
+          - type: 'null'
+          title: Product Image
+        logo_image:
+          anyOf:
+          - type: string
+            format: binary
+          - type: 'null'
+          title: Logo Image
+        num_variations:
+          type: integer
+          title: Num Variations
+          default: 3
       type: object
-      title: HTTPValidationError
+      required:
+      - image
+      - prompt
+      title: Body_edit_image_api_content_editing_edit_image_post
     ValidationError:
       properties:
         loc:
@@ -203,52 +225,29 @@ components:
       - created_at
       title: ImageGenerationResponse
       description: Response model for generated images
-    Body_edit_image_api_content_editing_edit_image_post:
+    ContentEditResponse:
       properties:
-        image:
-          type: string
-          format: binary
-          title: Image
-        prompt:
-          type: string
-          title: Prompt
-        use_company_style:
-          type: boolean
-          title: Use Company Style
-          default: false
-        product_image:
-          anyOf:
-          - type: string
-            format: binary
-          - type: 'null'
-          title: Product Image
-        logo_image:
-          anyOf:
-          - type: string
-            format: binary
-          - type: 'null'
-          title: Logo Image
-        num_variations:
-          type: integer
-          title: Num Variations
-          default: 3
-      type: object
-      required:
-      - image
-      - prompt
-      title: Body_edit_image_api_content_editing_edit_image_post
-    CreativeIdeasResponse:
-      properties:
-        creative_ideas:
+        edited_image_urls:
           items:
             type: string
           type: array
-          title: Creative Ideas
+          title: Edited Image Urls
+          default: []
+        original_image_url:
+          type: string
+          title: Original Image Url
+        variations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ImageVariation'
+            type: array
+          - type: 'null'
+          title: Variations
       type: object
       required:
-      - creative_ideas
-      title: CreativeIdeasResponse
-      description: Response model for the generate-ideas endpoint
+      - original_image_url
+      title: ContentEditResponse
+      description: Response model for edited image content
     ImageVariation:
       properties:
         url:
@@ -301,29 +300,27 @@ components:
       required:
       - prompt
       title: Body_generate_image_api_content_editing_generate_image_post
-    ContentEditResponse:
+    CreativeIdeasResponse:
       properties:
-        edited_image_urls:
+        creative_ideas:
           items:
             type: string
           type: array
-          title: Edited Image Urls
-          default: []
-        original_image_url:
-          type: string
-          title: Original Image Url
-        variations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/ImageVariation'
-            type: array
-          - type: 'null'
-          title: Variations
+          title: Creative Ideas
       type: object
       required:
-      - original_image_url
-      title: ContentEditResponse
-      description: Response model for edited image content
+      - creative_ideas
+      title: CreativeIdeasResponse
+      description: Response model for the generate-ideas endpoint
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

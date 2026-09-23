@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Agentic Tasks API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: agentic-tasks
 paths:
@@ -245,15 +242,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     AgentTaskRunListResponse:
       properties:
         runs:
@@ -281,67 +269,6 @@ components:
       type: object
       title: AgentTaskScheduleInput
       description: Simple interval schedule (minutes).
-    AgentTaskUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Name
-        status:
-          anyOf:
-          - type: string
-            enum:
-            - active
-            - paused
-            - error
-            - deleted
-          - type: 'null'
-          title: Status
-        no_change_behavior:
-          anyOf:
-          - type: string
-            enum:
-            - silent
-            - notify_no_change
-          - type: 'null'
-          title: No Change Behavior
-        delivery_mode:
-          anyOf:
-          - type: string
-            enum:
-            - immediate
-            - digest
-          - type: 'null'
-          title: Delivery Mode
-        delivery_destination:
-          anyOf:
-          - type: string
-            enum:
-            - thread
-            - slack
-            - both
-          - type: 'null'
-          title: Delivery Destination
-        schedule:
-          anyOf:
-          - $ref: '#/components/schemas/AgentTaskScheduleInput'
-          - type: 'null'
-        thresholds:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Thresholds
-        quiet_hours:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Quiet Hours
-      type: object
-      title: AgentTaskUpdate
     ValidationError:
       properties:
         loc:
@@ -387,21 +314,6 @@ components:
       required:
       - supported
       title: AgentTaskCapabilityResult
-    AgentTaskListResponse:
-      properties:
-        tasks:
-          items:
-            $ref: '#/components/schemas/AgentTaskResponse'
-          type: array
-          title: Tasks
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - tasks
-      - total
-      title: AgentTaskListResponse
     AgentTaskRunNowResponse:
       properties:
         task:
@@ -413,6 +325,114 @@ components:
       - task
       - run
       title: AgentTaskRunNowResponse
+    AgentTaskRunResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        task_id:
+          type: string
+          format: uuid
+          title: Task Id
+        run_key:
+          type: string
+          title: Run Key
+        status:
+          type: string
+          title: Status
+        scheduled_at:
+          type: string
+          format: date-time
+          title: Scheduled At
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        summary_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Summary Json
+        source_refs_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Source Refs Json
+        alert_emitted:
+          type: boolean
+          title: Alert Emitted
+        emitted_message_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Emitted Message Id
+        error_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Text
+        retry_count:
+          type: integer
+          title: Retry Count
+        attempt:
+          type: integer
+          title: Attempt
+        lease_expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Lease Expires At
+        heartbeat_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Heartbeat At
+        worker_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Worker Id
+        recovery_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recovery Reason
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - task_id
+      - run_key
+      - status
+      - scheduled_at
+      - alert_emitted
+      - retry_count
+      - attempt
+      - created_at
+      - updated_at
+      title: AgentTaskRunResponse
     AgentTaskResponse:
       properties:
         id:
@@ -541,114 +561,30 @@ components:
       - created_at
       - updated_at
       title: AgentTaskResponse
-    AgentTaskRunResponse:
+    AgentTaskListResponse:
       properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        task_id:
-          type: string
-          format: uuid
-          title: Task Id
-        run_key:
-          type: string
-          title: Run Key
-        status:
-          type: string
-          title: Status
-        scheduled_at:
-          type: string
-          format: date-time
-          title: Scheduled At
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-        summary_json:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Summary Json
-        source_refs_json:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Source Refs Json
-        alert_emitted:
-          type: boolean
-          title: Alert Emitted
-        emitted_message_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Emitted Message Id
-        error_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Text
-        retry_count:
+        tasks:
+          items:
+            $ref: '#/components/schemas/AgentTaskResponse'
+          type: array
+          title: Tasks
+        total:
           type: integer
-          title: Retry Count
-        attempt:
-          type: integer
-          title: Attempt
-        lease_expires_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Lease Expires At
-        heartbeat_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Heartbeat At
-        worker_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Worker Id
-        recovery_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Recovery Reason
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
+          title: Total
       type: object
       required:
-      - id
-      - task_id
-      - run_key
-      - status
-      - scheduled_at
-      - alert_emitted
-      - retry_count
-      - attempt
-      - created_at
-      - updated_at
-      title: AgentTaskRunResponse
+      - tasks
+      - total
+      title: AgentTaskListResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     AgentTaskCreate:
       properties:
         organization_id:
@@ -730,6 +666,67 @@ components:
       - conversation_id
       - objective_nl
       title: AgentTaskCreate
+    AgentTaskUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - active
+            - paused
+            - error
+            - deleted
+          - type: 'null'
+          title: Status
+        no_change_behavior:
+          anyOf:
+          - type: string
+            enum:
+            - silent
+            - notify_no_change
+          - type: 'null'
+          title: No Change Behavior
+        delivery_mode:
+          anyOf:
+          - type: string
+            enum:
+            - immediate
+            - digest
+          - type: 'null'
+          title: Delivery Mode
+        delivery_destination:
+          anyOf:
+          - type: string
+            enum:
+            - thread
+            - slack
+            - both
+          - type: 'null'
+          title: Delivery Destination
+        schedule:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTaskScheduleInput'
+          - type: 'null'
+        thresholds:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thresholds
+        quiet_hours:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Quiet Hours
+      type: object
+      title: AgentTaskUpdate
   securitySchemes:
     HTTPBearer:
       type: http

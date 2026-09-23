@@ -2,9 +2,6 @@ openapi: 3.2.0
 info:
   title: GPT Backend Campaign Images API
   version: 0.1.0
-servers:
-- url: https://api.usepomo.ai
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
 tags:
 - name: Campaign Images
 paths:
@@ -180,15 +177,64 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ImageSelectionRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        campaign_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: string
+          title: Campaign Id
+          description: Campaign ID (can be UUID database ID or string campaign_id)
+        campaign_type:
+          type: string
+          title: Campaign Type
+          description: Type of campaign (e.g., google_display, meta_feed, social_post)
+        selected_image_url:
+          type: string
+          title: Selected Image Url
+          description: URL of the selected image variation
+        selection_mode:
+          type: string
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Selection Mode
+          description: 'How to apply the selected image: replace current, add to list, or add and set as primary'
+          default: replace
+        variation_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Variation Index
+          description: Index of the selected variation (0-based)
+        total_variations:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Variations
+          description: Total number of variations that were presented
+        selection_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Selection Metadata
+          description: Additional metadata about the selection
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+          description: Specific ad ID for ad campaigns (when updating a specific ad variation)
       type: object
-      title: HTTPValidationError
+      required:
+      - campaign_id
+      - campaign_type
+      - selected_image_url
+      title: ImageSelectionRequest
+      description: Request schema for selecting an image variation for a campaign
     ValidationError:
       properties:
         loc:
@@ -210,44 +256,55 @@ components:
       - msg
       - type
       title: ValidationError
-    VideoSelectionResponse:
+    VideoSelectionRequest:
       properties:
-        success:
-          type: boolean
-          title: Success
         campaign_id:
           anyOf:
           - type: string
             format: uuid
           - type: string
           title: Campaign Id
+          description: Campaign ID (can be UUID database ID or string campaign_id)
         campaign_type:
           type: string
           title: Campaign Type
+          description: Type of campaign (e.g., google_video, tiktok_video)
         selected_video_url:
           type: string
           title: Selected Video Url
-        selected_thumbnail_url:
-          type: string
-          title: Selected Thumbnail Url
-        selected_companion_image_url:
+          description: URL of the selected video asset
+        variation_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Variation Index
+          description: Index of the selected video (0-based)
+        total_variations:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Variations
+          description: Total number of videos that were presented
+        selection_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Selection Metadata
+          description: Additional metadata about the selection
+        ad_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Selected Companion Image Url
-        message:
-          type: string
-          title: Message
+          title: Ad Id
+          description: Specific ad ID for ad campaigns
       type: object
       required:
-      - success
       - campaign_id
       - campaign_type
       - selected_video_url
-      - selected_thumbnail_url
-      - message
-      title: VideoSelectionResponse
-      description: Response schema for video selection.
+      title: VideoSelectionRequest
+      description: Request schema for selecting or uploading a replacement video for a campaign.
     ImageSelectionResponse:
       properties:
         success:
@@ -331,113 +388,53 @@ components:
       - edit_prompt
       title: EditImageJobRequest
       description: Request body for starting an async campaign image edit job
-    ImageSelectionRequest:
+    VideoSelectionResponse:
       properties:
+        success:
+          type: boolean
+          title: Success
         campaign_id:
           anyOf:
           - type: string
             format: uuid
           - type: string
           title: Campaign Id
-          description: Campaign ID (can be UUID database ID or string campaign_id)
         campaign_type:
           type: string
           title: Campaign Type
-          description: Type of campaign (e.g., google_display, meta_feed, social_post)
-        selected_image_url:
-          type: string
-          title: Selected Image Url
-          description: URL of the selected image variation
-        selection_mode:
-          type: string
-          enum:
-          - replace
-          - add
-          - add_and_set_primary
-          title: Selection Mode
-          description: 'How to apply the selected image: replace current, add to list, or add and set as primary'
-          default: replace
-        variation_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Variation Index
-          description: Index of the selected variation (0-based)
-        total_variations:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Total Variations
-          description: Total number of variations that were presented
-        selection_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Selection Metadata
-          description: Additional metadata about the selection
-        ad_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Id
-          description: Specific ad ID for ad campaigns (when updating a specific ad variation)
-      type: object
-      required:
-      - campaign_id
-      - campaign_type
-      - selected_image_url
-      title: ImageSelectionRequest
-      description: Request schema for selecting an image variation for a campaign
-    VideoSelectionRequest:
-      properties:
-        campaign_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: string
-          title: Campaign Id
-          description: Campaign ID (can be UUID database ID or string campaign_id)
-        campaign_type:
-          type: string
-          title: Campaign Type
-          description: Type of campaign (e.g., google_video, tiktok_video)
         selected_video_url:
           type: string
           title: Selected Video Url
-          description: URL of the selected video asset
-        variation_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Variation Index
-          description: Index of the selected video (0-based)
-        total_variations:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Total Variations
-          description: Total number of videos that were presented
-        selection_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Selection Metadata
-          description: Additional metadata about the selection
-        ad_id:
+        selected_thumbnail_url:
+          type: string
+          title: Selected Thumbnail Url
+        selected_companion_image_url:
           anyOf:
           - type: string
           - type: 'null'
-          title: Ad Id
-          description: Specific ad ID for ad campaigns
+          title: Selected Companion Image Url
+        message:
+          type: string
+          title: Message
       type: object
       required:
+      - success
       - campaign_id
       - campaign_type
       - selected_video_url
-      title: VideoSelectionRequest
-      description: Request schema for selecting or uploading a replacement video for a campaign.
+      - selected_thumbnail_url
+      - message
+      title: VideoSelectionResponse
+      description: Response schema for video selection.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     JobResponse:
       properties:
         job_id:
