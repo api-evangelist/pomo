@@ -721,24 +721,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ProductOfferingRewriteRequest:
-      properties:
-        field:
-          type: string
-          enum:
-          - description
-          - key_features
-          title: Field
-        instructions:
-          anyOf:
-          - type: string
-            maxLength: 1500
-          - type: 'null'
-          title: Instructions
-      type: object
-      required:
-      - field
-      title: ProductOfferingRewriteRequest
     ExternalAdMetadata:
       properties:
         platform:
@@ -798,43 +780,45 @@ components:
       - attribution_scope
       - usage_count
       title: ExternalAdMetadata
-    ProductOfferingCurrentPriceUpdateRequest:
+    ProductOfferingRewriteRequest:
       properties:
-        price:
+        field:
           type: string
-          maxLength: 255
-          minLength: 1
-          title: Price
-        unit:
+          enum:
+          - description
+          - key_features
+          title: Field
+        instructions:
           anyOf:
           - type: string
-            maxLength: 120
+            maxLength: 1500
           - type: 'null'
-          title: Unit
+          title: Instructions
       type: object
       required:
-      - price
-      title: ProductOfferingCurrentPriceUpdateRequest
-    HTTPValidationError:
+      - field
+      title: ProductOfferingRewriteRequest
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ProductOfferingDeleteImageRequest:
-      properties:
-        image_url:
+          title: Location
+        msg:
           type: string
-          maxLength: 4000
-          minLength: 1
-          title: Image Url
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - image_url
-      title: ProductOfferingDeleteImageRequest
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ProductOfferingUpdateRequest:
       properties:
         name:
@@ -929,27 +913,43 @@ components:
       required:
       - files
       title: Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post
-    ValidationError:
+    ProductOfferingUploadImagesResponse:
       properties:
-        loc:
+        success:
+          type: boolean
+          title: Success
+        uploaded_images:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/GalleryImageResponse'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Uploaded Images
+        total:
+          type: integer
+          title: Total
+          default: 0
+        offering:
+          additionalProperties: true
+          type: object
+          title: Offering
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - success
+      - offering
+      title: ProductOfferingUploadImagesResponse
+    ProductRefreshPreviewRequest:
+      properties:
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+        refresh_urls:
+          items:
+            type: string
+          type: array
+          title: Refresh Urls
+      type: object
+      title: ProductRefreshPreviewRequest
     GalleryImageResponse:
       properties:
         id:
@@ -1088,6 +1088,109 @@ components:
       - source_type
       title: GalleryImageResponse
       description: Response schema for gallery images with signed URL support
+    ProductRefreshApplyRequest:
+      properties:
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+        refresh_urls:
+          items:
+            type: string
+          type: array
+          title: Refresh Urls
+        selected_fields:
+          items:
+            type: string
+            enum:
+            - name
+            - description
+            - primary_category
+            - subcategories
+            - tags
+            - key_features
+            - price_list
+            - images
+            - pricing_analysis
+            - feature_comparison
+            - swot_analysis
+          type: array
+          title: Selected Fields
+        preview_patch:
+          additionalProperties: true
+          type: object
+          title: Preview Patch
+      type: object
+      title: ProductRefreshApplyRequest
+    ProductOfferingCurrentPriceUpdateRequest:
+      properties:
+        price:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Price
+        unit:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Unit
+      type: object
+      required:
+      - price
+      title: ProductOfferingCurrentPriceUpdateRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProductOfferingDeleteImageRequest:
+      properties:
+        image_url:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Image Url
+      type: object
+      required:
+      - image_url
+      title: ProductOfferingDeleteImageRequest
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
     ExternalAdUsageMetadata:
       properties:
         observation_id:
@@ -1199,109 +1302,6 @@ components:
       - performance_reason
       - attribution_scope
       title: ExternalAdUsageMetadata
-    ProductRefreshPreviewRequest:
-      properties:
-        source_urls:
-          items:
-            type: string
-          type: array
-          title: Source Urls
-        refresh_urls:
-          items:
-            type: string
-          type: array
-          title: Refresh Urls
-      type: object
-      title: ProductRefreshPreviewRequest
-    ProductOfferingUploadImagesResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        uploaded_images:
-          items:
-            $ref: '#/components/schemas/GalleryImageResponse'
-          type: array
-          title: Uploaded Images
-        total:
-          type: integer
-          title: Total
-          default: 0
-        offering:
-          additionalProperties: true
-          type: object
-          title: Offering
-      type: object
-      required:
-      - success
-      - offering
-      title: ProductOfferingUploadImagesResponse
-    ProductRefreshApplyRequest:
-      properties:
-        source_urls:
-          items:
-            type: string
-          type: array
-          title: Source Urls
-        refresh_urls:
-          items:
-            type: string
-          type: array
-          title: Refresh Urls
-        selected_fields:
-          items:
-            type: string
-            enum:
-            - name
-            - description
-            - primary_category
-            - subcategories
-            - tags
-            - key_features
-            - price_list
-            - images
-            - pricing_analysis
-            - feature_comparison
-            - swot_analysis
-          type: array
-          title: Selected Fields
-        preview_patch:
-          additionalProperties: true
-          type: object
-          title: Preview Patch
-      type: object
-      title: ProductRefreshApplyRequest
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
   securitySchemes:
     HTTPBearer:
       type: http

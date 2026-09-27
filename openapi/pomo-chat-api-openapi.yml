@@ -241,27 +241,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    ShareFileResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        filename:
-          type: string
-          title: Filename
-        is_shared:
-          type: boolean
-          title: Is Shared
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - id
-      - filename
-      - is_shared
-      - message
-      title: ShareFileResponse
     ValidationError:
       properties:
         loc:
@@ -283,105 +262,26 @@ components:
       - msg
       - type
       title: ValidationError
-    SharedFilesResponse:
+    KnowledgeBaseUploadResponse:
       properties:
+        success:
+          type: boolean
+          title: Success
         files:
           items:
             $ref: '#/components/schemas/SharedFileItem'
           type: array
           title: Files
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        total_pages:
-          type: integer
-          title: Total Pages
-      type: object
-      required:
-      - files
-      - total
-      - page
-      - total_pages
-      title: SharedFilesResponse
-      description: Response for shared files list endpoint
-    AgenticChatWithFilesResponse:
-      properties:
-        response:
-          type: string
-          title: Response
-        ui_tool_calls:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Ui Tool Calls
-        web_citations:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Web Citations
-        tokens_used:
-          type: integer
-          title: Tokens Used
-        turns:
-          type: integer
-          title: Turns
-        uploaded_files:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Uploaded Files
-        conversation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Conversation Id
-        user_message:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: User Message
-        assistant_message:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Assistant Message
-        ai_policy_eval:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ai Policy Eval
-      type: object
-      required:
-      - response
-      - tokens_used
-      - turns
-      title: AgenticChatWithFilesResponse
-    DeleteFileResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        filename:
-          type: string
-          title: Filename
         message:
           type: string
           title: Message
       type: object
       required:
-      - id
-      - filename
+      - success
+      - files
       - message
-      title: DeleteFileResponse
+      title: KnowledgeBaseUploadResponse
+      description: Response for knowledge base file upload
     Body_agentic_chat_with_files_api_chat_agentic_with_files_post:
       properties:
         message:
@@ -443,35 +343,6 @@ components:
       required:
       - files
       title: Body_upload_to_knowledge_base_api_chat_knowledge_base_upload_post
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    KnowledgeBaseUploadResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        files:
-          items:
-            $ref: '#/components/schemas/SharedFileItem'
-          type: array
-          title: Files
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - success
-      - files
-      - message
-      title: KnowledgeBaseUploadResponse
-      description: Response for knowledge base file upload
     SharedFileItem:
       properties:
         id:
@@ -521,6 +392,135 @@ components:
       - created_at
       title: SharedFileItem
       description: Schema for a shared file in the knowledge base
+    ShareFileResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        filename:
+          type: string
+          title: Filename
+        is_shared:
+          type: boolean
+          title: Is Shared
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - filename
+      - is_shared
+      - message
+      title: ShareFileResponse
+    DeleteFileResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        filename:
+          type: string
+          title: Filename
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - filename
+      - message
+      title: DeleteFileResponse
+    AgenticChatWithFilesResponse:
+      properties:
+        response:
+          type: string
+          title: Response
+        ui_tool_calls:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Ui Tool Calls
+        web_citations:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Web Citations
+        tokens_used:
+          type: integer
+          title: Tokens Used
+        turns:
+          type: integer
+          title: Turns
+        uploaded_files:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Uploaded Files
+        conversation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Conversation Id
+        user_message:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: User Message
+        assistant_message:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Assistant Message
+        ai_policy_eval:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Policy Eval
+      type: object
+      required:
+      - response
+      - tokens_used
+      - turns
+      title: AgenticChatWithFilesResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SharedFilesResponse:
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/SharedFileItem'
+          type: array
+          title: Files
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        total_pages:
+          type: integer
+          title: Total Pages
+      type: object
+      required:
+      - files
+      - total
+      - page
+      - total_pages
+      title: SharedFilesResponse
+      description: Response for shared files list endpoint
   securitySchemes:
     HTTPBearer:
       type: http

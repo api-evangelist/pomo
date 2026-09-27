@@ -91,6 +91,130 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    ProfileContentEditPreviewRequest:
+      properties:
+        prompt:
+          type: string
+          maxLength: 2500
+          minLength: 3
+          title: Prompt
+        targets:
+          $ref: '#/components/schemas/ProfileContentEditTargets'
+      type: object
+      required:
+      - prompt
+      title: ProfileContentEditPreviewRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProfileContentEditApplyResponse:
+      properties:
+        status:
+          type: string
+          const: applied
+          title: Status
+        applied_changes:
+          type: integer
+          title: Applied Changes
+        applied_groups:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditEntityChange-Output'
+          type: array
+          title: Applied Groups
+        applied_operations:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditOperation'
+          type: array
+          title: Applied Operations
+      type: object
+      required:
+      - status
+      - applied_changes
+      title: ProfileContentEditApplyResponse
+    ProfileContentEditPreviewResponse:
+      properties:
+        status:
+          type: string
+          enum:
+          - ready
+          - unchanged
+          title: Status
+        summary:
+          type: string
+          title: Summary
+        groups:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditEntityChange-Output'
+          type: array
+          title: Groups
+        operations:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditOperation'
+          type: array
+          title: Operations
+        total_changes:
+          type: integer
+          title: Total Changes
+          default: 0
+      type: object
+      required:
+      - status
+      - summary
+      title: ProfileContentEditPreviewResponse
+    ProfileContentEditEntityChange-Output:
+      properties:
+        entity_type:
+          type: string
+          enum:
+          - company_profile
+          - company_marketing_strategy
+          - product_offering
+          - product_competitive_analysis
+          - product_marketing_strategy
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        entity_name:
+          type: string
+          title: Entity Name
+        entity_label:
+          type: string
+          title: Entity Label
+        selected_by_default:
+          type: boolean
+          title: Selected By Default
+          default: true
+        changes:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditFieldChange'
+          type: array
+          title: Changes
+      type: object
+      required:
+      - entity_type
+      - entity_id
+      - entity_name
+      - entity_label
+      title: ProfileContentEditEntityChange
     ProfileContentEditDocumentPreviewRequest:
       properties:
         prompt:
@@ -112,52 +236,6 @@ components:
       required:
       - document_file_ids
       title: ProfileContentEditDocumentPreviewRequest
-    ProfileContentEditFieldChange:
-      properties:
-        field_key:
-          type: string
-          title: Field Key
-        field_label:
-          type: string
-          title: Field Label
-        before:
-          type: string
-          title: Before
-        after:
-          type: string
-          title: After
-        before_value:
-          title: Before Value
-        after_value:
-          title: After Value
-        confidence:
-          type: string
-          enum:
-          - low
-          - medium
-          - high
-          title: Confidence
-          default: medium
-        rationale:
-          type: string
-          title: Rationale
-          default: ''
-        evidence:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditEvidence'
-          type: array
-          title: Evidence
-        selected_by_default:
-          type: boolean
-          title: Selected By Default
-          default: true
-      type: object
-      required:
-      - field_key
-      - field_label
-      - before
-      - after
-      title: ProfileContentEditFieldChange
     ProfileContentEditOperation:
       properties:
         operation_type:
@@ -222,24 +300,6 @@ components:
       - before
       - after
       title: ProfileContentEditOperation
-    ProfileContentEditTargets:
-      properties:
-        company_profile:
-          type: boolean
-          title: Company Profile
-          default: true
-        product_offering_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          title: Product Offering Ids
-        include_all_product_offerings:
-          type: boolean
-          title: Include All Product Offerings
-          default: false
-      type: object
-      title: ProfileContentEditTargets
     ProfileContentEditSelectedOperation:
       properties:
         operation_type:
@@ -261,133 +321,6 @@ components:
       - operation_type
       - entity_id
       title: ProfileContentEditSelectedOperation
-    ProfileContentEditPreviewResponse:
-      properties:
-        status:
-          type: string
-          enum:
-          - ready
-          - unchanged
-          title: Status
-        summary:
-          type: string
-          title: Summary
-        groups:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditEntityChange-Output'
-          type: array
-          title: Groups
-        operations:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditOperation'
-          type: array
-          title: Operations
-        total_changes:
-          type: integer
-          title: Total Changes
-          default: 0
-      type: object
-      required:
-      - status
-      - summary
-      title: ProfileContentEditPreviewResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ProfileContentEditApplyRequest:
-      properties:
-        prompt:
-          type: string
-          maxLength: 2500
-          title: Prompt
-          default: ''
-        groups:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditEntityChange-Input'
-          type: array
-          title: Groups
-        operations:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditOperation'
-          type: array
-          title: Operations
-        selected_changes:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditSelectedChange'
-          type: array
-          title: Selected Changes
-        selected_operations:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditSelectedOperation'
-          type: array
-          title: Selected Operations
-      type: object
-      title: ProfileContentEditApplyRequest
-    ProfileContentEditApplyResponse:
-      properties:
-        status:
-          type: string
-          const: applied
-          title: Status
-        applied_changes:
-          type: integer
-          title: Applied Changes
-        applied_groups:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditEntityChange-Output'
-          type: array
-          title: Applied Groups
-        applied_operations:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditOperation'
-          type: array
-          title: Applied Operations
-      type: object
-      required:
-      - status
-      - applied_changes
-      title: ProfileContentEditApplyResponse
-    ProfileContentEditSelectedChange:
-      properties:
-        entity_type:
-          type: string
-          enum:
-          - company_profile
-          - company_marketing_strategy
-          - product_offering
-          - product_competitive_analysis
-          - product_marketing_strategy
-          title: Entity Type
-        entity_id:
-          type: string
-          title: Entity Id
-        field_key:
-          type: string
-          title: Field Key
-      type: object
-      required:
-      - entity_type
-      - entity_id
-      - field_key
-      title: ProfileContentEditSelectedChange
     ProfileContentEditEntityChange-Input:
       properties:
         entity_type:
@@ -424,6 +357,131 @@ components:
       - entity_name
       - entity_label
       title: ProfileContentEditEntityChange
+    ProfileContentEditTargets:
+      properties:
+        company_profile:
+          type: boolean
+          title: Company Profile
+          default: true
+        product_offering_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Product Offering Ids
+        include_all_product_offerings:
+          type: boolean
+          title: Include All Product Offerings
+          default: false
+      type: object
+      title: ProfileContentEditTargets
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProfileContentEditApplyRequest:
+      properties:
+        prompt:
+          type: string
+          maxLength: 2500
+          title: Prompt
+          default: ''
+        groups:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditEntityChange-Input'
+          type: array
+          title: Groups
+        operations:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditOperation'
+          type: array
+          title: Operations
+        selected_changes:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditSelectedChange'
+          type: array
+          title: Selected Changes
+        selected_operations:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditSelectedOperation'
+          type: array
+          title: Selected Operations
+      type: object
+      title: ProfileContentEditApplyRequest
+    ProfileContentEditFieldChange:
+      properties:
+        field_key:
+          type: string
+          title: Field Key
+        field_label:
+          type: string
+          title: Field Label
+        before:
+          type: string
+          title: Before
+        after:
+          type: string
+          title: After
+        before_value:
+          title: Before Value
+        after_value:
+          title: After Value
+        confidence:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          title: Confidence
+          default: medium
+        rationale:
+          type: string
+          title: Rationale
+          default: ''
+        evidence:
+          items:
+            $ref: '#/components/schemas/ProfileContentEditEvidence'
+          type: array
+          title: Evidence
+        selected_by_default:
+          type: boolean
+          title: Selected By Default
+          default: true
+      type: object
+      required:
+      - field_key
+      - field_label
+      - before
+      - after
+      title: ProfileContentEditFieldChange
+    ProfileContentEditSelectedChange:
+      properties:
+        entity_type:
+          type: string
+          enum:
+          - company_profile
+          - company_marketing_strategy
+          - product_offering
+          - product_competitive_analysis
+          - product_marketing_strategy
+          title: Entity Type
+        entity_id:
+          type: string
+          title: Entity Id
+        field_key:
+          type: string
+          title: Field Key
+      type: object
+      required:
+      - entity_type
+      - entity_id
+      - field_key
+      title: ProfileContentEditSelectedChange
     ProfileContentEditEvidence:
       properties:
         document_file_id:
@@ -444,64 +502,6 @@ components:
           default: ''
       type: object
       title: ProfileContentEditEvidence
-    ProfileContentEditEntityChange-Output:
-      properties:
-        entity_type:
-          type: string
-          enum:
-          - company_profile
-          - company_marketing_strategy
-          - product_offering
-          - product_competitive_analysis
-          - product_marketing_strategy
-          title: Entity Type
-        entity_id:
-          type: string
-          title: Entity Id
-        entity_name:
-          type: string
-          title: Entity Name
-        entity_label:
-          type: string
-          title: Entity Label
-        selected_by_default:
-          type: boolean
-          title: Selected By Default
-          default: true
-        changes:
-          items:
-            $ref: '#/components/schemas/ProfileContentEditFieldChange'
-          type: array
-          title: Changes
-      type: object
-      required:
-      - entity_type
-      - entity_id
-      - entity_name
-      - entity_label
-      title: ProfileContentEditEntityChange
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ProfileContentEditPreviewRequest:
-      properties:
-        prompt:
-          type: string
-          maxLength: 2500
-          minLength: 3
-          title: Prompt
-        targets:
-          $ref: '#/components/schemas/ProfileContentEditTargets'
-      type: object
-      required:
-      - prompt
-      title: ProfileContentEditPreviewRequest
   securitySchemes:
     HTTPBearer:
       type: http

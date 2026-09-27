@@ -40,6 +40,60 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    LuckyPickRequest:
+      properties:
+        kind:
+          type: string
+          enum:
+          - audience
+          - campaign_idea
+          title: Kind
+          description: Type of item to pick.
+        candidates:
+          items: {}
+          type: array
+          title: Candidates
+          description: Candidates to choose from.
+        context:
+          anyOf:
+          - $ref: '#/components/schemas/LuckyPickContext'
+          - type: 'null'
+      type: object
+      required:
+      - kind
+      - candidates
+      title: LuckyPickRequest
+      description: Request body for the /feeling-lucky/pick endpoint.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     LuckyPickContext:
       properties:
         offering_id:
@@ -98,60 +152,6 @@ components:
       - reason
       title: LuckyPickResponse
       description: Response body for the /feeling-lucky/pick endpoint.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    LuckyPickRequest:
-      properties:
-        kind:
-          type: string
-          enum:
-          - audience
-          - campaign_idea
-          title: Kind
-          description: Type of item to pick.
-        candidates:
-          items: {}
-          type: array
-          title: Candidates
-          description: Candidates to choose from.
-        context:
-          anyOf:
-          - $ref: '#/components/schemas/LuckyPickContext'
-          - type: 'null'
-      type: object
-      required:
-      - kind
-      - candidates
-      title: LuckyPickRequest
-      description: Request body for the /feeling-lucky/pick endpoint.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

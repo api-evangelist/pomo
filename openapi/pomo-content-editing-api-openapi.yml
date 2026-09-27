@@ -137,40 +137,29 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    Body_edit_image_api_content_editing_edit_image_post:
+    ContentEditResponse:
       properties:
-        image:
+        edited_image_urls:
+          items:
+            type: string
+          type: array
+          title: Edited Image Urls
+          default: []
+        original_image_url:
           type: string
-          format: binary
-          title: Image
-        prompt:
-          type: string
-          title: Prompt
-        use_company_style:
-          type: boolean
-          title: Use Company Style
-          default: false
-        product_image:
+          title: Original Image Url
+        variations:
           anyOf:
-          - type: string
-            format: binary
+          - items:
+              $ref: '#/components/schemas/ImageVariation'
+            type: array
           - type: 'null'
-          title: Product Image
-        logo_image:
-          anyOf:
-          - type: string
-            format: binary
-          - type: 'null'
-          title: Logo Image
-        num_variations:
-          type: integer
-          title: Num Variations
-          default: 3
+          title: Variations
       type: object
       required:
-      - image
-      - prompt
-      title: Body_edit_image_api_content_editing_edit_image_post
+      - original_image_url
+      title: ContentEditResponse
+      description: Response model for edited image content
     ValidationError:
       properties:
         loc:
@@ -225,29 +214,6 @@ components:
       - created_at
       title: ImageGenerationResponse
       description: Response model for generated images
-    ContentEditResponse:
-      properties:
-        edited_image_urls:
-          items:
-            type: string
-          type: array
-          title: Edited Image Urls
-          default: []
-        original_image_url:
-          type: string
-          title: Original Image Url
-        variations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/ImageVariation'
-            type: array
-          - type: 'null'
-          title: Variations
-      type: object
-      required:
-      - original_image_url
-      title: ContentEditResponse
-      description: Response model for edited image content
     ImageVariation:
       properties:
         url:
@@ -321,6 +287,40 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    Body_edit_image_api_content_editing_edit_image_post:
+      properties:
+        image:
+          type: string
+          format: binary
+          title: Image
+        prompt:
+          type: string
+          title: Prompt
+        use_company_style:
+          type: boolean
+          title: Use Company Style
+          default: false
+        product_image:
+          anyOf:
+          - type: string
+            format: binary
+          - type: 'null'
+          title: Product Image
+        logo_image:
+          anyOf:
+          - type: string
+            format: binary
+          - type: 'null'
+          title: Logo Image
+        num_variations:
+          type: integer
+          title: Num Variations
+          default: 3
+      type: object
+      required:
+      - image
+      - prompt
+      title: Body_edit_image_api_content_editing_edit_image_post
   securitySchemes:
     HTTPBearer:
       type: http

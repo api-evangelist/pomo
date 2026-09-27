@@ -241,86 +241,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CampaignMediaOperation:
-      properties:
-        action:
-          type: string
-          enum:
-          - replace
-          - add
-          - add_and_set_primary
-          title: Action
-        media_type:
-          type: string
-          enum:
-          - image
-          - video
-          title: Media Type
-        selected_url:
-          type: string
-          title: Selected Url
-        previous_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous Url
-        source_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Source Index
-      type: object
-      required:
-      - action
-      - media_type
-      - selected_url
-      title: CampaignMediaOperation
-      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
-    KeywordWithCpc:
-      properties:
-        keyword:
-          type: string
-          title: Keyword
-        estimated_cpc:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Estimated Cpc
-      type: object
-      required:
-      - keyword
-      title: KeywordWithCpc
-      description: Model for keyword with CPC data
     MetaStoriesReelsCampaignUpdateRequest:
       properties:
         campaign_id:
@@ -639,6 +559,113 @@ components:
       - campaign_id
       - ad_id
       title: MetaStoriesReelsCampaignUpdateRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AdsCampaignUpdateResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign:
+          anyOf:
+          - $ref: '#/components/schemas/CampaignResponse'
+          - type: 'null'
+        ad:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Ad
+      type: object
+      required:
+      - status
+      - message
+      - campaign_id
+      title: AdsCampaignUpdateResponse
+      description: Standardized response for ad update operations within a campaign.
+    KeywordWithCpc:
+      properties:
+        keyword:
+          type: string
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
+      type: object
+      required:
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CampaignMediaOperation:
+      properties:
+        action:
+          type: string
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Action
+        media_type:
+          type: string
+          enum:
+          - image
+          - video
+          title: Media Type
+        selected_url:
+          type: string
+          title: Selected Url
+        previous_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous Url
+        source_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Source Index
+      type: object
+      required:
+      - action
+      - media_type
+      - selected_url
+      title: CampaignMediaOperation
+      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
     CampaignResponse:
       properties:
         id:
@@ -720,33 +747,6 @@ components:
       - target_platforms
       title: CampaignResponse
       description: Base class for campaign metadata response.
-    AdsCampaignUpdateResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        message:
-          type: string
-          title: Message
-        campaign_id:
-          type: string
-          title: Campaign Id
-        campaign:
-          anyOf:
-          - $ref: '#/components/schemas/CampaignResponse'
-          - type: 'null'
-        ad:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Ad
-      type: object
-      required:
-      - status
-      - message
-      - campaign_id
-      title: AdsCampaignUpdateResponse
-      description: Standardized response for ad update operations within a campaign.
   securitySchemes:
     HTTPBearer:
       type: http

@@ -162,6 +162,39 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    UserPreferencesUpdate:
+      properties:
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          description: Preferences to update (will be merged with existing preferences)
+      type: object
+      required:
+      - preferences
+      title: UserPreferencesUpdate
+      description: "Schema for updating user preferences.\nAccepts a dictionary of preferences to merge with existing preferences.\n\nExample:\n{\n  \"tutorial_completed\": true,\n  \"daily_digest_theme\": \"dark\",\n  \"onboarding_dismissed\": true\n}"
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     UserPreferencesResponse:
       properties:
         id:
@@ -195,51 +228,6 @@ components:
       description: 'Response schema for user preferences.
 
         Returns the complete preferences object with metadata.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    UserPreferencesUpdate:
-      properties:
-        preferences:
-          additionalProperties: true
-          type: object
-          title: Preferences
-          description: Preferences to update (will be merged with existing preferences)
-      type: object
-      required:
-      - preferences
-      title: UserPreferencesUpdate
-      description: "Schema for updating user preferences.\nAccepts a dictionary of preferences to merge with existing preferences.\n\nExample:\n{\n  \"tutorial_completed\": true,\n  \"daily_digest_theme\": \"dark\",\n  \"onboarding_dismissed\": true\n}"
-    UserPreferencesPartial:
-      properties:
-        preferences:
-          additionalProperties: true
-          type: object
-          title: Preferences
-          description: User preferences as key-value pairs
-      type: object
-      title: UserPreferencesPartial
-      description: 'Response schema that returns only the preferences object without metadata.
-
-        Useful for lightweight responses.'
     ReleaseAnnouncementClaimRequest:
       properties:
         spotlight_release_id:
@@ -297,6 +285,18 @@ components:
       - claimed_at
       title: ReleaseAnnouncementClaimResponse
       description: Result of atomically claiming a release-announcement spotlight.
+    UserPreferencesPartial:
+      properties:
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          description: User preferences as key-value pairs
+      type: object
+      title: UserPreferencesPartial
+      description: 'Response schema that returns only the preferences object without metadata.
+
+        Useful for lightweight responses.'
   securitySchemes:
     HTTPBearer:
       type: http

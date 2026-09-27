@@ -211,6 +211,34 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    routes__ai_personas__GeneratePersonasRequest:
+      properties:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        personas_per_group:
+          type: integer
+          maximum: 100.0
+          title: Personas Per Group
+          description: Number of personas per target group
+          default: 50
+        persona_set_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Persona Set Id
+        location:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Location
+      type: object
+      title: GeneratePersonasRequest
     ValidationError:
       properties:
         loc:
@@ -241,34 +269,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    routes__ai_personas__GeneratePersonasRequest:
-      properties:
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        personas_per_group:
-          type: integer
-          maximum: 100.0
-          title: Personas Per Group
-          description: Number of personas per target group
-          default: 50
-        persona_set_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Persona Set Id
-        location:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Location
-      type: object
-      title: GeneratePersonasRequest
   securitySchemes:
     HTTPBearer:
       type: http

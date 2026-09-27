@@ -245,6 +245,41 @@ components:
       - potential_challenges
       - success_metrics
       title: ProductIdea
+    ProductIdeaBrainstormRequest:
+      properties:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        user_input:
+          type: string
+          title: User Input
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+      type: object
+      required:
+      - user_input
+      title: ProductIdeaBrainstormRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ProductIdeaResponse:
       properties:
         id:
@@ -289,41 +324,6 @@ components:
       - context_data
       - created_at
       title: ProductIdeaResponse
-    ProductIdeaBrainstormRequest:
-      properties:
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-        user_input:
-          type: string
-          title: User Input
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
-      type: object
-      required:
-      - user_input
-      title: ProductIdeaBrainstormRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

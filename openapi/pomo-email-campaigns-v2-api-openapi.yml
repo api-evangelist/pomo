@@ -226,42 +226,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    PersonalizationValidateRequest:
-      properties:
-        template:
-          type: string
-          title: Template
-        consumer_group_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Consumer Group Id
-      type: object
-      required:
-      - template
-      title: PersonalizationValidateRequest
-      description: Request to validate personalization template
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     SendCampaignRequest:
       properties:
         campaign_id:
@@ -288,6 +252,27 @@ components:
       - consumer_group_ids
       title: SendCampaignRequest
       description: Request to send campaign
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ABTestConfig:
       properties:
         test_type:
@@ -337,24 +322,15 @@ components:
       - variants
       title: ABTestConfig
       description: A/B test configuration
-    TestEmailRequest:
+    HTTPValidationError:
       properties:
-        campaign_id:
-          type: integer
-          title: Campaign Id
-        test_emails:
+        detail:
           items:
-            type: string
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          maxItems: 10
-          minItems: 1
-          title: Test Emails
+          title: Detail
       type: object
-      required:
-      - campaign_id
-      - test_emails
-      title: TestEmailRequest
-      description: Request to send test emails
+      title: HTTPValidationError
     WorkflowUpdateRequest:
       properties:
         campaign_id:
@@ -386,15 +362,39 @@ components:
       - campaign_id
       title: PreviewRequest
       description: Request for email preview
-    HTTPValidationError:
+    PersonalizationValidateRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        template:
+          type: string
+          title: Template
+        consumer_group_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Consumer Group Id
       type: object
-      title: HTTPValidationError
+      required:
+      - template
+      title: PersonalizationValidateRequest
+      description: Request to validate personalization template
+    TestEmailRequest:
+      properties:
+        campaign_id:
+          type: integer
+          title: Campaign Id
+        test_emails:
+          items:
+            type: string
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Test Emails
+      type: object
+      required:
+      - campaign_id
+      - test_emails
+      title: TestEmailRequest
+      description: Request to send test emails
   securitySchemes:
     HTTPBearer:
       type: http

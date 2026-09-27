@@ -190,84 +190,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    GoogleVideoAdRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-          description: Description of the product or service
-        target_audience:
-          type: string
-          title: Target Audience
-          description: Target audience description
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-        key_selling_points:
-          type: string
-          title: Key Selling Points
-          default: ''
-        num_ads:
-          type: integer
-          maximum: 10.0
-          minimum: 1.0
-          title: Num Ads
-          default: 3
-        video_length:
-          type: integer
-          maximum: 10.0
-          minimum: 10.0
-          title: Video Length
-          description: Video duration is fixed at 10 seconds
-          default: 10
-        bid_strategy:
-          type: string
-          title: Bid Strategy
-          default: automatic
-        budget_range:
-          type: string
-          title: Budget Range
-          default: medium
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-        locations:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Locations
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-            maxItems: 3
-          - type: 'null'
-          title: Reference Images
-      type: object
-      required:
-      - product_description
-      - target_audience
-      title: GoogleVideoAdRequest
     ValidationError:
       properties:
         loc:
@@ -289,41 +211,6 @@ components:
       - msg
       - type
       title: ValidationError
-    CampaignMediaOperation:
-      properties:
-        action:
-          type: string
-          enum:
-          - replace
-          - add
-          - add_and_set_primary
-          title: Action
-        media_type:
-          type: string
-          enum:
-          - image
-          - video
-          title: Media Type
-        selected_url:
-          type: string
-          title: Selected Url
-        previous_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous Url
-        source_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Source Index
-      type: object
-      required:
-      - action
-      - media_type
-      - selected_url
-      title: CampaignMediaOperation
-      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
     KeywordWithCpc:
       properties:
         keyword:
@@ -658,6 +545,84 @@ components:
       - campaign_id
       title: AdsCampaignUpdateRequest
       description: Request model for updating ad campaign data
+    GoogleVideoAdRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+          description: Description of the product or service
+        target_audience:
+          type: string
+          title: Target Audience
+          description: Target audience description
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+        key_selling_points:
+          type: string
+          title: Key Selling Points
+          default: ''
+        num_ads:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Num Ads
+          default: 3
+        video_length:
+          type: integer
+          maximum: 10.0
+          minimum: 10.0
+          title: Video Length
+          description: Video duration is fixed at 10 seconds
+          default: 10
+        bid_strategy:
+          type: string
+          title: Bid Strategy
+          default: automatic
+        budget_range:
+          type: string
+          title: Budget Range
+          default: medium
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        locations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Locations
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 3
+          - type: 'null'
+          title: Reference Images
+      type: object
+      required:
+      - product_description
+      - target_audience
+      title: GoogleVideoAdRequest
     HTTPValidationError:
       properties:
         detail:
@@ -667,6 +632,41 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    CampaignMediaOperation:
+      properties:
+        action:
+          type: string
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Action
+        media_type:
+          type: string
+          enum:
+          - image
+          - video
+          title: Media Type
+        selected_url:
+          type: string
+          title: Selected Url
+        previous_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous Url
+        source_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Source Index
+      type: object
+      required:
+      - action
+      - media_type
+      - selected_url
+      title: CampaignMediaOperation
+      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
   securitySchemes:
     HTTPBearer:
       type: http

@@ -255,6 +255,15 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     FeedbackCreate:
       properties:
         feedback_type:
@@ -328,17 +337,187 @@ components:
       - msg
       - type
       title: ValidationError
-    ScreenshotUploadResponse:
+    FeedbackResponse:
       properties:
-        screenshot_url:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        feedback_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+        message:
           type: string
+          title: Message
+        page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Url
+        page_route:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Route
+        component_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Component Name
+        screenshot_url:
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Screenshot Url
-          description: URL of the uploaded screenshot
+        browser_info:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Browser Info
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+        severity:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severity
+        report_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Report Source
+        client_report_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Report Id
+        frontend_release:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Frontend Release
+        diagnostics_schema_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Diagnostics Schema Version
+        redaction_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redaction Version
+        diagnostics_summary:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Diagnostics Summary
+        request_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Request Ids
+        console_error_count:
+          type: integer
+          title: Console Error Count
+          default: 0
+        http_error_count:
+          type: integer
+          title: Http Error Count
+          default: 0
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
       type: object
       required:
-      - screenshot_url
-      title: ScreenshotUploadResponse
-      description: Response schema for screenshot upload.
+      - id
+      - feedback_type
+      - message
+      - status
+      - created_at
+      title: FeedbackResponse
+      description: Response schema for feedback data.
+    FeedbackArtifactResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        feedback_id:
+          type: string
+          title: Feedback Id
+        artifact_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+        gcs_url:
+          type: string
+          title: Gcs Url
+        content_type:
+          type: string
+          title: Content Type
+        byte_size:
+          type: integer
+          title: Byte Size
+        sha256:
+          type: string
+          title: Sha256
+        redaction_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redaction Version
+        artifact_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Artifact Metadata
+        created_at:
+          type: string
+          title: Created At
+      type: object
+      required:
+      - id
+      - feedback_id
+      - artifact_type
+      - gcs_url
+      - content_type
+      - byte_size
+      - sha256
+      - created_at
+      title: FeedbackArtifactResponse
+      description: Response schema for metadata about a stored feedback artifact.
     FeedbackBugReportResponse:
       properties:
         id:
@@ -473,73 +652,6 @@ components:
       - created_at
       title: FeedbackBugReportResponse
       description: Response schema for rich bug reports.
-    Body_create_bug_report_api_feedback_bug_report_post:
-      properties:
-        report_json:
-          type: string
-          title: Report Json
-        screenshot:
-          anyOf:
-          - type: string
-            format: binary
-          - type: 'null'
-          title: Screenshot
-      type: object
-      required:
-      - report_json
-      title: Body_create_bug_report_api_feedback_bug_report_post
-    FeedbackArtifactResponse:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        feedback_id:
-          type: string
-          title: Feedback Id
-        artifact_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-        gcs_url:
-          type: string
-          title: Gcs Url
-        content_type:
-          type: string
-          title: Content Type
-        byte_size:
-          type: integer
-          title: Byte Size
-        sha256:
-          type: string
-          title: Sha256
-        redaction_version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Redaction Version
-        artifact_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Artifact Metadata
-        created_at:
-          type: string
-          title: Created At
-      type: object
-      required:
-      - id
-      - feedback_id
-      - artifact_type
-      - gcs_url
-      - content_type
-      - byte_size
-      - sha256
-      - created_at
-      title: FeedbackArtifactResponse
-      description: Response schema for metadata about a stored feedback artifact.
     Body_upload_screenshot_api_feedback_screenshot_post:
       properties:
         file:
@@ -550,6 +662,17 @@ components:
       required:
       - file
       title: Body_upload_screenshot_api_feedback_screenshot_post
+    ScreenshotUploadResponse:
+      properties:
+        screenshot_url:
+          type: string
+          title: Screenshot Url
+          description: URL of the uploaded screenshot
+      type: object
+      required:
+      - screenshot_url
+      title: ScreenshotUploadResponse
+      description: Response schema for screenshot upload.
     FeedbackListResponse:
       properties:
         items:
@@ -578,135 +701,21 @@ components:
       - has_more
       title: FeedbackListResponse
       description: Response schema for listing feedback.
-    FeedbackResponse:
+    Body_create_bug_report_api_feedback_bug_report_post:
       properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Id
-        organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Id
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-        feedback_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-        message:
+        report_json:
           type: string
-          title: Message
-        page_url:
+          title: Report Json
+        screenshot:
           anyOf:
           - type: string
+            format: binary
           - type: 'null'
-          title: Page Url
-        page_route:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Page Route
-        component_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Component Name
-        screenshot_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Screenshot Url
-        browser_info:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Browser Info
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-        severity:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Severity
-        report_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Report Source
-        client_report_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Client Report Id
-        frontend_release:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Frontend Release
-        diagnostics_schema_version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Diagnostics Schema Version
-        redaction_version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Redaction Version
-        diagnostics_summary:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Diagnostics Summary
-        request_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Request Ids
-        console_error_count:
-          type: integer
-          title: Console Error Count
-          default: 0
-        http_error_count:
-          type: integer
-          title: Http Error Count
-          default: 0
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
+          title: Screenshot
       type: object
       required:
-      - id
-      - feedback_type
-      - message
-      - status
-      - created_at
-      title: FeedbackResponse
-      description: Response schema for feedback data.
+      - report_json
+      title: Body_create_bug_report_api_feedback_bug_report_post
     FeedbackType:
       type: string
       enum:
@@ -716,15 +725,6 @@ components:
       - churn
       title: FeedbackType
       description: Type of feedback submitted by the user.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

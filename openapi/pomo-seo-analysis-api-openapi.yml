@@ -1030,6 +1030,50 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SEOAnalysisCreate:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        primary_url:
+          type: string
+          title: Primary Url
+        workflow_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+      type: object
+      required:
+      - company_profile_id
+      - primary_url
+      title: SEOAnalysisCreate
+      description: 'Request schema for creating a new SEO analysis.
+
+        Follows pattern from campaigns/email.py EmailCampaignCreate'
     ScoreCheckResponse:
       properties:
         name:
@@ -1062,73 +1106,6 @@ components:
       - reason
       title: ScoreCheckResponse
       description: Individual scoring check result for score breakdown.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    SEORecommendationUpdate:
-      properties:
-        is_dismissed:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Dismissed
-        is_completed:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Completed
-        user_notes:
-          anyOf:
-          - type: string
-            maxLength: 1000
-          - type: 'null'
-          title: User Notes
-      type: object
-      title: SEORecommendationUpdate
-      description: 'Schema for updating SEO recommendation user actions.
-
-        Allows marking recommendations as dismissed or completed.'
-    SEOAnalysisCreate:
-      properties:
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        primary_url:
-          type: string
-          title: Primary Url
-        workflow_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Workflow Id
-      type: object
-      required:
-      - company_profile_id
-      - primary_url
-      title: SEOAnalysisCreate
-      description: 'Request schema for creating a new SEO analysis.
-
-        Follows pattern from campaigns/email.py EmailCampaignCreate'
     SEOPageResponse:
       properties:
         id:
@@ -1474,6 +1451,259 @@ components:
       description: 'Response schema for individual page SEO analysis.
 
         Contains detailed SEO metrics for a single page.'
+    SEOAnalysisListResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        primary_url:
+          type: string
+          title: Primary Url
+        domain:
+          type: string
+          title: Domain
+        status:
+          type: string
+          title: Status
+        overall_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Overall Score
+        previous_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Previous Score
+        score_change:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Score Change
+        critical_issues_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Critical Issues Count
+          default: 0
+        important_issues_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Important Issues Count
+          default: 0
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Completed At
+      type: object
+      required:
+      - id
+      - company_profile_id
+      - primary_url
+      - domain
+      - status
+      - created_at
+      title: SEOAnalysisListResponse
+      description: 'Lightweight schema for listing SEO analyses.
+
+        Contains only key fields for display in lists/tables.
+
+        Follows pattern from consumer.py ConsumerGroupListResponse'
+    ScoreBreakdownResponse:
+      properties:
+        category:
+          type: string
+          title: Category
+        score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Score
+        max_score:
+          type: number
+          title: Max Score
+        percentage:
+          type: number
+          title: Percentage
+        checks:
+          items:
+            $ref: '#/components/schemas/ScoreCheckResponse'
+          type: array
+          title: Checks
+        warnings:
+          items:
+            type: string
+          type: array
+          title: Warnings
+          default: []
+        errors:
+          items:
+            type: string
+          type: array
+          title: Errors
+          default: []
+      type: object
+      required:
+      - category
+      - max_score
+      - percentage
+      - checks
+      title: ScoreBreakdownResponse
+      description: Detailed breakdown of a score calculation for a specific category.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SEORecommendationUpdate:
+      properties:
+        is_dismissed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Dismissed
+        is_completed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Completed
+        user_notes:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: User Notes
+      type: object
+      title: SEORecommendationUpdate
+      description: 'Schema for updating SEO recommendation user actions.
+
+        Allows marking recommendations as dismissed or completed.'
+    SEORecommendationResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        analysis_id:
+          type: string
+          format: uuid
+          title: Analysis Id
+        category:
+          type: string
+          title: Category
+        priority:
+          type: string
+          title: Priority
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+        impact:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact
+        effort:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Effort
+        how_to_fix:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: How To Fix
+        example:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Example
+        pages_affected:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Pages Affected
+          default: 0
+        affected_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Affected Urls
+          default: []
+        potential_score_improvement:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Potential Score Improvement
+        estimated_fix_time_hours:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Fix Time Hours
+        is_dismissed:
+          type: boolean
+          title: Is Dismissed
+          default: false
+        is_completed:
+          type: boolean
+          title: Is Completed
+          default: false
+        completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Completed At
+        user_notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Notes
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - analysis_id
+      - category
+      - priority
+      - title
+      - description
+      - created_at
+      title: SEORecommendationResponse
+      description: 'Response schema for SEO recommendation.
+
+        Contains all recommendation data including user actions.'
     SEOAnalysisResponse:
       properties:
         id:
@@ -1696,236 +1926,6 @@ components:
         Includes all analysis data, scores, and metadata.
 
         Follows pattern from campaigns/email.py EmailCampaignResponse'
-    SEOAnalysisListResponse:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-        primary_url:
-          type: string
-          title: Primary Url
-        domain:
-          type: string
-          title: Domain
-        status:
-          type: string
-          title: Status
-        overall_score:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Overall Score
-        previous_score:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Previous Score
-        score_change:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Score Change
-        critical_issues_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Critical Issues Count
-          default: 0
-        important_issues_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Important Issues Count
-          default: 0
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        completed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Completed At
-      type: object
-      required:
-      - id
-      - company_profile_id
-      - primary_url
-      - domain
-      - status
-      - created_at
-      title: SEOAnalysisListResponse
-      description: 'Lightweight schema for listing SEO analyses.
-
-        Contains only key fields for display in lists/tables.
-
-        Follows pattern from consumer.py ConsumerGroupListResponse'
-    SEORecommendationResponse:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        analysis_id:
-          type: string
-          format: uuid
-          title: Analysis Id
-        category:
-          type: string
-          title: Category
-        priority:
-          type: string
-          title: Priority
-        title:
-          type: string
-          title: Title
-        description:
-          type: string
-          title: Description
-        impact:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Impact
-        effort:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Effort
-        how_to_fix:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: How To Fix
-        example:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Example
-        pages_affected:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Pages Affected
-          default: 0
-        affected_urls:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Affected Urls
-          default: []
-        potential_score_improvement:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Potential Score Improvement
-        estimated_fix_time_hours:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Estimated Fix Time Hours
-        is_dismissed:
-          type: boolean
-          title: Is Dismissed
-          default: false
-        is_completed:
-          type: boolean
-          title: Is Completed
-          default: false
-        completed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Completed At
-        user_notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Notes
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      type: object
-      required:
-      - id
-      - analysis_id
-      - category
-      - priority
-      - title
-      - description
-      - created_at
-      title: SEORecommendationResponse
-      description: 'Response schema for SEO recommendation.
-
-        Contains all recommendation data including user actions.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ScoreBreakdownResponse:
-      properties:
-        category:
-          type: string
-          title: Category
-        score:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Score
-        max_score:
-          type: number
-          title: Max Score
-        percentage:
-          type: number
-          title: Percentage
-        checks:
-          items:
-            $ref: '#/components/schemas/ScoreCheckResponse'
-          type: array
-          title: Checks
-        warnings:
-          items:
-            type: string
-          type: array
-          title: Warnings
-          default: []
-        errors:
-          items:
-            type: string
-          type: array
-          title: Errors
-          default: []
-      type: object
-      required:
-      - category
-      - max_score
-      - percentage
-      - checks
-      title: ScoreBreakdownResponse
-      description: Detailed breakdown of a score calculation for a specific category.
   securitySchemes:
     HTTPBearer:
       type: http

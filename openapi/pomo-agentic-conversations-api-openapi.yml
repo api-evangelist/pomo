@@ -476,136 +476,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AgentConversationWithMessages:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-          description: Conversation ID
-        organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Id
-          description: Organization ID
-        user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Id
-          description: User ID who owns this conversation
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-          description: Company profile ID
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Conversation title
-        conversation_source:
-          type: string
-          enum:
-          - web
-          - slack
-          title: Conversation Source
-          description: Conversation source label used for UI filtering
-          default: web
-        runtime_key:
-          $ref: '#/components/schemas/RuntimeKey'
-          description: Immutable server-selected Markee engine version
-          default: legacy
-        message_count:
-          type: integer
-          title: Message Count
-          description: Number of messages in conversation
-        is_active:
-          type: boolean
-          title: Is Active
-          description: Whether conversation is active (not soft-deleted)
-        has_unread:
-          type: boolean
-          title: Has Unread
-          description: True when new messages added by system, False when user views
-          default: false
-        extra:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Extra
-          description: Additional data (stats, workflow state, etc.)
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Conversation creation timestamp
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: Last update timestamp
-        last_message_at:
-          type: string
-          format: date-time
-          title: Last Message At
-          description: Timestamp of last message
-        messages:
-          items:
-            $ref: '#/components/schemas/AgentMessageResponse'
-          type: array
-          title: Messages
-          description: Conversation messages
-        message_refs:
-          additionalProperties:
-            items:
-              $ref: '#/components/schemas/ReferencedDocument'
-            type: array
-          type: object
-          title: Message Refs
-          description: Per-message document references (message_id -> list of docs)
-        public_executions:
-          additionalProperties:
-            $ref: '#/components/schemas/PublicExecutionSummary'
-          type: object
-          title: Public Executions
-          description: Durable public execution snapshots keyed by producer job id. Each value is a complete revisioned replacement snapshot.
-      type: object
-      required:
-      - id
-      - organization_id
-      - user_id
-      - company_profile_id
-      - message_count
-      - is_active
-      - created_at
-      - updated_at
-      - last_message_at
-      title: AgentConversationWithMessages
-      description: 'Extended response schema that includes messages.
-
-
-        Used for GET /conversations/{id} endpoint.'
-      example:
-        company_profile_id: 123e4567-e89b-12d3-a456-426614174001
-        created_at: '2025-11-05T20:00:00Z'
-        extra:
-          total_tokens: 1500
-          total_tool_calls: 5
-          workflow_stage: campaign_creation
-        id: 123e4567-e89b-12d3-a456-426614174002
-        is_active: true
-        last_message_at: '2025-11-05T20:30:00Z'
-        message_count: 15
-        organization_id: 123e4567-e89b-12d3-a456-426614174000
-        title: Campaign Strategy Discussion
-        updated_at: '2025-11-05T20:30:00Z'
-        user_id: 123e4567-e89b-12d3-a456-426614174003
     AgentTraceStep:
       properties:
         agent_key:
@@ -643,147 +513,6 @@ components:
       - message_type
       title: AgentTraceStep
       description: One step in the agent delegation trace (specialist analysis or manager synthesis).
-    AgentConversationResponse:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-          description: Conversation ID
-        organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Id
-          description: Organization ID
-        user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Id
-          description: User ID who owns this conversation
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-          description: Company profile ID
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Conversation title
-        conversation_source:
-          type: string
-          enum:
-          - web
-          - slack
-          title: Conversation Source
-          description: Conversation source label used for UI filtering
-          default: web
-        runtime_key:
-          $ref: '#/components/schemas/RuntimeKey'
-          description: Immutable server-selected Markee engine version
-          default: legacy
-        message_count:
-          type: integer
-          title: Message Count
-          description: Number of messages in conversation
-        is_active:
-          type: boolean
-          title: Is Active
-          description: Whether conversation is active (not soft-deleted)
-        has_unread:
-          type: boolean
-          title: Has Unread
-          description: True when new messages added by system, False when user views
-          default: false
-        extra:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Extra
-          description: Additional data (stats, workflow state, etc.)
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Conversation creation timestamp
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: Last update timestamp
-        last_message_at:
-          type: string
-          format: date-time
-          title: Last Message At
-          description: Timestamp of last message
-      type: object
-      required:
-      - id
-      - organization_id
-      - user_id
-      - company_profile_id
-      - message_count
-      - is_active
-      - created_at
-      - updated_at
-      - last_message_at
-      title: AgentConversationResponse
-      description: 'Response schema for agent conversation.
-
-
-        Uses mixins for consistent UUID serialization:
-
-        - UUIDIdentifierMixin: Handles ''id'' field
-
-        - UserScopedMixin: Handles ''user_id'' field
-
-        - OrganizationScopedMixin: Handles ''organization_id'' field
-
-        - CompanyProfileScopedMixin: Handles ''company_profile_id'' field'
-      example:
-        company_profile_id: 123e4567-e89b-12d3-a456-426614174001
-        created_at: '2025-11-05T20:00:00Z'
-        extra:
-          total_tokens: 1500
-          total_tool_calls: 5
-          workflow_stage: campaign_creation
-        id: 123e4567-e89b-12d3-a456-426614174002
-        is_active: true
-        last_message_at: '2025-11-05T20:30:00Z'
-        message_count: 15
-        organization_id: 123e4567-e89b-12d3-a456-426614174000
-        title: Campaign Strategy Discussion
-        updated_at: '2025-11-05T20:30:00Z'
-        user_id: 123e4567-e89b-12d3-a456-426614174003
-    AgentConversationInboxSummaryResponse:
-      properties:
-        unread_conversation_count:
-          type: integer
-          title: Unread Conversation Count
-          description: Unread conversation count for this scope
-        latest_activity_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Latest Activity At
-          description: Latest conversation activity timestamp for this scope
-        previews:
-          items:
-            $ref: '#/components/schemas/AgentConversationInboxPreview'
-          type: array
-          title: Previews
-          description: Recent conversation metadata for lightweight closed-state previews
-      type: object
-      required:
-      - unread_conversation_count
-      title: AgentConversationInboxSummaryResponse
     ResolvedWorkspaceAttributionResponse:
       properties:
         ordinal:
@@ -908,6 +637,118 @@ components:
       - evidence_level
       title: ResolvedCitationResponse
       description: Safe public projection of one server-resolved citation.
+    PublicExecutionSummary:
+      properties:
+        api_version:
+          type: string
+          maxLength: 64
+          pattern: ^pomo\.agent\.execution/v[1-9][0-9]*$
+          title: Api Version
+          default: pomo.agent.execution/v1
+        execution_id:
+          type: string
+          format: uuid
+          title: Execution Id
+        revision:
+          type: integer
+          minimum: 0.0
+          title: Revision
+          default: 0
+        state:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          title: State
+        terminal:
+          type: boolean
+          title: Terminal
+        outcome:
+          anyOf:
+          - type: string
+            maxLength: 64
+            minLength: 1
+            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          - type: 'null'
+          title: Outcome
+        disposition:
+          anyOf:
+          - $ref: '#/components/schemas/PublicTerminalDisposition'
+          - type: 'null'
+        progress:
+          anyOf:
+          - type: number
+            maximum: 1.0
+            minimum: 0.0
+          - type: 'null'
+          title: Progress
+        summary:
+          anyOf:
+          - type: string
+            maxLength: 2000
+            minLength: 1
+          - type: 'null'
+          title: Summary
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        duration_ms:
+          anyOf:
+          - type: integer
+            maximum: 9007199254740991.0
+            minimum: 0.0
+          - type: 'null'
+          title: Duration Ms
+        cost_micros:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Cost Micros
+        total_step_count:
+          type: integer
+          maximum: 1000000.0
+          minimum: 0.0
+          title: Total Step Count
+          default: 0
+        omitted_step_count:
+          type: integer
+          maximum: 1000000.0
+          minimum: 0.0
+          title: Omitted Step Count
+          default: 0
+        steps:
+          items:
+            $ref: '#/components/schemas/PublicExecutionStep'
+          type: array
+          maxItems: 40
+          title: Steps
+          default: []
+      type: object
+      required:
+      - execution_id
+      - state
+      - terminal
+      title: PublicExecutionSummary
+      description: A complete public snapshot of one assistant execution.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     MessageFeedbackRequest:
       properties:
         feedback:
@@ -921,208 +762,266 @@ components:
       type: object
       title: MessageFeedbackRequest
       description: Request schema for updating message feedback.
-    MarkReadResponse:
+    ConversationAttachmentResponse:
       properties:
-        status:
+        handle:
           type: string
-          title: Status
+          title: Handle
+        name:
+          type: string
+          title: Name
+        media_type:
+          type: string
+          title: Media Type
+        size_bytes:
+          type: integer
+          title: Size Bytes
       type: object
       required:
-      - status
-      title: MarkReadResponse
-      description: Response schema for mark-read endpoint.
-    EvidenceLineageClass:
-      type: string
-      enum:
-      - user_authored
-      - first_party_observed
-      - imported
-      - system_derived
-      - unknown
-      title: EvidenceLineageClass
-      description: 'How a workspace field entered the evidence plane.
-
-
-        Lineage is descriptive metadata, not a truth ranking.  In particular,
-
-        ``system_derived`` facts still require support from their underlying
-
-        evidence and ``user_authored`` facts are authoritative only as statements
-
-        of user intent.'
-    Body_upload_attachments_api_agentic_conversations__conversation_id__attachments_post:
+      - handle
+      - name
+      - media_type
+      - size_bytes
+      title: ConversationAttachmentResponse
+    AgentConversationInboxPreview:
       properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-      type: object
-      required:
-      - files
-      title: Body_upload_attachments_api_agentic_conversations__conversation_id__attachments_post
-    ReferencedDocument:
-      properties:
-        document_id:
+        id:
           type: string
-          title: Document Id
-          description: Source document ID (CompanyAnalysisFile)
-        filename:
-          type: string
-          title: Filename
-          description: Original filename
-        file_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: File Type
-          description: MIME type of the file
-        type:
-          type: string
-          title: Type
-          description: 'Content type: ''document'' or ''image'''
-          default: document
-      type: object
-      required:
-      - document_id
-      - filename
-      title: ReferencedDocument
-      description: 'Document referenced in a chat response.
-
-
-        Tracks which company documents were used to generate the response,
-
-        allowing the UI to display file references.'
-      example:
-        document_id: 123e4567-e89b-12d3-a456-426614174010
-        file_type: application/pdf
-        filename: pitch_deck.pdf
-        type: document
-    ToolResultUpdateRequest:
-      properties:
-        agent_job_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Agent Job Id
-        tool_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tool Name
-        workflow_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Workflow Token
-        confirmation_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Confirmation Token
-        workflow_status:
-          anyOf:
-          - type: string
-            const: discarded
-          - type: 'null'
-          title: Workflow Status
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-        document_job_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Document Job Id
+          format: uuid
+          title: Id
+          description: Conversation ID
         title:
           anyOf:
           - type: string
           - type: 'null'
           title: Title
-        document_content:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Document Content
-        pdp_record_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Pdp Record Id
-        product_offering_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Offering Id
-        product_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Name
-        pdp_summary:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Pdp Summary
+          description: Conversation title
+        conversation_source:
+          type: string
+          enum:
+          - web
+          - slack
+          title: Conversation Source
+          description: Conversation source label used for UI filtering
+          default: web
+        has_unread:
+          type: boolean
+          title: Has Unread
+          description: Whether the conversation has unread activity
+          default: false
+        last_message_at:
+          type: string
+          format: date-time
+          title: Last Message At
+          description: Timestamp of latest activity
       type: object
-      title: ToolResultUpdateRequest
-      description: Request schema for patching a tool call result with async job output.
-    AgentConversationCreate:
+      required:
+      - id
+      - last_message_at
+      title: AgentConversationInboxPreview
+    ConversationAttachmentsResponse:
       properties:
-        organization_id:
+        files:
+          items:
+            $ref: '#/components/schemas/ConversationAttachmentResponse'
+          type: array
+          title: Files
+      type: object
+      required:
+      - files
+      title: ConversationAttachmentsResponse
+    PublicExecutionStep:
+      properties:
+        step_id:
+          anyOf:
+          - type: string
+            maxLength: 128
+            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          - type: 'null'
+          title: Step Id
+          description: Optional stable machine identity for reconciling one public step across live snapshot revisions. It is not user-visible.
+        category:
           type: string
-          format: uuid
-          title: Organization Id
-          description: Organization ID for multi-tenant scoping
-        company_profile_id:
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          title: Category
+        code:
           type: string
-          format: uuid
-          title: Company Profile Id
-          description: Company profile ID for MCP context
+          maxLength: 128
+          minLength: 1
+          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          title: Code
+        state:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          title: State
+        terminal:
+          type: boolean
+          title: Terminal
+        title:
+          type: string
+          maxLength: 160
+          minLength: 1
+          title: Title
+        detail:
+          anyOf:
+          - type: string
+            maxLength: 500
+            minLength: 1
+          - type: 'null'
+          title: Detail
+        duration_ms:
+          anyOf:
+          - type: integer
+            maximum: 9007199254740991.0
+            minimum: 0.0
+          - type: 'null'
+          title: Duration Ms
+        cost_micros:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Cost Micros
+        input_tokens:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Input Tokens
+        output_tokens:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Output Tokens
+        cached_input_tokens:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Cached Input Tokens
+        result_count:
+          anyOf:
+          - type: integer
+            maximum: 1000000.0
+            minimum: 0.0
+          - type: 'null'
+          title: Result Count
+        total_count:
+          anyOf:
+          - type: integer
+            maximum: 1000000.0
+            minimum: 0.0
+          - type: 'null'
+          title: Total Count
+        result_state:
+          anyOf:
+          - type: string
+            maxLength: 64
+            minLength: 1
+            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          - type: 'null'
+          title: Result State
+      type: object
+      required:
+      - category
+      - code
+      - state
+      - terminal
+      - title
+      title: PublicExecutionStep
+      description: 'One bounded, presentation-ready item in a public execution snapshot.
+
+
+        The optional result fields are public operational facts, never model
+
+        reasoning or raw tool arguments. They let clients explain what a step
+
+        accomplished without parsing display copy.'
+    AgentConversationUpdate:
+      properties:
         title:
           anyOf:
           - type: string
             maxLength: 255
           - type: 'null'
           title: Title
-          description: Conversation title (auto-generated if not provided)
+          description: Updated title
         extra:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
           title: Extra
-          description: Additional data (workflow stage, custom fields)
+          description: Updated extra data (merges with existing)
+      type: object
+      title: AgentConversationUpdate
+      description: 'Request schema for updating an existing conversation.
+
+
+        All fields are optional - only provided fields will be updated.'
+      example:
+        extra:
+          reviewed_by: user@example.com
+          workflow_stage: review
+        title: Updated Campaign Strategy
+    AgentConversationListResponse:
+      properties:
+        conversations:
+          items:
+            $ref: '#/components/schemas/AgentConversationResponse'
+          type: array
+          title: Conversations
+          description: List of conversations
+        total:
+          type: integer
+          title: Total
+          description: Total number of conversations (before pagination)
+        page:
+          type: integer
+          title: Page
+          description: Current page number (1-indexed)
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of items per page
+        has_more:
+          type: boolean
+          title: Has More
+          description: Whether there are more pages
       type: object
       required:
-      - organization_id
-      - company_profile_id
-      title: AgentConversationCreate
-      description: 'Request schema for creating a new agent conversation.
+      - conversations
+      - total
+      - page
+      - page_size
+      - has_more
+      title: AgentConversationListResponse
+      description: 'Response schema for paginated conversation list.
 
 
-        Required fields:
-
-        - organization_id: Organization context (for multi-tenant scoping)
-
-        - company_profile_id: Company context (for MCP tools)
-
-
-        Optional fields:
-
-        - title: Custom title (if not provided, auto-generated from first message)
-
-        - extra: Initial extra data (workflow stage, etc.)'
+        Used for GET /conversations endpoint.'
       example:
-        company_profile_id: 123e4567-e89b-12d3-a456-426614174001
-        extra:
-          workflow_stage: campaign_creation
-        organization_id: 123e4567-e89b-12d3-a456-426614174000
-        title: Campaign Strategy Discussion
+        conversations:
+        - company_profile_id: 123e4567-e89b-12d3-a456-426614174001
+          created_at: '2025-11-05T20:00:00Z'
+          extra: {}
+          id: 123e4567-e89b-12d3-a456-426614174002
+          is_active: true
+          last_message_at: '2025-11-05T20:30:00Z'
+          message_count: 15
+          organization_id: 123e4567-e89b-12d3-a456-426614174000
+          title: Campaign Strategy
+          updated_at: '2025-11-05T20:30:00Z'
+          user_id: 123e4567-e89b-12d3-a456-426614174003
+        has_more: true
+        page: 1
+        page_size: 20
+        total: 25
     AgentMessageResponse:
       properties:
         id:
@@ -1275,6 +1174,393 @@ components:
             roas: 3.2
           success: true
           tool: get_campaign_analytics
+    AgentConversationCreate:
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+          description: Organization ID for multi-tenant scoping
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+          description: Company profile ID for MCP context
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+          description: Conversation title (auto-generated if not provided)
+        extra:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Extra
+          description: Additional data (workflow stage, custom fields)
+      type: object
+      required:
+      - organization_id
+      - company_profile_id
+      title: AgentConversationCreate
+      description: 'Request schema for creating a new agent conversation.
+
+
+        Required fields:
+
+        - organization_id: Organization context (for multi-tenant scoping)
+
+        - company_profile_id: Company context (for MCP tools)
+
+
+        Optional fields:
+
+        - title: Custom title (if not provided, auto-generated from first message)
+
+        - extra: Initial extra data (workflow stage, etc.)'
+      example:
+        company_profile_id: 123e4567-e89b-12d3-a456-426614174001
+        extra:
+          workflow_stage: campaign_creation
+        organization_id: 123e4567-e89b-12d3-a456-426614174000
+        title: Campaign Strategy Discussion
+    AgentConversationResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+          description: Conversation ID
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+          description: Organization ID
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+          description: User ID who owns this conversation
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+          description: Company profile ID
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Conversation title
+        conversation_source:
+          type: string
+          enum:
+          - web
+          - slack
+          title: Conversation Source
+          description: Conversation source label used for UI filtering
+          default: web
+        runtime_key:
+          $ref: '#/components/schemas/RuntimeKey'
+          description: Immutable server-selected Markee engine version
+          default: legacy
+        message_count:
+          type: integer
+          title: Message Count
+          description: Number of messages in conversation
+        is_active:
+          type: boolean
+          title: Is Active
+          description: Whether conversation is active (not soft-deleted)
+        has_unread:
+          type: boolean
+          title: Has Unread
+          description: True when new messages added by system, False when user views
+          default: false
+        extra:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Extra
+          description: Additional data (stats, workflow state, etc.)
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Conversation creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Last update timestamp
+        last_message_at:
+          type: string
+          format: date-time
+          title: Last Message At
+          description: Timestamp of last message
+      type: object
+      required:
+      - id
+      - organization_id
+      - user_id
+      - company_profile_id
+      - message_count
+      - is_active
+      - created_at
+      - updated_at
+      - last_message_at
+      title: AgentConversationResponse
+      description: 'Response schema for agent conversation.
+
+
+        Uses mixins for consistent UUID serialization:
+
+        - UUIDIdentifierMixin: Handles ''id'' field
+
+        - UserScopedMixin: Handles ''user_id'' field
+
+        - OrganizationScopedMixin: Handles ''organization_id'' field
+
+        - CompanyProfileScopedMixin: Handles ''company_profile_id'' field'
+      example:
+        company_profile_id: 123e4567-e89b-12d3-a456-426614174001
+        created_at: '2025-11-05T20:00:00Z'
+        extra:
+          total_tokens: 1500
+          total_tool_calls: 5
+          workflow_stage: campaign_creation
+        id: 123e4567-e89b-12d3-a456-426614174002
+        is_active: true
+        last_message_at: '2025-11-05T20:30:00Z'
+        message_count: 15
+        organization_id: 123e4567-e89b-12d3-a456-426614174000
+        title: Campaign Strategy Discussion
+        updated_at: '2025-11-05T20:30:00Z'
+        user_id: 123e4567-e89b-12d3-a456-426614174003
+    EvidenceLineageClass:
+      type: string
+      enum:
+      - user_authored
+      - first_party_observed
+      - imported
+      - system_derived
+      - unknown
+      title: EvidenceLineageClass
+      description: 'How a workspace field entered the evidence plane.
+
+
+        Lineage is descriptive metadata, not a truth ranking.  In particular,
+
+        ``system_derived`` facts still require support from their underlying
+
+        evidence and ``user_authored`` facts are authoritative only as statements
+
+        of user intent.'
+    RuntimeKey:
+      type: string
+      enum:
+      - legacy
+      - markee_v2
+      title: RuntimeKey
+      description: 'Canonical Markee engine versions.
+
+
+        The serialized values predate the v1/v2 product vocabulary and remain
+
+        stable so existing conversation rows and in-flight jobs stay readable.
+
+        Callers must use the versioned enum members rather than repeating those
+
+        persistence literals.'
+    MarkReadResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - status
+      title: MarkReadResponse
+      description: Response schema for mark-read endpoint.
+    PublicDispositionKind:
+      type: string
+      enum:
+      - answered
+      - partial
+      - needs_input
+      - declined
+      - no_answer
+      - cancelled
+      - failed
+      title: PublicDispositionKind
+      description: 'Closed customer meaning for one terminal assistant execution.
+
+
+        Runtime lifecycle and internal stop causes remain separate. Unknown internal
+
+        outcomes must be projected to ``FAILED`` with an
+
+        ``unknown_terminal_outcome`` reason before crossing this public boundary.'
+    AgentConversationWithMessages:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+          description: Conversation ID
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+          description: Organization ID
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+          description: User ID who owns this conversation
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+          description: Company profile ID
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Conversation title
+        conversation_source:
+          type: string
+          enum:
+          - web
+          - slack
+          title: Conversation Source
+          description: Conversation source label used for UI filtering
+          default: web
+        runtime_key:
+          $ref: '#/components/schemas/RuntimeKey'
+          description: Immutable server-selected Markee engine version
+          default: legacy
+        message_count:
+          type: integer
+          title: Message Count
+          description: Number of messages in conversation
+        is_active:
+          type: boolean
+          title: Is Active
+          description: Whether conversation is active (not soft-deleted)
+        has_unread:
+          type: boolean
+          title: Has Unread
+          description: True when new messages added by system, False when user views
+          default: false
+        extra:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Extra
+          description: Additional data (stats, workflow state, etc.)
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Conversation creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Last update timestamp
+        last_message_at:
+          type: string
+          format: date-time
+          title: Last Message At
+          description: Timestamp of last message
+        messages:
+          items:
+            $ref: '#/components/schemas/AgentMessageResponse'
+          type: array
+          title: Messages
+          description: Conversation messages
+        message_refs:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/ReferencedDocument'
+            type: array
+          type: object
+          title: Message Refs
+          description: Per-message document references (message_id -> list of docs)
+        public_executions:
+          additionalProperties:
+            $ref: '#/components/schemas/PublicExecutionSummary'
+          type: object
+          title: Public Executions
+          description: Durable public execution snapshots keyed by producer job id. Each value is a complete revisioned replacement snapshot.
+      type: object
+      required:
+      - id
+      - organization_id
+      - user_id
+      - company_profile_id
+      - message_count
+      - is_active
+      - created_at
+      - updated_at
+      - last_message_at
+      title: AgentConversationWithMessages
+      description: 'Extended response schema that includes messages.
+
+
+        Used for GET /conversations/{id} endpoint.'
+      example:
+        company_profile_id: 123e4567-e89b-12d3-a456-426614174001
+        created_at: '2025-11-05T20:00:00Z'
+        extra:
+          total_tokens: 1500
+          total_tool_calls: 5
+          workflow_stage: campaign_creation
+        id: 123e4567-e89b-12d3-a456-426614174002
+        is_active: true
+        last_message_at: '2025-11-05T20:30:00Z'
+        message_count: 15
+        organization_id: 123e4567-e89b-12d3-a456-426614174000
+        title: Campaign Strategy Discussion
+        updated_at: '2025-11-05T20:30:00Z'
+        user_id: 123e4567-e89b-12d3-a456-426614174003
+    AgentConversationInboxSummaryResponse:
+      properties:
+        unread_conversation_count:
+          type: integer
+          title: Unread Conversation Count
+          description: Unread conversation count for this scope
+        latest_activity_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Latest Activity At
+          description: Latest conversation activity timestamp for this scope
+        previews:
+          items:
+            $ref: '#/components/schemas/AgentConversationInboxPreview'
+          type: array
+          title: Previews
+          description: Recent conversation metadata for lightweight closed-state previews
+      type: object
+      required:
+      - unread_conversation_count
+      title: AgentConversationInboxSummaryResponse
     ValidationError:
       properties:
         loc:
@@ -1296,201 +1582,6 @@ components:
       - msg
       - type
       title: ValidationError
-    AgentConversationListResponse:
-      properties:
-        conversations:
-          items:
-            $ref: '#/components/schemas/AgentConversationResponse'
-          type: array
-          title: Conversations
-          description: List of conversations
-        total:
-          type: integer
-          title: Total
-          description: Total number of conversations (before pagination)
-        page:
-          type: integer
-          title: Page
-          description: Current page number (1-indexed)
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of items per page
-        has_more:
-          type: boolean
-          title: Has More
-          description: Whether there are more pages
-      type: object
-      required:
-      - conversations
-      - total
-      - page
-      - page_size
-      - has_more
-      title: AgentConversationListResponse
-      description: 'Response schema for paginated conversation list.
-
-
-        Used for GET /conversations endpoint.'
-      example:
-        conversations:
-        - company_profile_id: 123e4567-e89b-12d3-a456-426614174001
-          created_at: '2025-11-05T20:00:00Z'
-          extra: {}
-          id: 123e4567-e89b-12d3-a456-426614174002
-          is_active: true
-          last_message_at: '2025-11-05T20:30:00Z'
-          message_count: 15
-          organization_id: 123e4567-e89b-12d3-a456-426614174000
-          title: Campaign Strategy
-          updated_at: '2025-11-05T20:30:00Z'
-          user_id: 123e4567-e89b-12d3-a456-426614174003
-        has_more: true
-        page: 1
-        page_size: 20
-        total: 25
-    PublicExecutionStep:
-      properties:
-        step_id:
-          anyOf:
-          - type: string
-            maxLength: 128
-            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          - type: 'null'
-          title: Step Id
-          description: Optional stable machine identity for reconciling one public step across live snapshot revisions. It is not user-visible.
-        category:
-          type: string
-          maxLength: 64
-          minLength: 1
-          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          title: Category
-        code:
-          type: string
-          maxLength: 128
-          minLength: 1
-          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          title: Code
-        state:
-          type: string
-          maxLength: 64
-          minLength: 1
-          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          title: State
-        terminal:
-          type: boolean
-          title: Terminal
-        title:
-          type: string
-          maxLength: 160
-          minLength: 1
-          title: Title
-        detail:
-          anyOf:
-          - type: string
-            maxLength: 500
-            minLength: 1
-          - type: 'null'
-          title: Detail
-        duration_ms:
-          anyOf:
-          - type: integer
-            maximum: 9007199254740991.0
-            minimum: 0.0
-          - type: 'null'
-          title: Duration Ms
-        cost_micros:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Cost Micros
-        input_tokens:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Input Tokens
-        output_tokens:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Output Tokens
-        cached_input_tokens:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Cached Input Tokens
-        result_count:
-          anyOf:
-          - type: integer
-            maximum: 1000000.0
-            minimum: 0.0
-          - type: 'null'
-          title: Result Count
-        total_count:
-          anyOf:
-          - type: integer
-            maximum: 1000000.0
-            minimum: 0.0
-          - type: 'null'
-          title: Total Count
-        result_state:
-          anyOf:
-          - type: string
-            maxLength: 64
-            minLength: 1
-            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          - type: 'null'
-          title: Result State
-      type: object
-      required:
-      - category
-      - code
-      - state
-      - terminal
-      - title
-      title: PublicExecutionStep
-      description: 'One bounded, presentation-ready item in a public execution snapshot.
-
-
-        The optional result fields are public operational facts, never model
-
-        reasoning or raw tool arguments. They let clients explain what a step
-
-        accomplished without parsing display copy.'
-    ConversationAttachmentsResponse:
-      properties:
-        files:
-          items:
-            $ref: '#/components/schemas/ConversationAttachmentResponse'
-          type: array
-          title: Files
-      type: object
-      required:
-      - files
-      title: ConversationAttachmentsResponse
-    PublicDispositionKind:
-      type: string
-      enum:
-      - answered
-      - partial
-      - needs_input
-      - declined
-      - no_answer
-      - cancelled
-      - failed
-      title: PublicDispositionKind
-      description: 'Closed customer meaning for one terminal assistant execution.
-
-
-        Runtime lifecycle and internal stop causes remain separate. Unknown internal
-
-        outcomes must be projected to ``FAILED`` with an
-
-        ``unknown_terminal_outcome`` reason before crossing this public boundary.'
     PublicTerminalDisposition:
       properties:
         schema_version:
@@ -1513,218 +1604,127 @@ components:
       - kind
       title: PublicTerminalDisposition
       description: Versioned, server-authored customer meaning for a terminal result.
-    RuntimeKey:
-      type: string
-      enum:
-      - legacy
-      - markee_v2
-      title: RuntimeKey
-      description: 'Canonical Markee engine versions.
-
-
-        The serialized values predate the v1/v2 product vocabulary and remain
-
-        stable so existing conversation rows and in-flight jobs stay readable.
-
-        Callers must use the versioned enum members rather than repeating those
-
-        persistence literals.'
-    AgentConversationInboxPreview:
+    ReferencedDocument:
       properties:
-        id:
+        document_id:
           type: string
-          format: uuid
-          title: Id
-          description: Conversation ID
+          title: Document Id
+          description: Source document ID (CompanyAnalysisFile)
+        filename:
+          type: string
+          title: Filename
+          description: Original filename
+        file_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: File Type
+          description: MIME type of the file
+        type:
+          type: string
+          title: Type
+          description: 'Content type: ''document'' or ''image'''
+          default: document
+      type: object
+      required:
+      - document_id
+      - filename
+      title: ReferencedDocument
+      description: 'Document referenced in a chat response.
+
+
+        Tracks which company documents were used to generate the response,
+
+        allowing the UI to display file references.'
+      example:
+        document_id: 123e4567-e89b-12d3-a456-426614174010
+        file_type: application/pdf
+        filename: pitch_deck.pdf
+        type: document
+    ToolResultUpdateRequest:
+      properties:
+        agent_job_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Job Id
+        tool_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tool Name
+        workflow_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workflow Token
+        confirmation_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confirmation Token
+        workflow_status:
+          anyOf:
+          - type: string
+            const: discarded
+          - type: 'null'
+          title: Workflow Status
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        document_job_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Document Job Id
         title:
           anyOf:
           - type: string
           - type: 'null'
           title: Title
-          description: Conversation title
-        conversation_source:
-          type: string
-          enum:
-          - web
-          - slack
-          title: Conversation Source
-          description: Conversation source label used for UI filtering
-          default: web
-        has_unread:
-          type: boolean
-          title: Has Unread
-          description: Whether the conversation has unread activity
-          default: false
-        last_message_at:
-          type: string
-          format: date-time
-          title: Last Message At
-          description: Timestamp of latest activity
-      type: object
-      required:
-      - id
-      - last_message_at
-      title: AgentConversationInboxPreview
-    ConversationAttachmentResponse:
-      properties:
-        handle:
-          type: string
-          title: Handle
-        name:
-          type: string
-          title: Name
-        media_type:
-          type: string
-          title: Media Type
-        size_bytes:
-          type: integer
-          title: Size Bytes
-      type: object
-      required:
-      - handle
-      - name
-      - media_type
-      - size_bytes
-      title: ConversationAttachmentResponse
-    PublicExecutionSummary:
-      properties:
-        api_version:
-          type: string
-          maxLength: 64
-          pattern: ^pomo\.agent\.execution/v[1-9][0-9]*$
-          title: Api Version
-          default: pomo.agent.execution/v1
-        execution_id:
-          type: string
-          format: uuid
-          title: Execution Id
-        revision:
-          type: integer
-          minimum: 0.0
-          title: Revision
-          default: 0
-        state:
-          type: string
-          maxLength: 64
-          minLength: 1
-          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          title: State
-        terminal:
-          type: boolean
-          title: Terminal
-        outcome:
+        document_content:
           anyOf:
           - type: string
-            maxLength: 64
-            minLength: 1
-            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
           - type: 'null'
-          title: Outcome
-        disposition:
-          anyOf:
-          - $ref: '#/components/schemas/PublicTerminalDisposition'
-          - type: 'null'
-        progress:
-          anyOf:
-          - type: number
-            maximum: 1.0
-            minimum: 0.0
-          - type: 'null'
-          title: Progress
-        summary:
+          title: Document Content
+        pdp_record_id:
           anyOf:
           - type: string
-            maxLength: 2000
-            minLength: 1
           - type: 'null'
-          title: Summary
-        started_at:
+          title: Pdp Record Id
+        product_offering_id:
           anyOf:
           - type: string
-            format: date-time
           - type: 'null'
-          title: Started At
-        completed_at:
+          title: Product Offering Id
+        product_name:
           anyOf:
           - type: string
-            format: date-time
           - type: 'null'
-          title: Completed At
-        duration_ms:
-          anyOf:
-          - type: integer
-            maximum: 9007199254740991.0
-            minimum: 0.0
-          - type: 'null'
-          title: Duration Ms
-        cost_micros:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Cost Micros
-        total_step_count:
-          type: integer
-          maximum: 1000000.0
-          minimum: 0.0
-          title: Total Step Count
-          default: 0
-        omitted_step_count:
-          type: integer
-          maximum: 1000000.0
-          minimum: 0.0
-          title: Omitted Step Count
-          default: 0
-        steps:
-          items:
-            $ref: '#/components/schemas/PublicExecutionStep'
-          type: array
-          maxItems: 40
-          title: Steps
-          default: []
-      type: object
-      required:
-      - execution_id
-      - state
-      - terminal
-      title: PublicExecutionSummary
-      description: A complete public snapshot of one assistant execution.
-    AgentConversationUpdate:
-      properties:
-        title:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Title
-          description: Updated title
-        extra:
+          title: Product Name
+        pdp_summary:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
-          title: Extra
-          description: Updated extra data (merges with existing)
+          title: Pdp Summary
       type: object
-      title: AgentConversationUpdate
-      description: 'Request schema for updating an existing conversation.
-
-
-        All fields are optional - only provided fields will be updated.'
-      example:
-        extra:
-          reviewed_by: user@example.com
-          workflow_stage: review
-        title: Updated Campaign Strategy
-    HTTPValidationError:
+      title: ToolResultUpdateRequest
+      description: Request schema for patching a tool call result with async job output.
+    Body_upload_attachments_api_agentic_conversations__conversation_id__attachments_post:
       properties:
-        detail:
+        files:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            type: string
+            format: binary
           type: array
-          title: Detail
+          title: Files
       type: object
-      title: HTTPValidationError
+      required:
+      - files
+      title: Body_upload_attachments_api_agentic_conversations__conversation_id__attachments_post
   securitySchemes:
     HTTPBearer:
       type: http

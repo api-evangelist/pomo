@@ -833,6 +833,61 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SocialSchedulePostingIdentity:
+      properties:
+        instagram_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Account Id
+        instagram_auth_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Auth Method
+        instagram_account_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Account Name
+        instagram_username:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Username
+        facebook_page_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Facebook Page Id
+        facebook_page_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Facebook Page Name
+      type: object
+      title: SocialSchedulePostingIdentity
     Body_upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post:
       properties:
         file:
@@ -863,13 +918,182 @@ components:
       - campaign_id
       - idea_number
       title: Body_upload_social_post_image_api_campaigns_social_post_upload_social_post_image_post
-    SocialScheduleUpsertRequest:
+    SocialPostCampaignMediaResponse:
       properties:
-        schedule_id:
+        media_type:
+          type: string
+          title: Media Type
+        media_url:
+          type: string
+          title: Media Url
+        thumbnail_url:
           anyOf:
           - type: string
           - type: 'null'
-          title: Schedule Id
+          title: Thumbnail Url
+        video_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Url
+        original_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Original Prompt
+        enhanced_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Enhanced Prompt
+        width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Height
+        duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration
+        file_size:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: File Size
+        media_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Media Metadata
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+          default: 0
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        social_post_campaign_id:
+          type: string
+          format: uuid
+          title: Social Post Campaign Id
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+      type: object
+      required:
+      - media_type
+      - media_url
+      - id
+      - social_post_campaign_id
+      - creation_date
+      title: SocialPostCampaignMediaResponse
+    SocialPostCampaignCreate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        caption:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caption
+        hashtags:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Hashtags
+        target_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Platform
+        post_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Type
+        media_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Type
+        platform_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Platform Config
+        target_audience:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Target Audience
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        post_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Id
+        post_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Url
+        posted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Posted At
+        scheduled_for:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled For
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        post_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Post Metadata
+        auto_rating:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Auto Rating
         campaign_id:
           type: string
           title: Campaign Id
@@ -880,60 +1104,62 @@ components:
           type: integer
           title: Variation
           default: 0
-        platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform
-        scheduled_local_date:
-          type: string
-          title: Scheduled Local Date
-        scheduled_local_time:
-          type: string
-          title: Scheduled Local Time
-        schedule_timezone:
-          type: string
-          title: Schedule Timezone
-          default: UTC
-        posting_identity:
-          $ref: '#/components/schemas/SocialSchedulePostingIdentity'
-        validate_only:
-          type: boolean
-          title: Validate Only
-          default: false
       type: object
       required:
       - campaign_id
       - idea_number
-      - scheduled_local_date
-      - scheduled_local_time
-      - posting_identity
-      title: SocialScheduleUpsertRequest
-    Body_edit_social_post_content_api_campaigns_social_post_edit_content_post:
+      title: SocialPostCampaignCreate
+    PostModel:
       properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
         campaign_id:
           type: string
           title: Campaign Id
-          description: Campaign ID of the social post to edit
         idea_number:
           type: integer
           title: Idea Number
-          description: Social post idea number
-        content:
+        platform:
           type: string
-          title: Content
-          description: Existing content as JSON string (title, caption and hashtags)
-        edit_prompt:
+          title: Platform
+        variation:
+          type: integer
+          title: Variation
+          default: 0
+        post_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Id
+        post_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Post Url
+        posted_at:
           type: string
-          title: Edit Prompt
-          description: Instructions for editing the social post content
+          format: date-time
+          title: Posted At
+        status:
+          type: string
+          title: Status
+        post_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Post Metadata
       type: object
       required:
+      - id
       - campaign_id
       - idea_number
-      - content
-      - edit_prompt
-      title: Body_edit_social_post_content_api_campaigns_social_post_edit_content_post
+      - platform
+      - posted_at
+      - status
+      title: PostModel
     SocialPostCampaignResponse:
       properties:
         name:
@@ -1071,151 +1297,6 @@ components:
       - creation_date
       - last_modified
       title: SocialPostCampaignResponse
-    SocialPostVariationRequest:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: ID of the campaign to create variations for
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Idea number within the campaign
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      title: SocialPostVariationRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    SocialPostCampaignCreate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        caption:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Caption
-        hashtags:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Hashtags
-        target_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Platform
-        post_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Post Type
-        media_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Media Type
-        platform_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Platform Config
-        target_audience:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Target Audience
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform
-        post_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Post Id
-        post_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Post Url
-        posted_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Posted At
-        scheduled_for:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Scheduled For
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        post_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Post Metadata
-        auto_rating:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Auto Rating
-        campaign_id:
-          type: string
-          title: Campaign Id
-        idea_number:
-          type: integer
-          title: Idea Number
-        variation:
-          type: integer
-          title: Variation
-          default: 0
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      title: SocialPostCampaignCreate
     Body_direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post:
       properties:
         campaign_id:
@@ -1243,6 +1324,112 @@ components:
       - idea_number
       - updated_post
       title: Body_direct_edit_social_post_api_campaigns_social_post_direct_edit_social_post_post
+    CampaignPostsResponse:
+      properties:
+        posts:
+          items:
+            $ref: '#/components/schemas/PostModel'
+          type: array
+          title: Posts
+      type: object
+      required:
+      - posts
+      title: CampaignPostsResponse
+    SocialPostVariationRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: ID of the campaign to create variations for
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Idea number within the campaign
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      title: SocialPostVariationRequest
+    Body_edit_social_post_content_api_campaigns_social_post_edit_content_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID of the social post to edit
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Social post idea number
+        content:
+          type: string
+          title: Content
+          description: Existing content as JSON string (title, caption and hashtags)
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+          description: Instructions for editing the social post content
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - content
+      - edit_prompt
+      title: Body_edit_social_post_content_api_campaigns_social_post_edit_content_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SocialScheduleUpsertRequest:
+      properties:
+        schedule_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Schedule Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        variation:
+          type: integer
+          title: Variation
+          default: 0
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        scheduled_local_date:
+          type: string
+          title: Scheduled Local Date
+        scheduled_local_time:
+          type: string
+          title: Scheduled Local Time
+        schedule_timezone:
+          type: string
+          title: Schedule Timezone
+          default: UTC
+        posting_identity:
+          $ref: '#/components/schemas/SocialSchedulePostingIdentity'
+        validate_only:
+          type: boolean
+          title: Validate Only
+          default: false
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - scheduled_local_date
+      - scheduled_local_time
+      - posting_identity
+      title: SocialScheduleUpsertRequest
     Body_edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post:
       properties:
         campaign_id:
@@ -1264,193 +1451,6 @@ components:
       - image_url
       - edit_prompt
       title: Body_edit_social_post_image_api_campaigns_social_post_edit_social_post_image_post
-    CampaignPostsResponse:
-      properties:
-        posts:
-          items:
-            $ref: '#/components/schemas/PostModel'
-          type: array
-          title: Posts
-      type: object
-      required:
-      - posts
-      title: CampaignPostsResponse
-    PostModel:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        campaign_id:
-          type: string
-          title: Campaign Id
-        idea_number:
-          type: integer
-          title: Idea Number
-        platform:
-          type: string
-          title: Platform
-        variation:
-          type: integer
-          title: Variation
-          default: 0
-        post_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Post Id
-        post_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Post Url
-        posted_at:
-          type: string
-          format: date-time
-          title: Posted At
-        status:
-          type: string
-          title: Status
-        post_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Post Metadata
-      type: object
-      required:
-      - id
-      - campaign_id
-      - idea_number
-      - platform
-      - posted_at
-      - status
-      title: PostModel
-    SocialSchedulePostingIdentity:
-      properties:
-        instagram_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Account Id
-        instagram_auth_method:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Auth Method
-        instagram_account_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Account Name
-        instagram_username:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Username
-        facebook_page_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Facebook Page Id
-        facebook_page_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Facebook Page Name
-      type: object
-      title: SocialSchedulePostingIdentity
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SocialPostCampaignMediaResponse:
-      properties:
-        media_type:
-          type: string
-          title: Media Type
-        media_url:
-          type: string
-          title: Media Url
-        thumbnail_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Thumbnail Url
-        video_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Video Url
-        original_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Original Prompt
-        enhanced_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Enhanced Prompt
-        width:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Width
-        height:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Height
-        duration:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Duration
-        file_size:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: File Size
-        media_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Media Metadata
-        position:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Position
-          default: 0
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        social_post_campaign_id:
-          type: string
-          format: uuid
-          title: Social Post Campaign Id
-        creation_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creation Date
-      type: object
-      required:
-      - media_type
-      - media_url
-      - id
-      - social_post_campaign_id
-      - creation_date
-      title: SocialPostCampaignMediaResponse
   securitySchemes:
     HTTPBearer:
       type: http

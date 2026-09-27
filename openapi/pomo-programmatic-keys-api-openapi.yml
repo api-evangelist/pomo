@@ -115,17 +115,27 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ApiKeyListResponse:
+    ValidationError:
       properties:
-        keys:
+        loc:
           items:
-            $ref: '#/components/schemas/ApiKeyListItem'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Keys
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - keys
-      title: ApiKeyListResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ApiKeyUsageResponse:
       properties:
         events:
@@ -137,6 +147,18 @@ components:
       required:
       - events
       title: ApiKeyUsageResponse
+    ApiKeyRevokeResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        key:
+          $ref: '#/components/schemas/ApiKeyListItem'
+      type: object
+      required:
+      - success
+      - key
+      title: ApiKeyRevokeResponse
     ApiKeyCreateRequest:
       properties:
         name:
@@ -161,39 +183,52 @@ components:
       required:
       - name
       title: ApiKeyCreateRequest
-    ApiKeyRevokeResponse:
+    ApiKeyListResponse:
       properties:
-        success:
-          type: boolean
-          title: Success
-        key:
-          $ref: '#/components/schemas/ApiKeyListItem'
-      type: object
-      required:
-      - success
-      - key
-      title: ApiKeyRevokeResponse
-    ValidationError:
-      properties:
-        loc:
+        keys:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ApiKeyListItem'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Keys
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - keys
+      title: ApiKeyListResponse
+    ApiKeyUsageEvent:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        action:
+          type: string
+          title: Action
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        ip:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ip
+        user_agent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Agent
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - id
+      - action
+      - timestamp
+      title: ApiKeyUsageEvent
     ApiKeyListItem:
       properties:
         id:
@@ -239,6 +274,15 @@ components:
       - status
       - created_at
       title: ApiKeyListItem
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ApiKeyCreateResponse:
       properties:
         api_key:
@@ -251,50 +295,6 @@ components:
       - api_key
       - key
       title: ApiKeyCreateResponse
-    ApiKeyUsageEvent:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        action:
-          type: string
-          title: Action
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-        ip:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ip
-        user_agent:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Agent
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - id
-      - action
-      - timestamp
-      title: ApiKeyUsageEvent
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

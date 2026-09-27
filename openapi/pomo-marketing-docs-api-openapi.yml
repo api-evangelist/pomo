@@ -163,110 +163,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post:
-      properties:
-        request_json:
-          type: string
-          title: Request Json
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-          default: []
-      type: object
-      required:
-      - request_json
-      title: Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    GenerateGTMRequest:
-      properties:
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        product_offering_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Product Offering Ids
-        audience:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Audience
-        goal:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Goal
-        tone:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tone
-          default: professional
-        expected_length:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expected Length
-          default: standard
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        attachments:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Attachments
-      type: object
-      required:
-      - company_profile_id
-      title: GenerateGTMRequest
     GenerateDeckRequest:
       properties:
         company_profile_id:
@@ -337,27 +233,27 @@ components:
       - slides_total
       - sections
       title: GenerateDeckRequest
-    DeckSection:
+    ValidationError:
       properties:
-        name:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Name
-        target_slides:
-          type: integer
-          minimum: 1.0
-          title: Target Slides
-          description: Target slides in this section
-        must_include:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Must Include
-          default: false
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - name
-      - target_slides
-      title: DeckSection
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DeckStyle:
       properties:
         palette:
@@ -396,6 +292,22 @@ components:
           title: Icon Style
       type: object
       title: DeckStyle
+    Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post:
+      properties:
+        request_json:
+          type: string
+          title: Request Json
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+          default: []
+      type: object
+      required:
+      - request_json
+      title: Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post
     DeckStatusResponse:
       properties:
         success:
@@ -446,6 +358,27 @@ components:
       - ready
       - doc_id
       title: DeckStatusResponse
+    DeckSection:
+      properties:
+        name:
+          type: string
+          title: Name
+        target_slides:
+          type: integer
+          minimum: 1.0
+          title: Target Slides
+          description: Target slides in this section
+        must_include:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Must Include
+          default: false
+      type: object
+      required:
+      - name
+      - target_slides
+      title: DeckSection
     DeckExport:
       properties:
         pptx:
@@ -491,6 +424,73 @@ components:
       required:
       - format
       title: DeckFileDescriptor
+    GenerateGTMRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        product_offering_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Product Offering Ids
+        audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Audience
+        goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal
+        tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tone
+          default: professional
+        expected_length:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Length
+          default: standard
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        attachments:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Attachments
+      type: object
+      required:
+      - company_profile_id
+      title: GenerateGTMRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     JobResponse:
       properties:
         job_id:

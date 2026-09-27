@@ -213,28 +213,27 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    FirstPartyExperimentVariantState:
+    ValidationError:
       properties:
-        id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          maxLength: 64
-          minLength: 1
-          title: Id
-        locked:
-          type: boolean
-          title: Locked
-          default: false
-        alternate_index:
-          type: integer
-          maximum: 100.0
-          minimum: 0.0
-          title: Alternate Index
-          default: 0
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - id
-      title: FirstPartyExperimentVariantState
-      description: Client-held state for one preview variant.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ExperimentReadoutRequest:
       properties:
         post_upload_id:
@@ -247,6 +246,55 @@ components:
       - post_upload_id
       title: ExperimentReadoutRequest
       description: Pair a post-test sales upload to a package for the lift readout.
+    FirstPartyExperimentVariantAsset:
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Id
+        image_url:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          title: Image Url
+        media_type:
+          type: string
+          maxLength: 24
+          title: Media Type
+          default: image
+        asset_source:
+          type: string
+          maxLength: 24
+          title: Asset Source
+          default: generated
+        width:
+          anyOf:
+          - type: integer
+            maximum: 20000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+            maximum: 20000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Height
+      type: object
+      required:
+      - id
+      - image_url
+      title: FirstPartyExperimentVariantAsset
+      description: 'Client-chosen creative image for one preview variant.
+
+
+        Sent as a DELTA keyed by the stable variant id: the server rebuilds the plan
+
+        from the stored upload on every recompute/persist, so the chosen (generated,
+
+        uploaded, or edited) image must be merged back onto the matching variant.'
     ExperimentPackageCreateRequest:
       properties:
         opportunity_id:
@@ -315,76 +363,6 @@ components:
       - upload_id
       title: ExperimentPackageCreateRequest
       description: Persist a test package from a tuned preview.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    FirstPartyExperimentVariantAsset:
-      properties:
-        id:
-          type: string
-          maxLength: 64
-          minLength: 1
-          title: Id
-        image_url:
-          type: string
-          maxLength: 2048
-          minLength: 1
-          title: Image Url
-        media_type:
-          type: string
-          maxLength: 24
-          title: Media Type
-          default: image
-        asset_source:
-          type: string
-          maxLength: 24
-          title: Asset Source
-          default: generated
-        width:
-          anyOf:
-          - type: integer
-            maximum: 20000.0
-            minimum: 1.0
-          - type: 'null'
-          title: Width
-        height:
-          anyOf:
-          - type: integer
-            maximum: 20000.0
-            minimum: 1.0
-          - type: 'null'
-          title: Height
-      type: object
-      required:
-      - id
-      - image_url
-      title: FirstPartyExperimentVariantAsset
-      description: 'Client-chosen creative image for one preview variant.
-
-
-        Sent as a DELTA keyed by the stable variant id: the server rebuilds the plan
-
-        from the stored upload on every recompute/persist, so the chosen (generated,
-
-        uploaded, or edited) image must be merged back onto the matching variant.'
     HTTPValidationError:
       properties:
         detail:
@@ -394,6 +372,28 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    FirstPartyExperimentVariantState:
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Id
+        locked:
+          type: boolean
+          title: Locked
+          default: false
+        alternate_index:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Alternate Index
+          default: 0
+      type: object
+      required:
+      - id
+      title: FirstPartyExperimentVariantState
+      description: Client-held state for one preview variant.
   securitySchemes:
     HTTPBearer:
       type: http

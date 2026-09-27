@@ -242,54 +242,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AgentTaskRunListResponse:
-      properties:
-        runs:
-          items:
-            $ref: '#/components/schemas/AgentTaskRunResponse'
-          type: array
-          title: Runs
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - runs
-      - total
-      title: AgentTaskRunListResponse
-    AgentTaskScheduleInput:
-      properties:
-        interval_minutes:
-          type: integer
-          maximum: 10080.0
-          minimum: 5.0
-          title: Interval Minutes
-          description: Run interval in minutes
-          default: 1440
-      type: object
-      title: AgentTaskScheduleInput
-      description: Simple interval schedule (minutes).
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     AgentTaskCapabilityResult:
       properties:
         supported:
@@ -314,17 +266,6 @@ components:
       required:
       - supported
       title: AgentTaskCapabilityResult
-    AgentTaskRunNowResponse:
-      properties:
-        task:
-          $ref: '#/components/schemas/AgentTaskResponse'
-        run:
-          $ref: '#/components/schemas/AgentTaskRunResponse'
-      type: object
-      required:
-      - task
-      - run
-      title: AgentTaskRunNowResponse
     AgentTaskRunResponse:
       properties:
         id:
@@ -561,30 +502,27 @@ components:
       - created_at
       - updated_at
       title: AgentTaskResponse
-    AgentTaskListResponse:
+    ValidationError:
       properties:
-        tasks:
+        loc:
           items:
-            $ref: '#/components/schemas/AgentTaskResponse'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Tasks
-        total:
-          type: integer
-          title: Total
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - tasks
-      - total
-      title: AgentTaskListResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - loc
+      - msg
+      - type
+      title: ValidationError
     AgentTaskCreate:
       properties:
         organization_id:
@@ -727,6 +665,68 @@ components:
           title: Quiet Hours
       type: object
       title: AgentTaskUpdate
+    AgentTaskListResponse:
+      properties:
+        tasks:
+          items:
+            $ref: '#/components/schemas/AgentTaskResponse'
+          type: array
+          title: Tasks
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - tasks
+      - total
+      title: AgentTaskListResponse
+    AgentTaskRunNowResponse:
+      properties:
+        task:
+          $ref: '#/components/schemas/AgentTaskResponse'
+        run:
+          $ref: '#/components/schemas/AgentTaskRunResponse'
+      type: object
+      required:
+      - task
+      - run
+      title: AgentTaskRunNowResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AgentTaskScheduleInput:
+      properties:
+        interval_minutes:
+          type: integer
+          maximum: 10080.0
+          minimum: 5.0
+          title: Interval Minutes
+          description: Run interval in minutes
+          default: 1440
+      type: object
+      title: AgentTaskScheduleInput
+      description: Simple interval schedule (minutes).
+    AgentTaskRunListResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/AgentTaskRunResponse'
+          type: array
+          title: Runs
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - runs
+      - total
+      title: AgentTaskRunListResponse
   securitySchemes:
     HTTPBearer:
       type: http

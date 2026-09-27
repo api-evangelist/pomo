@@ -89,6 +89,25 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    Body_replace_image_upload_api_images_replace_upload_post:
+      properties:
+        url:
+          type: string
+          title: Url
+        file:
+          type: string
+          format: binary
+          title: File
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+      type: object
+      required:
+      - url
+      - file
+      title: Body_replace_image_upload_api_images_replace_upload_post
     ReplaceImageRequest:
       properties:
         url:
@@ -129,25 +148,6 @@ components:
       - msg
       - type
       title: ValidationError
-    Body_replace_image_upload_api_images_replace_upload_post:
-      properties:
-        url:
-          type: string
-          title: Url
-        file:
-          type: string
-          format: binary
-          title: File
-        content_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Content Type
-      type: object
-      required:
-      - url
-      - file
-      title: Body_replace_image_upload_api_images_replace_upload_post
     HTTPValidationError:
       properties:
         detail:

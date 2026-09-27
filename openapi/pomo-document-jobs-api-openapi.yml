@@ -168,6 +168,60 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HtmlPreviewResponse:
+      properties:
+        html:
+          type: string
+          title: Html
+      type: object
+      required:
+      - html
+      title: HtmlPreviewResponse
+    DocumentJobsResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DocumentJobListItem'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: DocumentJobsResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     DocumentJobDetailResponse:
       properties:
         id:
@@ -229,21 +283,6 @@ components:
       - created_at
       - ready_at
       title: DocumentJobDetailResponse
-    DocumentJobsResponse:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/DocumentJobListItem'
-          type: array
-          title: Items
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - items
-      - total
-      title: DocumentJobsResponse
     SignedUrlResponse:
       properties:
         signed_url:
@@ -257,36 +296,6 @@ components:
       - signed_url
       - expires_in_seconds
       title: SignedUrlResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HtmlPreviewResponse:
-      properties:
-        html:
-          type: string
-          title: Html
-      type: object
-      required:
-      - html
-      title: HtmlPreviewResponse
     DocumentJobListItem:
       properties:
         id:
@@ -346,15 +355,6 @@ components:
       - doc_type
       - available_formats
       title: DocumentJobListItem
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

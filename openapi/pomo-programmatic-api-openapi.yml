@@ -103,6 +103,64 @@ components:
       - platforms
       - status
       title: ProgrammaticCampaignGenerationResult
+    ProgrammaticCampaignGenerationRequest:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ProgrammaticCampaignGenerationItem'
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Items
+      type: object
+      required:
+      - items
+      title: ProgrammaticCampaignGenerationRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProgrammaticCampaignGenerationResponse:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        request_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Id
+        results:
+          items:
+            $ref: '#/components/schemas/ProgrammaticCampaignGenerationResult'
+          type: array
+          title: Results
+      type: object
+      required:
+      - organization_id
+      - company_profile_id
+      - results
+      title: ProgrammaticCampaignGenerationResponse
     ProgrammaticCampaignIdeasResponse:
       properties:
         campaign_goal:
@@ -163,27 +221,6 @@ components:
       - organization_id
       - company_profile_id
       title: ProgrammaticCampaignIdeasResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     ProgrammaticCampaignGenerationItem:
       properties:
         idea_id:
@@ -209,30 +246,6 @@ components:
       required:
       - idea_id
       title: ProgrammaticCampaignGenerationItem
-    ProgrammaticCampaignGenerationResponse:
-      properties:
-        organization_id:
-          type: string
-          title: Organization Id
-        company_profile_id:
-          type: string
-          title: Company Profile Id
-        request_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Request Id
-        results:
-          items:
-            $ref: '#/components/schemas/ProgrammaticCampaignGenerationResult'
-          type: array
-          title: Results
-      type: object
-      required:
-      - organization_id
-      - company_profile_id
-      - results
-      title: ProgrammaticCampaignGenerationResponse
     ProgrammaticCampaignIdeasRequest:
       properties:
         campaign_goal:
@@ -272,19 +285,6 @@ components:
       - num_ideas
       - platform
       title: ProgrammaticCampaignIdeasRequest
-    ProgrammaticCampaignGenerationRequest:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/ProgrammaticCampaignGenerationItem'
-          type: array
-          maxItems: 10
-          minItems: 1
-          title: Items
-      type: object
-      required:
-      - items
-      title: ProgrammaticCampaignGenerationRequest
     HTTPValidationError:
       properties:
         detail:

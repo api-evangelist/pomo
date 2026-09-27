@@ -306,15 +306,6 @@ components:
       - resource_type
       title: ResourceListRequest
       description: Request to list resources
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -409,6 +400,15 @@ components:
       - resource_id
       title: ResourceReadRequest
       description: Request to read a specific resource
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     MCPResponse:
       properties:
         success:

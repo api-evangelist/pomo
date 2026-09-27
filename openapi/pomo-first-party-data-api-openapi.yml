@@ -394,37 +394,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    FirstPartyExperimentVariantState:
-      properties:
-        id:
-          type: string
-          maxLength: 64
-          minLength: 1
-          title: Id
-        locked:
-          type: boolean
-          title: Locked
-          default: false
-        alternate_index:
-          type: integer
-          maximum: 100.0
-          minimum: 0.0
-          title: Alternate Index
-          default: 0
-      type: object
-      required:
-      - id
-      title: FirstPartyExperimentVariantState
-      description: Client-held state for one preview variant.
     FirstPartySkuShipmentPoint:
       properties:
         period_start:
@@ -464,94 +433,85 @@ components:
       - period_grain
       - period_label
       title: FirstPartySkuShipmentPoint
-    FirstPartySkuTrendPoint:
+    FirstPartySkuListResponse:
       properties:
-        period_start:
+        upload_id:
           type: string
-          format: date
-          title: Period Start
-        period_end:
+          title: Upload Id
+        dataset_category:
+          type: string
+          title: Dataset Category
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+        total:
+          type: integer
+          title: Total
+        items:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuListItem'
+          type: array
+          title: Items
+        legacy_data_unavailable:
+          type: boolean
+          title: Legacy Data Unavailable
+          default: false
+        legacy_reason:
           anyOf:
           - type: string
-            format: date
           - type: 'null'
-          title: Period End
-        period_grain:
-          type: string
-          title: Period Grain
-        period_label:
-          type: string
-          title: Period Label
-        revenue:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Revenue
-        sold_units:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Sold Units
-        transactions:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Transactions
+          title: Legacy Reason
       type: object
       required:
-      - period_start
-      - period_grain
-      - period_label
-      title: FirstPartySkuTrendPoint
-    FirstPartyExperimentVariantAsset:
+      - upload_id
+      - dataset_category
+      - page
+      - page_size
+      - total
+      title: FirstPartySkuListResponse
+      description: Paginated SKU 360 directory for one workspace context.
+    Body_create_first_party_data_upload_api_first_party_data_uploads_post:
       properties:
-        id:
+        file:
           type: string
-          maxLength: 64
-          minLength: 1
-          title: Id
-        image_url:
-          type: string
-          maxLength: 2048
-          minLength: 1
-          title: Image Url
-        media_type:
-          type: string
-          maxLength: 24
-          title: Media Type
-          default: image
-        asset_source:
-          type: string
-          maxLength: 24
-          title: Asset Source
-          default: generated
-        width:
+          format: binary
+          title: File
+        mapping_overrides:
           anyOf:
-          - type: integer
-            maximum: 20000.0
-            minimum: 1.0
+          - type: string
           - type: 'null'
-          title: Width
-        height:
+          title: Mapping Overrides
+        product_mapping:
           anyOf:
-          - type: integer
-            maximum: 20000.0
-            minimum: 1.0
+          - type: string
           - type: 'null'
-          title: Height
+          title: Product Mapping
+        analysis_layer_preferences:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analysis Layer Preferences
+        workspace_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspace Name
+        import_upload_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Import Upload Id
+        allow_duplicate:
+          type: boolean
+          title: Allow Duplicate
+          default: false
       type: object
       required:
-      - id
-      - image_url
-      title: FirstPartyExperimentVariantAsset
-      description: 'Client-chosen creative image for one preview variant.
-
-
-        Sent as a DELTA keyed by the stable variant id: the server rebuilds the plan
-
-        from the stored upload on every recompute/persist, so the chosen (generated,
-
-        uploaded, or edited) image must be merged back onto the matching variant.'
+      - file
+      title: Body_create_first_party_data_upload_api_first_party_data_uploads_post
     FirstPartySkuBreakdownItem:
       properties:
         label:
@@ -720,46 +680,74 @@ components:
       - product_name
       title: FirstPartySkuDetailResponse
       description: Evidence-labelled SKU 360 view assembled from eligible profile uploads.
-    FirstPartySkuListResponse:
+    HTTPValidationError:
       properties:
-        upload_id:
-          type: string
-          title: Upload Id
-        dataset_category:
-          type: string
-          title: Dataset Category
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-        total:
-          type: integer
-          title: Total
-        items:
+        detail:
           items:
-            $ref: '#/components/schemas/FirstPartySkuListItem'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Items
-        legacy_data_unavailable:
-          type: boolean
-          title: Legacy Data Unavailable
-          default: false
-        legacy_reason:
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FirstPartyCoveragePolicyRequest:
+      properties:
+        minimum_weeks:
+          type: number
+          maximum: 52.0
+          minimum: 0.5
+          title: Minimum Weeks
+          default: 5.0
+        reorder_trigger_weeks:
+          type: number
+          maximum: 52.0
+          minimum: 0.5
+          title: Reorder Trigger Weeks
+          default: 6.0
+        target_weeks:
+          type: number
+          maximum: 104.0
+          minimum: 0.5
+          title: Target Weeks
+          default: 8.0
+        run_rate_window_weeks:
+          type: integer
+          maximum: 13.0
+          minimum: 1.0
+          title: Run Rate Window Weeks
+          default: 4
+        consumption_upload_id:
           anyOf:
           - type: string
+            maxLength: 64
           - type: 'null'
-          title: Legacy Reason
+          title: Consumption Upload Id
+        inventory_upload_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Inventory Upload Id
+        shipment_upload_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Shipment Upload Id
+        retailer_account:
+          anyOf:
+          - type: string
+            maxLength: 240
+          - type: 'null'
+          title: Retailer Account
+        shipment_customer:
+          anyOf:
+          - type: string
+            maxLength: 240
+          - type: 'null'
+          title: Shipment Customer
       type: object
-      required:
-      - upload_id
-      - dataset_category
-      - page
-      - page_size
-      - total
-      title: FirstPartySkuListResponse
-      description: Paginated SKU 360 directory for one workspace context.
+      title: FirstPartyCoveragePolicyRequest
+      description: Retail coverage thresholds applied to a POS + inventory workspace.
     FirstPartySkuInventoryDetail:
       properties:
         on_hand_units:
@@ -827,6 +815,104 @@ components:
       required:
       - coverage_policy_source
       title: FirstPartySkuInventoryDetail
+    FirstPartySkuTrendPoint:
+      properties:
+        period_start:
+          type: string
+          format: date
+          title: Period Start
+        period_end:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Period End
+        period_grain:
+          type: string
+          title: Period Grain
+        period_label:
+          type: string
+          title: Period Label
+        revenue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Revenue
+        sold_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sold Units
+        transactions:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Transactions
+      type: object
+      required:
+      - period_start
+      - period_grain
+      - period_label
+      title: FirstPartySkuTrendPoint
+    FirstPartyExperimentVariantAsset:
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Id
+        image_url:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          title: Image Url
+        media_type:
+          type: string
+          maxLength: 24
+          title: Media Type
+          default: image
+        asset_source:
+          type: string
+          maxLength: 24
+          title: Asset Source
+          default: generated
+        width:
+          anyOf:
+          - type: integer
+            maximum: 20000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+            maximum: 20000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Height
+      type: object
+      required:
+      - id
+      - image_url
+      title: FirstPartyExperimentVariantAsset
+      description: 'Client-chosen creative image for one preview variant.
+
+
+        Sent as a DELTA keyed by the stable variant id: the server rebuilds the plan
+
+        from the stored upload on every recompute/persist, so the chosen (generated,
+
+        uploaded, or edited) image must be merged back onto the matching variant.'
+    Body_profile_first_party_data_file_api_first_party_data_profile_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_profile_first_party_data_file_api_first_party_data_profile_post
     FirstPartySkuShipmentDetail:
       properties:
         shipped_units:
@@ -861,147 +947,28 @@ components:
       required:
       - grain
       title: FirstPartySkuShipmentDetail
-    FirstPartySkuPosDetail:
+    FirstPartyExperimentVariantState:
       properties:
-        total_revenue:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Total Revenue
-        sold_units:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Sold Units
-        transactions:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Transactions
-        average_units_per_week:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Average Units Per Week
-        units_per_store_week:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Units Per Store Week
-        revenue_share_pct:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Revenue Share Pct
-        units_share_pct:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Units Share Pct
-        weekly_trend:
-          items:
-            $ref: '#/components/schemas/FirstPartySkuTrendPoint'
-          type: array
-          title: Weekly Trend
-        top_markets:
-          items:
-            $ref: '#/components/schemas/FirstPartySkuBreakdownItem'
-          type: array
-          title: Top Markets
-        top_stores:
-          items:
-            $ref: '#/components/schemas/FirstPartySkuBreakdownItem'
-          type: array
-          title: Top Stores
-      type: object
-      title: FirstPartySkuPosDetail
-    FirstPartyBuyerTargetRequest:
-      properties:
-        unit_per_store_per_week:
-          anyOf:
-          - type: number
-            maximum: 100000.0
-            exclusiveMinimum: 0.0
-          - type: 'null'
-          title: Unit Per Store Per Week
-        source:
-          anyOf:
-          - type: string
-            maxLength: 240
-            minLength: 2
-          - type: 'null'
-          title: Source
-        as_of:
-          anyOf:
-          - type: string
-            maxLength: 32
-          - type: 'null'
-          title: As Of
-      type: object
-      title: FirstPartyBuyerTargetRequest
-      description: 'The velocity a retail buyer actually expects, as stated by the marketer.
-
-
-        This is the one number on the sales surface that no file contains and no
-
-        model can infer. A buyer''s hurdle rate is a commercial term one retailer
-
-        imposed on one brand in one review cycle, so it arrives by being typed, and
-
-        every figure downstream of it is only as good as its provenance.
-
-
-        `source` is therefore REQUIRED and not defaulted. A target with no stated
-
-        origin is indistinguishable, three months later, from a number somebody
-
-        guessed, and it drives the gap and the size of the prize on a screen a
-
-        marketer quotes to that same buyer.
-
-
-        Send `unit_per_store_per_week: null` to clear the target and fall back to
-
-        the modelled percentile.'
-    Body_create_first_party_data_upload_api_first_party_data_uploads_post:
-      properties:
-        file:
+        id:
           type: string
-          format: binary
-          title: File
-        mapping_overrides:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Mapping Overrides
-        product_mapping:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Mapping
-        analysis_layer_preferences:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Analysis Layer Preferences
-        workspace_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Workspace Name
-        import_upload_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Import Upload Id
-        allow_duplicate:
+          maxLength: 64
+          minLength: 1
+          title: Id
+        locked:
           type: boolean
-          title: Allow Duplicate
+          title: Locked
           default: false
+        alternate_index:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Alternate Index
+          default: 0
       type: object
       required:
-      - file
-      title: Body_create_first_party_data_upload_api_first_party_data_uploads_post
+      - id
+      title: FirstPartyExperimentVariantState
+      description: Client-held state for one preview variant.
     ValidationError:
       properties:
         loc:
@@ -1023,176 +990,6 @@ components:
       - msg
       - type
       title: ValidationError
-    Body_create_first_party_data_upload_async_job_api_first_party_data_uploads_async_post:
-      properties:
-        file:
-          type: string
-          format: binary
-          title: File
-        mapping_overrides:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Mapping Overrides
-        product_mapping:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Mapping
-        analysis_layer_preferences:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Analysis Layer Preferences
-        workspace_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Workspace Name
-        import_upload_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Import Upload Id
-        allow_duplicate:
-          type: boolean
-          title: Allow Duplicate
-          default: false
-      type: object
-      required:
-      - file
-      title: Body_create_first_party_data_upload_async_job_api_first_party_data_uploads_async_post
-    FirstPartyCoveragePolicyRequest:
-      properties:
-        minimum_weeks:
-          type: number
-          maximum: 52.0
-          minimum: 0.5
-          title: Minimum Weeks
-          default: 5.0
-        reorder_trigger_weeks:
-          type: number
-          maximum: 52.0
-          minimum: 0.5
-          title: Reorder Trigger Weeks
-          default: 6.0
-        target_weeks:
-          type: number
-          maximum: 104.0
-          minimum: 0.5
-          title: Target Weeks
-          default: 8.0
-        run_rate_window_weeks:
-          type: integer
-          maximum: 13.0
-          minimum: 1.0
-          title: Run Rate Window Weeks
-          default: 4
-        consumption_upload_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Consumption Upload Id
-        inventory_upload_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Inventory Upload Id
-        shipment_upload_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Shipment Upload Id
-        retailer_account:
-          anyOf:
-          - type: string
-            maxLength: 240
-          - type: 'null'
-          title: Retailer Account
-        shipment_customer:
-          anyOf:
-          - type: string
-            maxLength: 240
-          - type: 'null'
-          title: Shipment Customer
-      type: object
-      title: FirstPartyCoveragePolicyRequest
-      description: Retail coverage thresholds applied to a POS + inventory workspace.
-    FirstPartyExperimentPackageRequest:
-      properties:
-        opportunity_id:
-          type: string
-          maxLength: 64
-          minLength: 1
-          title: Opportunity Id
-        budget_cap:
-          anyOf:
-          - type: number
-            maximum: 1000000.0
-            minimum: 50.0
-          - type: 'null'
-          title: Budget Cap
-        duration_days:
-          anyOf:
-          - type: integer
-            maximum: 30.0
-            minimum: 7.0
-          - type: 'null'
-          title: Duration Days
-        variant_count:
-          anyOf:
-          - type: integer
-            maximum: 3.0
-            minimum: 1.0
-          - type: 'null'
-          title: Variant Count
-        gross_margin:
-          anyOf:
-          - type: number
-            maximum: 0.95
-            minimum: 0.1
-          - type: 'null'
-          title: Gross Margin
-        variant_states:
-          items:
-            $ref: '#/components/schemas/FirstPartyExperimentVariantState'
-          type: array
-          maxItems: 10
-          title: Variant States
-        removed_variant_ids:
-          items:
-            type: string
-          type: array
-          maxItems: 10
-          title: Removed Variant Ids
-        variant_assets:
-          items:
-            $ref: '#/components/schemas/FirstPartyExperimentVariantAsset'
-          type: array
-          maxItems: 10
-          title: Variant Assets
-        regenerate:
-          type: boolean
-          title: Regenerate
-          default: false
-      type: object
-      required:
-      - opportunity_id
-      title: FirstPartyExperimentPackageRequest
-      description: Full desired state for a stateless experiment-package recompute.
-    Body_profile_first_party_data_file_api_first_party_data_profile_post:
-      properties:
-        file:
-          type: string
-          format: binary
-          title: File
-      type: object
-      required:
-      - file
-      title: Body_profile_first_party_data_file_api_first_party_data_profile_post
     FirstPartySkuListItem:
       properties:
         sku_key:
@@ -1278,6 +1075,209 @@ components:
       - product_name
       title: FirstPartySkuListItem
       description: Compact SKU 360 row returned by the paginated workspace endpoint.
+    FirstPartySkuPosDetail:
+      properties:
+        total_revenue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Total Revenue
+        sold_units:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sold Units
+        transactions:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Transactions
+        average_units_per_week:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Average Units Per Week
+        units_per_store_week:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Units Per Store Week
+        revenue_share_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Revenue Share Pct
+        units_share_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Units Share Pct
+        weekly_trend:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuTrendPoint'
+          type: array
+          title: Weekly Trend
+        top_markets:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuBreakdownItem'
+          type: array
+          title: Top Markets
+        top_stores:
+          items:
+            $ref: '#/components/schemas/FirstPartySkuBreakdownItem'
+          type: array
+          title: Top Stores
+      type: object
+      title: FirstPartySkuPosDetail
+    FirstPartyExperimentPackageRequest:
+      properties:
+        opportunity_id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Opportunity Id
+        budget_cap:
+          anyOf:
+          - type: number
+            maximum: 1000000.0
+            minimum: 50.0
+          - type: 'null'
+          title: Budget Cap
+        duration_days:
+          anyOf:
+          - type: integer
+            maximum: 30.0
+            minimum: 7.0
+          - type: 'null'
+          title: Duration Days
+        variant_count:
+          anyOf:
+          - type: integer
+            maximum: 3.0
+            minimum: 1.0
+          - type: 'null'
+          title: Variant Count
+        gross_margin:
+          anyOf:
+          - type: number
+            maximum: 0.95
+            minimum: 0.1
+          - type: 'null'
+          title: Gross Margin
+        variant_states:
+          items:
+            $ref: '#/components/schemas/FirstPartyExperimentVariantState'
+          type: array
+          maxItems: 10
+          title: Variant States
+        removed_variant_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 10
+          title: Removed Variant Ids
+        variant_assets:
+          items:
+            $ref: '#/components/schemas/FirstPartyExperimentVariantAsset'
+          type: array
+          maxItems: 10
+          title: Variant Assets
+        regenerate:
+          type: boolean
+          title: Regenerate
+          default: false
+      type: object
+      required:
+      - opportunity_id
+      title: FirstPartyExperimentPackageRequest
+      description: Full desired state for a stateless experiment-package recompute.
+    Body_create_first_party_data_upload_async_job_api_first_party_data_uploads_async_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+        mapping_overrides:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mapping Overrides
+        product_mapping:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Mapping
+        analysis_layer_preferences:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analysis Layer Preferences
+        workspace_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspace Name
+        import_upload_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Import Upload Id
+        allow_duplicate:
+          type: boolean
+          title: Allow Duplicate
+          default: false
+      type: object
+      required:
+      - file
+      title: Body_create_first_party_data_upload_async_job_api_first_party_data_uploads_async_post
+    FirstPartyBuyerTargetRequest:
+      properties:
+        unit_per_store_per_week:
+          anyOf:
+          - type: number
+            maximum: 100000.0
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Unit Per Store Per Week
+        source:
+          anyOf:
+          - type: string
+            maxLength: 240
+            minLength: 2
+          - type: 'null'
+          title: Source
+        as_of:
+          anyOf:
+          - type: string
+            maxLength: 32
+          - type: 'null'
+          title: As Of
+      type: object
+      title: FirstPartyBuyerTargetRequest
+      description: 'The velocity a retail buyer actually expects, as stated by the marketer.
+
+
+        This is the one number on the sales surface that no file contains and no
+
+        model can infer. A buyer''s hurdle rate is a commercial term one retailer
+
+        imposed on one brand in one review cycle, so it arrives by being typed, and
+
+        every figure downstream of it is only as good as its provenance.
+
+
+        `source` is therefore REQUIRED and not defaulted. A target with no stated
+
+        origin is indistinguishable, three months later, from a number somebody
+
+        guessed, and it drives the gap and the size of the prize on a screen a
+
+        marketer quotes to that same buyer.
+
+
+        Send `unit_per_store_per_week: null` to clear the target and fall back to
+
+        the modelled percentile.'
   securitySchemes:
     HTTPBearer:
       type: http

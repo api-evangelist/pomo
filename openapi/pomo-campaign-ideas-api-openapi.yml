@@ -133,15 +133,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     JobResponse:
       properties:
         job_id:
@@ -173,6 +164,15 @@ components:
         poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
         status: running
         stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

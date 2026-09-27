@@ -63,150 +63,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    AICampaignRelevantProduct:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - id
-      - name
-      title: AICampaignRelevantProduct
-    AICampaignTrendContext:
-      properties:
-        trend_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Trend Title
-        platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform
-        analysis_summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Analysis Summary
-        priority_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Priority Label
-        trend_keywords:
-          items:
-            type: string
-          type: array
-          title: Trend Keywords
-        supporting_keywords:
-          items:
-            type: string
-          type: array
-          title: Supporting Keywords
-        signal_points:
-          items:
-            type: string
-          type: array
-          title: Signal Points
-        recommendation_points:
-          items:
-            type: string
-          type: array
-          title: Recommendation Points
-        relevant_product_names:
-          items:
-            type: string
-          type: array
-          title: Relevant Product Names
-        source_examples:
-          items:
-            $ref: '#/components/schemas/AICampaignTrendSourceExample'
-          type: array
-          title: Source Examples
-      type: object
-      title: AICampaignTrendContext
-    AICampaignReference:
-      properties:
-        title:
-          type: string
-          title: Title
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-        timestamp:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Timestamp
-      type: object
-      required:
-      - title
-      title: AICampaignReference
-    AICampaignOfferingSuggestionResponse:
-      properties:
-        selected_offering_id:
-          type: string
-          title: Selected Offering Id
-        selected_offering_reason:
-          type: string
-          title: Selected Offering Reason
-      type: object
-      required:
-      - selected_offering_id
-      - selected_offering_reason
-      title: AICampaignOfferingSuggestionResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AICampaignTrendSourceExample:
-      properties:
-        title:
-          type: string
-          title: Title
-        subtitle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subtitle
-        metric:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Metric
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-      type: object
-      required:
-      - title
-      title: AICampaignTrendSourceExample
     AICampaignSourcePayload:
       properties:
         title:
@@ -276,6 +132,151 @@ components:
       required:
       - title
       title: AICampaignSourcePayload
+    AICampaignRelevantProduct:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - name
+      title: AICampaignRelevantProduct
+    AICampaignTrendContext:
+      properties:
+        trend_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trend Title
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        analysis_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analysis Summary
+        priority_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority Label
+        trend_keywords:
+          items:
+            type: string
+          type: array
+          title: Trend Keywords
+        supporting_keywords:
+          items:
+            type: string
+          type: array
+          title: Supporting Keywords
+        signal_points:
+          items:
+            type: string
+          type: array
+          title: Signal Points
+        recommendation_points:
+          items:
+            type: string
+          type: array
+          title: Recommendation Points
+        relevant_product_names:
+          items:
+            type: string
+          type: array
+          title: Relevant Product Names
+        source_examples:
+          items:
+            $ref: '#/components/schemas/AICampaignTrendSourceExample'
+          type: array
+          title: Source Examples
+      type: object
+      title: AICampaignTrendContext
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AICampaignOfferingSuggestionResponse:
+      properties:
+        selected_offering_id:
+          type: string
+          title: Selected Offering Id
+        selected_offering_reason:
+          type: string
+          title: Selected Offering Reason
+      type: object
+      required:
+      - selected_offering_id
+      - selected_offering_reason
+      title: AICampaignOfferingSuggestionResponse
+    AICampaignReference:
+      properties:
+        title:
+          type: string
+          title: Title
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timestamp
+      type: object
+      required:
+      - title
+      title: AICampaignReference
+    AICampaignFromIntelligenceRequest:
+      properties:
+        source_type:
+          type: string
+          enum:
+          - trend
+          - social_summary
+          - ads_winner
+          - asset_set
+          title: Source Type
+        preferred_mode:
+          type: string
+          enum:
+          - auto
+          - ads_campaign
+          - social_post_campaign
+          title: Preferred Mode
+          default: auto
+        source_payload:
+          $ref: '#/components/schemas/AICampaignSourcePayload'
+      type: object
+      required:
+      - source_type
+      - source_payload
+      title: AICampaignFromIntelligenceRequest
     AICampaignAssetReference:
       properties:
         id:
@@ -347,31 +348,6 @@ components:
       required:
       - media_url
       title: AICampaignAssetReference
-    AICampaignFromIntelligenceRequest:
-      properties:
-        source_type:
-          type: string
-          enum:
-          - trend
-          - social_summary
-          - ads_winner
-          - asset_set
-          title: Source Type
-        preferred_mode:
-          type: string
-          enum:
-          - auto
-          - ads_campaign
-          - social_post_campaign
-          title: Preferred Mode
-          default: auto
-        source_payload:
-          $ref: '#/components/schemas/AICampaignSourcePayload'
-      type: object
-      required:
-      - source_type
-      - source_payload
-      title: AICampaignFromIntelligenceRequest
     HTTPValidationError:
       properties:
         detail:
@@ -381,6 +357,30 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    AICampaignTrendSourceExample:
+      properties:
+        title:
+          type: string
+          title: Title
+        subtitle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subtitle
+        metric:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Metric
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+      type: object
+      required:
+      - title
+      title: AICampaignTrendSourceExample
     JobResponse:
       properties:
         job_id:

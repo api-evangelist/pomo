@@ -288,6 +288,332 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    B2BSaveCandidateResponse:
+      properties:
+        prospect_id:
+          type: string
+          title: Prospect Id
+        person_ref:
+          type: string
+          title: Person Ref
+        created:
+          type: boolean
+          title: Created
+        candidate:
+          $ref: '#/components/schemas/B2BLeadCandidate'
+      type: object
+      required:
+      - prospect_id
+      - person_ref
+      - created
+      - candidate
+      title: B2BSaveCandidateResponse
+    B2BDraftRequest:
+      properties:
+        force_refresh:
+          type: boolean
+          title: Force Refresh
+          default: false
+      type: object
+      title: B2BDraftRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    B2BLeadContact:
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        status:
+          type: string
+          enum:
+          - publicly_listed
+          - provider_verified
+          - not_hydrated
+          - not_found
+          title: Status
+        kind:
+          anyOf:
+          - type: string
+            enum:
+            - person_business
+            - company_contact
+          - type: 'null'
+          title: Kind
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        evidence_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Evidence Text
+        provider_status:
+          anyOf:
+          - type: string
+            const: valid
+          - type: 'null'
+          title: Provider Status
+        confidence_score:
+          anyOf:
+          - type: integer
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Confidence Score
+        verified_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Verified At
+      type: object
+      required:
+      - status
+      title: B2BLeadContact
+    B2BActiveLeadSearchSummary:
+      properties:
+        search_id:
+          type: string
+          title: Search Id
+        query:
+          type: string
+          title: Query
+        started_at:
+          type: string
+          title: Started At
+      type: object
+      required:
+      - search_id
+      - query
+      - started_at
+      title: B2BActiveLeadSearchSummary
+      description: A durable search that should resume polling after a page reload.
+    B2BLeadSearchRequest:
+      properties:
+        query:
+          type: string
+          maxLength: 500
+          minLength: 2
+          title: Query
+        limit:
+          type: integer
+          maximum: 5.0
+          minimum: 3.0
+          title: Limit
+          default: 5
+        force_refresh:
+          type: boolean
+          title: Force Refresh
+          default: false
+      type: object
+      required:
+      - query
+      title: B2BLeadSearchRequest
+    B2BHydrateEmailsResponse:
+      properties:
+        search:
+          $ref: '#/components/schemas/B2BLeadSearchResponse'
+        attempted_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Attempted Count
+        found_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Found Count
+        direct_email_found_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Direct Email Found Count
+          default: 0
+        company_contact_found_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Company Contact Found Count
+          default: 0
+        provider_attempted_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Provider Attempted Count
+          default: 0
+        provider_verified_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Provider Verified Count
+          default: 0
+        provider_failure_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Provider Failure Count
+          default: 0
+        remaining_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Remaining Count
+      type: object
+      required:
+      - search
+      - attempted_count
+      - found_count
+      - remaining_count
+      title: B2BHydrateEmailsResponse
+    B2BFitEvidence:
+      properties:
+        kind:
+          type: string
+          enum:
+          - company
+          - person
+          title: Kind
+          default: person
+        claim:
+          type: string
+          title: Claim
+        source_url:
+          type: string
+          title: Source Url
+        evidence_text:
+          type: string
+          title: Evidence Text
+        verification_method:
+          type: string
+          enum:
+          - page_exact
+          - openai_web_search
+          - openai_web_search_ai_critic
+          title: Verification Method
+          default: openai_web_search
+      type: object
+      required:
+      - claim
+      - source_url
+      - evidence_text
+      title: B2BFitEvidence
+    B2BLeadSearchSummary:
+      properties:
+        search_id:
+          type: string
+          title: Search Id
+        query:
+          type: string
+          title: Query
+        interpreted_query:
+          type: string
+          title: Interpreted Query
+        result_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Result Count
+        company_count:
+          type: integer
+          maximum: 5.0
+          minimum: 0.0
+          title: Company Count
+        contact_count:
+          type: integer
+          maximum: 15.0
+          minimum: 0.0
+          title: Contact Count
+        generated_at:
+          type: string
+          title: Generated At
+        expires_at:
+          type: string
+          title: Expires At
+        email_hydration_status:
+          type: string
+          enum:
+          - not_started
+          - completed
+          title: Email Hydration Status
+      type: object
+      required:
+      - search_id
+      - query
+      - interpreted_query
+      - result_count
+      - company_count
+      - contact_count
+      - generated_at
+      - expires_at
+      - email_hydration_status
+      title: B2BLeadSearchSummary
+    B2BDraftResponse:
+      properties:
+        candidate:
+          $ref: '#/components/schemas/B2BLeadCandidate'
+      type: object
+      required:
+      - candidate
+      title: B2BDraftResponse
+    B2BLeadSearchHistoryResponse:
+      properties:
+        searches:
+          items:
+            $ref: '#/components/schemas/B2BLeadSearchSummary'
+          type: array
+          title: Searches
+        active_searches:
+          items:
+            $ref: '#/components/schemas/B2BActiveLeadSearchSummary'
+          type: array
+          title: Active Searches
+      type: object
+      title: B2BLeadSearchHistoryResponse
+    B2BEditableDraft:
+      properties:
+        subject:
+          type: string
+          maxLength: 160
+          minLength: 1
+          title: Subject
+        body:
+          type: string
+          maxLength: 1200
+          minLength: 1
+          title: Body
+      type: object
+      required:
+      - subject
+      - body
+      title: B2BEditableDraft
+    B2BCompanyContactRoute:
+      properties:
+        email:
+          type: string
+          title: Email
+        source_url:
+          type: string
+          title: Source Url
+        evidence_text:
+          type: string
+          title: Evidence Text
+      type: object
+      required:
+      - email
+      - source_url
+      - evidence_text
+      title: B2BCompanyContactRoute
+      description: A company-level public inbox, never a named person's email.
     B2BLeadSearchResponse:
       properties:
         search_id:
@@ -346,6 +672,22 @@ components:
       - email_hydration_status
       - result_count
       title: B2BLeadSearchResponse
+    B2BUpdateDraftResponse:
+      properties:
+        prospect_id:
+          type: string
+          title: Prospect Id
+        person_ref:
+          type: string
+          title: Person Ref
+        draft:
+          $ref: '#/components/schemas/B2BLeadDraft'
+      type: object
+      required:
+      - prospect_id
+      - person_ref
+      - draft
+      title: B2BUpdateDraftResponse
     B2BLeadCrmState:
       properties:
         saved:
@@ -364,204 +706,6 @@ components:
           title: Person Ref
       type: object
       title: B2BLeadCrmState
-    B2BDraftResponse:
-      properties:
-        candidate:
-          $ref: '#/components/schemas/B2BLeadCandidate'
-      type: object
-      required:
-      - candidate
-      title: B2BDraftResponse
-    B2BLeadSource:
-      properties:
-        url:
-          type: string
-          title: Url
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Type
-      type: object
-      required:
-      - url
-      title: B2BLeadSource
-    B2BLeadDraft:
-      properties:
-        subject:
-          type: string
-          title: Subject
-        body:
-          type: string
-          title: Body
-        status:
-          type: string
-          enum:
-          - generated
-          - edited
-          title: Status
-          default: generated
-      type: object
-      required:
-      - subject
-      - body
-      title: B2BLeadDraft
-    B2BLeadSearchSummary:
-      properties:
-        search_id:
-          type: string
-          title: Search Id
-        query:
-          type: string
-          title: Query
-        interpreted_query:
-          type: string
-          title: Interpreted Query
-        result_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Result Count
-        company_count:
-          type: integer
-          maximum: 5.0
-          minimum: 0.0
-          title: Company Count
-        contact_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Contact Count
-        generated_at:
-          type: string
-          title: Generated At
-        expires_at:
-          type: string
-          title: Expires At
-        email_hydration_status:
-          type: string
-          enum:
-          - not_started
-          - completed
-          title: Email Hydration Status
-      type: object
-      required:
-      - search_id
-      - query
-      - interpreted_query
-      - result_count
-      - company_count
-      - contact_count
-      - generated_at
-      - expires_at
-      - email_hydration_status
-      title: B2BLeadSearchSummary
-    B2BHydrateEmailsRequest:
-      properties:
-        candidate_ids:
-          items:
-            type: string
-          type: array
-          maxItems: 15
-          title: Candidate Ids
-        retry_not_found:
-          type: boolean
-          title: Retry Not Found
-          default: false
-      type: object
-      title: B2BHydrateEmailsRequest
-    B2BActiveLeadSearchSummary:
-      properties:
-        search_id:
-          type: string
-          title: Search Id
-        query:
-          type: string
-          title: Query
-        started_at:
-          type: string
-          title: Started At
-      type: object
-      required:
-      - search_id
-      - query
-      - started_at
-      title: B2BActiveLeadSearchSummary
-      description: A durable search that should resume polling after a page reload.
-    B2BSaveCandidateRequest:
-      properties:
-        idempotency_key:
-          anyOf:
-          - type: string
-            maxLength: 128
-          - type: 'null'
-          title: Idempotency Key
-        draft:
-          anyOf:
-          - $ref: '#/components/schemas/B2BEditableDraft'
-          - type: 'null'
-      type: object
-      title: B2BSaveCandidateRequest
-    B2BLeadContact:
-      properties:
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        status:
-          type: string
-          enum:
-          - publicly_listed
-          - provider_verified
-          - not_hydrated
-          - not_found
-          title: Status
-        kind:
-          anyOf:
-          - type: string
-            enum:
-            - person_business
-            - company_contact
-          - type: 'null'
-          title: Kind
-        source_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source Url
-        evidence_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Evidence Text
-        provider_status:
-          anyOf:
-          - type: string
-            const: valid
-          - type: 'null'
-          title: Provider Status
-        confidence_score:
-          anyOf:
-          - type: integer
-            maximum: 100.0
-            minimum: 0.0
-          - type: 'null'
-          title: Confidence Score
-        verified_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Verified At
-      type: object
-      required:
-      - status
-      title: B2BLeadContact
     B2BLeadCandidate:
       properties:
         candidate_id:
@@ -662,38 +806,85 @@ components:
       - fit_reason
       - contact
       title: B2BLeadCandidate
-    B2BFitEvidence:
+    B2BLeadDraft:
       properties:
-        kind:
+        subject:
+          type: string
+          title: Subject
+        body:
+          type: string
+          title: Body
+        status:
           type: string
           enum:
-          - company
-          - person
-          title: Kind
-          default: person
-        claim:
-          type: string
-          title: Claim
-        source_url:
-          type: string
-          title: Source Url
-        evidence_text:
-          type: string
-          title: Evidence Text
-        verification_method:
-          type: string
-          enum:
-          - page_exact
-          - openai_web_search
-          - openai_web_search_ai_critic
-          title: Verification Method
-          default: openai_web_search
+          - generated
+          - edited
+          title: Status
+          default: generated
       type: object
       required:
-      - claim
-      - source_url
-      - evidence_text
-      title: B2BFitEvidence
+      - subject
+      - body
+      title: B2BLeadDraft
+    B2BSaveCandidateRequest:
+      properties:
+        idempotency_key:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Idempotency Key
+        draft:
+          anyOf:
+          - $ref: '#/components/schemas/B2BEditableDraft'
+          - type: 'null'
+      type: object
+      title: B2BSaveCandidateRequest
+    B2BAccountContactsResponse:
+      properties:
+        search:
+          $ref: '#/components/schemas/B2BLeadSearchResponse'
+        account_key:
+          type: string
+          title: Account Key
+        added_count:
+          type: integer
+          maximum: 3.0
+          minimum: 0.0
+          title: Added Count
+        replaced_count:
+          type: integer
+          maximum: 3.0
+          minimum: 0.0
+          title: Replaced Count
+      type: object
+      required:
+      - search
+      - account_key
+      - added_count
+      - replaced_count
+      title: B2BAccountContactsResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     B2BLeadSearchJobResponse:
       properties:
         search_id:
@@ -738,210 +929,6 @@ components:
         the same small contract and exposes the completed snapshot only after the
 
         worker has committed it atomically.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    B2BUpdateDraftResponse:
-      properties:
-        prospect_id:
-          type: string
-          title: Prospect Id
-        person_ref:
-          type: string
-          title: Person Ref
-        draft:
-          $ref: '#/components/schemas/B2BLeadDraft'
-      type: object
-      required:
-      - prospect_id
-      - person_ref
-      - draft
-      title: B2BUpdateDraftResponse
-    B2BLeadSearchHistoryResponse:
-      properties:
-        searches:
-          items:
-            $ref: '#/components/schemas/B2BLeadSearchSummary'
-          type: array
-          title: Searches
-        active_searches:
-          items:
-            $ref: '#/components/schemas/B2BActiveLeadSearchSummary'
-          type: array
-          title: Active Searches
-      type: object
-      title: B2BLeadSearchHistoryResponse
-    B2BAccountContactsResponse:
-      properties:
-        search:
-          $ref: '#/components/schemas/B2BLeadSearchResponse'
-        account_key:
-          type: string
-          title: Account Key
-        added_count:
-          type: integer
-          maximum: 3.0
-          minimum: 0.0
-          title: Added Count
-        replaced_count:
-          type: integer
-          maximum: 3.0
-          minimum: 0.0
-          title: Replaced Count
-      type: object
-      required:
-      - search
-      - account_key
-      - added_count
-      - replaced_count
-      title: B2BAccountContactsResponse
-    B2BHydrateEmailsResponse:
-      properties:
-        search:
-          $ref: '#/components/schemas/B2BLeadSearchResponse'
-        attempted_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Attempted Count
-        found_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Found Count
-        direct_email_found_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Direct Email Found Count
-          default: 0
-        company_contact_found_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Company Contact Found Count
-          default: 0
-        provider_attempted_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Provider Attempted Count
-          default: 0
-        provider_verified_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Provider Verified Count
-          default: 0
-        provider_failure_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Provider Failure Count
-          default: 0
-        remaining_count:
-          type: integer
-          maximum: 15.0
-          minimum: 0.0
-          title: Remaining Count
-      type: object
-      required:
-      - search
-      - attempted_count
-      - found_count
-      - remaining_count
-      title: B2BHydrateEmailsResponse
-    B2BAccountContactsRequest:
-      properties:
-        limit:
-          type: integer
-          maximum: 3.0
-          minimum: 1.0
-          title: Limit
-          default: 3
-        force_refresh:
-          type: boolean
-          title: Force Refresh
-          default: false
-      type: object
-      title: B2BAccountContactsRequest
-    B2BCompanyContactRoute:
-      properties:
-        email:
-          type: string
-          title: Email
-        source_url:
-          type: string
-          title: Source Url
-        evidence_text:
-          type: string
-          title: Evidence Text
-      type: object
-      required:
-      - email
-      - source_url
-      - evidence_text
-      title: B2BCompanyContactRoute
-      description: A company-level public inbox, never a named person's email.
-    B2BSaveCandidateResponse:
-      properties:
-        prospect_id:
-          type: string
-          title: Prospect Id
-        person_ref:
-          type: string
-          title: Person Ref
-        created:
-          type: boolean
-          title: Created
-        candidate:
-          $ref: '#/components/schemas/B2BLeadCandidate'
-      type: object
-      required:
-      - prospect_id
-      - person_ref
-      - created
-      - candidate
-      title: B2BSaveCandidateResponse
-    B2BLeadSearchRequest:
-      properties:
-        query:
-          type: string
-          maxLength: 500
-          minLength: 2
-          title: Query
-        limit:
-          type: integer
-          maximum: 5.0
-          minimum: 3.0
-          title: Limit
-          default: 5
-        force_refresh:
-          type: boolean
-          title: Force Refresh
-          default: false
-      type: object
-      required:
-      - query
-      title: B2BLeadSearchRequest
     B2BUpdateDraftRequest:
       properties:
         subject:
@@ -959,40 +946,53 @@ components:
       - subject
       - body
       title: B2BUpdateDraftRequest
-    B2BEditableDraft:
+    B2BLeadSource:
       properties:
-        subject:
+        url:
           type: string
-          maxLength: 160
-          minLength: 1
-          title: Subject
-        body:
-          type: string
-          maxLength: 1200
-          minLength: 1
-          title: Body
+          title: Url
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Type
       type: object
       required:
-      - subject
-      - body
-      title: B2BEditableDraft
-    B2BDraftRequest:
+      - url
+      title: B2BLeadSource
+    B2BAccountContactsRequest:
       properties:
+        limit:
+          type: integer
+          maximum: 3.0
+          minimum: 1.0
+          title: Limit
+          default: 3
         force_refresh:
           type: boolean
           title: Force Refresh
           default: false
       type: object
-      title: B2BDraftRequest
-    HTTPValidationError:
+      title: B2BAccountContactsRequest
+    B2BHydrateEmailsRequest:
       properties:
-        detail:
+        candidate_ids:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            type: string
           type: array
-          title: Detail
+          maxItems: 15
+          title: Candidate Ids
+        retry_not_found:
+          type: boolean
+          title: Retry Not Found
+          default: false
       type: object
-      title: HTTPValidationError
+      title: B2BHydrateEmailsRequest
   securitySchemes:
     HTTPBearer:
       type: http
