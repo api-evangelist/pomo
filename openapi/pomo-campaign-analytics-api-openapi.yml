@@ -126,116 +126,45 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    TrendData:
+    PlatformIntegrationRequest:
       properties:
-        date:
+        platform:
           type: string
-          title: Date
-        impressions:
-          type: integer
-          title: Impressions
-        clicks:
-          type: integer
-          title: Clicks
-        conversions:
-          type: integer
-          title: Conversions
-      type: object
-      required:
-      - date
-      - impressions
-      - clicks
-      - conversions
-      title: TrendData
-      description: Daily trend data
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    RefreshAnalyticsRequest:
-      properties:
-        platforms:
+          pattern: ^(google|meta|amazon)$
+          title: Platform
+        credentials:
+          additionalProperties: true
+          type: object
+          title: Credentials
+          description: Platform-specific credentials
+        account_ids:
           anyOf:
           - items:
               type: string
             type: array
           - type: 'null'
-          title: Platforms
-          description: Platforms to refresh. If None, refresh all.
-        campaign_ids:
+          title: Account Ids
+          description: List of account IDs to sync
+        sync_frequency:
           anyOf:
-          - items:
-              type: string
-            type: array
+          - type: string
+            pattern: ^(hourly|daily|weekly)$
           - type: 'null'
-          title: Campaign Ids
-          description: Specific campaign IDs to refresh
-        force:
-          type: boolean
-          title: Force
-          description: Force refresh even if recently synced
-          default: false
+          title: Sync Frequency
+          default: daily
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+          description: Whether the integration is active
+          default: true
       type: object
-      title: RefreshAnalyticsRequest
-      description: Request schema for refreshing analytics
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CampaignTypeMetrics:
-      properties:
-        impressions:
-          type: integer
-          title: Impressions
-          default: 0
-        clicks:
-          type: integer
-          title: Clicks
-          default: 0
-        conversions:
-          type: integer
-          title: Conversions
-          default: 0
-        spend:
-          type: number
-          title: Spend
-          default: 0.0
-        revenue:
-          type: number
-          title: Revenue
-          default: 0.0
-        campaigns:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Campaigns
-          default: []
-      type: object
-      title: CampaignTypeMetrics
-      description: Metrics aggregated by campaign type
+      required:
+      - platform
+      - credentials
+      title: PlatformIntegrationRequest
+      description: Request schema for setting up platform integration
     CampaignAnalyticsResponse:
       properties:
         impressions:
@@ -367,45 +296,138 @@ components:
       - updated_at
       title: CampaignAnalyticsResponse
       description: Response schema for campaign analytics
-    PlatformIntegrationRequest:
+    ChannelTrendData:
       properties:
-        platform:
+        date:
           type: string
-          pattern: ^(google|meta|amazon)$
-          title: Platform
-        credentials:
-          additionalProperties: true
-          type: object
-          title: Credentials
-          description: Platform-specific credentials
-        account_ids:
+          title: Date
+        channel:
+          type: string
+          title: Channel
+        impressions:
+          type: integer
+          title: Impressions
+        clicks:
+          type: integer
+          title: Clicks
+      type: object
+      required:
+      - date
+      - channel
+      - impressions
+      - clicks
+      title: ChannelTrendData
+      description: Daily trend data by channel/platform
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RefreshAnalyticsRequest:
+      properties:
+        platforms:
           anyOf:
           - items:
               type: string
             type: array
           - type: 'null'
-          title: Account Ids
-          description: List of account IDs to sync
-        sync_frequency:
+          title: Platforms
+          description: Platforms to refresh. If None, refresh all.
+        campaign_ids:
           anyOf:
-          - type: string
-            pattern: ^(hourly|daily|weekly)$
+          - items:
+              type: string
+            type: array
           - type: 'null'
-          title: Sync Frequency
-          default: daily
-        is_active:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Active
-          description: Whether the integration is active
-          default: true
+          title: Campaign Ids
+          description: Specific campaign IDs to refresh
+        force:
+          type: boolean
+          title: Force
+          description: Force refresh even if recently synced
+          default: false
+      type: object
+      title: RefreshAnalyticsRequest
+      description: Request schema for refreshing analytics
+    CampaignTypeMetrics:
+      properties:
+        impressions:
+          type: integer
+          title: Impressions
+          default: 0
+        clicks:
+          type: integer
+          title: Clicks
+          default: 0
+        conversions:
+          type: integer
+          title: Conversions
+          default: 0
+        spend:
+          type: number
+          title: Spend
+          default: 0.0
+        revenue:
+          type: number
+          title: Revenue
+          default: 0.0
+        campaigns:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Campaigns
+          default: []
+      type: object
+      title: CampaignTypeMetrics
+      description: Metrics aggregated by campaign type
+    TrendData:
+      properties:
+        date:
+          type: string
+          title: Date
+        impressions:
+          type: integer
+          title: Impressions
+        clicks:
+          type: integer
+          title: Clicks
+        conversions:
+          type: integer
+          title: Conversions
       type: object
       required:
-      - platform
-      - credentials
-      title: PlatformIntegrationRequest
-      description: Request schema for setting up platform integration
+      - date
+      - impressions
+      - clicks
+      - conversions
+      title: TrendData
+      description: Daily trend data
     CampaignAnalyticsSummary:
       properties:
         total_impressions:
@@ -474,28 +496,6 @@ components:
       - trends
       title: CampaignAnalyticsSummary
       description: Dashboard summary of all campaign analytics
-    ChannelTrendData:
-      properties:
-        date:
-          type: string
-          title: Date
-        channel:
-          type: string
-          title: Channel
-        impressions:
-          type: integer
-          title: Impressions
-        clicks:
-          type: integer
-          title: Clicks
-      type: object
-      required:
-      - date
-      - channel
-      - impressions
-      - clicks
-      title: ChannelTrendData
-      description: Daily trend data by channel/platform
   securitySchemes:
     HTTPBearer:
       type: http

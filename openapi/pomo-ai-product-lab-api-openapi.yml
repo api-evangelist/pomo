@@ -362,27 +362,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     ProductIdea:
       properties:
         name:
@@ -438,33 +417,62 @@ components:
       - potential_challenges
       - success_metrics
       title: ProductIdea
-    ProductLaunchTestRequest:
+    ProductIdeaBrainstormRequest:
       properties:
-        launch_session_id:
-          type: string
-          format: uuid
-          title: Launch Session Id
-        product_idea_index:
-          type: integer
-          title: Product Idea Index
-        target_audience_groups:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Target Audience Groups
-        persona_set_id:
+        product_offering_id:
           anyOf:
           - type: string
             format: uuid
           - type: 'null'
-          title: Persona Set Id
+          title: Product Offering Id
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        user_input:
+          type: string
+          title: User Input
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
       type: object
       required:
-      - launch_session_id
-      - product_idea_index
-      title: ProductLaunchTestRequest
+      - user_input
+      title: ProductIdeaBrainstormRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ProductIdeaResponse:
       properties:
         id:
@@ -509,6 +517,89 @@ components:
       - context_data
       - created_at
       title: ProductIdeaResponse
+    ProductLaunchTestRequest:
+      properties:
+        launch_session_id:
+          type: string
+          format: uuid
+          title: Launch Session Id
+        product_idea_index:
+          type: integer
+          title: Product Idea Index
+        target_audience_groups:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Audience Groups
+        persona_set_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Persona Set Id
+      type: object
+      required:
+      - launch_session_id
+      - product_idea_index
+      title: ProductLaunchTestRequest
+    PersonaResponseData:
+      properties:
+        persona_id:
+          type: string
+          format: uuid
+          title: Persona Id
+        persona_name:
+          type: string
+          title: Persona Name
+        interest_level:
+          type: number
+          title: Interest Level
+        purchase_likelihood:
+          type: number
+          title: Purchase Likelihood
+        price_sensitivity:
+          type: string
+          title: Price Sensitivity
+        initial_reaction:
+          type: string
+          title: Initial Reaction
+        perceived_benefits:
+          items:
+            type: string
+          type: array
+          title: Perceived Benefits
+        concerns:
+          items:
+            type: string
+          type: array
+          title: Concerns
+        feature_requests:
+          items:
+            type: string
+          type: array
+          title: Feature Requests
+        would_recommend:
+          type: boolean
+          title: Would Recommend
+        recommendation_reason:
+          type: string
+          title: Recommendation Reason
+      type: object
+      required:
+      - persona_id
+      - persona_name
+      - interest_level
+      - purchase_likelihood
+      - price_sensitivity
+      - initial_reaction
+      - perceived_benefits
+      - concerns
+      - feature_requests
+      - would_recommend
+      - recommendation_reason
+      title: PersonaResponseData
     ProductLaunchTestResult:
       properties:
         id:
@@ -593,97 +684,6 @@ components:
       - started_at
       - completed_at
       title: ProductLaunchTestResult
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PersonaResponseData:
-      properties:
-        persona_id:
-          type: string
-          format: uuid
-          title: Persona Id
-        persona_name:
-          type: string
-          title: Persona Name
-        interest_level:
-          type: number
-          title: Interest Level
-        purchase_likelihood:
-          type: number
-          title: Purchase Likelihood
-        price_sensitivity:
-          type: string
-          title: Price Sensitivity
-        initial_reaction:
-          type: string
-          title: Initial Reaction
-        perceived_benefits:
-          items:
-            type: string
-          type: array
-          title: Perceived Benefits
-        concerns:
-          items:
-            type: string
-          type: array
-          title: Concerns
-        feature_requests:
-          items:
-            type: string
-          type: array
-          title: Feature Requests
-        would_recommend:
-          type: boolean
-          title: Would Recommend
-        recommendation_reason:
-          type: string
-          title: Recommendation Reason
-      type: object
-      required:
-      - persona_id
-      - persona_name
-      - interest_level
-      - purchase_likelihood
-      - price_sensitivity
-      - initial_reaction
-      - perceived_benefits
-      - concerns
-      - feature_requests
-      - would_recommend
-      - recommendation_reason
-      title: PersonaResponseData
-    ProductIdeaBrainstormRequest:
-      properties:
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-        user_input:
-          type: string
-          title: User Input
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
-      type: object
-      required:
-      - user_input
-      title: ProductIdeaBrainstormRequest
   securitySchemes:
     HTTPBearer:
       type: http

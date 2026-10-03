@@ -162,18 +162,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    UserPreferencesUpdate:
-      properties:
-        preferences:
-          additionalProperties: true
-          type: object
-          title: Preferences
-          description: Preferences to update (will be merged with existing preferences)
-      type: object
-      required:
-      - preferences
-      title: UserPreferencesUpdate
-      description: "Schema for updating user preferences.\nAccepts a dictionary of preferences to merge with existing preferences.\n\nExample:\n{\n  \"tutorial_completed\": true,\n  \"daily_digest_theme\": \"dark\",\n  \"onboarding_dismissed\": true\n}"
     ValidationError:
       properties:
         loc:
@@ -195,6 +183,30 @@ components:
       - msg
       - type
       title: ValidationError
+    UserPreferencesPartial:
+      properties:
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          description: User preferences as key-value pairs
+      type: object
+      title: UserPreferencesPartial
+      description: 'Response schema that returns only the preferences object without metadata.
+
+        Useful for lightweight responses.'
+    UserPreferencesUpdate:
+      properties:
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          description: Preferences to update (will be merged with existing preferences)
+      type: object
+      required:
+      - preferences
+      title: UserPreferencesUpdate
+      description: "Schema for updating user preferences.\nAccepts a dictionary of preferences to merge with existing preferences.\n\nExample:\n{\n  \"tutorial_completed\": true,\n  \"daily_digest_theme\": \"dark\",\n  \"onboarding_dismissed\": true\n}"
     UserPreferencesResponse:
       properties:
         id:
@@ -228,6 +240,15 @@ components:
       description: 'Response schema for user preferences.
 
         Returns the complete preferences object with metadata.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ReleaseAnnouncementClaimRequest:
       properties:
         spotlight_release_id:
@@ -251,15 +272,6 @@ components:
       - release_ids
       title: ReleaseAnnouncementClaimRequest
       description: Claim one release-announcement spotlight and its visible digest.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ReleaseAnnouncementClaimResponse:
       properties:
         claimed:
@@ -285,18 +297,6 @@ components:
       - claimed_at
       title: ReleaseAnnouncementClaimResponse
       description: Result of atomically claiming a release-announcement spotlight.
-    UserPreferencesPartial:
-      properties:
-        preferences:
-          additionalProperties: true
-          type: object
-          title: Preferences
-          description: User preferences as key-value pairs
-      type: object
-      title: UserPreferencesPartial
-      description: 'Response schema that returns only the preferences object without metadata.
-
-        Useful for lightweight responses.'
   securitySchemes:
     HTTPBearer:
       type: http

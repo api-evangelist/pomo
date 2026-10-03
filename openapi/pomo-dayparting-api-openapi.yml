@@ -190,15 +190,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -220,43 +211,6 @@ components:
       - msg
       - type
       title: ValidationError
-    DaypartingHealthResponse:
-      properties:
-        ad_id:
-          type: string
-          title: Ad Id
-        total_rules:
-          type: integer
-          title: Total Rules
-        healthy_rules:
-          items:
-            type: string
-          type: array
-          title: Healthy Rules
-        unhealthy_rules:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Unhealthy Rules
-        missing_rules:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Missing Rules
-        health_score:
-          type: number
-          title: Health Score
-      type: object
-      required:
-      - ad_id
-      - total_rules
-      - healthy_rules
-      - unhealthy_rules
-      - missing_rules
-      - health_score
-      title: DaypartingHealthResponse
     CampaignDaypartingRequest:
       properties:
         campaign_id:
@@ -299,6 +253,52 @@ components:
       - timezone
       - schedule
       title: PlatformDaypartingConfig
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DaypartingHealthResponse:
+      properties:
+        ad_id:
+          type: string
+          title: Ad Id
+        total_rules:
+          type: integer
+          title: Total Rules
+        healthy_rules:
+          items:
+            type: string
+          type: array
+          title: Healthy Rules
+        unhealthy_rules:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Unhealthy Rules
+        missing_rules:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Missing Rules
+        health_score:
+          type: number
+          title: Health Score
+      type: object
+      required:
+      - ad_id
+      - total_rules
+      - healthy_rules
+      - unhealthy_rules
+      - missing_rules
+      - health_score
+      title: DaypartingHealthResponse
     DaypartingSlot:
       properties:
         day:

@@ -276,36 +276,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    ResourceListRequest:
-      properties:
-        resource_type:
-          type: string
-          title: Resource Type
-          description: Type of resource to list
-        organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Id
-          description: Organization context
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-          description: Company profile context
-        params:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Params
-          description: Filtering parameters
-      type: object
-      required:
-      - resource_type
-      title: ResourceListRequest
-      description: Request to list resources
     ValidationError:
       properties:
         loc:
@@ -327,6 +297,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ToolExecuteRequest:
       properties:
         tool_name:
@@ -365,6 +344,36 @@ components:
       - company_profile_id
       title: ToolExecuteRequest
       description: Request to execute a tool
+    ResourceListRequest:
+      properties:
+        resource_type:
+          type: string
+          title: Resource Type
+          description: Type of resource to list
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+          description: Organization context
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+          description: Company profile context
+        params:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Params
+          description: Filtering parameters
+      type: object
+      required:
+      - resource_type
+      title: ResourceListRequest
+      description: Request to list resources
     ResourceReadRequest:
       properties:
         resource_type:
@@ -400,15 +409,6 @@ components:
       - resource_id
       title: ResourceReadRequest
       description: Request to read a specific resource
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     MCPResponse:
       properties:
         success:

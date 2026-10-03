@@ -152,6 +152,21 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    KeywordWithCpc:
+      properties:
+        keyword:
+          type: string
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
+      type: object
+      required:
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
     ValidationError:
       properties:
         loc:
@@ -173,6 +188,96 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CampaignResponse:
+      properties:
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        name:
+          type: string
+          title: Name
+        target_platforms:
+          items:
+            type: string
+          type: array
+          title: Target Platforms
+        target_audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Audience
+        user_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Prompt
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        state_province:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State Province
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+        last_modified:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Modified
+        deployed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deployed At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+        creation_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Source
+      type: object
+      required:
+      - campaign_id
+      - name
+      - target_platforms
+      title: CampaignResponse
+      description: Base class for campaign metadata response.
     AdsCampaignUpdateResponse:
       properties:
         status:
@@ -200,21 +305,41 @@ components:
       - campaign_id
       title: AdsCampaignUpdateResponse
       description: Standardized response for ad update operations within a campaign.
-    KeywordWithCpc:
+    CampaignMediaOperation:
       properties:
-        keyword:
+        action:
           type: string
-          title: Keyword
-        estimated_cpc:
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Action
+        media_type:
+          type: string
+          enum:
+          - image
+          - video
+          title: Media Type
+        selected_url:
+          type: string
+          title: Selected Url
+        previous_url:
           anyOf:
-          - type: number
+          - type: string
           - type: 'null'
-          title: Estimated Cpc
+          title: Previous Url
+        source_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Source Index
       type: object
       required:
-      - keyword
-      title: KeywordWithCpc
-      description: Model for keyword with CPC data
+      - action
+      - media_type
+      - selected_url
+      title: CampaignMediaOperation
+      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
     AdsCampaignUpdateRequest:
       properties:
         campaign_id:
@@ -534,131 +659,6 @@ components:
       - campaign_id
       title: AdsCampaignUpdateRequest
       description: Request model for updating ad campaign data
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CampaignMediaOperation:
-      properties:
-        action:
-          type: string
-          enum:
-          - replace
-          - add
-          - add_and_set_primary
-          title: Action
-        media_type:
-          type: string
-          enum:
-          - image
-          - video
-          title: Media Type
-        selected_url:
-          type: string
-          title: Selected Url
-        previous_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous Url
-        source_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Source Index
-      type: object
-      required:
-      - action
-      - media_type
-      - selected_url
-      title: CampaignMediaOperation
-      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
-    CampaignResponse:
-      properties:
-        id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Id
-        campaign_id:
-          type: string
-          title: Campaign Id
-        name:
-          type: string
-          title: Name
-        target_platforms:
-          items:
-            type: string
-          type: array
-          title: Target Platforms
-        target_audience:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Audience
-        user_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Prompt
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-        state_province:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: State Province
-        city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: City
-        creation_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creation Date
-        last_modified:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Modified
-        deployed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Deployed At
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-        creation_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creation Source
-      type: object
-      required:
-      - campaign_id
-      - name
-      - target_platforms
-      title: CampaignResponse
-      description: Base class for campaign metadata response.
   securitySchemes:
     HTTPBearer:
       type: http

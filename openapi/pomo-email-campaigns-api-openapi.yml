@@ -541,27 +541,92 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
+    Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post:
       properties:
-        loc:
+        files:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            type: string
+            format: binary
           type: array
-          title: Location
-        msg:
+          title: Files
+          description: List of image files to upload (max 15)
+        campaign_id:
           type: string
-          title: Message
-        type:
+          title: Campaign Id
+          description: Campaign ID
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        image_type:
           type: string
-          title: Error Type
+          title: Image Type
+          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
+          default: EMAIL_IMAGE
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - files
+      - campaign_id
+      - idea_number
+      title: Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post
+    Body_edit_campaign_content_api_campaigns_email_edit_content_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID of the content to edit
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        content:
+          type: string
+          title: Content
+          description: Existing HTML content to edit
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+          description: Instructions for editing the content
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - content
+      - edit_prompt
+      title: Body_edit_campaign_content_api_campaigns_email_edit_content_post
+    EmailCampaignImageCreate:
+      properties:
+        image_type:
+          type: string
+          title: Image Type
+        image_url:
+          type: string
+          title: Image Url
+        original_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Original Prompt
+        enhanced_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Enhanced Prompt
+        width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Width
+        height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Height
+      type: object
+      required:
+      - image_type
+      - image_url
+      title: EmailCampaignImageCreate
     EmailCampaignImageResponse:
       properties:
         image_type:
@@ -612,31 +677,48 @@ components:
       - email_campaign_id
       - creation_date
       title: EmailCampaignImageResponse
-    Body_edit_campaign_image_api_campaigns_email_edit_image_post:
+    ValidationError:
       properties:
-        campaign_id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Campaign Id
-          description: Campaign ID of the image to edit
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Campaign idea number
-        image_url:
+          title: Message
+        type:
           type: string
-          title: Image Url
-          description: URL of the image to edit
-        edit_prompt:
-          type: string
-          title: Edit Prompt
-          description: Instructions for editing the image
+          title: Error Type
       type: object
       required:
-      - campaign_id
-      - idea_number
-      - image_url
-      - edit_prompt
-      title: Body_edit_campaign_image_api_campaigns_email_edit_image_post
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    WorkflowStatus:
+      type: string
+      enum:
+      - draft
+      - review
+      - approved
+      - scheduled
+      - sending
+      - sent
+      - failed
+      title: WorkflowStatus
+      description: Email campaign workflow status values.
     EmailCampaignCreate:
       properties:
         name:
@@ -772,18 +854,6 @@ components:
       - campaign_id
       - idea_number
       title: EmailCampaignCreate
-    WorkflowStatus:
-      type: string
-      enum:
-      - draft
-      - review
-      - approved
-      - scheduled
-      - sending
-      - sent
-      - failed
-      title: WorkflowStatus
-      description: Email campaign workflow status values.
     EmailCampaignResponse:
       properties:
         name:
@@ -959,101 +1029,6 @@ components:
       - creation_date
       - last_modified
       title: EmailCampaignResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    EmailCampaignImageCreate:
-      properties:
-        image_type:
-          type: string
-          title: Image Type
-        image_url:
-          type: string
-          title: Image Url
-        original_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Original Prompt
-        enhanced_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Enhanced Prompt
-        width:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Width
-        height:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Height
-      type: object
-      required:
-      - image_type
-      - image_url
-      title: EmailCampaignImageCreate
-    Body_edit_campaign_content_api_campaigns_email_edit_content_post:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: Campaign ID of the content to edit
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Campaign idea number
-        content:
-          type: string
-          title: Content
-          description: Existing HTML content to edit
-        edit_prompt:
-          type: string
-          title: Edit Prompt
-          description: Instructions for editing the content
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      - content
-      - edit_prompt
-      title: Body_edit_campaign_content_api_campaigns_email_edit_content_post
-    Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post:
-      properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-          description: List of image files to upload (max 15)
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: Campaign ID
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Campaign idea number
-        image_type:
-          type: string
-          title: Image Type
-          description: Type of image (EMAIL_BANNER, EMAIL_IMAGE, etc.)
-          default: EMAIL_IMAGE
-      type: object
-      required:
-      - files
-      - campaign_id
-      - idea_number
-      title: Body_upload_campaign_images_api_campaigns_email_upload_campaign_images_post
     Body_upload_campaign_image_api_campaigns_email_upload_campaign_image_post:
       properties:
         file:
@@ -1080,6 +1055,31 @@ components:
       - campaign_id
       - idea_number
       title: Body_upload_campaign_image_api_campaigns_email_upload_campaign_image_post
+    Body_edit_campaign_image_api_campaigns_email_edit_image_post:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: Campaign ID of the image to edit
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Campaign idea number
+        image_url:
+          type: string
+          title: Image Url
+          description: URL of the image to edit
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+          description: Instructions for editing the image
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - image_url
+      - edit_prompt
+      title: Body_edit_campaign_image_api_campaigns_email_edit_image_post
     Body_upload_email_campaign_image_general_api_campaigns_email_upload_image_post:
       properties:
         file:

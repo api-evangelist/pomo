@@ -521,65 +521,23 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AiPolicyContextWarningResponse:
-      properties:
-        found:
-          type: boolean
-          title: Found
-          default: false
-        evaluation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Evaluation Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        ai_policy_eval:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ai Policy Eval
-      type: object
-      title: AiPolicyContextWarningResponse
-      description: 'Lightweight lookup for the latest warn-only evaluation matching a UI context.
-
-
-        This is intended for inline warnings in campaign details pages (ads/social) and similar surfaces.'
-    AiPolicyDraftUpdateRequest:
+    AiPolicyGenerateVersionNameRequest:
       properties:
         text:
           type: string
           title: Text
-          description: Updated draft policy text
+          description: Policy text used to generate a short version name
+        max_length:
+          type: integer
+          maximum: 80.0
+          minimum: 16.0
+          title: Max Length
+          description: Maximum output length for the generated version name
+          default: 48
       type: object
       required:
       - text
-      title: AiPolicyDraftUpdateRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: AiPolicyGenerateVersionNameRequest
     AiPolicyDraft:
       properties:
         text:
@@ -644,75 +602,6 @@ components:
       - user_id
       - endpoint
       title: AiPolicyViolationEvent
-    AiPolicyGenerateVersionNameResponse:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Generated policy version name
-      type: object
-      required:
-      - name
-      title: AiPolicyGenerateVersionNameResponse
-    AiPolicyEnabledSurfaces:
-      properties:
-        chat:
-          type: boolean
-          title: Chat
-          default: true
-        ads:
-          type: boolean
-          title: Ads
-          default: true
-        social:
-          type: boolean
-          title: Social
-          default: true
-        images:
-          type: boolean
-          title: Images
-          default: true
-      type: object
-      title: AiPolicyEnabledSurfaces
-    AiPolicyGenerateVersionNameRequest:
-      properties:
-        text:
-          type: string
-          title: Text
-          description: Policy text used to generate a short version name
-        max_length:
-          type: integer
-          maximum: 80.0
-          minimum: 16.0
-          title: Max Length
-          description: Maximum output length for the generated version name
-          default: 48
-      type: object
-      required:
-      - text
-      title: AiPolicyGenerateVersionNameRequest
-    AiPolicyActivateVersionRequest:
-      properties:
-        version_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Version Id
-        version_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Version Ids
-      type: object
-      title: AiPolicyActivateVersionRequest
-      description: 'Backwards-compatible activation request.
-
-
-        - `version_id`: activate a single version
-
-        - `version_ids`: activate a policy set (multiple versions), in the provided order'
     AiPolicyStateResponse:
       properties:
         policy_purpose:
@@ -759,6 +648,94 @@ components:
       - enabled
       - mode
       title: AiPolicyStateResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AiPolicyDraftUpdateRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: Updated draft policy text
+      type: object
+      required:
+      - text
+      title: AiPolicyDraftUpdateRequest
+    AiPolicyEnabledSurfaces:
+      properties:
+        chat:
+          type: boolean
+          title: Chat
+          default: true
+        ads:
+          type: boolean
+          title: Ads
+          default: true
+        social:
+          type: boolean
+          title: Social
+          default: true
+        images:
+          type: boolean
+          title: Images
+          default: true
+      type: object
+      title: AiPolicyEnabledSurfaces
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AiPolicyContextWarningResponse:
+      properties:
+        found:
+          type: boolean
+          title: Found
+          default: false
+        evaluation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Evaluation Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        ai_policy_eval:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Policy Eval
+      type: object
+      title: AiPolicyContextWarningResponse
+      description: 'Lightweight lookup for the latest warn-only evaluation matching a UI context.
+
+
+        This is intended for inline warnings in campaign details pages (ads/social) and similar surfaces.'
     AiPolicyVersion:
       properties:
         id:
@@ -795,6 +772,51 @@ components:
       - id
       - text
       title: AiPolicyVersion
+    AiPolicyGenerateVersionNameResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Generated policy version name
+      type: object
+      required:
+      - name
+      title: AiPolicyGenerateVersionNameResponse
+    AiPolicySettingsUpdateRequest:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        enabled_surfaces:
+          anyOf:
+          - $ref: '#/components/schemas/AiPolicyEnabledSurfaces'
+          - type: 'null'
+      type: object
+      required:
+      - enabled
+      title: AiPolicySettingsUpdateRequest
+    AiPolicyActivateVersionRequest:
+      properties:
+        version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Version Id
+        version_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Version Ids
+      type: object
+      title: AiPolicyActivateVersionRequest
+      description: 'Backwards-compatible activation request.
+
+
+        - `version_id`: activate a single version
+
+        - `version_ids`: activate a policy set (multiple versions), in the provided order'
     AiPolicySaveVersionRequest:
       properties:
         name:
@@ -814,28 +836,6 @@ components:
           description: Optional editor text to save as a version without requiring a separate draft save first
       type: object
       title: AiPolicySaveVersionRequest
-    AiPolicySettingsUpdateRequest:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-        enabled_surfaces:
-          anyOf:
-          - $ref: '#/components/schemas/AiPolicyEnabledSurfaces'
-          - type: 'null'
-      type: object
-      required:
-      - enabled
-      title: AiPolicySettingsUpdateRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

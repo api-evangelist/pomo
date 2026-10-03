@@ -860,7 +860,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    CompanyProfileResponse:
+    CompanyProfileCreate:
       properties:
         name:
           anyOf:
@@ -982,135 +982,48 @@ components:
           default: false
         status:
           anyOf:
-          - type: string
+          - $ref: '#/components/schemas/CompanyProfileStatus'
           - type: 'null'
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Id
-        creator_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creator Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-        company_messages:
+          default: active
+      type: object
+      title: CompanyProfileCreate
+    CompanyStylebookPromoReferences:
+      properties:
+        subtitle:
+          type: string
+          title: Subtitle
+        items:
           items:
-            $ref: '#/components/schemas/CompanyMessageResponse'
+            $ref: '#/components/schemas/CompanyStylebookImageItem'
           type: array
-          title: Company Messages
-          default: []
-        company_images:
-          items:
-            $ref: '#/components/schemas/CompanyImageResponse'
-          type: array
-          title: Company Images
-          default: []
-        category_attributes:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Category Attributes
-        marketing_profile_completed:
-          type: boolean
-          title: Marketing Profile Completed
-          default: false
+          title: Items
       type: object
       required:
-      - id
-      - organization_id
-      - creator_id
-      - created_at
-      - updated_at
-      title: CompanyProfileResponse
-    CompanyStylebookPage:
+      - subtitle
+      title: CompanyStylebookPromoReferences
+    CompanyStylebookListSection:
       properties:
-        id:
-          type: string
-          title: Id
-        title:
-          type: string
-          title: Title
-        summary:
-          type: string
-          title: Summary
-          default: ''
-        sections:
-          items:
-            $ref: '#/components/schemas/CompanyStylebookPageSection'
-          type: array
-          title: Sections
-      type: object
-      required:
-      - id
-      - title
-      title: CompanyStylebookPage
-    CompanyImageResponse:
-      properties:
-        image_type:
-          type: string
-          title: Image Type
-        image_url:
-          type: string
-          title: Image Url
-        alt_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Alt Text
-        image_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Image Metadata
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      type: object
-      required:
-      - image_type
-      - image_url
-      - id
-      - company_profile_id
-      - created_at
-      title: CompanyImageResponse
-    CompanyStylebookChipSection:
-      properties:
-        chips:
+        items:
           items:
             type: string
           type: array
-          title: Chips
+          title: Items
       type: object
-      title: CompanyStylebookChipSection
+      title: CompanyStylebookListSection
+    CompanyStylebookGenerateRequest:
+      properties:
+        workflow_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+        force:
+          type: boolean
+          title: Force
+          default: false
+      type: object
+      title: CompanyStylebookGenerateRequest
     HTTPValidationError:
       properties:
         detail:
@@ -1120,104 +1033,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    CompanyMessageCreate:
-      properties:
-        message_type:
-          type: string
-          title: Message Type
-        content:
-          type: string
-          title: Content
-        message_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Message Metadata
-      type: object
-      required:
-      - message_type
-      - content
-      title: CompanyMessageCreate
-    CompanyStylebookImageItem:
-      properties:
-        id:
-          type: string
-          title: Id
-        image_url:
-          type: string
-          title: Image Url
-        label:
-          type: string
-          title: Label
-        source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source
-      type: object
-      required:
-      - id
-      - image_url
-      - label
-      title: CompanyStylebookImageItem
-    CompanyStylebookPageSection:
-      properties:
-        title:
-          type: string
-          title: Title
-        body:
-          type: string
-          title: Body
-          default: ''
-        bullets:
-          items:
-            type: string
-          type: array
-          title: Bullets
-        chips:
-          items:
-            type: string
-          type: array
-          title: Chips
-        evidence_refs:
-          items:
-            type: string
-          type: array
-          title: Evidence Refs
-        examples:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Examples
-        confidence:
-          anyOf:
-          - type: string
-            enum:
-            - high
-            - medium
-            - low
-          - type: 'null'
-          title: Confidence
-      type: object
-      required:
-      - title
-      title: CompanyStylebookPageSection
-    CompanyProfileStatus:
-      type: string
-      enum:
-      - active
-      - archived
-      - deleted
-      title: CompanyProfileStatus
-      description: Lifecycle status for a company profile.
-    CompanyProfileListScope:
-      type: string
-      enum:
-      - active_org
-      - my_accessible
-      title: CompanyProfileListScope
     CompanyStylebookHero:
       properties:
         company_name:
@@ -1244,100 +1059,204 @@ components:
       - location_value
       - company_size_value
       title: CompanyStylebookHero
-    CompanyStylebookResponse:
+    CompanyMessageCreate:
       properties:
-        status:
+        message_type:
           type: string
-          enum:
-          - pending
-          - processing
-          - ready
-          - failed
-          title: Status
-        schema_version:
-          type: integer
-          title: Schema Version
-        generated_at:
+          title: Message Type
+        content:
+          type: string
+          title: Content
+        message_metadata:
           anyOf:
-          - type: string
+          - additionalProperties: true
+            type: object
           - type: 'null'
-          title: Generated At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-        manually_edited:
-          type: boolean
-          title: Manually Edited
-          default: false
-        retryable:
-          type: boolean
-          title: Retryable
-          default: false
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-        payload:
-          anyOf:
-          - $ref: '#/components/schemas/CompanyStylebookPayload-Output'
-          - type: 'null'
+          title: Message Metadata
       type: object
       required:
-      - status
-      - schema_version
-      title: CompanyStylebookResponse
-    CompanyStylebookUpdateRequest:
+      - message_type
+      - content
+      title: CompanyMessageCreate
+    CompanyStylebookPayload-Input:
       properties:
-        payload:
-          $ref: '#/components/schemas/CompanyStylebookPayload-Input'
-      type: object
-      required:
-      - payload
-      title: CompanyStylebookUpdateRequest
-    CompanyProfileSummaryResponse:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Id
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        company_links:
+        hero:
+          $ref: '#/components/schemas/CompanyStylebookHero'
+        logo:
+          $ref: '#/components/schemas/CompanyStylebookLogo'
+        colors:
+          $ref: '#/components/schemas/CompanyStylebookColors'
+        promo_references:
+          $ref: '#/components/schemas/CompanyStylebookPromoReferences'
+        value_propositions:
+          $ref: '#/components/schemas/CompanyStylebookListSection'
+        target_audience:
+          $ref: '#/components/schemas/CompanyStylebookChipSection'
+        business_model:
+          $ref: '#/components/schemas/CompanyStylebookBusinessModel'
+        categories:
+          $ref: '#/components/schemas/CompanyStylebookChipSection'
+        available_reference_images:
+          items:
+            $ref: '#/components/schemas/CompanyStylebookImageItem'
+          type: array
+          title: Available Reference Images
+        brand_nuance:
+          $ref: '#/components/schemas/CompanyStylebookBrandNuance'
+        brand_foundation:
+          additionalProperties: true
+          type: object
+          title: Brand Foundation
+        messaging_pillars:
           items:
             type: string
           type: array
-          title: Company Links
-        logo_url:
+          title: Messaging Pillars
+        must_preserve:
+          items:
+            type: string
+          type: array
+          title: Must Preserve
+        canonical_profile:
+          additionalProperties: true
+          type: object
+          title: Canonical Profile
+        design_tokens:
+          additionalProperties: true
+          type: object
+          title: Design Tokens
+        visual_system:
+          additionalProperties: true
+          type: object
+          title: Visual System
+        accessibility_system:
+          additionalProperties: true
+          type: object
+          title: Accessibility System
+        asset_usage_system:
+          additionalProperties: true
+          type: object
+          title: Asset Usage System
+        messaging_system:
+          additionalProperties: true
+          type: object
+          title: Messaging System
+        content_style_system:
+          additionalProperties: true
+          type: object
+          title: Content Style System
+        products_audiences:
+          additionalProperties: true
+          type: object
+          title: Products Audiences
+        campaign_playbook:
+          additionalProperties: true
+          type: object
+          title: Campaign Playbook
+        market_learning:
+          additionalProperties: true
+          type: object
+          title: Market Learning
+        brand_validation_system:
+          additionalProperties: true
+          type: object
+          title: Brand Validation System
+        source_inventory:
+          additionalProperties: true
+          type: object
+          title: Source Inventory
+        stylebook_governance:
+          additionalProperties: true
+          type: object
+          title: Stylebook Governance
+        pages:
+          items:
+            $ref: '#/components/schemas/CompanyStylebookPage'
+          type: array
+          title: Pages
+      type: object
+      required:
+      - hero
+      - logo
+      - colors
+      - promo_references
+      - value_propositions
+      - target_audience
+      - business_model
+      - categories
+      title: CompanyStylebookPayload
+    CompanyStylebookLogo:
+      properties:
+        image_url:
           anyOf:
           - type: string
           - type: 'null'
-          title: Logo Url
-        status:
+          title: Image Url
+        description:
           type: string
-        marketing_profile_completed:
-          type: boolean
-          title: Marketing Profile Completed
-          default: false
+          title: Description
       type: object
       required:
-      - id
-      - organization_id
+      - description
+      title: CompanyStylebookLogo
+    CompanyStylebookColors:
+      properties:
+        description:
+          type: string
+          title: Description
+        swatches:
+          items:
+            $ref: '#/components/schemas/CompanyStylebookSwatch'
+          type: array
+          title: Swatches
+      type: object
+      required:
+      - description
+      title: CompanyStylebookColors
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CompanyStylebookSwatch:
+      properties:
+        label:
+          type: string
+          title: Label
+        hex:
+          type: string
+          title: Hex
+      type: object
+      required:
+      - label
+      - hex
+      title: CompanyStylebookSwatch
+    CompanyProfileStatusUpdateRequest:
+      properties:
+        status:
+          $ref: '#/components/schemas/CompanyProfileStatus'
+          description: New status for the company profile (archived or deleted)
+      type: object
+      required:
       - status
-      title: CompanyProfileSummaryResponse
-      description: Compact company-profile projection for workspace navigation.
-    CompanyStylebookPayload-Input:
+      title: CompanyProfileStatusUpdateRequest
+    CompanyStylebookPayload-Output:
       properties:
         hero:
           $ref: '#/components/schemas/CompanyStylebookHero'
@@ -1571,81 +1490,15 @@ components:
           default: active
       type: object
       title: CompanyProfileUpdate
-    CompanyMessageResponse:
+    CompanyStylebookChipSection:
       properties:
-        message_type:
-          type: string
-          title: Message Type
-        content:
-          type: string
-          title: Content
-        message_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Message Metadata
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      type: object
-      required:
-      - message_type
-      - content
-      - id
-      - company_profile_id
-      - created_at
-      title: CompanyMessageResponse
-    CompanyStylebookLogo:
-      properties:
-        image_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Image Url
-        description:
-          type: string
-          title: Description
-      type: object
-      required:
-      - description
-      title: CompanyStylebookLogo
-    CompanyStylebookPromoReferences:
-      properties:
-        subtitle:
-          type: string
-          title: Subtitle
-        items:
+        chips:
           items:
-            $ref: '#/components/schemas/CompanyStylebookImageItem'
+            type: string
           type: array
-          title: Items
+          title: Chips
       type: object
-      required:
-      - subtitle
-      title: CompanyStylebookPromoReferences
-    Body_upload_image_api_company_profile__profile_id__upload_image_post:
-      properties:
-        file:
-          type: string
-          format: binary
-          title: File
-      type: object
-      required:
-      - file
-      title: Body_upload_image_api_company_profile__profile_id__upload_image_post
+      title: CompanyStylebookChipSection
     CompanyProfileStatusUpdateResponse:
       properties:
         success:
@@ -1662,6 +1515,38 @@ components:
       - message
       - profile
       title: CompanyProfileStatusUpdateResponse
+    CompanyStylebookImageItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        image_url:
+          type: string
+          title: Image Url
+        label:
+          type: string
+          title: Label
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+      type: object
+      required:
+      - id
+      - image_url
+      - label
+      title: CompanyStylebookImageItem
+    Body_upload_image_api_company_profile__profile_id__upload_image_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_upload_image_api_company_profile__profile_id__upload_image_post
     Body_upload_company_logo_api_company_profile__profile_id__upload_logo_post:
       properties:
         file:
@@ -1672,65 +1557,7 @@ components:
       required:
       - file
       title: Body_upload_company_logo_api_company_profile__profile_id__upload_logo_post
-    CompanyStylebookColors:
-      properties:
-        description:
-          type: string
-          title: Description
-        swatches:
-          items:
-            $ref: '#/components/schemas/CompanyStylebookSwatch'
-          type: array
-          title: Swatches
-      type: object
-      required:
-      - description
-      title: CompanyStylebookColors
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CompanyStylebookGenerateRequest:
-      properties:
-        workflow_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Workflow Id
-        force:
-          type: boolean
-          title: Force
-          default: false
-      type: object
-      title: CompanyStylebookGenerateRequest
-    CompanyStylebookListSection:
-      properties:
-        items:
-          items:
-            type: string
-          type: array
-          title: Items
-      type: object
-      title: CompanyStylebookListSection
-    CompanyProfileCreate:
+    CompanyProfileResponse:
       properties:
         name:
           anyOf:
@@ -1852,149 +1679,236 @@ components:
           default: false
         status:
           anyOf:
-          - $ref: '#/components/schemas/CompanyProfileStatus'
+          - type: string
           - type: 'null'
-          default: active
-      type: object
-      title: CompanyProfileCreate
-    CompanyStylebookPayload-Output:
-      properties:
-        hero:
-          $ref: '#/components/schemas/CompanyStylebookHero'
-        logo:
-          $ref: '#/components/schemas/CompanyStylebookLogo'
-        colors:
-          $ref: '#/components/schemas/CompanyStylebookColors'
-        promo_references:
-          $ref: '#/components/schemas/CompanyStylebookPromoReferences'
-        value_propositions:
-          $ref: '#/components/schemas/CompanyStylebookListSection'
-        target_audience:
-          $ref: '#/components/schemas/CompanyStylebookChipSection'
-        business_model:
-          $ref: '#/components/schemas/CompanyStylebookBusinessModel'
-        categories:
-          $ref: '#/components/schemas/CompanyStylebookChipSection'
-        available_reference_images:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+        creator_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creator Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        company_messages:
           items:
-            $ref: '#/components/schemas/CompanyStylebookImageItem'
+            $ref: '#/components/schemas/CompanyMessageResponse'
           type: array
-          title: Available Reference Images
-        brand_nuance:
-          $ref: '#/components/schemas/CompanyStylebookBrandNuance'
-        brand_foundation:
-          additionalProperties: true
-          type: object
-          title: Brand Foundation
-        messaging_pillars:
+          title: Company Messages
+          default: []
+        company_images:
           items:
-            type: string
+            $ref: '#/components/schemas/CompanyImageResponse'
           type: array
-          title: Messaging Pillars
-        must_preserve:
-          items:
-            type: string
-          type: array
-          title: Must Preserve
-        canonical_profile:
-          additionalProperties: true
-          type: object
-          title: Canonical Profile
-        design_tokens:
-          additionalProperties: true
-          type: object
-          title: Design Tokens
-        visual_system:
-          additionalProperties: true
-          type: object
-          title: Visual System
-        accessibility_system:
-          additionalProperties: true
-          type: object
-          title: Accessibility System
-        asset_usage_system:
-          additionalProperties: true
-          type: object
-          title: Asset Usage System
-        messaging_system:
-          additionalProperties: true
-          type: object
-          title: Messaging System
-        content_style_system:
-          additionalProperties: true
-          type: object
-          title: Content Style System
-        products_audiences:
-          additionalProperties: true
-          type: object
-          title: Products Audiences
-        campaign_playbook:
-          additionalProperties: true
-          type: object
-          title: Campaign Playbook
-        market_learning:
-          additionalProperties: true
-          type: object
-          title: Market Learning
-        brand_validation_system:
-          additionalProperties: true
-          type: object
-          title: Brand Validation System
-        source_inventory:
-          additionalProperties: true
-          type: object
-          title: Source Inventory
-        stylebook_governance:
-          additionalProperties: true
-          type: object
-          title: Stylebook Governance
-        pages:
-          items:
-            $ref: '#/components/schemas/CompanyStylebookPage'
-          type: array
-          title: Pages
+          title: Company Images
+          default: []
+        category_attributes:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Category Attributes
+        marketing_profile_completed:
+          type: boolean
+          title: Marketing Profile Completed
+          default: false
       type: object
       required:
-      - hero
-      - logo
-      - colors
-      - promo_references
-      - value_propositions
-      - target_audience
-      - business_model
-      - categories
-      title: CompanyStylebookPayload
-    CompanyProfileStatusUpdateRequest:
+      - id
+      - organization_id
+      - creator_id
+      - created_at
+      - updated_at
+      title: CompanyProfileResponse
+    CompanyStylebookPage:
       properties:
-        status:
-          $ref: '#/components/schemas/CompanyProfileStatus'
-          description: New status for the company profile (archived or deleted)
-      type: object
-      required:
-      - status
-      title: CompanyProfileStatusUpdateRequest
-    CompanyStylebookSwatch:
-      properties:
-        label:
+        id:
           type: string
-          title: Label
-        hex:
+          title: Id
+        title:
           type: string
-          title: Hex
-      type: object
-      required:
-      - label
-      - hex
-      title: CompanyStylebookSwatch
-    CompanyStylebookBusinessModel:
-      properties:
+          title: Title
         summary:
           type: string
           title: Summary
+          default: ''
+        sections:
+          items:
+            $ref: '#/components/schemas/CompanyStylebookPageSection'
+          type: array
+          title: Sections
       type: object
       required:
-      - summary
-      title: CompanyStylebookBusinessModel
+      - id
+      - title
+      title: CompanyStylebookPage
+    CompanyProfileStatus:
+      type: string
+      enum:
+      - active
+      - archived
+      - deleted
+      title: CompanyProfileStatus
+      description: Lifecycle status for a company profile.
+    CompanyStylebookResponse:
+      properties:
+        status:
+          type: string
+          enum:
+          - pending
+          - processing
+          - ready
+          - failed
+          title: Status
+        schema_version:
+          type: integer
+          title: Schema Version
+        generated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generated At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        manually_edited:
+          type: boolean
+          title: Manually Edited
+          default: false
+        retryable:
+          type: boolean
+          title: Retryable
+          default: false
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        payload:
+          anyOf:
+          - $ref: '#/components/schemas/CompanyStylebookPayload-Output'
+          - type: 'null'
+      type: object
+      required:
+      - status
+      - schema_version
+      title: CompanyStylebookResponse
+    CompanyStylebookPageSection:
+      properties:
+        title:
+          type: string
+          title: Title
+        body:
+          type: string
+          title: Body
+          default: ''
+        bullets:
+          items:
+            type: string
+          type: array
+          title: Bullets
+        chips:
+          items:
+            type: string
+          type: array
+          title: Chips
+        evidence_refs:
+          items:
+            type: string
+          type: array
+          title: Evidence Refs
+        examples:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Examples
+        confidence:
+          anyOf:
+          - type: string
+            enum:
+            - high
+            - medium
+            - low
+          - type: 'null'
+          title: Confidence
+      type: object
+      required:
+      - title
+      title: CompanyStylebookPageSection
+    CompanyProfileListScope:
+      type: string
+      enum:
+      - active_org
+      - my_accessible
+      title: CompanyProfileListScope
+    CompanyImageResponse:
+      properties:
+        image_type:
+          type: string
+          title: Image Type
+        image_url:
+          type: string
+          title: Image Url
+        alt_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alt Text
+        image_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Image Metadata
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - image_type
+      - image_url
+      - id
+      - company_profile_id
+      - created_at
+      title: CompanyImageResponse
+    CompanyStylebookUpdateRequest:
+      properties:
+        payload:
+          $ref: '#/components/schemas/CompanyStylebookPayload-Input'
+      type: object
+      required:
+      - payload
+      title: CompanyStylebookUpdateRequest
     CompanyStylebookBrandNuance:
       properties:
         implicit_brand_differentiators:
@@ -2028,6 +1942,92 @@ components:
           title: Messaging Pillars
       type: object
       title: CompanyStylebookBrandNuance
+    CompanyStylebookBusinessModel:
+      properties:
+        summary:
+          type: string
+          title: Summary
+      type: object
+      required:
+      - summary
+      title: CompanyStylebookBusinessModel
+    CompanyProfileSummaryResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        company_links:
+          items:
+            type: string
+          type: array
+          title: Company Links
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+        status:
+          type: string
+        marketing_profile_completed:
+          type: boolean
+          title: Marketing Profile Completed
+          default: false
+      type: object
+      required:
+      - id
+      - organization_id
+      - status
+      title: CompanyProfileSummaryResponse
+      description: Compact company-profile projection for workspace navigation.
+    CompanyMessageResponse:
+      properties:
+        message_type:
+          type: string
+          title: Message Type
+        content:
+          type: string
+          title: Content
+        message_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Message Metadata
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - message_type
+      - content
+      - id
+      - company_profile_id
+      - created_at
+      title: CompanyMessageResponse
   securitySchemes:
     HTTPBearer:
       type: http

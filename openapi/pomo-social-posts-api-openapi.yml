@@ -282,134 +282,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    BatchGenerateRequest:
-      properties:
-        product_description:
-          type: string
-          title: Product Description
-        target_audience:
-          type: string
-          title: Target Audience
-        platforms:
-          items:
-            additionalProperties:
-              type: string
-            type: object
-          type: array
-          title: Platforms
-          description: List of platform configurations
-        campaign_goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Campaign Goals
-        key_selling_points:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Key Selling Points
-          default: ''
-        reference_images:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Reference Images
-        use_brand_style:
-          type: boolean
-          title: Use Brand Style
-          default: false
-        num_posts:
-          type: integer
-          maximum: 5.0
-          minimum: 1.0
-          title: Num Posts
-          default: 1
-      type: object
-      required:
-      - product_description
-      - target_audience
-      - platforms
-      title: BatchGenerateRequest
-      description: Request model for batch generation across multiple platforms.
-    UpdatePostRequest:
-      properties:
-        caption:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Caption
-        hashtags:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Hashtags
-        platform_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Platform Config
-        scheduled_for:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scheduled For
-      type: object
-      title: UpdatePostRequest
-      description: Request model for updating a post.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    GenerateVariationRequest:
-      properties:
-        post_id:
-          type: integer
-          title: Post Id
-          description: ID of the original post
-        variation_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Variation Prompt
-          description: Optional prompt for variation
-      type: object
-      required:
-      - post_id
-      title: GenerateVariationRequest
-      description: Request model for generating post variations.
     SocialPostRequest:
       properties:
         product_description:
@@ -496,6 +368,134 @@ components:
       - post_type
       title: SocialPostRequest
       description: Request model for generating social posts.
+    BatchGenerateRequest:
+      properties:
+        product_description:
+          type: string
+          title: Product Description
+        target_audience:
+          type: string
+          title: Target Audience
+        platforms:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type: array
+          title: Platforms
+          description: List of platform configurations
+        campaign_goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Campaign Goals
+        key_selling_points:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Selling Points
+          default: ''
+        reference_images:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Reference Images
+        use_brand_style:
+          type: boolean
+          title: Use Brand Style
+          default: false
+        num_posts:
+          type: integer
+          maximum: 5.0
+          minimum: 1.0
+          title: Num Posts
+          default: 1
+      type: object
+      required:
+      - product_description
+      - target_audience
+      - platforms
+      title: BatchGenerateRequest
+      description: Request model for batch generation across multiple platforms.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UpdatePostRequest:
+      properties:
+        caption:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caption
+        hashtags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Hashtags
+        platform_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Platform Config
+        scheduled_for:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheduled For
+      type: object
+      title: UpdatePostRequest
+      description: Request model for updating a post.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    GenerateVariationRequest:
+      properties:
+        post_id:
+          type: integer
+          title: Post Id
+          description: ID of the original post
+        variation_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variation Prompt
+          description: Optional prompt for variation
+      type: object
+      required:
+      - post_id
+      title: GenerateVariationRequest
+      description: Request model for generating post variations.
   securitySchemes:
     HTTPBearer:
       type: http

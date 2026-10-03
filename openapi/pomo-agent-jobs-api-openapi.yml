@@ -215,6 +215,121 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    JobStatusResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Job identifier
+        type:
+          type: string
+          title: Type
+          description: Job type
+        status:
+          type: string
+          title: Status
+          description: 'Current status: pending, running, completed, failed, cancelled'
+        result:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Result
+          description: Job result (only when completed)
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+          description: Error message (only when failed)
+        progress:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Progress
+          description: Current progress data
+        public_execution:
+          anyOf:
+          - $ref: '#/components/schemas/PublicExecutionSummary'
+          - type: 'null'
+          description: Bounded, engine-neutral execution summary. A higher revision replaces the complete previous snapshot.
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Job creation timestamp
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+          description: Job start timestamp
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+          description: Job completion timestamp
+      type: object
+      required:
+      - job_id
+      - type
+      - status
+      - created_at
+      title: JobStatusResponse
+      description: Response for job status query
+      example:
+        created_at: '2025-01-15T10:30:00Z'
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        progress:
+          message: Generating ad creative...
+          progress: 0.25
+          step: generate_creative
+        started_at: '2025-01-15T10:30:01Z'
+        status: running
+        type: ad_creation
+    AsyncJobRequest:
+      properties:
+        job_type:
+          type: string
+          title: Job Type
+          description: Type of job to execute
+        job_data:
+          additionalProperties: true
+          type: object
+          title: Job Data
+          description: Job-specific parameters
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+          description: Organization context
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+          description: Optional company profile context
+      type: object
+      required:
+      - job_type
+      - job_data
+      - organization_id
+      title: AsyncJobRequest
+      description: Request to start an async job
+      example:
+        company_profile_id: 123e4567-e89b-12d3-a456-426614174001
+        job_data:
+          campaign_name: Summer Sale 2025
+          copy_prompt: 50% off all products
+          creative_prompt: Beach vacation theme
+          platform: facebook
+        job_type: ad_creation
+        organization_id: 123e4567-e89b-12d3-a456-426614174000
     ValidationError:
       properties:
         loc:
@@ -236,6 +351,242 @@ components:
       - msg
       - type
       title: ValidationError
+    JobListItem:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        type:
+          type: string
+          title: Type
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+      type: object
+      required:
+      - job_id
+      - type
+      - status
+      - created_at
+      title: JobListItem
+      description: Summary info for a job in a list
+      example:
+        completed_at: '2025-01-15T10:32:15Z'
+        created_at: '2025-01-15T10:30:00Z'
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        status: completed
+        type: ad_creation
+    JobListResponse:
+      properties:
+        jobs:
+          items:
+            $ref: '#/components/schemas/JobListItem'
+          type: array
+          title: Jobs
+          description: List of jobs
+        total:
+          type: integer
+          title: Total
+          description: Total number of jobs matching filter
+      type: object
+      required:
+      - jobs
+      - total
+      title: JobListResponse
+      description: Response for listing jobs
+      example:
+        jobs:
+        - completed_at: '2025-01-15T10:32:15Z'
+          created_at: '2025-01-15T10:30:00Z'
+          job_id: 987fcdeb-51a2-43f7-9876-543210987654
+          status: completed
+          type: ad_creation
+        - created_at: '2025-01-15T10:25:00Z'
+          job_id: 123e4567-e89b-12d3-a456-426614174002
+          status: running
+          type: pdf_processing
+        total: 2
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PublicDispositionKind:
+      type: string
+      enum:
+      - answered
+      - partial
+      - needs_input
+      - declined
+      - no_answer
+      - cancelled
+      - failed
+      title: PublicDispositionKind
+      description: 'Closed customer meaning for one terminal assistant execution.
+
+
+        Runtime lifecycle and internal stop causes remain separate. Unknown internal
+
+        outcomes must be projected to ``FAILED`` with an
+
+        ``unknown_terminal_outcome`` reason before crossing this public boundary.'
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    PublicExecutionStep:
+      properties:
+        step_id:
+          anyOf:
+          - type: string
+            maxLength: 128
+            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          - type: 'null'
+          title: Step Id
+          description: Optional stable machine identity for reconciling one public step across live snapshot revisions. It is not user-visible.
+        category:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          title: Category
+        code:
+          type: string
+          maxLength: 128
+          minLength: 1
+          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          title: Code
+        state:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          title: State
+        terminal:
+          type: boolean
+          title: Terminal
+        title:
+          type: string
+          maxLength: 160
+          minLength: 1
+          title: Title
+        detail:
+          anyOf:
+          - type: string
+            maxLength: 500
+            minLength: 1
+          - type: 'null'
+          title: Detail
+        duration_ms:
+          anyOf:
+          - type: integer
+            maximum: 9007199254740991.0
+            minimum: 0.0
+          - type: 'null'
+          title: Duration Ms
+        cost_micros:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Cost Micros
+        input_tokens:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Input Tokens
+        output_tokens:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Output Tokens
+        cached_input_tokens:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Cached Input Tokens
+        result_count:
+          anyOf:
+          - type: integer
+            maximum: 1000000.0
+            minimum: 0.0
+          - type: 'null'
+          title: Result Count
+        total_count:
+          anyOf:
+          - type: integer
+            maximum: 1000000.0
+            minimum: 0.0
+          - type: 'null'
+          title: Total Count
+        result_state:
+          anyOf:
+          - type: string
+            maxLength: 64
+            minLength: 1
+            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          - type: 'null'
+          title: Result State
+      type: object
+      required:
+      - category
+      - code
+      - state
+      - terminal
+      - title
+      title: PublicExecutionStep
+      description: 'One bounded, presentation-ready item in a public execution snapshot.
+
+
+        The optional result fields are public operational facts, never model
+
+        reasoning or raw tool arguments. They let clients explain what a step
+
+        accomplished without parsing display copy.'
     PublicTerminalDisposition:
       properties:
         schema_version:
@@ -361,357 +712,6 @@ components:
       - terminal
       title: PublicExecutionSummary
       description: A complete public snapshot of one assistant execution.
-    JobListItem:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-        type:
-          type: string
-          title: Type
-        status:
-          type: string
-          title: Status
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-      type: object
-      required:
-      - job_id
-      - type
-      - status
-      - created_at
-      title: JobListItem
-      description: Summary info for a job in a list
-      example:
-        completed_at: '2025-01-15T10:32:15Z'
-        created_at: '2025-01-15T10:30:00Z'
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        status: completed
-        type: ad_creation
-    PublicExecutionStep:
-      properties:
-        step_id:
-          anyOf:
-          - type: string
-            maxLength: 128
-            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          - type: 'null'
-          title: Step Id
-          description: Optional stable machine identity for reconciling one public step across live snapshot revisions. It is not user-visible.
-        category:
-          type: string
-          maxLength: 64
-          minLength: 1
-          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          title: Category
-        code:
-          type: string
-          maxLength: 128
-          minLength: 1
-          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          title: Code
-        state:
-          type: string
-          maxLength: 64
-          minLength: 1
-          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          title: State
-        terminal:
-          type: boolean
-          title: Terminal
-        title:
-          type: string
-          maxLength: 160
-          minLength: 1
-          title: Title
-        detail:
-          anyOf:
-          - type: string
-            maxLength: 500
-            minLength: 1
-          - type: 'null'
-          title: Detail
-        duration_ms:
-          anyOf:
-          - type: integer
-            maximum: 9007199254740991.0
-            minimum: 0.0
-          - type: 'null'
-          title: Duration Ms
-        cost_micros:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Cost Micros
-        input_tokens:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Input Tokens
-        output_tokens:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Output Tokens
-        cached_input_tokens:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Cached Input Tokens
-        result_count:
-          anyOf:
-          - type: integer
-            maximum: 1000000.0
-            minimum: 0.0
-          - type: 'null'
-          title: Result Count
-        total_count:
-          anyOf:
-          - type: integer
-            maximum: 1000000.0
-            minimum: 0.0
-          - type: 'null'
-          title: Total Count
-        result_state:
-          anyOf:
-          - type: string
-            maxLength: 64
-            minLength: 1
-            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          - type: 'null'
-          title: Result State
-      type: object
-      required:
-      - category
-      - code
-      - state
-      - terminal
-      - title
-      title: PublicExecutionStep
-      description: 'One bounded, presentation-ready item in a public execution snapshot.
-
-
-        The optional result fields are public operational facts, never model
-
-        reasoning or raw tool arguments. They let clients explain what a step
-
-        accomplished without parsing display copy.'
-    AsyncJobRequest:
-      properties:
-        job_type:
-          type: string
-          title: Job Type
-          description: Type of job to execute
-        job_data:
-          additionalProperties: true
-          type: object
-          title: Job Data
-          description: Job-specific parameters
-        organization_id:
-          type: string
-          format: uuid
-          title: Organization Id
-          description: Organization context
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-          description: Optional company profile context
-      type: object
-      required:
-      - job_type
-      - job_data
-      - organization_id
-      title: AsyncJobRequest
-      description: Request to start an async job
-      example:
-        company_profile_id: 123e4567-e89b-12d3-a456-426614174001
-        job_data:
-          campaign_name: Summer Sale 2025
-          copy_prompt: 50% off all products
-          creative_prompt: Beach vacation theme
-          platform: facebook
-        job_type: ad_creation
-        organization_id: 123e4567-e89b-12d3-a456-426614174000
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PublicDispositionKind:
-      type: string
-      enum:
-      - answered
-      - partial
-      - needs_input
-      - declined
-      - no_answer
-      - cancelled
-      - failed
-      title: PublicDispositionKind
-      description: 'Closed customer meaning for one terminal assistant execution.
-
-
-        Runtime lifecycle and internal stop causes remain separate. Unknown internal
-
-        outcomes must be projected to ``FAILED`` with an
-
-        ``unknown_terminal_outcome`` reason before crossing this public boundary.'
-    JobStatusResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Job identifier
-        type:
-          type: string
-          title: Type
-          description: Job type
-        status:
-          type: string
-          title: Status
-          description: 'Current status: pending, running, completed, failed, cancelled'
-        result:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Result
-          description: Job result (only when completed)
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-          description: Error message (only when failed)
-        progress:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Progress
-          description: Current progress data
-        public_execution:
-          anyOf:
-          - $ref: '#/components/schemas/PublicExecutionSummary'
-          - type: 'null'
-          description: Bounded, engine-neutral execution summary. A higher revision replaces the complete previous snapshot.
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Job creation timestamp
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-          description: Job start timestamp
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-          description: Job completion timestamp
-      type: object
-      required:
-      - job_id
-      - type
-      - status
-      - created_at
-      title: JobStatusResponse
-      description: Response for job status query
-      example:
-        created_at: '2025-01-15T10:30:00Z'
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        progress:
-          message: Generating ad creative...
-          progress: 0.25
-          step: generate_creative
-        started_at: '2025-01-15T10:30:01Z'
-        status: running
-        type: ad_creation
-    JobListResponse:
-      properties:
-        jobs:
-          items:
-            $ref: '#/components/schemas/JobListItem'
-          type: array
-          title: Jobs
-          description: List of jobs
-        total:
-          type: integer
-          title: Total
-          description: Total number of jobs matching filter
-      type: object
-      required:
-      - jobs
-      - total
-      title: JobListResponse
-      description: Response for listing jobs
-      example:
-        jobs:
-        - completed_at: '2025-01-15T10:32:15Z'
-          created_at: '2025-01-15T10:30:00Z'
-          job_id: 987fcdeb-51a2-43f7-9876-543210987654
-          status: completed
-          type: ad_creation
-        - created_at: '2025-01-15T10:25:00Z'
-          job_id: 123e4567-e89b-12d3-a456-426614174002
-          status: running
-          type: pdf_processing
-        total: 2
   securitySchemes:
     HTTPBearer:
       type: http

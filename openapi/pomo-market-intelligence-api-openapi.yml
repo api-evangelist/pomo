@@ -1608,198 +1608,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SocialListeningSummaryAnalysisItemResponse:
-      properties:
-        theme_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Theme Key
-        title:
-          type: string
-          title: Title
-        analysis:
-          type: string
-          title: Analysis
-        recommendation:
-          type: string
-          title: Recommendation
-        drivers:
-          items:
-            type: string
-          type: array
-          title: Drivers
-        citations:
-          items:
-            $ref: '#/components/schemas/SocialListeningSummaryCitationResponse'
-          type: array
-          title: Citations
-        citation_mention_ids:
-          items:
-            type: string
-          type: array
-          title: Citation Mention Ids
-        group_citation_ids:
-          items:
-            type: string
-          type: array
-          title: Group Citation Ids
-        group_mention_ids:
-          items:
-            type: string
-          type: array
-          title: Group Mention Ids
-        group_metrics:
-          additionalProperties: true
-          type: object
-          title: Group Metrics
-        theme_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Theme Type
-        priority:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Priority
-        sentiment_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sentiment Label
-      type: object
-      required:
-      - title
-      - analysis
-      - recommendation
-      title: SocialListeningSummaryAnalysisItemResponse
-    CompetitiveIntelligenceEvidence:
-      properties:
-        evidence_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Evidence Id
-        signal_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Signal Type
-        summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Summary
-        source_table:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source Table
-        source_urls:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Source Urls
-      type: object
-      title: CompetitiveIntelligenceEvidence
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MarketIntelligenceUpdate:
-      properties:
-        is_active:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Active
-        expires_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Expires At
-      type: object
-      title: MarketIntelligenceUpdate
-    CompetitiveIntelligenceRecord:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-        company_profile_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Name
-        snapshot_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Snapshot Date
-        analysis:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Analysis
-        judgement:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Judgement
-        actions:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/CompetitiveIntelligenceAction'
-            type: array
-          - type: 'null'
-          title: Actions
-        evidence:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/CompetitiveIntelligenceEvidence'
-            type: array
-          - type: 'null'
-          title: Evidence
-        confidence_score:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Confidence Score
-        model_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Model Name
-        created_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created Date
-        updated_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated Date
-      type: object
-      title: CompetitiveIntelligenceRecord
     SocialListeningSummaryCitationResponse:
       properties:
         citation_id:
@@ -1894,40 +1702,21 @@ components:
       required:
       - citation_id
       title: SocialListeningSummaryCitationResponse
-    SocialProspectingCandidateStatusUpdateRequest:
+    MarketIntelligenceUpdate:
       properties:
-        status:
-          anyOf:
-          - type: string
-            pattern: ^(new|reviewed|saved|dismissed)$
-          - type: 'null'
-          title: Status
-        handoff_status:
-          anyOf:
-          - type: string
-            pattern: ^(not_ready|ready|copied|exported|contacted|replied|converted|disqualified)$
-          - type: 'null'
-          title: Handoff Status
-        block_account:
+        is_active:
           anyOf:
           - type: boolean
           - type: 'null'
-          title: Block Account
-          default: false
-        feedback_reason:
+          title: Is Active
+        expires_at:
           anyOf:
           - type: string
-            maxLength: 500
+            format: date-time
           - type: 'null'
-          title: Feedback Reason
-        handoff_note:
-          anyOf:
-          - type: string
-            maxLength: 600
-          - type: 'null'
-          title: Handoff Note
+          title: Expires At
       type: object
-      title: SocialProspectingCandidateStatusUpdateRequest
+      title: MarketIntelligenceUpdate
     SocialListeningSettingsResponse:
       properties:
         id:
@@ -2024,6 +1813,394 @@ components:
       - max_custom_query_terms
       - max_query_term_length
       title: SocialListeningSettingsResponse
+    MarketIntelligenceResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        intelligence_type:
+          type: string
+          title: Intelligence Type
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        insights:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Insights
+        metrics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metrics
+        recommendations:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Recommendations
+        data_sources:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Data Sources
+        confidence_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Confidence Score
+        impact_level:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Level
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+        is_active:
+          type: boolean
+          title: Is Active
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - intelligence_type
+      - title
+      - description
+      - insights
+      - metrics
+      - recommendations
+      - data_sources
+      - confidence_score
+      - impact_level
+      - category
+      - tags
+      - is_active
+      - expires_at
+      - created_at
+      - updated_at
+      title: MarketIntelligenceResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SocialProspectingExportResponse:
+      properties:
+        candidates:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Candidates
+        total:
+          type: integer
+          title: Total
+          default: 0
+      type: object
+      title: SocialProspectingExportResponse
+    AdsWinnerResponse:
+      properties:
+        search_mode:
+          type: string
+          enum:
+          - general
+          - precise
+          title: Search Mode
+          default: general
+        industry_ids:
+          items:
+            type: string
+          type: array
+          title: Industry Ids
+        sub_industries:
+          items:
+            type: string
+          type: array
+          title: Sub Industries
+        items:
+          items:
+            $ref: '#/components/schemas/AdsWinnerItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - industry_ids
+      - sub_industries
+      - items
+      title: AdsWinnerResponse
+    SocialProspectingCandidateStatusUpdateRequest:
+      properties:
+        status:
+          anyOf:
+          - type: string
+            pattern: ^(new|reviewed|saved|dismissed)$
+          - type: 'null'
+          title: Status
+        handoff_status:
+          anyOf:
+          - type: string
+            pattern: ^(not_ready|ready|copied|exported|contacted|replied|converted|disqualified)$
+          - type: 'null'
+          title: Handoff Status
+        block_account:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Block Account
+          default: false
+        feedback_reason:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Feedback Reason
+        handoff_note:
+          anyOf:
+          - type: string
+            maxLength: 600
+          - type: 'null'
+          title: Handoff Note
+      type: object
+      title: SocialProspectingCandidateStatusUpdateRequest
+    TrendSuppressionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        acted_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Acted By User Id
+        platform:
+          type: string
+          enum:
+          - google
+          - tiktok
+          - youtube
+          - yelp
+          - amazon
+          title: Platform
+        source_record_id:
+          type: string
+          title: Source Record Id
+        reason:
+          type: string
+          enum:
+          - not_interested
+          - irrelevant
+          - duplicate
+          title: Reason
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - company_profile_id
+      - platform
+      - source_record_id
+      - reason
+      title: TrendSuppressionResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CompetitiveIntelligenceEvidence:
+      properties:
+        evidence_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Evidence Id
+        signal_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signal Type
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        source_table:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Table
+        source_urls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Source Urls
+      type: object
+      title: CompetitiveIntelligenceEvidence
+    TrendSuppressionUpsertRequest:
+      properties:
+        platform:
+          type: string
+          enum:
+          - google
+          - tiktok
+          - youtube
+          - yelp
+          - amazon
+          title: Platform
+        source_record_id:
+          type: string
+          minLength: 1
+          title: Source Record Id
+        reason:
+          type: string
+          enum:
+          - not_interested
+          - irrelevant
+          - duplicate
+          title: Reason
+      type: object
+      required:
+      - platform
+      - source_record_id
+      - reason
+      title: TrendSuppressionUpsertRequest
+    SocialListeningSummaryResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        summary_markdown:
+          type: string
+          title: Summary Markdown
+        analysis_items:
+          items:
+            $ref: '#/components/schemas/SocialListeningSummaryAnalysisItemResponse'
+          type: array
+          title: Analysis Items
+        model_name:
+          type: string
+          title: Model Name
+        mention_count:
+          type: integer
+          title: Mention Count
+        lookback_days:
+          type: integer
+          title: Lookback Days
+        latest_mention_created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Mention Created At
+        generated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generated At
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        is_cached:
+          type: boolean
+          title: Is Cached
+        summary_metadata:
+          additionalProperties: true
+          type: object
+          title: Summary Metadata
+      type: object
+      required:
+      - summary_markdown
+      - model_name
+      - mention_count
+      - lookback_days
+      - is_cached
+      title: SocialListeningSummaryResponse
     SocialProspectingResponse:
       properties:
         access:
@@ -2053,34 +2230,6 @@ components:
       - access
       - summary
       title: SocialProspectingResponse
-    TrendSuppressionUpsertRequest:
-      properties:
-        platform:
-          type: string
-          enum:
-          - google
-          - tiktok
-          - youtube
-          - yelp
-          - amazon
-          title: Platform
-        source_record_id:
-          type: string
-          minLength: 1
-          title: Source Record Id
-        reason:
-          type: string
-          enum:
-          - not_interested
-          - irrelevant
-          - duplicate
-          title: Reason
-      type: object
-      required:
-      - platform
-      - source_record_id
-      - reason
-      title: TrendSuppressionUpsertRequest
     AdsWinnerItem:
       properties:
         id:
@@ -2206,7 +2355,38 @@ components:
           title: Expected Impact
       type: object
       title: CompetitiveIntelligenceAction
-    SocialListeningSummaryResponse:
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    CompetitiveIntelligenceRecord:
       properties:
         id:
           anyOf:
@@ -2218,280 +2398,131 @@ components:
           - type: string
           - type: 'null'
           title: Company Profile Id
-        summary_markdown:
-          type: string
-          title: Summary Markdown
-        analysis_items:
-          items:
-            $ref: '#/components/schemas/SocialListeningSummaryAnalysisItemResponse'
-          type: array
-          title: Analysis Items
-        model_name:
-          type: string
-          title: Model Name
-        mention_count:
-          type: integer
-          title: Mention Count
-        lookback_days:
-          type: integer
-          title: Lookback Days
-        latest_mention_created_at:
+        company_profile_name:
           anyOf:
           - type: string
           - type: 'null'
-          title: Latest Mention Created At
-        generated_at:
+          title: Company Profile Name
+        snapshot_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Snapshot Date
+        analysis:
           anyOf:
           - type: string
           - type: 'null'
-          title: Generated At
-        created_at:
+          title: Analysis
+        judgement:
           anyOf:
           - type: string
           - type: 'null'
-          title: Created At
-        updated_at:
+          title: Judgement
+        actions:
           anyOf:
-          - type: string
+          - items:
+              $ref: '#/components/schemas/CompetitiveIntelligenceAction'
+            type: array
           - type: 'null'
-          title: Updated At
-        is_cached:
-          type: boolean
-          title: Is Cached
-        summary_metadata:
-          additionalProperties: true
-          type: object
-          title: Summary Metadata
-      type: object
-      required:
-      - summary_markdown
-      - model_name
-      - mention_count
-      - lookback_days
-      - is_cached
-      title: SocialListeningSummaryResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TrendSuppressionResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        organization_id:
-          type: string
-          format: uuid
-          title: Organization Id
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        acted_by_user_id:
+          title: Actions
+        evidence:
           anyOf:
-          - type: string
-            format: uuid
+          - items:
+              $ref: '#/components/schemas/CompetitiveIntelligenceEvidence'
+            type: array
           - type: 'null'
-          title: Acted By User Id
-        platform:
-          type: string
-          enum:
-          - google
-          - tiktok
-          - youtube
-          - yelp
-          - amazon
-          title: Platform
-        source_record_id:
-          type: string
-          title: Source Record Id
-        reason:
-          type: string
-          enum:
-          - not_interested
-          - irrelevant
-          - duplicate
-          title: Reason
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      type: object
-      required:
-      - id
-      - organization_id
-      - company_profile_id
-      - platform
-      - source_record_id
-      - reason
-      title: TrendSuppressionResponse
-    MarketIntelligenceResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        intelligence_type:
-          type: string
-          title: Intelligence Type
-        title:
-          type: string
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        insights:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Insights
-        metrics:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metrics
-        recommendations:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Recommendations
-        data_sources:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Data Sources
+          title: Evidence
         confidence_score:
           anyOf:
           - type: number
           - type: 'null'
           title: Confidence Score
-        impact_level:
+        model_name:
           anyOf:
           - type: string
           - type: 'null'
-          title: Impact Level
-        category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Category
-        tags:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Tags
-        is_active:
-          type: boolean
-          title: Is Active
-        expires_at:
+          title: Model Name
+        created_date:
           anyOf:
           - type: string
             format: date-time
           - type: 'null'
-          title: Expires At
-        created_at:
+          title: Created Date
+        updated_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated Date
+      type: object
+      title: CompetitiveIntelligenceRecord
+    SocialListeningSummaryAnalysisItemResponse:
+      properties:
+        theme_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Theme Key
+        title:
           type: string
-          format: date-time
-          title: Created At
-        updated_at:
+          title: Title
+        analysis:
           type: string
-          format: date-time
-          title: Updated At
+          title: Analysis
+        recommendation:
+          type: string
+          title: Recommendation
+        drivers:
+          items:
+            type: string
+          type: array
+          title: Drivers
+        citations:
+          items:
+            $ref: '#/components/schemas/SocialListeningSummaryCitationResponse'
+          type: array
+          title: Citations
+        citation_mention_ids:
+          items:
+            type: string
+          type: array
+          title: Citation Mention Ids
+        group_citation_ids:
+          items:
+            type: string
+          type: array
+          title: Group Citation Ids
+        group_mention_ids:
+          items:
+            type: string
+          type: array
+          title: Group Mention Ids
+        group_metrics:
+          additionalProperties: true
+          type: object
+          title: Group Metrics
+        theme_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Theme Type
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        sentiment_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sentiment Label
       type: object
       required:
-      - id
-      - intelligence_type
       - title
-      - description
-      - insights
-      - metrics
-      - recommendations
-      - data_sources
-      - confidence_score
-      - impact_level
-      - category
-      - tags
-      - is_active
-      - expires_at
-      - created_at
-      - updated_at
-      title: MarketIntelligenceResponse
-    AdsWinnerResponse:
-      properties:
-        search_mode:
-          type: string
-          enum:
-          - general
-          - precise
-          title: Search Mode
-          default: general
-        industry_ids:
-          items:
-            type: string
-          type: array
-          title: Industry Ids
-        sub_industries:
-          items:
-            type: string
-          type: array
-          title: Sub Industries
-        items:
-          items:
-            $ref: '#/components/schemas/AdsWinnerItem'
-          type: array
-          title: Items
-      type: object
-      required:
-      - industry_ids
-      - sub_industries
-      - items
-      title: AdsWinnerResponse
-    SocialProspectingExportResponse:
-      properties:
-        candidates:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Candidates
-        total:
-          type: integer
-          title: Total
-          default: 0
-      type: object
-      title: SocialProspectingExportResponse
+      - analysis
+      - recommendation
+      title: SocialListeningSummaryAnalysisItemResponse
     SocialProspectingSettingsUpdateRequest:
       properties:
         enabled:
@@ -2591,37 +2622,6 @@ components:
           title: Target Query Overrides
       type: object
       title: SocialListeningSettingsUpdateRequest
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
   securitySchemes:
     HTTPBearer:
       type: http

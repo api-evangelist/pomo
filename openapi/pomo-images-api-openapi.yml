@@ -89,44 +89,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    Body_replace_image_upload_api_images_replace_upload_post:
-      properties:
-        url:
-          type: string
-          title: Url
-        file:
-          type: string
-          format: binary
-          title: File
-        content_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Content Type
-      type: object
-      required:
-      - url
-      - file
-      title: Body_replace_image_upload_api_images_replace_upload_post
-    ReplaceImageRequest:
-      properties:
-        url:
-          type: string
-          title: Url
-        image_data:
-          type: string
-          title: Image Data
-        content_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Content Type
-      type: object
-      required:
-      - url
-      - image_data
-      title: ReplaceImageRequest
-      description: Request model for replacing an image.
     ValidationError:
       properties:
         loc:
@@ -148,6 +110,25 @@ components:
       - msg
       - type
       title: ValidationError
+    Body_replace_image_upload_api_images_replace_upload_post:
+      properties:
+        url:
+          type: string
+          title: Url
+        file:
+          type: string
+          format: binary
+          title: File
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+      type: object
+      required:
+      - url
+      - file
+      title: Body_replace_image_upload_api_images_replace_upload_post
     HTTPValidationError:
       properties:
         detail:
@@ -157,6 +138,25 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    ReplaceImageRequest:
+      properties:
+        url:
+          type: string
+          title: Url
+        image_data:
+          type: string
+          title: Image Data
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+      type: object
+      required:
+      - url
+      - image_data
+      title: ReplaceImageRequest
+      description: Request model for replacing an image.
   securitySchemes:
     HTTPBearer:
       type: http

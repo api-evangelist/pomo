@@ -163,6 +163,295 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DeckStatusResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        status:
+          type: string
+          title: Status
+        ready:
+          type: boolean
+          title: Ready
+        doc_id:
+          type: string
+          title: Doc Id
+        doc_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Doc Url
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        provider_response:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Provider Response
+        file_urls:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: File Urls
+        files:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/DeckFileDescriptor'
+            type: array
+          - type: 'null'
+          title: Files
+      type: object
+      required:
+      - success
+      - status
+      - ready
+      - doc_id
+      title: DeckStatusResponse
+    DeckFileDescriptor:
+      properties:
+        format:
+          type: string
+          title: Format
+        filename:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Filename
+        gcs_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gcs Url
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+        signed_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signed Url
+      type: object
+      required:
+      - format
+      title: DeckFileDescriptor
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    GenerateGTMRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        product_offering_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Product Offering Ids
+        audience:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Audience
+        goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal
+        tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tone
+          default: professional
+        expected_length:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Length
+          default: standard
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        attachments:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Attachments
+      type: object
+      required:
+      - company_profile_id
+      title: GenerateGTMRequest
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post:
+      properties:
+        request_json:
+          type: string
+          title: Request Json
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+          default: []
+      type: object
+      required:
+      - request_json
+      title: Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post
+    DeckStyle:
+      properties:
+        palette:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Palette
+        fonts:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Fonts
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+        tone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tone
+        density:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Density
+        icon_style:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon Style
+      type: object
+      title: DeckStyle
+    DeckSection:
+      properties:
+        name:
+          type: string
+          title: Name
+        target_slides:
+          type: integer
+          minimum: 1.0
+          title: Target Slides
+          description: Target slides in this section
+        must_include:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Must Include
+          default: false
+      type: object
+      required:
+      - name
+      - target_slides
+      title: DeckSection
+    DeckExport:
+      properties:
+        pptx:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Pptx
+          default: false
+        pdf:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Pdf
+          default: false
+      type: object
+      title: DeckExport
     GenerateDeckRequest:
       properties:
         company_profile_id:
@@ -233,295 +522,6 @@ components:
       - slides_total
       - sections
       title: GenerateDeckRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    DeckStyle:
-      properties:
-        palette:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Palette
-        fonts:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Fonts
-        logo_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Logo Url
-        tone:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tone
-        density:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Density
-        icon_style:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon Style
-      type: object
-      title: DeckStyle
-    Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post:
-      properties:
-        request_json:
-          type: string
-          title: Request Json
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-          default: []
-      type: object
-      required:
-      - request_json
-      title: Body_generate_market_opportunity_document_api_marketing_docs_market_opportunity_generate_post
-    DeckStatusResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        status:
-          type: string
-          title: Status
-        ready:
-          type: boolean
-          title: Ready
-        doc_id:
-          type: string
-          title: Doc Id
-        doc_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Doc Url
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-        provider_response:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Provider Response
-        file_urls:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: File Urls
-        files:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/DeckFileDescriptor'
-            type: array
-          - type: 'null'
-          title: Files
-      type: object
-      required:
-      - success
-      - status
-      - ready
-      - doc_id
-      title: DeckStatusResponse
-    DeckSection:
-      properties:
-        name:
-          type: string
-          title: Name
-        target_slides:
-          type: integer
-          minimum: 1.0
-          title: Target Slides
-          description: Target slides in this section
-        must_include:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Must Include
-          default: false
-      type: object
-      required:
-      - name
-      - target_slides
-      title: DeckSection
-    DeckExport:
-      properties:
-        pptx:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Pptx
-          default: false
-        pdf:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Pdf
-          default: false
-      type: object
-      title: DeckExport
-    DeckFileDescriptor:
-      properties:
-        format:
-          type: string
-          title: Format
-        filename:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Filename
-        gcs_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gcs Url
-        content_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Content Type
-        signed_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Signed Url
-      type: object
-      required:
-      - format
-      title: DeckFileDescriptor
-    GenerateGTMRequest:
-      properties:
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        product_offering_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Product Offering Ids
-        audience:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Audience
-        goal:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Goal
-        tone:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tone
-          default: professional
-        expected_length:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expected Length
-          default: standard
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        attachments:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Attachments
-      type: object
-      required:
-      - company_profile_id
-      title: GenerateGTMRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
   securitySchemes:
     HTTPBearer:
       type: http

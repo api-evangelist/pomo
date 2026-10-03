@@ -169,27 +169,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
+    ProductIdeaBrainstormRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        user_input:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: User Input
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - user_input
+      title: ProductIdeaBrainstormRequest
     ProductIdea:
       properties:
         name:
@@ -245,32 +250,27 @@ components:
       - potential_challenges
       - success_metrics
       title: ProductIdea
-    ProductIdeaBrainstormRequest:
+    ValidationError:
       properties:
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-        user_input:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: User Input
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - user_input
-      title: ProductIdeaBrainstormRequest
+      - loc
+      - msg
+      - type
+      title: ValidationError
     HTTPValidationError:
       properties:
         detail:

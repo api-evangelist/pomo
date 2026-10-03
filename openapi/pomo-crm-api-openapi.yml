@@ -156,47 +156,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    CrmSyncResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        change_request_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Change Request Id
-        results:
-          items:
-            $ref: '#/components/schemas/CrmSyncResultItem'
-          type: array
-          title: Results
-      type: object
-      required:
-      - status
-      title: CrmSyncResponse
-      description: "Response for POST /api/crm/sync/hubspot.\n\n`status` is the overall request outcome:\n  - \"synced\"           — direct path, all upserts succeeded\n  - \"partial\"          — direct path, some upserts failed\n  - \"failed\"           — direct path, all upserts failed\n  - \"pending_approval\" — governed path, ChangeRequest created"
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     CrmAudienceAddResponse:
       properties:
         group:
@@ -218,6 +177,116 @@ components:
       required:
       - group
       title: CrmAudienceAddResponse
+    CrmSyncRequest:
+      properties:
+        person_refs:
+          items:
+            type: string
+          type: array
+          maxItems: 200
+          minItems: 1
+          title: Person Refs
+        fields_overrides:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Fields Overrides
+        note:
+          anyOf:
+          - type: string
+            maxLength: 5000
+          - type: 'null'
+          title: Note
+        mode:
+          type: string
+          title: Mode
+          default: contact
+      type: object
+      required:
+      - person_refs
+      title: CrmSyncRequest
+      description: 'Body for POST /api/crm/sync/hubspot.
+
+
+        `person_refs` are the synthetic `{source}:{id}` keys from the People projection.
+
+        `fields_overrides` lets the client patch the diff before staging (e.g. an
+
+        email typed into the email-less notice). `mode` switches identity handling.'
+    CrmSettingsUpdateRequest:
+      properties:
+        crm_sync_requires_approval:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Crm Sync Requires Approval
+        default_audience_group_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Default Audience Group Id
+      type: object
+      title: CrmSettingsUpdateRequest
+    CrmSyncResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        change_request_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Change Request Id
+        results:
+          items:
+            $ref: '#/components/schemas/CrmSyncResultItem'
+          type: array
+          title: Results
+      type: object
+      required:
+      - status
+      title: CrmSyncResponse
+      description: "Response for POST /api/crm/sync/hubspot.\n\n`status` is the overall request outcome:\n  - \"synced\"           — direct path, all upserts succeeded\n  - \"partial\"          — direct path, some upserts failed\n  - \"failed\"           — direct path, all upserts failed\n  - \"pending_approval\" — governed path, ChangeRequest created"
+    CrmSettingsResponse:
+      properties:
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        crm_sync_requires_approval:
+          type: boolean
+          title: Crm Sync Requires Approval
+          default: false
+        default_audience_group_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Default Audience Group Id
+      type: object
+      required:
+      - company_profile_id
+      title: CrmSettingsResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CrmApproverMember:
       properties:
         user_id:
@@ -237,6 +306,69 @@ components:
       required:
       - user_id
       title: CrmApproverMember
+    CrmApproverGroupResponse:
+      properties:
+        group_id:
+          type: string
+          title: Group Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        members:
+          items:
+            $ref: '#/components/schemas/CrmApproverMember'
+          type: array
+          title: Members
+      type: object
+      required:
+      - group_id
+      - name
+      title: CrmApproverGroupResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CrmAudienceListResponse:
+      properties:
+        audiences:
+          items:
+            $ref: '#/components/schemas/CrmAudienceSummary'
+          type: array
+          title: Audiences
+      type: object
+      title: CrmAudienceListResponse
+    CrmAudienceSummary:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        number_of_members:
+          type: integer
+          title: Number Of Members
+          default: 0
+        creation_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creation Date
+      type: object
+      required:
+      - id
+      - name
+      title: CrmAudienceSummary
     CrmAudienceAddRequest:
       properties:
         person_refs:
@@ -315,138 +447,6 @@ components:
       - status
       title: CrmSyncResultItem
       description: Per-person outcome of a sync request (direct path) or staged op (governed).
-    CrmAudienceSummary:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        number_of_members:
-          type: integer
-          title: Number Of Members
-          default: 0
-        creation_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creation Date
-      type: object
-      required:
-      - id
-      - name
-      title: CrmAudienceSummary
-    CrmSyncRequest:
-      properties:
-        person_refs:
-          items:
-            type: string
-          type: array
-          maxItems: 200
-          minItems: 1
-          title: Person Refs
-        fields_overrides:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Fields Overrides
-        note:
-          anyOf:
-          - type: string
-            maxLength: 5000
-          - type: 'null'
-          title: Note
-        mode:
-          type: string
-          title: Mode
-          default: contact
-      type: object
-      required:
-      - person_refs
-      title: CrmSyncRequest
-      description: 'Body for POST /api/crm/sync/hubspot.
-
-
-        `person_refs` are the synthetic `{source}:{id}` keys from the People projection.
-
-        `fields_overrides` lets the client patch the diff before staging (e.g. an
-
-        email typed into the email-less notice). `mode` switches identity handling.'
-    CrmSettingsResponse:
-      properties:
-        company_profile_id:
-          type: string
-          title: Company Profile Id
-        crm_sync_requires_approval:
-          type: boolean
-          title: Crm Sync Requires Approval
-          default: false
-        default_audience_group_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Default Audience Group Id
-      type: object
-      required:
-      - company_profile_id
-      title: CrmSettingsResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CrmSettingsUpdateRequest:
-      properties:
-        crm_sync_requires_approval:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Crm Sync Requires Approval
-        default_audience_group_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Default Audience Group Id
-      type: object
-      title: CrmSettingsUpdateRequest
-    CrmApproverGroupResponse:
-      properties:
-        group_id:
-          type: string
-          title: Group Id
-        name:
-          type: string
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        members:
-          items:
-            $ref: '#/components/schemas/CrmApproverMember'
-          type: array
-          title: Members
-      type: object
-      required:
-      - group_id
-      - name
-      title: CrmApproverGroupResponse
-    CrmAudienceListResponse:
-      properties:
-        audiences:
-          items:
-            $ref: '#/components/schemas/CrmAudienceSummary'
-          type: array
-          title: Audiences
-      type: object
-      title: CrmAudienceListResponse
   securitySchemes:
     HTTPBearer:
       type: http

@@ -242,30 +242,113 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AgentTaskCapabilityResult:
+    AgentTaskCreate:
       properties:
-        supported:
-          type: boolean
-          title: Supported
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        objective_nl:
+          type: string
+          maxLength: 2000
+          minLength: 6
+          title: Objective Nl
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
         task_type:
           anyOf:
           - type: string
+            enum:
+            - competitor_new_ads
+            - competitor_top_ads
+            - campaign_metrics
+            - market_trends_changes
+            - industry_intel_digest
+            - social_mentions
+            - campaign_ideas_lucky
           - type: 'null'
           title: Task Type
-        reason:
+        no_change_behavior:
+          type: string
+          enum:
+          - silent
+          - notify_no_change
+          title: No Change Behavior
+          default: silent
+        delivery_mode:
+          type: string
+          enum:
+          - immediate
+          - digest
+          title: Delivery Mode
+          default: immediate
+        delivery_destination:
+          type: string
+          enum:
+          - thread
+          - slack
+          - both
+          title: Delivery Destination
+          default: thread
+        schedule:
+          $ref: '#/components/schemas/AgentTaskScheduleInput'
+        thresholds:
           anyOf:
-          - type: string
+          - additionalProperties: true
+            type: object
           - type: 'null'
-          title: Reason
-        suggestions:
-          items:
-            type: string
-          type: array
-          title: Suggestions
+          title: Thresholds
+        quiet_hours:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Quiet Hours
       type: object
       required:
-      - supported
-      title: AgentTaskCapabilityResult
+      - organization_id
+      - company_profile_id
+      - conversation_id
+      - objective_nl
+      title: AgentTaskCreate
+    AgentTaskRunNowResponse:
+      properties:
+        task:
+          $ref: '#/components/schemas/AgentTaskResponse'
+        run:
+          $ref: '#/components/schemas/AgentTaskRunResponse'
+      type: object
+      required:
+      - task
+      - run
+      title: AgentTaskRunNowResponse
+    AgentTaskRunListResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/AgentTaskRunResponse'
+          type: array
+          title: Runs
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - runs
+      - total
+      title: AgentTaskRunListResponse
     AgentTaskRunResponse:
       properties:
         id:
@@ -374,6 +457,133 @@ components:
       - created_at
       - updated_at
       title: AgentTaskRunResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AgentTaskScheduleInput:
+      properties:
+        interval_minutes:
+          type: integer
+          maximum: 10080.0
+          minimum: 5.0
+          title: Interval Minutes
+          description: Run interval in minutes
+          default: 1440
+      type: object
+      title: AgentTaskScheduleInput
+      description: Simple interval schedule (minutes).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AgentTaskUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - active
+            - paused
+            - error
+            - deleted
+          - type: 'null'
+          title: Status
+        no_change_behavior:
+          anyOf:
+          - type: string
+            enum:
+            - silent
+            - notify_no_change
+          - type: 'null'
+          title: No Change Behavior
+        delivery_mode:
+          anyOf:
+          - type: string
+            enum:
+            - immediate
+            - digest
+          - type: 'null'
+          title: Delivery Mode
+        delivery_destination:
+          anyOf:
+          - type: string
+            enum:
+            - thread
+            - slack
+            - both
+          - type: 'null'
+          title: Delivery Destination
+        schedule:
+          anyOf:
+          - $ref: '#/components/schemas/AgentTaskScheduleInput'
+          - type: 'null'
+        thresholds:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Thresholds
+        quiet_hours:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Quiet Hours
+      type: object
+      title: AgentTaskUpdate
+    AgentTaskCapabilityResult:
+      properties:
+        supported:
+          type: boolean
+          title: Supported
+        task_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Type
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+        suggestions:
+          items:
+            type: string
+          type: array
+          title: Suggestions
+      type: object
+      required:
+      - supported
+      title: AgentTaskCapabilityResult
     AgentTaskResponse:
       properties:
         id:
@@ -502,169 +712,6 @@ components:
       - created_at
       - updated_at
       title: AgentTaskResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AgentTaskCreate:
-      properties:
-        organization_id:
-          type: string
-          format: uuid
-          title: Organization Id
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        conversation_id:
-          type: string
-          format: uuid
-          title: Conversation Id
-        objective_nl:
-          type: string
-          maxLength: 2000
-          minLength: 6
-          title: Objective Nl
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Name
-        task_type:
-          anyOf:
-          - type: string
-            enum:
-            - competitor_new_ads
-            - competitor_top_ads
-            - campaign_metrics
-            - market_trends_changes
-            - industry_intel_digest
-            - social_mentions
-            - campaign_ideas_lucky
-          - type: 'null'
-          title: Task Type
-        no_change_behavior:
-          type: string
-          enum:
-          - silent
-          - notify_no_change
-          title: No Change Behavior
-          default: silent
-        delivery_mode:
-          type: string
-          enum:
-          - immediate
-          - digest
-          title: Delivery Mode
-          default: immediate
-        delivery_destination:
-          type: string
-          enum:
-          - thread
-          - slack
-          - both
-          title: Delivery Destination
-          default: thread
-        schedule:
-          $ref: '#/components/schemas/AgentTaskScheduleInput'
-        thresholds:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Thresholds
-        quiet_hours:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Quiet Hours
-      type: object
-      required:
-      - organization_id
-      - company_profile_id
-      - conversation_id
-      - objective_nl
-      title: AgentTaskCreate
-    AgentTaskUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Name
-        status:
-          anyOf:
-          - type: string
-            enum:
-            - active
-            - paused
-            - error
-            - deleted
-          - type: 'null'
-          title: Status
-        no_change_behavior:
-          anyOf:
-          - type: string
-            enum:
-            - silent
-            - notify_no_change
-          - type: 'null'
-          title: No Change Behavior
-        delivery_mode:
-          anyOf:
-          - type: string
-            enum:
-            - immediate
-            - digest
-          - type: 'null'
-          title: Delivery Mode
-        delivery_destination:
-          anyOf:
-          - type: string
-            enum:
-            - thread
-            - slack
-            - both
-          - type: 'null'
-          title: Delivery Destination
-        schedule:
-          anyOf:
-          - $ref: '#/components/schemas/AgentTaskScheduleInput'
-          - type: 'null'
-        thresholds:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Thresholds
-        quiet_hours:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Quiet Hours
-      type: object
-      title: AgentTaskUpdate
     AgentTaskListResponse:
       properties:
         tasks:
@@ -680,53 +727,6 @@ components:
       - tasks
       - total
       title: AgentTaskListResponse
-    AgentTaskRunNowResponse:
-      properties:
-        task:
-          $ref: '#/components/schemas/AgentTaskResponse'
-        run:
-          $ref: '#/components/schemas/AgentTaskRunResponse'
-      type: object
-      required:
-      - task
-      - run
-      title: AgentTaskRunNowResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AgentTaskScheduleInput:
-      properties:
-        interval_minutes:
-          type: integer
-          maximum: 10080.0
-          minimum: 5.0
-          title: Interval Minutes
-          description: Run interval in minutes
-          default: 1440
-      type: object
-      title: AgentTaskScheduleInput
-      description: Simple interval schedule (minutes).
-    AgentTaskRunListResponse:
-      properties:
-        runs:
-          items:
-            $ref: '#/components/schemas/AgentTaskRunResponse'
-          type: array
-          title: Runs
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - runs
-      - total
-      title: AgentTaskRunListResponse
   securitySchemes:
     HTTPBearer:
       type: http

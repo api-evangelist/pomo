@@ -255,20 +255,92 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    CreditReleaseRequest:
+    CreditCaptureRequest:
       properties:
         hold_id:
           type: string
           title: Hold Id
-        reason:
+        campaign_id:
           type: string
-          title: Reason
+          title: Campaign Id
+        final_charge:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Final Charge
+          description: Final charge if different from hold
       type: object
       required:
       - hold_id
-      - reason
-      title: CreditReleaseRequest
-      description: Request to release a credit hold.
+      - campaign_id
+      title: CreditCaptureRequest
+      description: Request to capture a credit hold.
+    CreditHoldResponse:
+      properties:
+        hold_id:
+          type: string
+          title: Hold Id
+        amount:
+          type: number
+          title: Amount
+        expires_at:
+          type: string
+          format: date-time
+          title: Expires At
+        status:
+          type: string
+          title: Status
+          default: success
+      type: object
+      required:
+      - hold_id
+      - amount
+      - expires_at
+      title: CreditHoldResponse
+      description: Response from credit hold creation.
+    CreditPurchaseResponse:
+      properties:
+        client_secret:
+          type: string
+          title: Client Secret
+        payment_intent_id:
+          type: string
+          title: Payment Intent Id
+        amount:
+          type: number
+          title: Amount
+        currency:
+          type: string
+          title: Currency
+          default: USD
+      type: object
+      required:
+      - client_secret
+      - payment_intent_id
+      - amount
+      title: CreditPurchaseResponse
+      description: Response with Stripe payment intent details.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CreditHoldRequest:
       properties:
         organization_id:
@@ -293,41 +365,29 @@ components:
       - description
       title: CreditHoldRequest
       description: Request to create a credit hold.
-    ValidationError:
+    CreditReleaseRequest:
       properties:
-        loc:
+        hold_id:
+          type: string
+          title: Hold Id
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - hold_id
+      - reason
+      title: CreditReleaseRequest
+      description: Request to release a credit hold.
+    HTTPValidationError:
+      properties:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CreditPurchaseRequest:
-      properties:
-        organization_id:
-          type: string
-          title: Organization Id
-        amount:
-          type: number
-          title: Amount
-      type: object
-      required:
-      - organization_id
-      - amount
-      title: CreditPurchaseRequest
-      description: Request to purchase credits.
+      title: HTTPValidationError
     CalculateChargeResponse:
       properties:
         ad_spend:
@@ -395,29 +455,43 @@ components:
       - last_updated
       title: CreditBalanceResponse
       description: Current credit balance response.
-    CreditHoldResponse:
+    CreditPurchaseRequest:
       properties:
-        hold_id:
+        organization_id:
           type: string
-          title: Hold Id
+          title: Organization Id
         amount:
           type: number
           title: Amount
-        expires_at:
-          type: string
-          format: date-time
-          title: Expires At
-        status:
-          type: string
-          title: Status
-          default: success
       type: object
       required:
-      - hold_id
+      - organization_id
       - amount
-      - expires_at
-      title: CreditHoldResponse
-      description: Response from credit hold creation.
+      title: CreditPurchaseRequest
+      description: Request to purchase credits.
+    TransactionHistoryResponse:
+      properties:
+        transactions:
+          items: {}
+          type: array
+          title: Transactions
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - transactions
+      - total
+      - limit
+      - offset
+      title: TransactionHistoryResponse
+      description: Credit transaction history response.
     CalculateChargeRequest:
       properties:
         organization_id:
@@ -447,80 +521,6 @@ components:
       - currency
       title: CalculateChargeRequest
       description: Request to calculate charge for ad campaign.
-    TransactionHistoryResponse:
-      properties:
-        transactions:
-          items: {}
-          type: array
-          title: Transactions
-        total:
-          type: integer
-          title: Total
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-      type: object
-      required:
-      - transactions
-      - total
-      - limit
-      - offset
-      title: TransactionHistoryResponse
-      description: Credit transaction history response.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CreditPurchaseResponse:
-      properties:
-        client_secret:
-          type: string
-          title: Client Secret
-        payment_intent_id:
-          type: string
-          title: Payment Intent Id
-        amount:
-          type: number
-          title: Amount
-        currency:
-          type: string
-          title: Currency
-          default: USD
-      type: object
-      required:
-      - client_secret
-      - payment_intent_id
-      - amount
-      title: CreditPurchaseResponse
-      description: Response with Stripe payment intent details.
-    CreditCaptureRequest:
-      properties:
-        hold_id:
-          type: string
-          title: Hold Id
-        campaign_id:
-          type: string
-          title: Campaign Id
-        final_charge:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Final Charge
-          description: Final charge if different from hold
-      type: object
-      required:
-      - hold_id
-      - campaign_id
-      title: CreditCaptureRequest
-      description: Request to capture a credit hold.
   securitySchemes:
     HTTPBearer:
       type: http

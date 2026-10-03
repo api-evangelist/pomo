@@ -353,51 +353,6 @@ paths:
               schema: {}
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    RegistrationTouchResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        registration_lead_id:
-          type: string
-          format: uuid
-          title: Registration Lead Id
-        registration_event_id:
-          type: string
-          format: uuid
-          title: Registration Event Id
-        current_phase:
-          type: string
-          title: Current Phase
-      type: object
-      required:
-      - success
-      - registration_lead_id
-      - registration_event_id
-      - current_phase
-      title: RegistrationTouchResponse
-      description: Response after recording a registration funnel event.
     UserUpdate:
       properties:
         email:
@@ -444,7 +399,88 @@ components:
       type: object
       title: UserUpdate
       description: Schema for user profile updates. Status changes require admin privileges.
-    AcceptInvitationResponse:
+    AcceptInvitationRequest:
+      properties:
+        invite_token:
+          type: string
+          title: Invite Token
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        tos_hash:
+          type: string
+          title: Tos Hash
+        tos_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tos Version
+      type: object
+      required:
+      - invite_token
+      - tos_hash
+      title: AcceptInvitationRequest
+      description: 'Request schema for accepting an organization invitation.
+
+        Used by both new users and existing users joining additional organizations.'
+    RegistrationTouchResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        registration_lead_id:
+          type: string
+          format: uuid
+          title: Registration Lead Id
+        registration_event_id:
+          type: string
+          format: uuid
+          title: Registration Event Id
+        current_phase:
+          type: string
+          title: Current Phase
+      type: object
+      required:
+      - success
+      - registration_lead_id
+      - registration_event_id
+      - current_phase
+      title: RegistrationTouchResponse
+      description: Response after recording a registration funnel event.
+    RegistrationTouchRequest:
+      properties:
+        event_name:
+          type: string
+          title: Event Name
+        path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Path
+        phase:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phase
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - event_name
+      title: RegistrationTouchRequest
+      description: Record a pre-registration page or lifecycle event after Clerk auth.
+    RegistrationResponse:
       properties:
         success:
           type: boolean
@@ -469,22 +505,119 @@ components:
           - type: string
           - type: 'null'
           title: Organization Name
-        is_new_user:
-          type: boolean
-          title: Is New User
-          default: false
         on_waitlist:
           anyOf:
           - type: boolean
           - type: 'null'
           title: On Waitlist
           default: false
+        waitlist_position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Waitlist Position
       type: object
       required:
       - success
       - message
-      title: AcceptInvitationResponse
-      description: Response from accept invitation endpoint.
+      title: RegistrationResponse
+      description: Response from registration endpoint (new users creating their own organization).
+    User:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        google_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Google Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          default: active
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+          default: true
+        company:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company
+        auth_provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Auth Provider
+        registration_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Registration Data
+      type: object
+      required:
+      - email
+      - id
+      title: User
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     InvitationProfileAccess:
       properties:
         company_profile_id:
@@ -569,81 +702,6 @@ components:
       - already_member
       title: InvitationInfoResponse
       description: Response from invitation preview endpoint.
-    User:
-      properties:
-        email:
-          type: string
-          format: email
-          title: Email
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        google_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Google Id
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-          default: active
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-        is_active:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Active
-          default: true
-        company:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company
-        auth_provider:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Auth Provider
-        registration_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Registration Data
-      type: object
-      required:
-      - email
-      - id
-      title: User
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     RegistrationFormData:
       properties:
         name:
@@ -691,38 +749,22 @@ components:
       description: 'Registration form data for NEW users creating their own organization.
 
         For accepting invitations, use AcceptInvitationRequest instead.'
-    AcceptInvitationRequest:
+    FinalizeRegistrationRequest:
       properties:
-        invite_token:
-          type: string
-          title: Invite Token
-        name:
+        selected_plan:
           anyOf:
           - type: string
           - type: 'null'
-          title: Name
-        title:
+          title: Selected Plan
+        billing_interval:
           anyOf:
           - type: string
           - type: 'null'
-          title: Title
-        tos_hash:
-          type: string
-          title: Tos Hash
-        tos_version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tos Version
+          title: Billing Interval
       type: object
-      required:
-      - invite_token
-      - tos_hash
-      title: AcceptInvitationRequest
-      description: 'Request schema for accepting an organization invitation.
-
-        Used by both new users and existing users joining additional organizations.'
-    RegistrationResponse:
+      title: FinalizeRegistrationRequest
+      description: Finalize registration by marking status complete and recording selected plan.
+    AcceptInvitationResponse:
       properties:
         success:
           type: boolean
@@ -747,64 +789,22 @@ components:
           - type: string
           - type: 'null'
           title: Organization Name
+        is_new_user:
+          type: boolean
+          title: Is New User
+          default: false
         on_waitlist:
           anyOf:
           - type: boolean
           - type: 'null'
           title: On Waitlist
           default: false
-        waitlist_position:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Waitlist Position
       type: object
       required:
       - success
       - message
-      title: RegistrationResponse
-      description: Response from registration endpoint (new users creating their own organization).
-    RegistrationTouchRequest:
-      properties:
-        event_name:
-          type: string
-          title: Event Name
-        path:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Path
-        phase:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Phase
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - event_name
-      title: RegistrationTouchRequest
-      description: Record a pre-registration page or lifecycle event after Clerk auth.
-    FinalizeRegistrationRequest:
-      properties:
-        selected_plan:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Selected Plan
-        billing_interval:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Billing Interval
-      type: object
-      title: FinalizeRegistrationRequest
-      description: Finalize registration by marking status complete and recording selected plan.
+      title: AcceptInvitationResponse
+      description: Response from accept invitation endpoint.
   securitySchemes:
     HTTPBearer:
       type: http

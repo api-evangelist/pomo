@@ -181,39 +181,18 @@ components:
       - msg
       - type
       title: ValidationError
-    ImageGenerationResponse:
+    CreativeIdeasResponse:
       properties:
-        image_urls:
+        creative_ideas:
           items:
             type: string
           type: array
-          title: Image Urls
-        prompt:
-          type: string
-          title: Prompt
-        enhanced_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Enhanced Prompt
-        ai_policy_eval:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ai Policy Eval
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
+          title: Creative Ideas
       type: object
       required:
-      - image_urls
-      - prompt
-      - created_at
-      title: ImageGenerationResponse
-      description: Response model for generated images
+      - creative_ideas
+      title: CreativeIdeasResponse
+      description: Response model for the generate-ideas endpoint
     ImageVariation:
       properties:
         url:
@@ -266,18 +245,6 @@ components:
       required:
       - prompt
       title: Body_generate_image_api_content_editing_generate_image_post
-    CreativeIdeasResponse:
-      properties:
-        creative_ideas:
-          items:
-            type: string
-          type: array
-          title: Creative Ideas
-      type: object
-      required:
-      - creative_ideas
-      title: CreativeIdeasResponse
-      description: Response model for the generate-ideas endpoint
     HTTPValidationError:
       properties:
         detail:
@@ -321,6 +288,39 @@ components:
       - image
       - prompt
       title: Body_edit_image_api_content_editing_edit_image_post
+    ImageGenerationResponse:
+      properties:
+        image_urls:
+          items:
+            type: string
+          type: array
+          title: Image Urls
+        prompt:
+          type: string
+          title: Prompt
+        enhanced_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Enhanced Prompt
+        ai_policy_eval:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Policy Eval
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - image_urls
+      - prompt
+      - created_at
+      title: ImageGenerationResponse
+      description: Response model for generated images
   securitySchemes:
     HTTPBearer:
       type: http

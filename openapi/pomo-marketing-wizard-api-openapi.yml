@@ -221,23 +221,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    PDPSectionSummary:
-      properties:
-        heading:
-          type: string
-          title: Heading
-          description: Human-friendly heading for the section.
-        intent:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Intent
-          description: Goal or purpose of the section (e.g., 'Social proof', 'Feature showcase').
-      type: object
-      required:
-      - heading
-      title: PDPSectionSummary
-      description: Summary of a key section returned by the generator.
     PDPVariantType:
       type: string
       enum:
@@ -245,27 +228,53 @@ components:
       - marketplace
       title: PDPVariantType
       description: Supported PDP layout variants.
-    ValidationError:
+    PDPHistoryItem:
       properties:
-        loc:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+          description: Record identifier for the stored PDP.
+        tier:
+          $ref: '#/components/schemas/PDPExperienceTier'
+          description: Experience tier used for the generation.
+        tone:
+          type: string
+          title: Tone
+          description: Tone used for the copy.
+        include_marketplace:
+          type: boolean
+          title: Include Marketplace
+          description: Whether a marketplace variant was requested.
+        marketplace_generated:
+          type: boolean
+          title: Marketplace Generated
+          description: True if a marketplace variant was produced.
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Timestamp when the PDP was generated.
+        used_images:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Used Images
+          description: Images that informed the generation.
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - id
+      - tier
+      - tone
+      - include_marketplace
+      - marketplace_generated
+      - created_at
+      title: PDPHistoryItem
+      description: Summary of a previously generated PDP.
     PDPGenerationResponse:
       properties:
         success:
@@ -327,6 +336,27 @@ components:
       - modern_page
       title: PDPGenerationResponse
       description: Response payload returned after PDP generation.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     PDPExperienceTier:
       type: string
       enum:
@@ -336,6 +366,69 @@ components:
       - luxury
       title: PDPExperienceTier
       description: Available experience tiers for PDP generation.
+    PDPGenerationRequest:
+      properties:
+        tier:
+          $ref: '#/components/schemas/PDPExperienceTier'
+          description: Experience tier that determines aesthetic and layout density.
+        tone:
+          type: string
+          minLength: 2
+          title: Tone
+          description: Copywriting tone (e.g., 'Bold & Confident', 'Friendly and Warm').
+        selected_images:
+          items:
+            type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          type: array
+          maxItems: 5
+          title: Selected Images
+          description: Ordered list of up to five image URLs to embed in the PDP.
+        include_marketplace:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Include Marketplace
+          description: Override to force marketplace variant generation.
+        additional_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Additional Context
+          description: Optional extra instructions or nuances about the PDP.
+        target_audience_segments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Audience Segments
+          description: Optional list of audience segments to tailor messaging (from cached target audience).
+      type: object
+      required:
+      - tier
+      - tone
+      title: PDPGenerationRequest
+      description: Request payload for PDP generation.
+    PDPSectionSummary:
+      properties:
+        heading:
+          type: string
+          title: Heading
+          description: Human-friendly heading for the section.
+        intent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intent
+          description: Goal or purpose of the section (e.g., 'Social proof', 'Feature showcase').
+      type: object
+      required:
+      - heading
+      title: PDPSectionSummary
+      description: Summary of a key section returned by the generator.
     HTTPValidationError:
       properties:
         detail:
@@ -345,6 +438,37 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
     PDPVariantResponse:
       properties:
         variant:
@@ -396,130 +520,6 @@ components:
       - html
       title: PDPVariantResponse
       description: Single PDP variant response.
-    PDPHistoryItem:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-          description: Record identifier for the stored PDP.
-        tier:
-          $ref: '#/components/schemas/PDPExperienceTier'
-          description: Experience tier used for the generation.
-        tone:
-          type: string
-          title: Tone
-          description: Tone used for the copy.
-        include_marketplace:
-          type: boolean
-          title: Include Marketplace
-          description: Whether a marketplace variant was requested.
-        marketplace_generated:
-          type: boolean
-          title: Marketplace Generated
-          description: True if a marketplace variant was produced.
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Timestamp when the PDP was generated.
-        used_images:
-          items:
-            type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          type: array
-          title: Used Images
-          description: Images that informed the generation.
-      type: object
-      required:
-      - id
-      - tier
-      - tone
-      - include_marketplace
-      - marketplace_generated
-      - created_at
-      title: PDPHistoryItem
-      description: Summary of a previously generated PDP.
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
-    PDPGenerationRequest:
-      properties:
-        tier:
-          $ref: '#/components/schemas/PDPExperienceTier'
-          description: Experience tier that determines aesthetic and layout density.
-        tone:
-          type: string
-          minLength: 2
-          title: Tone
-          description: Copywriting tone (e.g., 'Bold & Confident', 'Friendly and Warm').
-        selected_images:
-          items:
-            type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          type: array
-          maxItems: 5
-          title: Selected Images
-          description: Ordered list of up to five image URLs to embed in the PDP.
-        include_marketplace:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Include Marketplace
-          description: Override to force marketplace variant generation.
-        additional_context:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Additional Context
-          description: Optional extra instructions or nuances about the PDP.
-        target_audience_segments:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Target Audience Segments
-          description: Optional list of audience segments to tailor messaging (from cached target audience).
-      type: object
-      required:
-      - tier
-      - tone
-      title: PDPGenerationRequest
-      description: Request payload for PDP generation.
   securitySchemes:
     HTTPBearer:
       type: http

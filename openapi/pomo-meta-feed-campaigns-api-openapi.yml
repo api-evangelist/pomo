@@ -269,6 +269,21 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    KeywordWithCpc:
+      properties:
+        keyword:
+          type: string
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
+      type: object
+      required:
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
     ValidationError:
       properties:
         loc:
@@ -290,33 +305,6 @@ components:
       - msg
       - type
       title: ValidationError
-    AdsCampaignUpdateResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        message:
-          type: string
-          title: Message
-        campaign_id:
-          type: string
-          title: Campaign Id
-        campaign:
-          anyOf:
-          - $ref: '#/components/schemas/CampaignResponse'
-          - type: 'null'
-        ad:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Ad
-      type: object
-      required:
-      - status
-      - message
-      - campaign_id
-      title: AdsCampaignUpdateResponse
-      description: Standardized response for ad update operations within a campaign.
     MetaFeedCampaignUpdateRequest:
       properties:
         campaign_id:
@@ -635,21 +623,6 @@ components:
       - campaign_id
       - ad_id
       title: MetaFeedCampaignUpdateRequest
-    KeywordWithCpc:
-      properties:
-        keyword:
-          type: string
-          title: Keyword
-        estimated_cpc:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Estimated Cpc
-      type: object
-      required:
-      - keyword
-      title: KeywordWithCpc
-      description: Model for keyword with CPC data
     HTTPValidationError:
       properties:
         detail:
@@ -659,6 +632,33 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    AdsCampaignUpdateResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign:
+          anyOf:
+          - $ref: '#/components/schemas/CampaignResponse'
+          - type: 'null'
+        ad:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Ad
+      type: object
+      required:
+      - status
+      - message
+      - campaign_id
+      title: AdsCampaignUpdateResponse
+      description: Standardized response for ad update operations within a campaign.
     CampaignMediaOperation:
       properties:
         action:

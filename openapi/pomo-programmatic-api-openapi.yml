@@ -69,6 +69,44 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ProgrammaticCampaignGenerationRequest:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ProgrammaticCampaignGenerationItem'
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Items
+      type: object
+      required:
+      - items
+      title: ProgrammaticCampaignGenerationRequest
+    ProgrammaticCampaignGenerationItem:
+      properties:
+        idea_id:
+          type: string
+          minLength: 1
+          title: Idea Id
+        social_or_ads:
+          anyOf:
+          - type: string
+            enum:
+            - social
+            - ads
+          - type: 'null'
+          title: Social Or Ads
+        platforms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Platforms
+      type: object
+      required:
+      - idea_id
+      title: ProgrammaticCampaignGenerationItem
     ProgrammaticCampaignGenerationResult:
       properties:
         campaign_idea_id:
@@ -103,19 +141,6 @@ components:
       - platforms
       - status
       title: ProgrammaticCampaignGenerationResult
-    ProgrammaticCampaignGenerationRequest:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/ProgrammaticCampaignGenerationItem'
-          type: array
-          maxItems: 10
-          minItems: 1
-          title: Items
-      type: object
-      required:
-      - items
-      title: ProgrammaticCampaignGenerationRequest
     ValidationError:
       properties:
         loc:
@@ -137,30 +162,54 @@ components:
       - msg
       - type
       title: ValidationError
-    ProgrammaticCampaignGenerationResponse:
+    ProgrammaticCampaignIdeasRequest:
       properties:
-        organization_id:
+        campaign_goal:
           type: string
-          title: Organization Id
-        company_profile_id:
+          maxLength: 2000
+          minLength: 1
+          title: Campaign Goal
+        target_audience:
           type: string
-          title: Company Profile Id
-        request_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Request Id
-        results:
-          items:
-            $ref: '#/components/schemas/ProgrammaticCampaignGenerationResult'
-          type: array
-          title: Results
+          maxLength: 2000
+          minLength: 1
+          title: Target Audience
+        num_ideas:
+          type: integer
+          maximum: 30.0
+          minimum: 1.0
+          title: Num Ideas
+        platform:
+          type: string
+          enum:
+          - meta
+          - google
+          - tiktok
+          - linkedin
+          title: Platform
+        social_or_ads:
+          type: string
+          enum:
+          - social
+          - ads
+          title: Social Or Ads
+          default: social
       type: object
       required:
-      - organization_id
-      - company_profile_id
-      - results
-      title: ProgrammaticCampaignGenerationResponse
+      - campaign_goal
+      - target_audience
+      - num_ideas
+      - platform
+      title: ProgrammaticCampaignIdeasRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ProgrammaticCampaignIdeasResponse:
       properties:
         campaign_goal:
@@ -221,79 +270,30 @@ components:
       - organization_id
       - company_profile_id
       title: ProgrammaticCampaignIdeasResponse
-    ProgrammaticCampaignGenerationItem:
+    ProgrammaticCampaignGenerationResponse:
       properties:
-        idea_id:
+        organization_id:
           type: string
-          minLength: 1
-          title: Idea Id
-        social_or_ads:
+          title: Organization Id
+        company_profile_id:
+          type: string
+          title: Company Profile Id
+        request_id:
           anyOf:
           - type: string
-            enum:
-            - social
-            - ads
           - type: 'null'
-          title: Social Or Ads
-        platforms:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Platforms
-      type: object
-      required:
-      - idea_id
-      title: ProgrammaticCampaignGenerationItem
-    ProgrammaticCampaignIdeasRequest:
-      properties:
-        campaign_goal:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Campaign Goal
-        target_audience:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Target Audience
-        num_ideas:
-          type: integer
-          maximum: 30.0
-          minimum: 1.0
-          title: Num Ideas
-        platform:
-          type: string
-          enum:
-          - meta
-          - google
-          - tiktok
-          - linkedin
-          title: Platform
-        social_or_ads:
-          type: string
-          enum:
-          - social
-          - ads
-          title: Social Or Ads
-          default: social
-      type: object
-      required:
-      - campaign_goal
-      - target_audience
-      - num_ideas
-      - platform
-      title: ProgrammaticCampaignIdeasRequest
-    HTTPValidationError:
-      properties:
-        detail:
+          title: Request Id
+        results:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/ProgrammaticCampaignGenerationResult'
           type: array
-          title: Detail
+          title: Results
       type: object
-      title: HTTPValidationError
+      required:
+      - organization_id
+      - company_profile_id
+      - results
+      title: ProgrammaticCampaignGenerationResponse
   securitySchemes:
     HTTPBearer:
       type: http

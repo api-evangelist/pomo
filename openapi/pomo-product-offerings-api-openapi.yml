@@ -721,6 +721,131 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ProductOfferingDeleteImageRequest:
+      properties:
+        image_url:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Image Url
+      type: object
+      required:
+      - image_url
+      title: ProductOfferingDeleteImageRequest
+    ProductOfferingRewriteRequest:
+      properties:
+        field:
+          type: string
+          enum:
+          - description
+          - key_features
+          title: Field
+        instructions:
+          anyOf:
+          - type: string
+            maxLength: 1500
+          - type: 'null'
+          title: Instructions
+      type: object
+      required:
+      - field
+      title: ProductOfferingRewriteRequest
+    ProductOfferingUploadImagesResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        uploaded_images:
+          items:
+            $ref: '#/components/schemas/GalleryImageResponse'
+          type: array
+          title: Uploaded Images
+        total:
+          type: integer
+          title: Total
+          default: 0
+        offering:
+          additionalProperties: true
+          type: object
+          title: Offering
+      type: object
+      required:
+      - success
+      - offering
+      title: ProductOfferingUploadImagesResponse
+    ProductRefreshApplyRequest:
+      properties:
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+        refresh_urls:
+          items:
+            type: string
+          type: array
+          title: Refresh Urls
+        selected_fields:
+          items:
+            type: string
+            enum:
+            - name
+            - description
+            - primary_category
+            - subcategories
+            - tags
+            - key_features
+            - price_list
+            - images
+            - pricing_analysis
+            - feature_comparison
+            - swot_analysis
+          type: array
+          title: Selected Fields
+        preview_patch:
+          additionalProperties: true
+          type: object
+          title: Preview Patch
+      type: object
+      title: ProductRefreshApplyRequest
+    ProductOfferingCurrentPriceUpdateRequest:
+      properties:
+        price:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Price
+        unit:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Unit
+      type: object
+      required:
+      - price
+      title: ProductOfferingCurrentPriceUpdateRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ExternalAdMetadata:
       properties:
         platform:
@@ -780,106 +905,171 @@ components:
       - attribution_scope
       - usage_count
       title: ExternalAdMetadata
-    ProductOfferingRewriteRequest:
+    HTTPValidationError:
       properties:
-        field:
-          type: string
-          enum:
-          - description
-          - key_features
-          title: Field
-        instructions:
-          anyOf:
-          - type: string
-            maxLength: 1500
-          - type: 'null'
-          title: Instructions
-      type: object
-      required:
-      - field
-      title: ProductOfferingRewriteRequest
-    ValidationError:
-      properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ProductOfferingUpdateRequest:
+      title: HTTPValidationError
+    ExternalAdUsageMetadata:
       properties:
-        name:
+        observation_id:
+          type: string
+          title: Observation Id
+        platform:
+          type: string
+          title: Platform
+        native_type:
+          type: string
+          title: Native Type
+        account_id:
+          type: string
+          title: Account Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        campaign_name:
+          type: string
+          title: Campaign Name
+        currency_code:
           anyOf:
           - type: string
           - type: 'null'
-          title: Name
-        description:
+          title: Currency Code
+        ad_group_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Description
-        category:
+          title: Ad Group Id
+        ad_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Category
-        primary_category:
+          title: Ad Id
+        creative_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Primary Category
-        subcategories:
+          title: Creative Id
+        creative_name:
           anyOf:
-          - items:
-              type: string
-            type: array
+          - type: string
           - type: 'null'
-          title: Subcategories
-        tags:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Tags
-        key_features:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Key Features
-        source_urls:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Source Urls
+          title: Creative Name
         status:
           anyOf:
           - type: string
-            enum:
-            - active
-            - inactive
-            - draft
           - type: 'null'
           title: Status
+        inventory_state:
+          type: string
+          title: Inventory State
+          default: current
+        media_role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Media Role
+        provider_asset_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Asset Id
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thumbnail Url
+        performance_tier:
+          type: string
+          title: Performance Tier
+        performance_reason:
+          type: string
+          title: Performance Reason
+        attribution_scope:
+          type: string
+          title: Attribution Scope
+        metrics:
+          additionalProperties: true
+          type: object
+          title: Metrics
+        benchmark:
+          additionalProperties: true
+          type: object
+          title: Benchmark
+        metric_window:
+          additionalProperties: true
+          type: object
+          title: Metric Window
+        analysis:
+          additionalProperties: true
+          type: object
+          title: Analysis
       type: object
-      title: ProductOfferingUpdateRequest
+      required:
+      - observation_id
+      - platform
+      - native_type
+      - account_id
+      - campaign_id
+      - campaign_name
+      - performance_tier
+      - performance_reason
+      - attribution_scope
+      title: ExternalAdUsageMetadata
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    ProductRefreshPreviewRequest:
+      properties:
+        source_urls:
+          items:
+            type: string
+          type: array
+          title: Source Urls
+        refresh_urls:
+          items:
+            type: string
+          type: array
+          title: Refresh Urls
+      type: object
+      title: ProductRefreshPreviewRequest
     Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post:
       properties:
         files:
@@ -913,43 +1103,6 @@ components:
       required:
       - files
       title: Body_upload_product_offering_images_api_product_offerings__product_offering_id__images_upload_post
-    ProductOfferingUploadImagesResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        uploaded_images:
-          items:
-            $ref: '#/components/schemas/GalleryImageResponse'
-          type: array
-          title: Uploaded Images
-        total:
-          type: integer
-          title: Total
-          default: 0
-        offering:
-          additionalProperties: true
-          type: object
-          title: Offering
-      type: object
-      required:
-      - success
-      - offering
-      title: ProductOfferingUploadImagesResponse
-    ProductRefreshPreviewRequest:
-      properties:
-        source_urls:
-          items:
-            type: string
-          type: array
-          title: Source Urls
-        refresh_urls:
-          items:
-            type: string
-          type: array
-          title: Refresh Urls
-      type: object
-      title: ProductRefreshPreviewRequest
     GalleryImageResponse:
       properties:
         id:
@@ -1088,220 +1241,67 @@ components:
       - source_type
       title: GalleryImageResponse
       description: Response schema for gallery images with signed URL support
-    ProductRefreshApplyRequest:
+    ProductOfferingUpdateRequest:
       properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        primary_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Category
+        subcategories:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Subcategories
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tags
+        key_features:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Key Features
         source_urls:
-          items:
-            type: string
-          type: array
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Source Urls
-        refresh_urls:
-          items:
-            type: string
-          type: array
-          title: Refresh Urls
-        selected_fields:
-          items:
-            type: string
+        status:
+          anyOf:
+          - type: string
             enum:
-            - name
-            - description
-            - primary_category
-            - subcategories
-            - tags
-            - key_features
-            - price_list
-            - images
-            - pricing_analysis
-            - feature_comparison
-            - swot_analysis
-          type: array
-          title: Selected Fields
-        preview_patch:
-          additionalProperties: true
-          type: object
-          title: Preview Patch
-      type: object
-      title: ProductRefreshApplyRequest
-    ProductOfferingCurrentPriceUpdateRequest:
-      properties:
-        price:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Price
-        unit:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Unit
-      type: object
-      required:
-      - price
-      title: ProductOfferingCurrentPriceUpdateRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ProductOfferingDeleteImageRequest:
-      properties:
-        image_url:
-          type: string
-          maxLength: 4000
-          minLength: 1
-          title: Image Url
-      type: object
-      required:
-      - image_url
-      title: ProductOfferingDeleteImageRequest
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
-    ExternalAdUsageMetadata:
-      properties:
-        observation_id:
-          type: string
-          title: Observation Id
-        platform:
-          type: string
-          title: Platform
-        native_type:
-          type: string
-          title: Native Type
-        account_id:
-          type: string
-          title: Account Id
-        campaign_id:
-          type: string
-          title: Campaign Id
-        campaign_name:
-          type: string
-          title: Campaign Name
-        currency_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Currency Code
-        ad_group_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Group Id
-        ad_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Id
-        creative_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creative Id
-        creative_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Creative Name
-        status:
-          anyOf:
-          - type: string
+            - active
+            - inactive
+            - draft
           - type: 'null'
           title: Status
-        inventory_state:
-          type: string
-          title: Inventory State
-          default: current
-        media_role:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Media Role
-        provider_asset_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Provider Asset Id
-        source_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source Url
-        thumbnail_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Thumbnail Url
-        performance_tier:
-          type: string
-          title: Performance Tier
-        performance_reason:
-          type: string
-          title: Performance Reason
-        attribution_scope:
-          type: string
-          title: Attribution Scope
-        metrics:
-          additionalProperties: true
-          type: object
-          title: Metrics
-        benchmark:
-          additionalProperties: true
-          type: object
-          title: Benchmark
-        metric_window:
-          additionalProperties: true
-          type: object
-          title: Metric Window
-        analysis:
-          additionalProperties: true
-          type: object
-          title: Analysis
       type: object
-      required:
-      - observation_id
-      - platform
-      - native_type
-      - account_id
-      - campaign_id
-      - campaign_name
-      - performance_tier
-      - performance_reason
-      - attribution_scope
-      title: ExternalAdUsageMetadata
+      title: ProductOfferingUpdateRequest
   securitySchemes:
     HTTPBearer:
       type: http

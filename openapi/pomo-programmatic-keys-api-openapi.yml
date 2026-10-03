@@ -115,6 +115,17 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ApiKeyListResponse:
+      properties:
+        keys:
+          items:
+            $ref: '#/components/schemas/ApiKeyListItem'
+          type: array
+          title: Keys
+      type: object
+      required:
+      - keys
+      title: ApiKeyListResponse
     ValidationError:
       properties:
         loc:
@@ -136,99 +147,6 @@ components:
       - msg
       - type
       title: ValidationError
-    ApiKeyUsageResponse:
-      properties:
-        events:
-          items:
-            $ref: '#/components/schemas/ApiKeyUsageEvent'
-          type: array
-          title: Events
-      type: object
-      required:
-      - events
-      title: ApiKeyUsageResponse
-    ApiKeyRevokeResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        key:
-          $ref: '#/components/schemas/ApiKeyListItem'
-      type: object
-      required:
-      - success
-      - key
-      title: ApiKeyRevokeResponse
-    ApiKeyCreateRequest:
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-        scopes:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Scopes
-        expires_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Expires At
-      type: object
-      required:
-      - name
-      title: ApiKeyCreateRequest
-    ApiKeyListResponse:
-      properties:
-        keys:
-          items:
-            $ref: '#/components/schemas/ApiKeyListItem'
-          type: array
-          title: Keys
-      type: object
-      required:
-      - keys
-      title: ApiKeyListResponse
-    ApiKeyUsageEvent:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        action:
-          type: string
-          title: Action
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-        ip:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ip
-        user_agent:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Agent
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - id
-      - action
-      - timestamp
-      title: ApiKeyUsageEvent
     ApiKeyListItem:
       properties:
         id:
@@ -274,15 +192,17 @@ components:
       - status
       - created_at
       title: ApiKeyListItem
-    HTTPValidationError:
+    ApiKeyUsageResponse:
       properties:
-        detail:
+        events:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/ApiKeyUsageEvent'
           type: array
-          title: Detail
+          title: Events
       type: object
-      title: HTTPValidationError
+      required:
+      - events
+      title: ApiKeyUsageResponse
     ApiKeyCreateResponse:
       properties:
         api_key:
@@ -295,6 +215,86 @@ components:
       - api_key
       - key
       title: ApiKeyCreateResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ApiKeyRevokeResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        key:
+          $ref: '#/components/schemas/ApiKeyListItem'
+      type: object
+      required:
+      - success
+      - key
+      title: ApiKeyRevokeResponse
+    ApiKeyUsageEvent:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        action:
+          type: string
+          title: Action
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        ip:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ip
+        user_agent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Agent
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - id
+      - action
+      - timestamp
+      title: ApiKeyUsageEvent
+    ApiKeyCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        scopes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Scopes
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+      type: object
+      required:
+      - name
+      title: ApiKeyCreateRequest
   securitySchemes:
     HTTPBearer:
       type: http

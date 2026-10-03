@@ -61,6 +61,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     LuckyPickRequest:
       properties:
         kind:
@@ -85,15 +94,6 @@ components:
       - candidates
       title: LuckyPickRequest
       description: Request body for the /feeling-lucky/pick endpoint.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     LuckyPickContext:
       properties:
         offering_id:

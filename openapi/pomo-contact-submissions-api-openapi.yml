@@ -72,6 +72,13 @@ components:
       required:
       - scheduled
       title: DemoSchedulingConfirmation
+    SubmissionType:
+      type: string
+      enum:
+      - book_demo
+      - contact
+      title: SubmissionType
+      description: Type of contact submission.
     ValidationError:
       properties:
         loc:
@@ -93,6 +100,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ContactSubmissionCreate:
       properties:
         first_name:
@@ -154,22 +170,6 @@ components:
       - submission_type
       title: ContactSubmissionCreate
       description: Request schema for creating a contact submission.
-    SubmissionType:
-      type: string
-      enum:
-      - book_demo
-      - contact
-      title: SubmissionType
-      description: Type of contact submission.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

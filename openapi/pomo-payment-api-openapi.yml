@@ -793,53 +793,67 @@ components:
       - target_plan
       title: ChangePlanRequest
       description: Request model for changing subscription plan.
-    HTTPValidationError:
+    SubscriptionResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidatePlanChangeRequest:
-      properties:
-        organization_id:
+        id:
           type: string
-          title: Organization Id
-        target_plan:
-          type: string
-          title: Target Plan
-        billing_interval:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Billing Interval
-      type: object
-      required:
-      - organization_id
-      - target_plan
-      title: ValidatePlanChangeRequest
-      description: Request model for validating a plan change.
-    CreateSubscriptionRequest:
-      properties:
-        payment_method_id:
-          type: string
-          title: Payment Method Id
+          title: Id
         plan_id:
           type: string
           title: Plan Id
-          default: silver
-        billing_interval:
+        status:
+          type: string
+          title: Status
+        current_period_start:
           anyOf:
           - type: string
+            format: date-time
           - type: 'null'
-          title: Billing Interval
+          title: Current Period Start
+        current_period_end:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Current Period End
+        cancel_at_period_end:
+          type: boolean
+          title: Cancel At Period End
+        trial_end:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Trial End
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
       type: object
       required:
-      - payment_method_id
-      title: CreateSubscriptionRequest
-      description: Request model for creating a subscription.
+      - id
+      - plan_id
+      - status
+      - cancel_at_period_end
+      - created_at
+      title: SubscriptionResponse
+      description: Response model for subscription information.
+    PaymentHistoryListResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        payment_history:
+          items:
+            $ref: '#/components/schemas/PaymentHistoryItemResponse'
+          type: array
+          title: Payment History
+      type: object
+      required:
+      - status
+      - payment_history
+      title: PaymentHistoryListResponse
+      description: Response model for payment history.
     ValidationError:
       properties:
         loc:
@@ -861,72 +875,6 @@ components:
       - msg
       - type
       title: ValidationError
-    SubscriptionTier:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        description:
-          type: string
-          title: Description
-        price:
-          type: number
-          title: Price
-        currency:
-          type: string
-          title: Currency
-          default: USD
-        features:
-          items:
-            type: string
-          type: array
-          title: Features
-        stripe_price_id:
-          type: string
-          title: Stripe Price Id
-      type: object
-      required:
-      - id
-      - name
-      - description
-      - price
-      - features
-      - stripe_price_id
-      title: SubscriptionTier
-      description: Model representing a subscription tier.
-    PaymentHistoryListResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        payment_history:
-          items:
-            $ref: '#/components/schemas/PaymentHistoryItemResponse'
-          type: array
-          title: Payment History
-      type: object
-      required:
-      - status
-      - payment_history
-      title: PaymentHistoryListResponse
-      description: Response model for payment history.
-    BillingPortalSessionResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        portal_url:
-          type: string
-          title: Portal Url
-      type: object
-      required:
-      - status
-      - portal_url
-      title: BillingPortalSessionResponse
-      description: Response model for a Stripe billing portal session.
     PaymentHistoryItemResponse:
       properties:
         id:
@@ -1000,6 +948,53 @@ components:
       type: object
       title: CancelSubscriptionRequest
       description: Request model for cancelling a subscription.
+    ValidatePlanChangeRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        target_plan:
+          type: string
+          title: Target Plan
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+      type: object
+      required:
+      - organization_id
+      - target_plan
+      title: ValidatePlanChangeRequest
+      description: Request model for validating a plan change.
+    CreateSubscriptionRequest:
+      properties:
+        payment_method_id:
+          type: string
+          title: Payment Method Id
+        plan_id:
+          type: string
+          title: Plan Id
+          default: silver
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+      type: object
+      required:
+      - payment_method_id
+      title: CreateSubscriptionRequest
+      description: Request model for creating a subscription.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     PlanChangeValidationResponse:
       properties:
         is_valid:
@@ -1094,51 +1089,56 @@ components:
         Kept in sync with the frontend cancellation reason form. The order here is
 
         not significant; values are persisted verbatim for churn analysis.'
-    SubscriptionResponse:
+    SubscriptionTier:
       properties:
         id:
           type: string
           title: Id
-        plan_id:
+        name:
           type: string
-          title: Plan Id
-        status:
+          title: Name
+        description:
           type: string
-          title: Status
-        current_period_start:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Current Period Start
-        current_period_end:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Current Period End
-        cancel_at_period_end:
-          type: boolean
-          title: Cancel At Period End
-        trial_end:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Trial End
-        created_at:
+          title: Description
+        price:
+          type: number
+          title: Price
+        currency:
           type: string
-          format: date-time
-          title: Created At
+          title: Currency
+          default: USD
+        features:
+          items:
+            type: string
+          type: array
+          title: Features
+        stripe_price_id:
+          type: string
+          title: Stripe Price Id
       type: object
       required:
       - id
-      - plan_id
+      - name
+      - description
+      - price
+      - features
+      - stripe_price_id
+      title: SubscriptionTier
+      description: Model representing a subscription tier.
+    BillingPortalSessionResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        portal_url:
+          type: string
+          title: Portal Url
+      type: object
+      required:
       - status
-      - cancel_at_period_end
-      - created_at
-      title: SubscriptionResponse
-      description: Response model for subscription information.
+      - portal_url
+      title: BillingPortalSessionResponse
+      description: Response model for a Stripe billing portal session.
   securitySchemes:
     HTTPBearer:
       type: http
