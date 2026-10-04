@@ -280,40 +280,24 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    CompanyProfileAccessUpdateRequest:
+    BulkCompanyProfileAccessRequest:
       properties:
+        user_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: User Ids
+          description: List of user IDs
         role:
           $ref: '#/components/schemas/ProjectRoleEnum'
-          description: New company profile role
+          description: Role to assign to all users
       type: object
       required:
+      - user_ids
       - role
-      title: CompanyProfileAccessUpdateRequest
-      description: Request to update a user's company profile access.
-    ProjectRoleEnum:
-      type: string
-      enum:
-      - admin
-      - contributor
-      - observer
-      title: ProjectRoleEnum
-      description: Project-level role options (for company profiles).
-    CompanyProfileAccessGrantRequest:
-      properties:
-        user_id:
-          type: string
-          format: uuid
-          title: User Id
-          description: ID of the user to grant access
-        role:
-          $ref: '#/components/schemas/ProjectRoleEnum'
-          description: Company profile role to assign
-      type: object
-      required:
-      - user_id
-      - role
-      title: CompanyProfileAccessGrantRequest
-      description: Request to grant company profile access to a user.
+      title: BulkCompanyProfileAccessRequest
+      description: Request to grant company profile access to multiple users.
     BulkCompanyProfileAccessResponse:
       properties:
         successful:
@@ -338,24 +322,59 @@ components:
       - total_processed
       title: BulkCompanyProfileAccessResponse
       description: Response for bulk company profile access operations.
-    BulkCompanyProfileAccessRequest:
+    HTTPValidationError:
       properties:
-        user_ids:
+        detail:
           items:
-            type: string
-            format: uuid
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: User Ids
-          description: List of user IDs
-        role:
-          $ref: '#/components/schemas/ProjectRoleEnum'
-          description: Role to assign to all users
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProjectRoleEnum:
+      type: string
+      enum:
+      - admin
+      - contributor
+      - observer
+      title: ProjectRoleEnum
+      description: Project-level role options (for company profiles).
+    CompanyProfileAccessListResponse:
+      properties:
+        access_list:
+          items:
+            $ref: '#/components/schemas/CompanyProfileAccessResponse'
+          type: array
+          title: Access List
+        total_count:
+          type: integer
+          title: Total Count
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        company_profile_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Name
       type: object
       required:
-      - user_ids
+      - access_list
+      - total_count
+      - company_profile_id
+      title: CompanyProfileAccessListResponse
+      description: Response model for listing company profile access.
+    CompanyProfileAccessUpdateRequest:
+      properties:
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+          description: New company profile role
+      type: object
+      required:
       - role
-      title: BulkCompanyProfileAccessRequest
-      description: Request to grant company profile access to multiple users.
+      title: CompanyProfileAccessUpdateRequest
+      description: Request to update a user's company profile access.
     ValidationError:
       properties:
         loc:
@@ -377,15 +396,22 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
+    CompanyProfileAccessGrantRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+          description: ID of the user to grant access
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+          description: Company profile role to assign
       type: object
-      title: HTTPValidationError
+      required:
+      - user_id
+      - role
+      title: CompanyProfileAccessGrantRequest
+      description: Request to grant company profile access to a user.
     CompanyProfileAccessResponse:
       properties:
         id:
@@ -442,32 +468,6 @@ components:
       - updated_at
       title: CompanyProfileAccessResponse
       description: Response model for company profile access information.
-    CompanyProfileAccessListResponse:
-      properties:
-        access_list:
-          items:
-            $ref: '#/components/schemas/CompanyProfileAccessResponse'
-          type: array
-          title: Access List
-        total_count:
-          type: integer
-          title: Total Count
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        company_profile_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Name
-      type: object
-      required:
-      - access_list
-      - total_count
-      - company_profile_id
-      title: CompanyProfileAccessListResponse
-      description: Response model for listing company profile access.
   securitySchemes:
     HTTPBearer:
       type: http

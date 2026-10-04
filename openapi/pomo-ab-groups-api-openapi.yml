@@ -303,20 +303,96 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ABGroupReorderMembersRequest:
+    ABGroupResponse:
       properties:
-        ordered_ad_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          title: Ordered Ad Ids
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        ads_type:
+          type: string
+          title: Ads Type
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        settings:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        member_count:
+          type: integer
+          title: Member Count
       type: object
       required:
-      - ordered_ad_ids
-      title: ABGroupReorderMembersRequest
-    ABGroupUpdateRequest:
+      - id
+      - name
+      - ads_type
+      - member_count
+      title: ABGroupResponse
+    ABGroupMetricsSummary:
       properties:
+        impressions:
+          type: integer
+          title: Impressions
+          default: 0
+        clicks:
+          type: integer
+          title: Clicks
+          default: 0
+        cost_micros:
+          type: integer
+          title: Cost Micros
+          default: 0
+        conversions:
+          type: number
+          title: Conversions
+          default: 0.0
+        video_views:
+          type: integer
+          title: Video Views
+          default: 0
+        ctr:
+          type: number
+          title: Ctr
+          default: 0.0
+        average_cpc:
+          type: number
+          title: Average Cpc
+          default: 0.0
+        cost_per_conversion:
+          type: number
+          title: Cost Per Conversion
+          default: 0.0
+      type: object
+      title: ABGroupMetricsSummary
+    ABGroupMemberResponse:
+      properties:
+        ad_id:
+          type: string
+          format: uuid
+          title: Ad Id
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
         name:
           anyOf:
           - type: string
@@ -327,36 +403,22 @@ components:
           - type: string
           - type: 'null'
           title: Status
-          description: draft|active|paused|ended
-        settings:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Settings
-      type: object
-      title: ABGroupUpdateRequest
-    ABGroupMetricsTrend:
-      properties:
-        date:
-          type: string
-          title: Date
-        impressions:
-          type: integer
-          title: Impressions
-        clicks:
-          type: integer
-          title: Clicks
-        cost_micros:
-          type: integer
-          title: Cost Micros
       type: object
       required:
-      - date
-      - impressions
-      - clicks
-      - cost_micros
-      title: ABGroupMetricsTrend
+      - ad_id
+      title: ABGroupMemberResponse
+    ABGroupAddMembersRequest:
+      properties:
+        ad_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Ad Ids
+      type: object
+      required:
+      - ad_ids
+      title: ABGroupAddMembersRequest
     ABGroupDetailResponse:
       properties:
         id:
@@ -406,27 +468,18 @@ components:
       - member_count
       - members
       title: ABGroupDetailResponse
-    ValidationError:
+    ABGroupReorderMembersRequest:
       properties:
-        loc:
+        ordered_ad_ids:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            type: string
+            format: uuid
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Ordered Ad Ids
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - ordered_ad_ids
+      title: ABGroupReorderMembersRequest
     HTTPValidationError:
       properties:
         detail:
@@ -436,86 +489,27 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ABGroupResponse:
+    ABGroupUpdateRequest:
       properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
         name:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Name
-        ads_type:
-          type: string
-          title: Ads Type
         status:
           anyOf:
           - type: string
           - type: 'null'
           title: Status
+          description: draft|active|paused|ended
         settings:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
           title: Settings
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-        member_count:
-          type: integer
-          title: Member Count
       type: object
-      required:
-      - id
-      - name
-      - ads_type
-      - member_count
-      title: ABGroupResponse
-    ABGroupMemberResponse:
-      properties:
-        ad_id:
-          type: string
-          format: uuid
-          title: Ad Id
-        position:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Position
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-      type: object
-      required:
-      - ad_id
-      title: ABGroupMemberResponse
-    ABGroupAddMembersRequest:
-      properties:
-        ad_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          title: Ad Ids
-      type: object
-      required:
-      - ad_ids
-      title: ABGroupAddMembersRequest
+      title: ABGroupUpdateRequest
     ABGroupMetricsResponse:
       properties:
         summary:
@@ -548,6 +542,27 @@ components:
       - trends
       - variants
       title: ABGroupMetricsResponse
+    ABGroupMetricsTrend:
+      properties:
+        date:
+          type: string
+          title: Date
+        impressions:
+          type: integer
+          title: Impressions
+        clicks:
+          type: integer
+          title: Clicks
+        cost_micros:
+          type: integer
+          title: Cost Micros
+      type: object
+      required:
+      - date
+      - impressions
+      - clicks
+      - cost_micros
+      title: ABGroupMetricsTrend
     ABGroupCreateRequest:
       properties:
         name:
@@ -577,42 +592,27 @@ components:
       - name
       - ads_type
       title: ABGroupCreateRequest
-    ABGroupMetricsSummary:
+    ValidationError:
       properties:
-        impressions:
-          type: integer
-          title: Impressions
-          default: 0
-        clicks:
-          type: integer
-          title: Clicks
-          default: 0
-        cost_micros:
-          type: integer
-          title: Cost Micros
-          default: 0
-        conversions:
-          type: number
-          title: Conversions
-          default: 0.0
-        video_views:
-          type: integer
-          title: Video Views
-          default: 0
-        ctr:
-          type: number
-          title: Ctr
-          default: 0.0
-        average_cpc:
-          type: number
-          title: Average Cpc
-          default: 0.0
-        cost_per_conversion:
-          type: number
-          title: Cost Per Conversion
-          default: 0.0
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
-      title: ABGroupMetricsSummary
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

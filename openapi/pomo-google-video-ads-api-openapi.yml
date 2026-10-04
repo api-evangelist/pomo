@@ -190,86 +190,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    KeywordWithCpc:
-      properties:
-        keyword:
-          type: string
-          title: Keyword
-        estimated_cpc:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Estimated Cpc
-      type: object
-      required:
-      - keyword
-      title: KeywordWithCpc
-      description: Model for keyword with CPC data
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CampaignMediaOperation:
-      properties:
-        action:
-          type: string
-          enum:
-          - replace
-          - add
-          - add_and_set_primary
-          title: Action
-        media_type:
-          type: string
-          enum:
-          - image
-          - video
-          title: Media Type
-        selected_url:
-          type: string
-          title: Selected Url
-        previous_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Previous Url
-        source_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Source Index
-      type: object
-      required:
-      - action
-      - media_type
-      - selected_url
-      title: CampaignMediaOperation
-      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
     GoogleVideoAdRequest:
       properties:
         product_description:
@@ -348,6 +268,65 @@ components:
       - product_description
       - target_audience
       title: GoogleVideoAdRequest
+    KeywordWithCpc:
+      properties:
+        keyword:
+          type: string
+          title: Keyword
+        estimated_cpc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Estimated Cpc
+      type: object
+      required:
+      - keyword
+      title: KeywordWithCpc
+      description: Model for keyword with CPC data
+    CampaignMediaOperation:
+      properties:
+        action:
+          type: string
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Action
+        media_type:
+          type: string
+          enum:
+          - image
+          - video
+          title: Media Type
+        selected_url:
+          type: string
+          title: Selected Url
+        previous_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Previous Url
+        source_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Source Index
+      type: object
+      required:
+      - action
+      - media_type
+      - selected_url
+      title: CampaignMediaOperation
+      description: Campaign Edit Mode media change applied by the outer Save/Sync transaction.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     AdsCampaignUpdateRequest:
       properties:
         campaign_id:
@@ -667,6 +646,27 @@ components:
       - campaign_id
       title: AdsCampaignUpdateRequest
       description: Request model for updating ad campaign data
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

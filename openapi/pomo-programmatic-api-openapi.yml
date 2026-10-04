@@ -69,147 +69,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ProgrammaticCampaignGenerationRequest:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/ProgrammaticCampaignGenerationItem'
-          type: array
-          maxItems: 10
-          minItems: 1
-          title: Items
-      type: object
-      required:
-      - items
-      title: ProgrammaticCampaignGenerationRequest
-    ProgrammaticCampaignGenerationItem:
-      properties:
-        idea_id:
-          type: string
-          minLength: 1
-          title: Idea Id
-        social_or_ads:
-          anyOf:
-          - type: string
-            enum:
-            - social
-            - ads
-          - type: 'null'
-          title: Social Or Ads
-        platforms:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Platforms
-      type: object
-      required:
-      - idea_id
-      title: ProgrammaticCampaignGenerationItem
-    ProgrammaticCampaignGenerationResult:
-      properties:
-        campaign_idea_id:
-          type: string
-          title: Campaign Idea Id
-        campaign_type:
-          type: string
-          title: Campaign Type
-        platforms:
-          items:
-            type: string
-          type: array
-          title: Platforms
-        status:
-          type: string
-          title: Status
-        output:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Output
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-      type: object
-      required:
-      - campaign_idea_id
-      - campaign_type
-      - platforms
-      - status
-      title: ProgrammaticCampaignGenerationResult
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ProgrammaticCampaignIdeasRequest:
-      properties:
-        campaign_goal:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Campaign Goal
-        target_audience:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Target Audience
-        num_ideas:
-          type: integer
-          maximum: 30.0
-          minimum: 1.0
-          title: Num Ideas
-        platform:
-          type: string
-          enum:
-          - meta
-          - google
-          - tiktok
-          - linkedin
-          title: Platform
-        social_or_ads:
-          type: string
-          enum:
-          - social
-          - ads
-          title: Social Or Ads
-          default: social
-      type: object
-      required:
-      - campaign_goal
-      - target_audience
-      - num_ideas
-      - platform
-      title: ProgrammaticCampaignIdeasRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ProgrammaticCampaignIdeasResponse:
       properties:
         campaign_goal:
@@ -294,6 +153,147 @@ components:
       - company_profile_id
       - results
       title: ProgrammaticCampaignGenerationResponse
+    ProgrammaticCampaignGenerationItem:
+      properties:
+        idea_id:
+          type: string
+          minLength: 1
+          title: Idea Id
+        social_or_ads:
+          anyOf:
+          - type: string
+            enum:
+            - social
+            - ads
+          - type: 'null'
+          title: Social Or Ads
+        platforms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Platforms
+      type: object
+      required:
+      - idea_id
+      title: ProgrammaticCampaignGenerationItem
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProgrammaticCampaignGenerationResult:
+      properties:
+        campaign_idea_id:
+          type: string
+          title: Campaign Idea Id
+        campaign_type:
+          type: string
+          title: Campaign Type
+        platforms:
+          items:
+            type: string
+          type: array
+          title: Platforms
+        status:
+          type: string
+          title: Status
+        output:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Output
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - campaign_idea_id
+      - campaign_type
+      - platforms
+      - status
+      title: ProgrammaticCampaignGenerationResult
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProgrammaticCampaignGenerationRequest:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ProgrammaticCampaignGenerationItem'
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Items
+      type: object
+      required:
+      - items
+      title: ProgrammaticCampaignGenerationRequest
+    ProgrammaticCampaignIdeasRequest:
+      properties:
+        campaign_goal:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Campaign Goal
+        target_audience:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Target Audience
+        num_ideas:
+          type: integer
+          maximum: 30.0
+          minimum: 1.0
+          title: Num Ideas
+        platform:
+          type: string
+          enum:
+          - meta
+          - google
+          - tiktok
+          - linkedin
+          title: Platform
+        social_or_ads:
+          type: string
+          enum:
+          - social
+          - ads
+          title: Social Or Ads
+          default: social
+      type: object
+      required:
+      - campaign_goal
+      - target_audience
+      - num_ideas
+      - platform
+      title: ProgrammaticCampaignIdeasRequest
   securitySchemes:
     HTTPBearer:
       type: http

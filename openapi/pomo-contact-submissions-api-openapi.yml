@@ -63,15 +63,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    DemoSchedulingConfirmation:
-      properties:
-        scheduled:
-          type: boolean
-          title: Scheduled
-      type: object
-      required:
-      - scheduled
-      title: DemoSchedulingConfirmation
     SubmissionType:
       type: string
       enum:
@@ -79,6 +70,15 @@ components:
       - contact
       title: SubmissionType
       description: Type of contact submission.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -100,15 +100,15 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
+    DemoSchedulingConfirmation:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        scheduled:
+          type: boolean
+          title: Scheduled
       type: object
-      title: HTTPValidationError
+      required:
+      - scheduled
+      title: DemoSchedulingConfirmation
     ContactSubmissionCreate:
       properties:
         first_name:

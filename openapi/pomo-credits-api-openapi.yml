@@ -255,49 +255,64 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    CreditCaptureRequest:
+    TransactionHistoryResponse:
+      properties:
+        transactions:
+          items: {}
+          type: array
+          title: Transactions
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - transactions
+      - total
+      - limit
+      - offset
+      title: TransactionHistoryResponse
+      description: Credit transaction history response.
+    CreditReleaseRequest:
       properties:
         hold_id:
           type: string
           title: Hold Id
-        campaign_id:
+        reason:
           type: string
-          title: Campaign Id
-        final_charge:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Final Charge
-          description: Final charge if different from hold
+          title: Reason
       type: object
       required:
       - hold_id
-      - campaign_id
-      title: CreditCaptureRequest
-      description: Request to capture a credit hold.
-    CreditHoldResponse:
+      - reason
+      title: CreditReleaseRequest
+      description: Request to release a credit hold.
+    ValidationError:
       properties:
-        hold_id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Hold Id
-        amount:
-          type: number
-          title: Amount
-        expires_at:
+          title: Message
+        type:
           type: string
-          format: date-time
-          title: Expires At
-        status:
-          type: string
-          title: Status
-          default: success
+          title: Error Type
       type: object
       required:
-      - hold_id
-      - amount
-      - expires_at
-      title: CreditHoldResponse
-      description: Response from credit hold creation.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CreditPurchaseResponse:
       properties:
         client_secret:
@@ -320,27 +335,6 @@ components:
       - amount
       title: CreditPurchaseResponse
       description: Response with Stripe payment intent details.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     CreditHoldRequest:
       properties:
         organization_id:
@@ -365,20 +359,6 @@ components:
       - description
       title: CreditHoldRequest
       description: Request to create a credit hold.
-    CreditReleaseRequest:
-      properties:
-        hold_id:
-          type: string
-          title: Hold Id
-        reason:
-          type: string
-          title: Reason
-      type: object
-      required:
-      - hold_id
-      - reason
-      title: CreditReleaseRequest
-      description: Request to release a credit hold.
     HTTPValidationError:
       properties:
         detail:
@@ -388,6 +368,63 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    CreditCaptureRequest:
+      properties:
+        hold_id:
+          type: string
+          title: Hold Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        final_charge:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Final Charge
+          description: Final charge if different from hold
+      type: object
+      required:
+      - hold_id
+      - campaign_id
+      title: CreditCaptureRequest
+      description: Request to capture a credit hold.
+    CreditPurchaseRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        amount:
+          type: number
+          title: Amount
+      type: object
+      required:
+      - organization_id
+      - amount
+      title: CreditPurchaseRequest
+      description: Request to purchase credits.
+    CreditHoldResponse:
+      properties:
+        hold_id:
+          type: string
+          title: Hold Id
+        amount:
+          type: number
+          title: Amount
+        expires_at:
+          type: string
+          format: date-time
+          title: Expires At
+        status:
+          type: string
+          title: Status
+          default: success
+      type: object
+      required:
+      - hold_id
+      - amount
+      - expires_at
+      title: CreditHoldResponse
+      description: Response from credit hold creation.
     CalculateChargeResponse:
       properties:
         ad_spend:
@@ -455,43 +492,6 @@ components:
       - last_updated
       title: CreditBalanceResponse
       description: Current credit balance response.
-    CreditPurchaseRequest:
-      properties:
-        organization_id:
-          type: string
-          title: Organization Id
-        amount:
-          type: number
-          title: Amount
-      type: object
-      required:
-      - organization_id
-      - amount
-      title: CreditPurchaseRequest
-      description: Request to purchase credits.
-    TransactionHistoryResponse:
-      properties:
-        transactions:
-          items: {}
-          type: array
-          title: Transactions
-        total:
-          type: integer
-          title: Total
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-      type: object
-      required:
-      - transactions
-      - total
-      - limit
-      - offset
-      title: TransactionHistoryResponse
-      description: Credit transaction history response.
     CalculateChargeRequest:
       properties:
         organization_id:

@@ -169,32 +169,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ProductIdeaBrainstormRequest:
-      properties:
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-        user_input:
-          type: string
-          title: User Input
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
-      type: object
-      required:
-      - user_input
-      title: ProductIdeaBrainstormRequest
     ProductIdea:
       properties:
         name:
@@ -250,27 +224,6 @@ components:
       - potential_challenges
       - success_metrics
       title: ProductIdea
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -324,6 +277,53 @@ components:
       - context_data
       - created_at
       title: ProductIdeaResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProductIdeaBrainstormRequest:
+      properties:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        user_input:
+          type: string
+          title: User Input
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+      type: object
+      required:
+      - user_input
+      title: ProductIdeaBrainstormRequest
   securitySchemes:
     HTTPBearer:
       type: http

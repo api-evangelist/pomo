@@ -40,36 +40,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     LuckyPickRequest:
       properties:
         kind:
@@ -94,6 +64,28 @@ components:
       - candidates
       title: LuckyPickRequest
       description: Request body for the /feeling-lucky/pick endpoint.
+    LuckyPickResponse:
+      properties:
+        choice:
+          title: Choice
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - choice
+      - reason
+      title: LuckyPickResponse
+      description: Response body for the /feeling-lucky/pick endpoint.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     LuckyPickContext:
       properties:
         offering_id:
@@ -139,19 +131,27 @@ components:
       type: object
       title: LuckyPickContext
       description: Context for the lucky pick request.
-    LuckyPickResponse:
+    ValidationError:
       properties:
-        choice:
-          title: Choice
-        reason:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Reason
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - choice
-      - reason
-      title: LuckyPickResponse
-      description: Response body for the /feeling-lucky/pick endpoint.
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

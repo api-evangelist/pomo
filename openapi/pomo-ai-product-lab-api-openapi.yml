@@ -417,53 +417,6 @@ components:
       - potential_challenges
       - success_metrics
       title: ProductIdea
-    ProductIdeaBrainstormRequest:
-      properties:
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-        user_input:
-          type: string
-          title: User Input
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
-      type: object
-      required:
-      - user_input
-      title: ProductIdeaBrainstormRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -517,33 +470,6 @@ components:
       - context_data
       - created_at
       title: ProductIdeaResponse
-    ProductLaunchTestRequest:
-      properties:
-        launch_session_id:
-          type: string
-          format: uuid
-          title: Launch Session Id
-        product_idea_index:
-          type: integer
-          title: Product Idea Index
-        target_audience_groups:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Target Audience Groups
-        persona_set_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Persona Set Id
-      type: object
-      required:
-      - launch_session_id
-      - product_idea_index
-      title: ProductLaunchTestRequest
     PersonaResponseData:
       properties:
         persona_id:
@@ -600,6 +526,27 @@ components:
       - would_recommend
       - recommendation_reason
       title: PersonaResponseData
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ProductLaunchTestResult:
       properties:
         id:
@@ -684,6 +631,59 @@ components:
       - started_at
       - completed_at
       title: ProductLaunchTestResult
+    ProductLaunchTestRequest:
+      properties:
+        launch_session_id:
+          type: string
+          format: uuid
+          title: Launch Session Id
+        product_idea_index:
+          type: integer
+          title: Product Idea Index
+        target_audience_groups:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Target Audience Groups
+        persona_set_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Persona Set Id
+      type: object
+      required:
+      - launch_session_id
+      - product_idea_index
+      title: ProductLaunchTestRequest
+    ProductIdeaBrainstormRequest:
+      properties:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        user_input:
+          type: string
+          title: User Input
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+      type: object
+      required:
+      - user_input
+      title: ProductIdeaBrainstormRequest
   securitySchemes:
     HTTPBearer:
       type: http

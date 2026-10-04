@@ -190,27 +190,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     CampaignDaypartingRequest:
       properties:
         campaign_id:
@@ -227,41 +206,6 @@ components:
       - campaign_id
       - platform_configs
       title: CampaignDaypartingRequest
-    PlatformDaypartingConfig:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-        timezone:
-          type: string
-          title: Timezone
-        schedule:
-          items:
-            $ref: '#/components/schemas/DaypartingSlot'
-          type: array
-          title: Schedule
-        bid_adjustments:
-          anyOf:
-          - additionalProperties:
-              type: number
-            type: object
-          - type: 'null'
-          title: Bid Adjustments
-      type: object
-      required:
-      - enabled
-      - timezone
-      - schedule
-      title: PlatformDaypartingConfig
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     DaypartingHealthResponse:
       properties:
         ad_id:
@@ -299,6 +243,62 @@ components:
       - missing_rules
       - health_score
       title: DaypartingHealthResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PlatformDaypartingConfig:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        timezone:
+          type: string
+          title: Timezone
+        schedule:
+          items:
+            $ref: '#/components/schemas/DaypartingSlot'
+          type: array
+          title: Schedule
+        bid_adjustments:
+          anyOf:
+          - additionalProperties:
+              type: number
+            type: object
+          - type: 'null'
+          title: Bid Adjustments
+      type: object
+      required:
+      - enabled
+      - timezone
+      - schedule
+      title: PlatformDaypartingConfig
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DaypartingSlot:
       properties:
         day:

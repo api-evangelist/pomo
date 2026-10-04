@@ -177,235 +177,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    VideoSelectionRequest:
-      properties:
-        campaign_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: string
-          title: Campaign Id
-          description: Campaign ID (can be UUID database ID or string campaign_id)
-        campaign_type:
-          type: string
-          title: Campaign Type
-          description: Type of campaign (e.g., google_video, tiktok_video)
-        selected_video_url:
-          type: string
-          title: Selected Video Url
-          description: URL of the selected video asset
-        variation_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Variation Index
-          description: Index of the selected video (0-based)
-        total_variations:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Total Variations
-          description: Total number of videos that were presented
-        selection_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Selection Metadata
-          description: Additional metadata about the selection
-        ad_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Id
-          description: Specific ad ID for ad campaigns
-      type: object
-      required:
-      - campaign_id
-      - campaign_type
-      - selected_video_url
-      title: VideoSelectionRequest
-      description: Request schema for selecting or uploading a replacement video for a campaign.
-    EditImageJobRequest:
-      properties:
-        image_url:
-          type: string
-          title: Image Url
-        edit_prompt:
-          type: string
-          title: Edit Prompt
-        num_variations:
-          type: integer
-          maximum: 3.0
-          minimum: 1.0
-          title: Num Variations
-          default: 3
-        product_image_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Image Url
-        logo_image_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Logo Image Url
-        campaign_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Campaign Id
-        campaign_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Campaign Type
-        ad_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Id
-        idea_number:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Idea Number
-        use_company_style:
-          type: boolean
-          title: Use Company Style
-          default: false
-      type: object
-      required:
-      - image_url
-      - edit_prompt
-      title: EditImageJobRequest
-      description: Request body for starting an async campaign image edit job
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    VideoSelectionResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        campaign_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: string
-          title: Campaign Id
-        campaign_type:
-          type: string
-          title: Campaign Type
-        selected_video_url:
-          type: string
-          title: Selected Video Url
-        selected_thumbnail_url:
-          type: string
-          title: Selected Thumbnail Url
-        selected_companion_image_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Selected Companion Image Url
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - success
-      - campaign_id
-      - campaign_type
-      - selected_video_url
-      - selected_thumbnail_url
-      - message
-      title: VideoSelectionResponse
-      description: Response schema for video selection.
-    ImageSelectionRequest:
-      properties:
-        campaign_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: string
-          title: Campaign Id
-          description: Campaign ID (can be UUID database ID or string campaign_id)
-        campaign_type:
-          type: string
-          title: Campaign Type
-          description: Type of campaign (e.g., google_display, meta_feed, social_post)
-        selected_image_url:
-          type: string
-          title: Selected Image Url
-          description: URL of the selected image variation
-        selection_mode:
-          type: string
-          enum:
-          - replace
-          - add
-          - add_and_set_primary
-          title: Selection Mode
-          description: 'How to apply the selected image: replace current, add to list, or add and set as primary'
-          default: replace
-        variation_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Variation Index
-          description: Index of the selected variation (0-based)
-        total_variations:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Total Variations
-          description: Total number of variations that were presented
-        selection_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Selection Metadata
-          description: Additional metadata about the selection
-        ad_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Id
-          description: Specific ad ID for ad campaigns (when updating a specific ad variation)
-      type: object
-      required:
-      - campaign_id
-      - campaign_type
-      - selected_image_url
-      title: ImageSelectionRequest
-      description: Request schema for selecting an image variation for a campaign
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     JobResponse:
       properties:
         job_id:
@@ -466,6 +237,235 @@ components:
       - message
       title: ImageSelectionResponse
       description: Response schema for image selection
+    EditImageJobRequest:
+      properties:
+        image_url:
+          type: string
+          title: Image Url
+        edit_prompt:
+          type: string
+          title: Edit Prompt
+        num_variations:
+          type: integer
+          maximum: 3.0
+          minimum: 1.0
+          title: Num Variations
+          default: 3
+        product_image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Image Url
+        logo_image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Image Url
+        campaign_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Id
+        campaign_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Type
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+        idea_number:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Idea Number
+        use_company_style:
+          type: boolean
+          title: Use Company Style
+          default: false
+      type: object
+      required:
+      - image_url
+      - edit_prompt
+      title: EditImageJobRequest
+      description: Request body for starting an async campaign image edit job
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    VideoSelectionResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        campaign_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: string
+          title: Campaign Id
+        campaign_type:
+          type: string
+          title: Campaign Type
+        selected_video_url:
+          type: string
+          title: Selected Video Url
+        selected_thumbnail_url:
+          type: string
+          title: Selected Thumbnail Url
+        selected_companion_image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selected Companion Image Url
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - campaign_id
+      - campaign_type
+      - selected_video_url
+      - selected_thumbnail_url
+      - message
+      title: VideoSelectionResponse
+      description: Response schema for video selection.
+    VideoSelectionRequest:
+      properties:
+        campaign_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: string
+          title: Campaign Id
+          description: Campaign ID (can be UUID database ID or string campaign_id)
+        campaign_type:
+          type: string
+          title: Campaign Type
+          description: Type of campaign (e.g., google_video, tiktok_video)
+        selected_video_url:
+          type: string
+          title: Selected Video Url
+          description: URL of the selected video asset
+        variation_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Variation Index
+          description: Index of the selected video (0-based)
+        total_variations:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Variations
+          description: Total number of videos that were presented
+        selection_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Selection Metadata
+          description: Additional metadata about the selection
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+          description: Specific ad ID for ad campaigns
+      type: object
+      required:
+      - campaign_id
+      - campaign_type
+      - selected_video_url
+      title: VideoSelectionRequest
+      description: Request schema for selecting or uploading a replacement video for a campaign.
+    ImageSelectionRequest:
+      properties:
+        campaign_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: string
+          title: Campaign Id
+          description: Campaign ID (can be UUID database ID or string campaign_id)
+        campaign_type:
+          type: string
+          title: Campaign Type
+          description: Type of campaign (e.g., google_display, meta_feed, social_post)
+        selected_image_url:
+          type: string
+          title: Selected Image Url
+          description: URL of the selected image variation
+        selection_mode:
+          type: string
+          enum:
+          - replace
+          - add
+          - add_and_set_primary
+          title: Selection Mode
+          description: 'How to apply the selected image: replace current, add to list, or add and set as primary'
+          default: replace
+        variation_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Variation Index
+          description: Index of the selected variation (0-based)
+        total_variations:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Variations
+          description: Total number of variations that were presented
+        selection_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Selection Metadata
+          description: Additional metadata about the selection
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+          description: Specific ad ID for ad campaigns (when updating a specific ad variation)
+      type: object
+      required:
+      - campaign_id
+      - campaign_type
+      - selected_image_url
+      title: ImageSelectionRequest
+      description: Request schema for selecting an image variation for a campaign
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

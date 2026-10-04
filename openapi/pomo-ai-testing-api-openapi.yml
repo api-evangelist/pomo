@@ -638,64 +638,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    PersonaSetUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        is_active:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Active
-      type: object
-      title: PersonaSetUpdate
-    PersonaSetCreate:
-      properties:
-        name:
-          type: string
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        location:
-          anyOf:
-          - $ref: '#/components/schemas/LocationInfo'
-          - type: 'null'
-      type: object
-      required:
-      - name
-      title: PersonaSetCreate
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     LocationInfo:
       properties:
         country:
@@ -724,65 +666,6 @@ components:
       - country
       - country_code
       title: LocationInfo
-    PersonaSetResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        name:
-          type: string
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        location:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Location
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        is_active:
-          type: boolean
-          title: Is Active
-        persona_count:
-          type: integer
-          title: Persona Count
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-      type: object
-      required:
-      - id
-      - name
-      - description
-      - location
-      - company_profile_id
-      - is_active
-      - persona_count
-      - created_at
-      - updated_at
-      title: PersonaSetResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     AIPersonaResponse:
       properties:
         id:
@@ -859,6 +742,226 @@ components:
       - created_at
       - updated_at
       title: AIPersonaResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PersonaSetResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        location:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Location
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        is_active:
+          type: boolean
+          title: Is Active
+        persona_count:
+          type: integer
+          title: Persona Count
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - name
+      - description
+      - location
+      - company_profile_id
+      - is_active
+      - persona_count
+      - created_at
+      - updated_at
+      title: PersonaSetResponse
+    AIPersonaCreate:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        demographics:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Demographics
+        interests:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Interests
+        behaviors:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Behaviors
+        pain_points:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Pain Points
+        goals:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Goals
+        preferred_channels:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Preferred Channels
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+      type: object
+      required:
+      - name
+      title: AIPersonaCreate
+    PersonaSetUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+      type: object
+      title: PersonaSetUpdate
+    AITestRequest:
+      properties:
+        ad_id:
+          type: string
+          title: Ad Id
+        ad_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Platform
+        persona_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Persona Ids
+        audience_groups:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Audience Groups
+        target_audience_data:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Target Audience Data
+        persona_set_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Persona Set Id
+      type: object
+      required:
+      - ad_id
+      title: AITestRequest
+    PersonaSetCreate:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        location:
+          anyOf:
+          - $ref: '#/components/schemas/LocationInfo'
+          - type: 'null'
+      type: object
+      required:
+      - name
+      title: PersonaSetCreate
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     AITestSessionResponse:
       properties:
         id:
@@ -952,109 +1055,6 @@ components:
           title: Persona Set Description
       type: object
       title: GeneratePersonasRequest
-    AIPersonaCreate:
-      properties:
-        name:
-          type: string
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        demographics:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Demographics
-        interests:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Interests
-        behaviors:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Behaviors
-        pain_points:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Pain Points
-        goals:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Goals
-        preferred_channels:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Preferred Channels
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-      type: object
-      required:
-      - name
-      title: AIPersonaCreate
-    AITestRequest:
-      properties:
-        ad_id:
-          type: string
-          title: Ad Id
-        ad_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Platform
-        persona_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Persona Ids
-        audience_groups:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Audience Groups
-        target_audience_data:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Target Audience Data
-        persona_set_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Persona Set Id
-      type: object
-      required:
-      - ad_id
-      title: AITestRequest
   securitySchemes:
     HTTPBearer:
       type: http

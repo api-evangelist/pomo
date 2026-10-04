@@ -276,36 +276,36 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    ValidationError:
+    ResourceListRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        resource_type:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Resource Type
+          description: Type of resource to list
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+          description: Organization context
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+          description: Company profile context
+        params:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Params
+          description: Filtering parameters
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - resource_type
+      title: ResourceListRequest
+      description: Request to list resources
     ToolExecuteRequest:
       properties:
         tool_name:
@@ -344,36 +344,42 @@ components:
       - company_profile_id
       title: ToolExecuteRequest
       description: Request to execute a tool
-    ResourceListRequest:
+    MCPResponse:
       properties:
-        resource_type:
-          type: string
-          title: Resource Type
-          description: Type of resource to list
-        organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Id
-          description: Organization context
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-          description: Company profile context
-        params:
+        success:
+          type: boolean
+          title: Success
+        data:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
-          title: Params
-          description: Filtering parameters
+          title: Data
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
       type: object
       required:
-      - resource_type
-      title: ResourceListRequest
-      description: Request to list resources
+      - success
+      title: MCPResponse
+      description: Standard MCP response
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ResourceReadRequest:
       properties:
         resource_type:
@@ -409,33 +415,27 @@ components:
       - resource_id
       title: ResourceReadRequest
       description: Request to read a specific resource
-    MCPResponse:
+    ValidationError:
       properties:
-        success:
-          type: boolean
-          title: Success
-        data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Data
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - success
-      title: MCPResponse
-      description: Standard MCP response
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

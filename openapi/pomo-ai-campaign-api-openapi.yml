@@ -63,6 +63,60 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    AICampaignTrendContext:
+      properties:
+        trend_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trend Title
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        analysis_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analysis Summary
+        priority_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority Label
+        trend_keywords:
+          items:
+            type: string
+          type: array
+          title: Trend Keywords
+        supporting_keywords:
+          items:
+            type: string
+          type: array
+          title: Supporting Keywords
+        signal_points:
+          items:
+            type: string
+          type: array
+          title: Signal Points
+        recommendation_points:
+          items:
+            type: string
+          type: array
+          title: Recommendation Points
+        relevant_product_names:
+          items:
+            type: string
+          type: array
+          title: Relevant Product Names
+        source_examples:
+          items:
+            $ref: '#/components/schemas/AICampaignTrendSourceExample'
+          type: array
+          title: Source Examples
+      type: object
+      title: AICampaignTrendContext
     AICampaignAssetReference:
       properties:
         id:
@@ -147,6 +201,56 @@ components:
       - selected_offering_id
       - selected_offering_reason
       title: AICampaignOfferingSuggestionResponse
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    AICampaignReference:
+      properties:
+        title:
+          type: string
+          title: Title
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timestamp
+      type: object
+      required:
+      - title
+      title: AICampaignReference
     AICampaignSourcePayload:
       properties:
         title:
@@ -241,99 +345,6 @@ components:
       - source_type
       - source_payload
       title: AICampaignFromIntelligenceRequest
-    AICampaignReference:
-      properties:
-        title:
-          type: string
-          title: Title
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-        timestamp:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Timestamp
-      type: object
-      required:
-      - title
-      title: AICampaignReference
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AICampaignRelevantProduct:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - id
-      - name
-      title: AICampaignRelevantProduct
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
     AICampaignTrendSourceExample:
       properties:
         title:
@@ -358,60 +369,49 @@ components:
       required:
       - title
       title: AICampaignTrendSourceExample
-    AICampaignTrendContext:
+    AICampaignRelevantProduct:
       properties:
-        trend_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Trend Title
-        platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform
-        analysis_summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Analysis Summary
-        priority_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Priority Label
-        trend_keywords:
-          items:
-            type: string
-          type: array
-          title: Trend Keywords
-        supporting_keywords:
-          items:
-            type: string
-          type: array
-          title: Supporting Keywords
-        signal_points:
-          items:
-            type: string
-          type: array
-          title: Signal Points
-        recommendation_points:
-          items:
-            type: string
-          type: array
-          title: Recommendation Points
-        relevant_product_names:
-          items:
-            type: string
-          type: array
-          title: Relevant Product Names
-        source_examples:
-          items:
-            $ref: '#/components/schemas/AICampaignTrendSourceExample'
-          type: array
-          title: Source Examples
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
       type: object
-      title: AICampaignTrendContext
+      required:
+      - id
+      - name
+      title: AICampaignRelevantProduct
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

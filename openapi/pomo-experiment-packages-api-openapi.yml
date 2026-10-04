@@ -213,70 +213,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ExperimentReadoutRequest:
-      properties:
-        post_upload_id:
-          type: string
-          maxLength: 64
-          minLength: 1
-          title: Post Upload Id
-      type: object
-      required:
-      - post_upload_id
-      title: ExperimentReadoutRequest
-      description: Pair a post-test sales upload to a package for the lift readout.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    FirstPartyExperimentVariantState:
-      properties:
-        id:
-          type: string
-          maxLength: 64
-          minLength: 1
-          title: Id
-        locked:
-          type: boolean
-          title: Locked
-          default: false
-        alternate_index:
-          type: integer
-          maximum: 100.0
-          minimum: 0.0
-          title: Alternate Index
-          default: 0
-      type: object
-      required:
-      - id
-      title: FirstPartyExperimentVariantState
-      description: Client-held state for one preview variant.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ExperimentPackageCreateRequest:
       properties:
         opportunity_id:
@@ -345,6 +281,70 @@ components:
       - upload_id
       title: ExperimentPackageCreateRequest
       description: Persist a test package from a tuned preview.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ExperimentReadoutRequest:
+      properties:
+        post_upload_id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Post Upload Id
+      type: object
+      required:
+      - post_upload_id
+      title: ExperimentReadoutRequest
+      description: Pair a post-test sales upload to a package for the lift readout.
+    FirstPartyExperimentVariantState:
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Id
+        locked:
+          type: boolean
+          title: Locked
+          default: false
+        alternate_index:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Alternate Index
+          default: 0
+      type: object
+      required:
+      - id
+      title: FirstPartyExperimentVariantState
+      description: Client-held state for one preview variant.
     FirstPartyExperimentVariantAsset:
       properties:
         id:

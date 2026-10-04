@@ -354,17 +354,50 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    QuickBooksAuditResponse:
+    QuickBooksExpenseSplitsResponse:
       properties:
-        events:
+        qb_token:
+          type: string
+          title: Qb Token
+        entity_type:
+          type: string
+          enum:
+          - bill
+          - purchase
+          title: Entity Type
+        splits:
           items:
-            $ref: '#/components/schemas/QuickBooksAuditEventRow'
+            $ref: '#/components/schemas/QuickBooksExpenseSplitRow'
           type: array
-          title: Events
+          title: Splits
       type: object
       required:
-      - events
-      title: QuickBooksAuditResponse
+      - qb_token
+      - entity_type
+      - splits
+      title: QuickBooksExpenseSplitsResponse
+    QuickBooksExpenseAnnotateRequest:
+      properties:
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+          description: Whether this transaction is marketing spend
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+          description: Marketing category (required when qb_is_marketing_expense=true)
+        qb_marketing_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Reason
+          description: User-provided annotation reason
+      type: object
+      required:
+      - qb_is_marketing_expense
+      title: QuickBooksExpenseAnnotateRequest
     ValidationError:
       properties:
         loc:
@@ -386,31 +419,135 @@ components:
       - msg
       - type
       title: ValidationError
-    QuickBooksExpenseBulkAnnotateResponse:
+    QuickBooksExpenseSplitUpsert:
       properties:
-        updated:
-          type: integer
-          title: Updated
-          default: 0
-      type: object
-      title: QuickBooksExpenseBulkAnnotateResponse
-    QuickBooksExpenseSplitsUpdateRequest:
-      properties:
-        splits:
-          items:
-            $ref: '#/components/schemas/QuickBooksExpenseSplitUpsert'
-          type: array
-          title: Splits
-        expense_total_amt:
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+          default: true
+        qb_marketing_category:
           anyOf:
-          - type: number
+          - type: string
           - type: 'null'
-          title: Expense Total Amt
-          description: Parent expense total in dollars (for server-side validation)
+          title: Qb Marketing Category
+        amount:
+          type: number
+          title: Amount
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
       type: object
       required:
-      - splits
-      title: QuickBooksExpenseSplitsUpdateRequest
+      - amount
+      title: QuickBooksExpenseSplitUpsert
+    QuickBooksAuditResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/QuickBooksAuditEventRow'
+          type: array
+          title: Events
+      type: object
+      required:
+      - events
+      title: QuickBooksAuditResponse
+    QuickBooksExpenseBulkAnnotateRequest:
+      properties:
+        qb_tokens:
+          items:
+            type: string
+          type: array
+          title: Qb Tokens
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+        qb_marketing_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Reason
+      type: object
+      required:
+      - qb_tokens
+      - qb_is_marketing_expense
+      title: QuickBooksExpenseBulkAnnotateRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    QuickBooksExpenseSplitRow:
+      properties:
+        id:
+          type: string
+          title: Id
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+        amount:
+          type: number
+          title: Amount
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - id
+      - qb_is_marketing_expense
+      - amount
+      title: QuickBooksExpenseSplitRow
+    QuickBooksAuditEventRow:
+      properties:
+        id:
+          type: string
+          title: Id
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        actor_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actor User Id
+        actor_user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actor User Email
+        action:
+          type: string
+          title: Action
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - id
+      - timestamp
+      - action
+      title: QuickBooksAuditEventRow
     QuickBooksMappingRow:
       properties:
         id:
@@ -452,7 +589,57 @@ components:
       - match_text
       - qb_is_marketing_expense
       title: QuickBooksMappingRow
-    QuickBooksExpenseSplitsResponse:
+    QuickBooksExpenseBulkAnnotateResponse:
+      properties:
+        updated:
+          type: integer
+          title: Updated
+          default: 0
+      type: object
+      title: QuickBooksExpenseBulkAnnotateResponse
+    QuickBooksExpenseSplitsUpdateRequest:
+      properties:
+        splits:
+          items:
+            $ref: '#/components/schemas/QuickBooksExpenseSplitUpsert'
+          type: array
+          title: Splits
+        expense_total_amt:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Expense Total Amt
+          description: Parent expense total in dollars (for server-side validation)
+      type: object
+      required:
+      - splits
+      title: QuickBooksExpenseSplitsUpdateRequest
+    QuickBooksMappingCreateRequest:
+      properties:
+        match_field:
+          type: string
+          enum:
+          - vendor
+          - account
+          title: Match Field
+        match_text:
+          type: string
+          title: Match Text
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+          default: true
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+      type: object
+      required:
+      - match_field
+      - match_text
+      title: QuickBooksMappingCreateRequest
+    QBMarketingAnnotationResponse:
       properties:
         qb_token:
           type: string
@@ -463,17 +650,40 @@ components:
           - bill
           - purchase
           title: Entity Type
-        splits:
-          items:
-            $ref: '#/components/schemas/QuickBooksExpenseSplitRow'
-          type: array
-          title: Splits
+        qb_is_marketing_expense:
+          type: boolean
+          title: Qb Is Marketing Expense
+          default: false
+        qb_marketing_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Category
+        qb_marketing_category_confidence:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Qb Marketing Category Confidence
+        qb_marketing_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Reason
+        qb_marketing_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Qb Marketing Source
+        qb_has_splits:
+          type: boolean
+          title: Qb Has Splits
+          default: false
       type: object
       required:
       - qb_token
       - entity_type
-      - splits
-      title: QuickBooksExpenseSplitsResponse
+      title: QBMarketingAnnotationResponse
+      description: Lightweight response for annotation writes (no transaction data needed).
     QuickBooksMappingUpdateRequest:
       properties:
         match_field:
@@ -501,115 +711,6 @@ components:
           title: Qb Marketing Category
       type: object
       title: QuickBooksMappingUpdateRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    QuickBooksExpenseSplitUpsert:
-      properties:
-        qb_is_marketing_expense:
-          type: boolean
-          title: Qb Is Marketing Expense
-          default: true
-        qb_marketing_category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Category
-        amount:
-          type: number
-          title: Amount
-        note:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Note
-      type: object
-      required:
-      - amount
-      title: QuickBooksExpenseSplitUpsert
-    QuickBooksMappingCreateRequest:
-      properties:
-        match_field:
-          type: string
-          enum:
-          - vendor
-          - account
-          title: Match Field
-        match_text:
-          type: string
-          title: Match Text
-        qb_is_marketing_expense:
-          type: boolean
-          title: Qb Is Marketing Expense
-          default: true
-        qb_marketing_category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Category
-      type: object
-      required:
-      - match_field
-      - match_text
-      title: QuickBooksMappingCreateRequest
-    QuickBooksExpenseSplitRow:
-      properties:
-        id:
-          type: string
-          title: Id
-        qb_is_marketing_expense:
-          type: boolean
-          title: Qb Is Marketing Expense
-        qb_marketing_category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Category
-        amount:
-          type: number
-          title: Amount
-        note:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Note
-      type: object
-      required:
-      - id
-      - qb_is_marketing_expense
-      - amount
-      title: QuickBooksExpenseSplitRow
-    QuickBooksExpenseBulkAnnotateRequest:
-      properties:
-        qb_tokens:
-          items:
-            type: string
-          type: array
-          title: Qb Tokens
-        qb_is_marketing_expense:
-          type: boolean
-          title: Qb Is Marketing Expense
-        qb_marketing_category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Category
-        qb_marketing_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Reason
-      type: object
-      required:
-      - qb_tokens
-      - qb_is_marketing_expense
-      title: QuickBooksExpenseBulkAnnotateRequest
     QuickBooksReviewQueueRow:
       properties:
         entity_type:
@@ -684,107 +785,6 @@ components:
       - qb_token
       - qb_id
       title: QuickBooksReviewQueueRow
-    QuickBooksAuditEventRow:
-      properties:
-        id:
-          type: string
-          title: Id
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-        actor_user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Actor User Id
-        actor_user_email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Actor User Email
-        action:
-          type: string
-          title: Action
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - id
-      - timestamp
-      - action
-      title: QuickBooksAuditEventRow
-    QuickBooksExpenseAnnotateRequest:
-      properties:
-        qb_is_marketing_expense:
-          type: boolean
-          title: Qb Is Marketing Expense
-          description: Whether this transaction is marketing spend
-        qb_marketing_category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Category
-          description: Marketing category (required when qb_is_marketing_expense=true)
-        qb_marketing_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Reason
-          description: User-provided annotation reason
-      type: object
-      required:
-      - qb_is_marketing_expense
-      title: QuickBooksExpenseAnnotateRequest
-    QBMarketingAnnotationResponse:
-      properties:
-        qb_token:
-          type: string
-          title: Qb Token
-        entity_type:
-          type: string
-          enum:
-          - bill
-          - purchase
-          title: Entity Type
-        qb_is_marketing_expense:
-          type: boolean
-          title: Qb Is Marketing Expense
-          default: false
-        qb_marketing_category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Category
-        qb_marketing_category_confidence:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Qb Marketing Category Confidence
-        qb_marketing_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Reason
-        qb_marketing_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Qb Marketing Source
-        qb_has_splits:
-          type: boolean
-          title: Qb Has Splits
-          default: false
-      type: object
-      required:
-      - qb_token
-      - entity_type
-      title: QBMarketingAnnotationResponse
-      description: Lightweight response for annotation writes (no transaction data needed).
   securitySchemes:
     HTTPBearer:
       type: http

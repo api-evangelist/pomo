@@ -226,45 +226,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    TestEmailRequest:
-      properties:
-        campaign_id:
-          type: integer
-          title: Campaign Id
-        test_emails:
-          items:
-            type: string
-          type: array
-          maxItems: 10
-          minItems: 1
-          title: Test Emails
-      type: object
-      required:
-      - campaign_id
-      - test_emails
-      title: TestEmailRequest
-      description: Request to send test emails
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     ABTestConfig:
       properties:
         test_type:
@@ -314,21 +275,22 @@ components:
       - variants
       title: ABTestConfig
       description: A/B test configuration
-    WorkflowUpdateRequest:
+    PreviewRequest:
       properties:
         campaign_id:
           type: integer
           title: Campaign Id
-        new_status:
-          type: string
-          pattern: ^(draft|review|approved|scheduled|sending|sent|failed)$
-          title: New Status
+        sample_size:
+          type: integer
+          maximum: 20.0
+          minimum: 1.0
+          title: Sample Size
+          default: 5
       type: object
       required:
       - campaign_id
-      - new_status
-      title: WorkflowUpdateRequest
-      description: Request to update workflow status
+      title: PreviewRequest
+      description: Request for email preview
     SendCampaignRequest:
       properties:
         campaign_id:
@@ -355,6 +317,21 @@ components:
       - consumer_group_ids
       title: SendCampaignRequest
       description: Request to send campaign
+    WorkflowUpdateRequest:
+      properties:
+        campaign_id:
+          type: integer
+          title: Campaign Id
+        new_status:
+          type: string
+          pattern: ^(draft|review|approved|scheduled|sending|sent|failed)$
+          title: New Status
+      type: object
+      required:
+      - campaign_id
+      - new_status
+      title: WorkflowUpdateRequest
+      description: Request to update workflow status
     HTTPValidationError:
       properties:
         detail:
@@ -379,22 +356,45 @@ components:
       - template
       title: PersonalizationValidateRequest
       description: Request to validate personalization template
-    PreviewRequest:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TestEmailRequest:
       properties:
         campaign_id:
           type: integer
           title: Campaign Id
-        sample_size:
-          type: integer
-          maximum: 20.0
-          minimum: 1.0
-          title: Sample Size
-          default: 5
+        test_emails:
+          items:
+            type: string
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Test Emails
       type: object
       required:
       - campaign_id
-      title: PreviewRequest
-      description: Request for email preview
+      - test_emails
+      title: TestEmailRequest
+      description: Request to send test emails
   securitySchemes:
     HTTPBearer:
       type: http

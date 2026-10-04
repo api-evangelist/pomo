@@ -168,6 +168,52 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    SignedUrlResponse:
+      properties:
+        signed_url:
+          type: string
+          title: Signed Url
+        expires_in_seconds:
+          type: integer
+          title: Expires In Seconds
+      type: object
+      required:
+      - signed_url
+      - expires_in_seconds
+      title: SignedUrlResponse
+    DocumentJobsResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DocumentJobListItem'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - items
+      - total
+      title: DocumentJobsResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    HtmlPreviewResponse:
+      properties:
+        html:
+          type: string
+          title: Html
+      type: object
+      required:
+      - html
+      title: HtmlPreviewResponse
     DocumentJobDetailResponse:
       properties:
         id:
@@ -229,15 +275,6 @@ components:
       - created_at
       - ready_at
       title: DocumentJobDetailResponse
-    HtmlPreviewResponse:
-      properties:
-        html:
-          type: string
-          title: Html
-      type: object
-      required:
-      - html
-      title: HtmlPreviewResponse
     ValidationError:
       properties:
         loc:
@@ -259,28 +296,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SignedUrlResponse:
-      properties:
-        signed_url:
-          type: string
-          title: Signed Url
-        expires_in_seconds:
-          type: integer
-          title: Expires In Seconds
-      type: object
-      required:
-      - signed_url
-      - expires_in_seconds
-      title: SignedUrlResponse
     DocumentJobListItem:
       properties:
         id:
@@ -340,21 +355,6 @@ components:
       - doc_type
       - available_formats
       title: DocumentJobListItem
-    DocumentJobsResponse:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/DocumentJobListItem'
-          type: array
-          title: Items
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - items
-      - total
-      title: DocumentJobsResponse
   securitySchemes:
     HTTPBearer:
       type: http

@@ -774,227 +774,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ChangePlanRequest:
-      properties:
-        organization_id:
-          type: string
-          title: Organization Id
-        target_plan:
-          type: string
-          title: Target Plan
-        billing_interval:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Billing Interval
-      type: object
-      required:
-      - organization_id
-      - target_plan
-      title: ChangePlanRequest
-      description: Request model for changing subscription plan.
-    SubscriptionResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        plan_id:
-          type: string
-          title: Plan Id
-        status:
-          type: string
-          title: Status
-        current_period_start:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Current Period Start
-        current_period_end:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Current Period End
-        cancel_at_period_end:
-          type: boolean
-          title: Cancel At Period End
-        trial_end:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Trial End
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - plan_id
-      - status
-      - cancel_at_period_end
-      - created_at
-      title: SubscriptionResponse
-      description: Response model for subscription information.
-    PaymentHistoryListResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        payment_history:
-          items:
-            $ref: '#/components/schemas/PaymentHistoryItemResponse'
-          type: array
-          title: Payment History
-      type: object
-      required:
-      - status
-      - payment_history
-      title: PaymentHistoryListResponse
-      description: Response model for payment history.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    PaymentHistoryItemResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        invoice_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Invoice Id
-        invoice_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Invoice Number
-        amount:
-          type: number
-          title: Amount
-        currency:
-          type: string
-          title: Currency
-        status:
-          type: string
-          title: Status
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        paid_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Paid At
-        refunded:
-          type: boolean
-          title: Refunded
-          default: false
-        refund_amount:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Refund Amount
-      type: object
-      required:
-      - id
-      - amount
-      - currency
-      - status
-      title: PaymentHistoryItemResponse
-      description: Response model for a payment history entry.
-    CancelSubscriptionRequest:
-      properties:
-        at_period_end:
-          type: boolean
-          title: At Period End
-          description: If True, cancellation occurs at period end (default).
-          default: true
-        cancellation_reason_category:
-          anyOf:
-          - $ref: '#/components/schemas/CancellationReason'
-          - type: 'null'
-          description: High-level reason the user is cancelling (for churn analysis).
-        cancellation_note:
-          anyOf:
-          - type: string
-            maxLength: 500
-          - type: 'null'
-          title: Cancellation Note
-          description: Optional free-text elaboration on why the user is cancelling.
-      type: object
-      title: CancelSubscriptionRequest
-      description: Request model for cancelling a subscription.
-    ValidatePlanChangeRequest:
-      properties:
-        organization_id:
-          type: string
-          title: Organization Id
-        target_plan:
-          type: string
-          title: Target Plan
-        billing_interval:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Billing Interval
-      type: object
-      required:
-      - organization_id
-      - target_plan
-      title: ValidatePlanChangeRequest
-      description: Request model for validating a plan change.
-    CreateSubscriptionRequest:
-      properties:
-        payment_method_id:
-          type: string
-          title: Payment Method Id
-        plan_id:
-          type: string
-          title: Plan Id
-          default: silver
-        billing_interval:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Billing Interval
-      type: object
-      required:
-      - payment_method_id
-      title: CreateSubscriptionRequest
-      description: Request model for creating a subscription.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     PlanChangeValidationResponse:
       properties:
         is_valid:
@@ -1071,24 +850,67 @@ components:
       - target_plan
       title: PlanChangeValidationResponse
       description: Response model for plan change validation.
-    CancellationReason:
-      type: string
-      enum:
-      - too_expensive
-      - missing_features
-      - not_using
-      - switched_competitor
-      - technical_issues
-      - hard_to_use
-      - temporary
-      - other
-      title: CancellationReason
-      description: 'High-level reason a user selects when cancelling a subscription.
-
-
-        Kept in sync with the frontend cancellation reason form. The order here is
-
-        not significant; values are persisted verbatim for churn analysis.'
+    BillingPortalSessionResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        portal_url:
+          type: string
+          title: Portal Url
+      type: object
+      required:
+      - status
+      - portal_url
+      title: BillingPortalSessionResponse
+      description: Response model for a Stripe billing portal session.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidatePlanChangeRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        target_plan:
+          type: string
+          title: Target Plan
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+      type: object
+      required:
+      - organization_id
+      - target_plan
+      title: ValidatePlanChangeRequest
+      description: Request model for validating a plan change.
+    CreateSubscriptionRequest:
+      properties:
+        payment_method_id:
+          type: string
+          title: Payment Method Id
+        plan_id:
+          type: string
+          title: Plan Id
+          default: silver
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+      type: object
+      required:
+      - payment_method_id
+      title: CreateSubscriptionRequest
+      description: Request model for creating a subscription.
     SubscriptionTier:
       properties:
         id:
@@ -1125,20 +947,198 @@ components:
       - stripe_price_id
       title: SubscriptionTier
       description: Model representing a subscription tier.
-    BillingPortalSessionResponse:
+    SubscriptionResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        plan_id:
+          type: string
+          title: Plan Id
+        status:
+          type: string
+          title: Status
+        current_period_start:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Current Period Start
+        current_period_end:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Current Period End
+        cancel_at_period_end:
+          type: boolean
+          title: Cancel At Period End
+        trial_end:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Trial End
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - plan_id
+      - status
+      - cancel_at_period_end
+      - created_at
+      title: SubscriptionResponse
+      description: Response model for subscription information.
+    CancelSubscriptionRequest:
+      properties:
+        at_period_end:
+          type: boolean
+          title: At Period End
+          description: If True, cancellation occurs at period end (default).
+          default: true
+        cancellation_reason_category:
+          anyOf:
+          - $ref: '#/components/schemas/CancellationReason'
+          - type: 'null'
+          description: High-level reason the user is cancelling (for churn analysis).
+        cancellation_note:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Cancellation Note
+          description: Optional free-text elaboration on why the user is cancelling.
+      type: object
+      title: CancelSubscriptionRequest
+      description: Request model for cancelling a subscription.
+    CancellationReason:
+      type: string
+      enum:
+      - too_expensive
+      - missing_features
+      - not_using
+      - switched_competitor
+      - technical_issues
+      - hard_to_use
+      - temporary
+      - other
+      title: CancellationReason
+      description: 'High-level reason a user selects when cancelling a subscription.
+
+
+        Kept in sync with the frontend cancellation reason form. The order here is
+
+        not significant; values are persisted verbatim for churn analysis.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PaymentHistoryItemResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        invoice_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Id
+        invoice_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Number
+        amount:
+          type: number
+          title: Amount
+        currency:
+          type: string
+          title: Currency
+        status:
+          type: string
+          title: Status
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        paid_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Paid At
+        refunded:
+          type: boolean
+          title: Refunded
+          default: false
+        refund_amount:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Refund Amount
+      type: object
+      required:
+      - id
+      - amount
+      - currency
+      - status
+      title: PaymentHistoryItemResponse
+      description: Response model for a payment history entry.
+    PaymentHistoryListResponse:
       properties:
         status:
           type: string
           title: Status
-        portal_url:
-          type: string
-          title: Portal Url
+        payment_history:
+          items:
+            $ref: '#/components/schemas/PaymentHistoryItemResponse'
+          type: array
+          title: Payment History
       type: object
       required:
       - status
-      - portal_url
-      title: BillingPortalSessionResponse
-      description: Response model for a Stripe billing portal session.
+      - payment_history
+      title: PaymentHistoryListResponse
+      description: Response model for payment history.
+    ChangePlanRequest:
+      properties:
+        organization_id:
+          type: string
+          title: Organization Id
+        target_plan:
+          type: string
+          title: Target Plan
+        billing_interval:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Interval
+      type: object
+      required:
+      - organization_id
+      - target_plan
+      title: ChangePlanRequest
+      description: Request model for changing subscription plan.
   securitySchemes:
     HTTPBearer:
       type: http

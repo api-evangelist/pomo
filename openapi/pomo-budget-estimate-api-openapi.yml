@@ -35,6 +35,31 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    BudgetEstimateResponse:
+      properties:
+        currency:
+          type: string
+          title: Currency
+          description: ISO currency code (e.g., TWD, USD)
+        budget_recommendation:
+          $ref: '#/components/schemas/BudgetRecommendationRange'
+          description: Recommended budget range
+        duration_days:
+          type: integer
+          title: Duration Days
+          description: Recommended duration in days
+        reasoning:
+          type: string
+          title: Reasoning
+          description: Concise explanation for recommendation
+      type: object
+      required:
+      - currency
+      - budget_recommendation
+      - duration_days
+      - reasoning
+      title: BudgetEstimateResponse
+      description: Structured response for budget estimate.
     LocationItem:
       properties:
         level:
@@ -169,6 +194,15 @@ components:
       - name
       title: LocationItem
       description: Canonical location input for multi-geo campaigns with one shared budget.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     BudgetEstimateRequest:
       properties:
         goal:
@@ -209,61 +243,6 @@ components:
       - currency
       title: BudgetEstimateRequest
       description: Input payload for budget estimation.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    BudgetEstimateResponse:
-      properties:
-        currency:
-          type: string
-          title: Currency
-          description: ISO currency code (e.g., TWD, USD)
-        budget_recommendation:
-          $ref: '#/components/schemas/BudgetRecommendationRange'
-          description: Recommended budget range
-        duration_days:
-          type: integer
-          title: Duration Days
-          description: Recommended duration in days
-        reasoning:
-          type: string
-          title: Reasoning
-          description: Concise explanation for recommendation
-      type: object
-      required:
-      - currency
-      - budget_recommendation
-      - duration_days
-      - reasoning
-      title: BudgetEstimateResponse
-      description: Structured response for budget estimate.
     BudgetRecommendationRange:
       properties:
         min_value:
@@ -285,6 +264,27 @@ components:
       - suggested_value
       title: BudgetRecommendationRange
       description: Recommended daily budget range.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

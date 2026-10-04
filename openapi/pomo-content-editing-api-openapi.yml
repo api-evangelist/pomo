@@ -160,27 +160,6 @@ components:
       - original_image_url
       title: ContentEditResponse
       description: Response model for edited image content
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     CreativeIdeasResponse:
       properties:
         creative_ideas:
@@ -193,6 +172,40 @@ components:
       - creative_ideas
       title: CreativeIdeasResponse
       description: Response model for the generate-ideas endpoint
+    Body_edit_image_api_content_editing_edit_image_post:
+      properties:
+        image:
+          type: string
+          format: binary
+          title: Image
+        prompt:
+          type: string
+          title: Prompt
+        use_company_style:
+          type: boolean
+          title: Use Company Style
+          default: false
+        product_image:
+          anyOf:
+          - type: string
+            format: binary
+          - type: 'null'
+          title: Product Image
+        logo_image:
+          anyOf:
+          - type: string
+            format: binary
+          - type: 'null'
+          title: Logo Image
+        num_variations:
+          type: integer
+          title: Num Variations
+          default: 3
+      type: object
+      required:
+      - image
+      - prompt
+      title: Body_edit_image_api_content_editing_edit_image_post
     ImageVariation:
       properties:
         url:
@@ -213,6 +226,39 @@ components:
       - index
       title: ImageVariation
       description: Information about an image variation
+    ImageGenerationResponse:
+      properties:
+        image_urls:
+          items:
+            type: string
+          type: array
+          title: Image Urls
+        prompt:
+          type: string
+          title: Prompt
+        enhanced_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Enhanced Prompt
+        ai_policy_eval:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Policy Eval
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - image_urls
+      - prompt
+      - created_at
+      title: ImageGenerationResponse
+      description: Response model for generated images
     Body_generate_image_api_content_editing_generate_image_post:
       properties:
         prompt:
@@ -254,73 +300,27 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    Body_edit_image_api_content_editing_edit_image_post:
+    ValidationError:
       properties:
-        image:
-          type: string
-          format: binary
-          title: Image
-        prompt:
-          type: string
-          title: Prompt
-        use_company_style:
-          type: boolean
-          title: Use Company Style
-          default: false
-        product_image:
-          anyOf:
-          - type: string
-            format: binary
-          - type: 'null'
-          title: Product Image
-        logo_image:
-          anyOf:
-          - type: string
-            format: binary
-          - type: 'null'
-          title: Logo Image
-        num_variations:
-          type: integer
-          title: Num Variations
-          default: 3
-      type: object
-      required:
-      - image
-      - prompt
-      title: Body_edit_image_api_content_editing_edit_image_post
-    ImageGenerationResponse:
-      properties:
-        image_urls:
+        loc:
           items:
-            type: string
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Image Urls
-        prompt:
+          title: Location
+        msg:
           type: string
-          title: Prompt
-        enhanced_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Enhanced Prompt
-        ai_policy_eval:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ai Policy Eval
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - image_urls
-      - prompt
-      - created_at
-      title: ImageGenerationResponse
-      description: Response model for generated images
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

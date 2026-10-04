@@ -115,38 +115,18 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ApiKeyListResponse:
+    ApiKeyCreateResponse:
       properties:
-        keys:
-          items:
-            $ref: '#/components/schemas/ApiKeyListItem'
-          type: array
-          title: Keys
+        api_key:
+          type: string
+          title: Api Key
+        key:
+          $ref: '#/components/schemas/ApiKeyListItem'
       type: object
       required:
-      - keys
-      title: ApiKeyListResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - api_key
+      - key
+      title: ApiKeyCreateResponse
     ApiKeyListItem:
       properties:
         id:
@@ -192,50 +172,6 @@ components:
       - status
       - created_at
       title: ApiKeyListItem
-    ApiKeyUsageResponse:
-      properties:
-        events:
-          items:
-            $ref: '#/components/schemas/ApiKeyUsageEvent'
-          type: array
-          title: Events
-      type: object
-      required:
-      - events
-      title: ApiKeyUsageResponse
-    ApiKeyCreateResponse:
-      properties:
-        api_key:
-          type: string
-          title: Api Key
-        key:
-          $ref: '#/components/schemas/ApiKeyListItem'
-      type: object
-      required:
-      - api_key
-      - key
-      title: ApiKeyCreateResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ApiKeyRevokeResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        key:
-          $ref: '#/components/schemas/ApiKeyListItem'
-      type: object
-      required:
-      - success
-      - key
-      title: ApiKeyRevokeResponse
     ApiKeyUsageEvent:
       properties:
         id:
@@ -271,6 +207,38 @@ components:
       - action
       - timestamp
       title: ApiKeyUsageEvent
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ApiKeyUsageResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/ApiKeyUsageEvent'
+          type: array
+          title: Events
+      type: object
+      required:
+      - events
+      title: ApiKeyUsageResponse
+    ApiKeyRevokeResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        key:
+          $ref: '#/components/schemas/ApiKeyListItem'
+      type: object
+      required:
+      - success
+      - key
+      title: ApiKeyRevokeResponse
     ApiKeyCreateRequest:
       properties:
         name:
@@ -295,6 +263,38 @@ components:
       required:
       - name
       title: ApiKeyCreateRequest
+    ApiKeyListResponse:
+      properties:
+        keys:
+          items:
+            $ref: '#/components/schemas/ApiKeyListItem'
+          type: array
+          title: Keys
+      type: object
+      required:
+      - keys
+      title: ApiKeyListResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

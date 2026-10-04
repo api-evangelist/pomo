@@ -255,66 +255,73 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    FeedbackListResponse:
+    FeedbackCreate:
       properties:
-        items:
-          items:
-            $ref: '#/components/schemas/FeedbackResponse'
-          type: array
-          title: Items
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-        has_more:
-          type: boolean
-          title: Has More
-      type: object
-      required:
-      - items
-      - total
-      - page
-      - page_size
-      - has_more
-      title: FeedbackListResponse
-      description: Response schema for listing feedback.
-    ScreenshotUploadResponse:
-      properties:
-        screenshot_url:
+        feedback_type:
+          $ref: '#/components/schemas/FeedbackType'
+          description: 'Type of feedback: bug, feature, or general'
+        message:
           type: string
+          maxLength: 5000
+          minLength: 1
+          title: Message
+          description: The feedback message content
+        page_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Page Url
+          description: Full URL where feedback was submitted
+        page_route:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Page Route
+          description: React route path where feedback was submitted
+        component_name:
+          anyOf:
+          - type: string
+            maxLength: 256
+          - type: 'null'
+          title: Component Name
+          description: Name of the component where feedback was triggered
+        screenshot_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
           title: Screenshot Url
           description: URL of the uploaded screenshot
+        browser_info:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Browser Info
+          description: Browser and device metadata
       type: object
       required:
-      - screenshot_url
-      title: ScreenshotUploadResponse
-      description: Response schema for screenshot upload.
-    ValidationError:
+      - feedback_type
+      - message
+      title: FeedbackCreate
+      description: Request schema for creating new feedback.
+    Body_create_bug_report_api_feedback_bug_report_post:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        report_json:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Report Json
+        screenshot:
+          anyOf:
+          - type: string
+            format: binary
+          - type: 'null'
+          title: Screenshot
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - report_json
+      title: Body_create_bug_report_api_feedback_bug_report_post
     FeedbackBugReportResponse:
       properties:
         id:
@@ -449,15 +456,17 @@ components:
       - created_at
       title: FeedbackBugReportResponse
       description: Response schema for rich bug reports.
-    HTTPValidationError:
+    ScreenshotUploadResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        screenshot_url:
+          type: string
+          title: Screenshot Url
+          description: URL of the uploaded screenshot
       type: object
-      title: HTTPValidationError
+      required:
+      - screenshot_url
+      title: ScreenshotUploadResponse
+      description: Response schema for screenshot upload.
     FeedbackType:
       type: string
       enum:
@@ -467,6 +476,15 @@ components:
       - churn
       title: FeedbackType
       description: Type of feedback submitted by the user.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     FeedbackArtifactResponse:
       properties:
         id:
@@ -529,21 +547,55 @@ components:
       required:
       - file
       title: Body_upload_screenshot_api_feedback_screenshot_post
-    Body_create_bug_report_api_feedback_bug_report_post:
+    ValidationError:
       properties:
-        report_json:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Report Json
-        screenshot:
-          anyOf:
-          - type: string
-            format: binary
-          - type: 'null'
-          title: Screenshot
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - report_json
-      title: Body_create_bug_report_api_feedback_bug_report_post
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    FeedbackListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/FeedbackResponse'
+          type: array
+          title: Items
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+        has_more:
+          type: boolean
+          title: Has More
+      type: object
+      required:
+      - items
+      - total
+      - page
+      - page_size
+      - has_more
+      title: FeedbackListResponse
+      description: Response schema for listing feedback.
     FeedbackResponse:
       properties:
         id:
@@ -673,58 +725,6 @@ components:
       - created_at
       title: FeedbackResponse
       description: Response schema for feedback data.
-    FeedbackCreate:
-      properties:
-        feedback_type:
-          $ref: '#/components/schemas/FeedbackType'
-          description: 'Type of feedback: bug, feature, or general'
-        message:
-          type: string
-          maxLength: 5000
-          minLength: 1
-          title: Message
-          description: The feedback message content
-        page_url:
-          anyOf:
-          - type: string
-            maxLength: 2048
-          - type: 'null'
-          title: Page Url
-          description: Full URL where feedback was submitted
-        page_route:
-          anyOf:
-          - type: string
-            maxLength: 512
-          - type: 'null'
-          title: Page Route
-          description: React route path where feedback was submitted
-        component_name:
-          anyOf:
-          - type: string
-            maxLength: 256
-          - type: 'null'
-          title: Component Name
-          description: Name of the component where feedback was triggered
-        screenshot_url:
-          anyOf:
-          - type: string
-            maxLength: 2048
-          - type: 'null'
-          title: Screenshot Url
-          description: URL of the uploaded screenshot
-        browser_info:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Browser Info
-          description: Browser and device metadata
-      type: object
-      required:
-      - feedback_type
-      - message
-      title: FeedbackCreate
-      description: Request schema for creating new feedback.
   securitySchemes:
     HTTPBearer:
       type: http

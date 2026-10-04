@@ -824,6 +824,110 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    ConfirmCompetitorsRequest:
+      properties:
+        workflow_id:
+          type: string
+          format: uuid
+          title: Workflow Id
+        selected_competitors:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Selected Competitors
+      type: object
+      required:
+      - workflow_id
+      - selected_competitors
+      title: ConfirmCompetitorsRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+        company_url:
+          type: string
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+      type: object
+      required:
+      - files
+      - company_url
+      - company_profile_id
+      title: Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post
+    ProductOfferingAugmentItem:
+      properties:
+        source:
+          type: string
+          enum:
+          - inventory
+          - custom
+          title: Source
+        inventory_offering_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Inventory Offering Id
+        custom_offering:
+          anyOf:
+          - $ref: '#/components/schemas/SKU'
+          - type: 'null'
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      type: object
+      required:
+      - source
+      title: ProductOfferingAugmentItem
+    CompetitorRegenerateRequest:
+      properties:
+        workflow_id:
+          type: string
+          format: uuid
+          title: Workflow Id
+        scope_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Key
+      type: object
+      required:
+      - workflow_id
+      title: CompetitorRegenerateRequest
+    ProductOfferingAugmentRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        items:
+          items:
+            $ref: '#/components/schemas/ProductOfferingAugmentItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - company_profile_id
+      - items
+      title: ProductOfferingAugmentRequest
     Step2ConfirmRequest:
       properties:
         company_url:
@@ -858,6 +962,90 @@ components:
       - company_profile_id
       - skus
       title: Step2ConfirmRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AgentModeStartRequest:
+      properties:
+        company_url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: string
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        keep_existing_images:
+          type: boolean
+          title: Keep Existing Images
+          default: false
+        force_restart:
+          type: boolean
+          title: Force Restart
+          default: false
+        social_overrides:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Social Overrides
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      title: AgentModeStartRequest
+      description: Request payload for starting agent mode on a brand workflow.
+    Step1ConfirmRequest:
+      properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        company_info:
+          $ref: '#/components/schemas/CompanyInfo'
+      type: object
+      required:
+      - company_url
+      - company_profile_id
+      - company_info
+      title: Step1ConfirmRequest
+    CompanyUrlPreflightRequest:
+      properties:
+        company_url:
+          type: string
+          title: Company Url
+      type: object
+      required:
+      - company_url
+      title: CompanyUrlPreflightRequest
     SKU:
       properties:
         name:
@@ -962,31 +1150,32 @@ components:
       - name
       - description
       title: SKU
-    HTTPValidationError:
+    MarketingProfileGenerationRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        scope_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope Key
       type: object
-      title: HTTPValidationError
-    ProductOfferingAugmentRequest:
+      title: MarketingProfileGenerationRequest
+    Step2DiscoverRequest:
       properties:
+        company_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Company Url
         company_profile_id:
           type: string
           format: uuid
           title: Company Profile Id
-        items:
-          items:
-            $ref: '#/components/schemas/ProductOfferingAugmentItem'
-          type: array
-          title: Items
       type: object
       required:
+      - company_url
       - company_profile_id
-      - items
-      title: ProductOfferingAugmentRequest
+      title: Step2DiscoverRequest
     CompanyInfo:
       properties:
         name:
@@ -1067,15 +1256,15 @@ components:
       - description
       - industry
       title: CompanyInfo
-    CompanyUrlPreflightRequest:
+    Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post:
       properties:
-        company_url:
+        url:
           type: string
-          title: Company Url
+          title: Url
       type: object
       required:
-      - company_url
-      title: CompanyUrlPreflightRequest
+      - url
+      title: Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post
     Step1ExtractRequest:
       properties:
         company_url:
@@ -1093,79 +1282,6 @@ components:
       - company_url
       - company_profile_id
       title: Step1ExtractRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Step1ConfirmRequest:
-      properties:
-        company_url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Company Url
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        company_info:
-          $ref: '#/components/schemas/CompanyInfo'
-      type: object
-      required:
-      - company_url
-      - company_profile_id
-      - company_info
-      title: Step1ConfirmRequest
-    CompetitorRegenerateRequest:
-      properties:
-        workflow_id:
-          type: string
-          format: uuid
-          title: Workflow Id
-        scope_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope Key
-      type: object
-      required:
-      - workflow_id
-      title: CompetitorRegenerateRequest
-    ConfirmCompetitorsRequest:
-      properties:
-        workflow_id:
-          type: string
-          format: uuid
-          title: Workflow Id
-        selected_competitors:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Selected Competitors
-      type: object
-      required:
-      - workflow_id
-      - selected_competitors
-      title: ConfirmCompetitorsRequest
     ProductOfferingExtractUrlRequest:
       properties:
         company_profile_id:
@@ -1195,96 +1311,6 @@ components:
       - company_profile_id
       - page_url
       title: ProductOfferingExtractUrlRequest
-    ProductOfferingAugmentItem:
-      properties:
-        source:
-          type: string
-          enum:
-          - inventory
-          - custom
-          title: Source
-        inventory_offering_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Inventory Offering Id
-        custom_offering:
-          anyOf:
-          - $ref: '#/components/schemas/SKU'
-          - type: 'null'
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-      type: object
-      required:
-      - source
-      title: ProductOfferingAugmentItem
-    AgentModeStartRequest:
-      properties:
-        company_url:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: string
-          title: Company Url
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        keep_existing_images:
-          type: boolean
-          title: Keep Existing Images
-          default: false
-        force_restart:
-          type: boolean
-          title: Force Restart
-          default: false
-        social_overrides:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Social Overrides
-      type: object
-      required:
-      - company_url
-      - company_profile_id
-      title: AgentModeStartRequest
-      description: Request payload for starting agent mode on a brand workflow.
-    Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post:
-      properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-        company_url:
-          type: string
-          title: Company Url
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-      type: object
-      required:
-      - files
-      - company_url
-      - company_profile_id
-      title: Body_upload_analysis_files_api_workflow_brand_generation_step1_upload_files_post
-    MarketingProfileGenerationRequest:
-      properties:
-        scope_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope Key
-      type: object
-      title: MarketingProfileGenerationRequest
     OnboardingNarrativeRequest:
       properties:
         stage:
@@ -1310,32 +1336,6 @@ components:
       required:
       - stage
       title: OnboardingNarrativeRequest
-    Step2DiscoverRequest:
-      properties:
-        company_url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Company Url
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-      type: object
-      required:
-      - company_url
-      - company_profile_id
-      title: Step2DiscoverRequest
-    Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post:
-      properties:
-        url:
-          type: string
-          title: Url
-      type: object
-      required:
-      - url
-      title: Body_validate_competitor_url_api_workflow_brand_generation_step3_validate_competitor_post
   securitySchemes:
     HTTPBearer:
       type: http

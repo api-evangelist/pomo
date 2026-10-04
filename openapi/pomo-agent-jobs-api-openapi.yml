@@ -215,6 +215,255 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    JobListResponse:
+      properties:
+        jobs:
+          items:
+            $ref: '#/components/schemas/JobListItem'
+          type: array
+          title: Jobs
+          description: List of jobs
+        total:
+          type: integer
+          title: Total
+          description: Total number of jobs matching filter
+      type: object
+      required:
+      - jobs
+      - total
+      title: JobListResponse
+      description: Response for listing jobs
+      example:
+        jobs:
+        - completed_at: '2025-01-15T10:32:15Z'
+          created_at: '2025-01-15T10:30:00Z'
+          job_id: 987fcdeb-51a2-43f7-9876-543210987654
+          status: completed
+          type: ad_creation
+        - created_at: '2025-01-15T10:25:00Z'
+          job_id: 123e4567-e89b-12d3-a456-426614174002
+          status: running
+          type: pdf_processing
+        total: 2
+    PublicTerminalDisposition:
+      properties:
+        schema_version:
+          type: string
+          const: pomo.public-disposition/v1
+          title: Schema Version
+          default: pomo.public-disposition/v1
+        kind:
+          $ref: '#/components/schemas/PublicDispositionKind'
+        reason:
+          anyOf:
+          - type: string
+            maxLength: 128
+            minLength: 1
+            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          - type: 'null'
+          title: Reason
+      type: object
+      required:
+      - kind
+      title: PublicTerminalDisposition
+      description: Versioned, server-authored customer meaning for a terminal result.
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    PublicExecutionSummary:
+      properties:
+        api_version:
+          type: string
+          maxLength: 64
+          pattern: ^pomo\.agent\.execution/v[1-9][0-9]*$
+          title: Api Version
+          default: pomo.agent.execution/v1
+        execution_id:
+          type: string
+          format: uuid
+          title: Execution Id
+        revision:
+          type: integer
+          minimum: 0.0
+          title: Revision
+          default: 0
+        state:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          title: State
+        terminal:
+          type: boolean
+          title: Terminal
+        outcome:
+          anyOf:
+          - type: string
+            maxLength: 64
+            minLength: 1
+            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
+          - type: 'null'
+          title: Outcome
+        disposition:
+          anyOf:
+          - $ref: '#/components/schemas/PublicTerminalDisposition'
+          - type: 'null'
+        progress:
+          anyOf:
+          - type: number
+            maximum: 1.0
+            minimum: 0.0
+          - type: 'null'
+          title: Progress
+        summary:
+          anyOf:
+          - type: string
+            maxLength: 2000
+            minLength: 1
+          - type: 'null'
+          title: Summary
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        duration_ms:
+          anyOf:
+          - type: integer
+            maximum: 9007199254740991.0
+            minimum: 0.0
+          - type: 'null'
+          title: Duration Ms
+        cost_micros:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Cost Micros
+        total_step_count:
+          type: integer
+          maximum: 1000000.0
+          minimum: 0.0
+          title: Total Step Count
+          default: 0
+        omitted_step_count:
+          type: integer
+          maximum: 1000000.0
+          minimum: 0.0
+          title: Omitted Step Count
+          default: 0
+        steps:
+          items:
+            $ref: '#/components/schemas/PublicExecutionStep'
+          type: array
+          maxItems: 40
+          title: Steps
+          default: []
+      type: object
+      required:
+      - execution_id
+      - state
+      - terminal
+      title: PublicExecutionSummary
+      description: A complete public snapshot of one assistant execution.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    JobListItem:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        type:
+          type: string
+          title: Type
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+      type: object
+      required:
+      - job_id
+      - type
+      - status
+      - created_at
+      title: JobListItem
+      description: Summary info for a job in a list
+      example:
+        completed_at: '2025-01-15T10:32:15Z'
+        created_at: '2025-01-15T10:30:00Z'
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        status: completed
+        type: ad_creation
+    PublicDispositionKind:
+      type: string
+      enum:
+      - answered
+      - partial
+      - needs_input
+      - declined
+      - no_answer
+      - cancelled
+      - failed
+      title: PublicDispositionKind
+      description: 'Closed customer meaning for one terminal assistant execution.
+
+
+        Runtime lifecycle and internal stop causes remain separate. Unknown internal
+
+        outcomes must be projected to ``FAILED`` with an
+
+        ``unknown_terminal_outcome`` reason before crossing this public boundary.'
     JobStatusResponse:
       properties:
         job_id:
@@ -351,130 +600,6 @@ components:
       - msg
       - type
       title: ValidationError
-    JobListItem:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-        type:
-          type: string
-          title: Type
-        status:
-          type: string
-          title: Status
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-      type: object
-      required:
-      - job_id
-      - type
-      - status
-      - created_at
-      title: JobListItem
-      description: Summary info for a job in a list
-      example:
-        completed_at: '2025-01-15T10:32:15Z'
-        created_at: '2025-01-15T10:30:00Z'
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        status: completed
-        type: ad_creation
-    JobListResponse:
-      properties:
-        jobs:
-          items:
-            $ref: '#/components/schemas/JobListItem'
-          type: array
-          title: Jobs
-          description: List of jobs
-        total:
-          type: integer
-          title: Total
-          description: Total number of jobs matching filter
-      type: object
-      required:
-      - jobs
-      - total
-      title: JobListResponse
-      description: Response for listing jobs
-      example:
-        jobs:
-        - completed_at: '2025-01-15T10:32:15Z'
-          created_at: '2025-01-15T10:30:00Z'
-          job_id: 987fcdeb-51a2-43f7-9876-543210987654
-          status: completed
-          type: ad_creation
-        - created_at: '2025-01-15T10:25:00Z'
-          job_id: 123e4567-e89b-12d3-a456-426614174002
-          status: running
-          type: pdf_processing
-        total: 2
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PublicDispositionKind:
-      type: string
-      enum:
-      - answered
-      - partial
-      - needs_input
-      - declined
-      - no_answer
-      - cancelled
-      - failed
-      title: PublicDispositionKind
-      description: 'Closed customer meaning for one terminal assistant execution.
-
-
-        Runtime lifecycle and internal stop causes remain separate. Unknown internal
-
-        outcomes must be projected to ``FAILED`` with an
-
-        ``unknown_terminal_outcome`` reason before crossing this public boundary.'
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
     PublicExecutionStep:
       properties:
         step_id:
@@ -587,131 +712,6 @@ components:
         reasoning or raw tool arguments. They let clients explain what a step
 
         accomplished without parsing display copy.'
-    PublicTerminalDisposition:
-      properties:
-        schema_version:
-          type: string
-          const: pomo.public-disposition/v1
-          title: Schema Version
-          default: pomo.public-disposition/v1
-        kind:
-          $ref: '#/components/schemas/PublicDispositionKind'
-        reason:
-          anyOf:
-          - type: string
-            maxLength: 128
-            minLength: 1
-            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          - type: 'null'
-          title: Reason
-      type: object
-      required:
-      - kind
-      title: PublicTerminalDisposition
-      description: Versioned, server-authored customer meaning for a terminal result.
-    PublicExecutionSummary:
-      properties:
-        api_version:
-          type: string
-          maxLength: 64
-          pattern: ^pomo\.agent\.execution/v[1-9][0-9]*$
-          title: Api Version
-          default: pomo.agent.execution/v1
-        execution_id:
-          type: string
-          format: uuid
-          title: Execution Id
-        revision:
-          type: integer
-          minimum: 0.0
-          title: Revision
-          default: 0
-        state:
-          type: string
-          maxLength: 64
-          minLength: 1
-          pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          title: State
-        terminal:
-          type: boolean
-          title: Terminal
-        outcome:
-          anyOf:
-          - type: string
-            maxLength: 64
-            minLength: 1
-            pattern: ^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$
-          - type: 'null'
-          title: Outcome
-        disposition:
-          anyOf:
-          - $ref: '#/components/schemas/PublicTerminalDisposition'
-          - type: 'null'
-        progress:
-          anyOf:
-          - type: number
-            maximum: 1.0
-            minimum: 0.0
-          - type: 'null'
-          title: Progress
-        summary:
-          anyOf:
-          - type: string
-            maxLength: 2000
-            minLength: 1
-          - type: 'null'
-          title: Summary
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-        duration_ms:
-          anyOf:
-          - type: integer
-            maximum: 9007199254740991.0
-            minimum: 0.0
-          - type: 'null'
-          title: Duration Ms
-        cost_micros:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Cost Micros
-        total_step_count:
-          type: integer
-          maximum: 1000000.0
-          minimum: 0.0
-          title: Total Step Count
-          default: 0
-        omitted_step_count:
-          type: integer
-          maximum: 1000000.0
-          minimum: 0.0
-          title: Omitted Step Count
-          default: 0
-        steps:
-          items:
-            $ref: '#/components/schemas/PublicExecutionStep'
-          type: array
-          maxItems: 40
-          title: Steps
-          default: []
-      type: object
-      required:
-      - execution_id
-      - state
-      - terminal
-      title: PublicExecutionSummary
-      description: A complete public snapshot of one assistant execution.
   securitySchemes:
     HTTPBearer:
       type: http

@@ -648,48 +648,117 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ApprovalGroupUpdateRequest:
+    ApprovalGroupResponse:
       properties:
+        id:
+          type: string
+          title: Id
+        organization_id:
+          type: string
+          title: Organization Id
         name:
-          anyOf:
-          - type: string
-            maxLength: 100
-            minLength: 1
-          - type: 'null'
+          type: string
           title: Name
         description:
           anyOf:
           - type: string
-            maxLength: 2000
           - type: 'null'
           title: Description
-      type: object
-      title: ApprovalGroupUpdateRequest
-    ChangeRequestSummaryResponse:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-        enforce_writes:
-          type: boolean
-          title: Enforce Writes
-        pending_total:
-          type: integer
-          title: Pending Total
-        awaiting_my_review:
-          type: integer
-          title: Awaiting My Review
-        is_approver:
-          type: boolean
-          title: Is Approver
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        members:
+          items:
+            $ref: '#/components/schemas/ApprovalGroupMemberResponse'
+          type: array
+          title: Members
       type: object
       required:
-      - enabled
-      - enforce_writes
-      - pending_total
-      - awaiting_my_review
-      - is_approver
-      title: ChangeRequestSummaryResponse
+      - id
+      - organization_id
+      - name
+      - created_at
+      - updated_at
+      title: ApprovalGroupResponse
+    ChangeRequestCreateRequest:
+      properties:
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+        source:
+          type: string
+          maxLength: 50
+          title: Source
+          default: manual
+        title:
+          type: string
+          maxLength: 300
+          minLength: 1
+          title: Title
+        description:
+          anyOf:
+          - type: string
+            maxLength: 5000
+          - type: 'null'
+          title: Description
+        risk_score:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Risk Score
+          default: 0
+        risk_factors:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Risk Factors
+        policy_results:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Policy Results
+        required_approvals:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Required Approvals
+        operations:
+          items:
+            $ref: '#/components/schemas/ChangeOperationCreateRequest'
+          type: array
+          title: Operations
+      type: object
+      required:
+      - title
+      title: ChangeRequestCreateRequest
+    BudgetLimitConfig:
+      properties:
+        amount:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount
+        currency:
+          type: string
+          maxLength: 8
+          minLength: 3
+          title: Currency
+      type: object
+      required:
+      - amount
+      - currency
+      title: BudgetLimitConfig
     HTTPValidationError:
       properties:
         detail:
@@ -699,34 +768,199 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ChangeRequestExecuteRequest:
+    ChangeApprovalResponse:
       properties:
-        operation_overrides:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/ChangeOperationExecuteOverride'
-            type: array
-          - type: 'null'
-          title: Operation Overrides
-      type: object
-      title: ChangeRequestExecuteRequest
-    ApprovalGroupCreateRequest:
-      properties:
-        name:
+        id:
           type: string
-          maxLength: 100
-          minLength: 1
-          title: Name
-        description:
+          title: Id
+        approver_user_id:
           anyOf:
           - type: string
-            maxLength: 2000
           - type: 'null'
-          title: Description
+          title: Approver User Id
+        approver_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Approver Name
+        approver_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Approver Email
+        decision:
+          type: string
+          title: Decision
+        rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rationale
+        requirement_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Requirement Key
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
       type: object
       required:
-      - name
-      title: ApprovalGroupCreateRequest
+      - id
+      - decision
+      - created_at
+      title: ChangeApprovalResponse
+    ChangeOperationResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        kind:
+          type: string
+          title: Kind
+        operation_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Operation Key
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        tool_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tool Name
+        tool_arguments:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Tool Arguments
+        job_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Job Type
+        job_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Job Data
+        diff:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Diff
+        execution_status:
+          type: string
+          title: Execution Status
+        execution_result:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Execution Result
+        execution_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Error
+        execution_started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Execution Started At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - kind
+      - execution_status
+      - created_at
+      - updated_at
+      title: ChangeOperationResponse
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    ChangeOperationExecuteOverride:
+      properties:
+        operation_id:
+          type: string
+          title: Operation Id
+        job_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Job Data
+      type: object
+      required:
+      - operation_id
+      title: ChangeOperationExecuteOverride
+    ChangeRequestApproveRequest:
+      properties:
+        decision:
+          type: string
+          pattern: ^(approved|rejected|changes_requested)$
+          title: Decision
+        rationale:
+          anyOf:
+          - type: string
+            maxLength: 5000
+          - type: 'null'
+          title: Rationale
+        requirement_key:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Requirement Key
+      type: object
+      required:
+      - decision
+      title: ChangeRequestApproveRequest
     ValidationError:
       properties:
         loc:
@@ -748,137 +982,6 @@ components:
       - msg
       - type
       title: ValidationError
-    ApprovalGroupMemberResponse:
-      properties:
-        user_id:
-          type: string
-          title: User Id
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - user_id
-      - created_at
-      title: ApprovalGroupMemberResponse
-    ChangeManagementSettingsResponse:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-          default: false
-        enforce_writes:
-          type: boolean
-          title: Enforce Writes
-          default: false
-        budget_guardrail:
-          $ref: '#/components/schemas/BudgetGuardrailConfig'
-      type: object
-      title: ChangeManagementSettingsResponse
-    BudgetLimitConfig:
-      properties:
-        amount:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Amount
-        currency:
-          type: string
-          maxLength: 8
-          minLength: 3
-          title: Currency
-      type: object
-      required:
-      - amount
-      - currency
-      title: BudgetLimitConfig
-    ChangeOperationExecuteOverride:
-      properties:
-        operation_id:
-          type: string
-          title: Operation Id
-        job_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Job Data
-      type: object
-      required:
-      - operation_id
-      title: ChangeOperationExecuteOverride
-    ChangeOperationCreateRequest:
-      properties:
-        kind:
-          type: string
-          maxLength: 50
-          minLength: 1
-          title: Kind
-        title:
-          anyOf:
-          - type: string
-            maxLength: 300
-          - type: 'null'
-          title: Title
-        tool_name:
-          anyOf:
-          - type: string
-            maxLength: 200
-          - type: 'null'
-          title: Tool Name
-        tool_arguments:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Tool Arguments
-        job_type:
-          anyOf:
-          - type: string
-            maxLength: 200
-          - type: 'null'
-          title: Job Type
-        job_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Job Data
-        diff:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Diff
-      type: object
-      required:
-      - kind
-      title: ChangeOperationCreateRequest
-    ChangeRequestPreviewResponse:
-      properties:
-        platform_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform Type
-        ad_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Id
-        ad:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ad
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-      type: object
-      title: ChangeRequestPreviewResponse
     ChangeRequestCommentResponse:
       properties:
         id:
@@ -927,6 +1030,73 @@ components:
       - kind
       - created_at
       title: ChangeRequestCommentResponse
+    ChangeOperationCreateRequest:
+      properties:
+        kind:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Kind
+        title:
+          anyOf:
+          - type: string
+            maxLength: 300
+          - type: 'null'
+          title: Title
+        tool_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Tool Name
+        tool_arguments:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Tool Arguments
+        job_type:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Job Type
+        job_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Job Data
+        diff:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Diff
+      type: object
+      required:
+      - kind
+      title: ChangeOperationCreateRequest
+    ApprovalGroupSetMembersRequest:
+      properties:
+        user_ids:
+          items:
+            type: string
+          type: array
+          title: User Ids
+      type: object
+      title: ApprovalGroupSetMembersRequest
+    ChangeRequestExecuteRequest:
+      properties:
+        operation_overrides:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ChangeOperationExecuteOverride'
+            type: array
+          - type: 'null'
+          title: Operation Overrides
+      type: object
+      title: ChangeRequestExecuteRequest
     ChangeRequestResponse:
       properties:
         id:
@@ -1049,88 +1219,6 @@ components:
       - created_at
       - updated_at
       title: ChangeRequestResponse
-    ChangeOperationResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        kind:
-          type: string
-          title: Kind
-        operation_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Operation Key
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        tool_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tool Name
-        tool_arguments:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Tool Arguments
-        job_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Job Type
-        job_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Job Data
-        diff:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Diff
-        execution_status:
-          type: string
-          title: Execution Status
-        execution_result:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Execution Result
-        execution_error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Execution Error
-        execution_started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Execution Started At
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-      type: object
-      required:
-      - id
-      - kind
-      - execution_status
-      - created_at
-      - updated_at
-      title: ChangeOperationResponse
     BudgetGuardrailConfig:
       properties:
         enabled:
@@ -1148,141 +1236,6 @@ components:
           title: Brand Overrides
       type: object
       title: BudgetGuardrailConfig
-    ApprovalGroupResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        organization_id:
-          type: string
-          title: Organization Id
-        name:
-          type: string
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-        members:
-          items:
-            $ref: '#/components/schemas/ApprovalGroupMemberResponse'
-          type: array
-          title: Members
-      type: object
-      required:
-      - id
-      - organization_id
-      - name
-      - created_at
-      - updated_at
-      title: ApprovalGroupResponse
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
-    ChangeRequestCreateRequest:
-      properties:
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-        source:
-          type: string
-          maxLength: 50
-          title: Source
-          default: manual
-        title:
-          type: string
-          maxLength: 300
-          minLength: 1
-          title: Title
-        description:
-          anyOf:
-          - type: string
-            maxLength: 5000
-          - type: 'null'
-          title: Description
-        risk_score:
-          type: integer
-          maximum: 100.0
-          minimum: 0.0
-          title: Risk Score
-          default: 0
-        risk_factors:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Risk Factors
-        policy_results:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Policy Results
-        required_approvals:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Required Approvals
-        operations:
-          items:
-            $ref: '#/components/schemas/ChangeOperationCreateRequest'
-          type: array
-          title: Operations
-      type: object
-      required:
-      - title
-      title: ChangeRequestCreateRequest
-    ApprovalGroupSetMembersRequest:
-      properties:
-        user_ids:
-          items:
-            type: string
-          type: array
-          title: User Ids
-      type: object
-      title: ApprovalGroupSetMembersRequest
     ChangeManagementSettingsUpdateRequest:
       properties:
         enabled:
@@ -1299,71 +1252,118 @@ components:
           - type: 'null'
       type: object
       title: ChangeManagementSettingsUpdateRequest
-    ChangeRequestApproveRequest:
+    ApprovalGroupMemberResponse:
       properties:
-        decision:
+        user_id:
           type: string
-          pattern: ^(approved|rejected|changes_requested)$
-          title: Decision
-        rationale:
-          anyOf:
-          - type: string
-            maxLength: 5000
-          - type: 'null'
-          title: Rationale
-        requirement_key:
-          anyOf:
-          - type: string
-            maxLength: 200
-          - type: 'null'
-          title: Requirement Key
-      type: object
-      required:
-      - decision
-      title: ChangeRequestApproveRequest
-    ChangeApprovalResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        approver_user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Approver User Id
-        approver_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Approver Name
-        approver_email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Approver Email
-        decision:
-          type: string
-          title: Decision
-        rationale:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rationale
-        requirement_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Requirement Key
+          title: User Id
         created_at:
           type: string
           format: date-time
           title: Created At
       type: object
       required:
-      - id
-      - decision
+      - user_id
       - created_at
-      title: ChangeApprovalResponse
+      title: ApprovalGroupMemberResponse
+    ApprovalGroupCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+      type: object
+      required:
+      - name
+      title: ApprovalGroupCreateRequest
+    ChangeManagementSettingsResponse:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+          default: false
+        enforce_writes:
+          type: boolean
+          title: Enforce Writes
+          default: false
+        budget_guardrail:
+          $ref: '#/components/schemas/BudgetGuardrailConfig'
+      type: object
+      title: ChangeManagementSettingsResponse
+    ChangeRequestSummaryResponse:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        enforce_writes:
+          type: boolean
+          title: Enforce Writes
+        pending_total:
+          type: integer
+          title: Pending Total
+        awaiting_my_review:
+          type: integer
+          title: Awaiting My Review
+        is_approver:
+          type: boolean
+          title: Is Approver
+      type: object
+      required:
+      - enabled
+      - enforce_writes
+      - pending_total
+      - awaiting_my_review
+      - is_approver
+      title: ChangeRequestSummaryResponse
+    ChangeRequestPreviewResponse:
+      properties:
+        platform_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Type
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+        ad:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ad
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+      type: object
+      title: ChangeRequestPreviewResponse
+    ApprovalGroupUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+      type: object
+      title: ApprovalGroupUpdateRequest
   securitySchemes:
     HTTPBearer:
       type: http

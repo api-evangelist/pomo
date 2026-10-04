@@ -1444,206 +1444,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AddCreatorToListsRequest:
-      properties:
-        list_ids:
-          items:
-            type: string
-          type: array
-          minItems: 1
-          title: List Ids
-      type: object
-      required:
-      - list_ids
-      title: AddCreatorToListsRequest
-    AddCreatorsToListRequest:
-      properties:
-        creator_ids:
-          items:
-            type: string
-          type: array
-          minItems: 1
-          title: Creator Ids
-        positions_by_creator_id:
-          anyOf:
-          - additionalProperties:
-              type: integer
-            type: object
-          - type: 'null'
-          title: Positions By Creator Id
-      type: object
-      required:
-      - creator_ids
-      title: AddCreatorsToListRequest
-    UpdateCreatorContactsRequest:
-      properties:
-        contacts_json:
-          additionalProperties: true
-          type: object
-          title: Contacts Json
-      type: object
-      required:
-      - contacts_json
-      title: UpdateCreatorContactsRequest
-    InfluencerPricingEstimateResponse:
-      properties:
-        market_country_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Market Country Code
-        market_country_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Market Country Name
-        estimates:
-          items:
-            $ref: '#/components/schemas/InfluencerDeliverablePricingEstimate'
-          type: array
-          title: Estimates
-      type: object
-      required:
-      - estimates
-      title: InfluencerPricingEstimateResponse
-      description: Structured influencer price estimates grouped by deliverable type.
-    SaveCreatorOutreachDraftRequest:
-      properties:
-        channel:
-          type: string
-          maxLength: 64
-          minLength: 1
-          title: Channel
-        target_label:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Target Label
-        target_value:
-          type: string
-          maxLength: 500
-          minLength: 1
-          title: Target Value
-        subject:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Subject
-        message:
-          type: string
-          maxLength: 4000
-          minLength: 1
-          title: Message
-        last_prompt:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Last Prompt
-      type: object
-      required:
-      - channel
-      - target_value
-      - message
-      title: SaveCreatorOutreachDraftRequest
-    UpdateCreatorLocationsRequest:
-      properties:
-        creator_locations_json:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Creator Locations Json
-      type: object
-      title: UpdateCreatorLocationsRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CreateCreatorListRequest:
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        list_type:
-          type: string
-          title: List Type
-          default: manual
-        campaign_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Campaign Id
-        campaign_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Campaign Type
-        metadata_json:
-          additionalProperties: true
-          type: object
-          title: Metadata Json
-      type: object
-      required:
-      - name
-      title: CreateCreatorListRequest
-    UpdateCreatorListMembershipRequest:
-      properties:
-        outreach_stage:
-          anyOf:
-          - type: string
-            enum:
-            - saved
-            - outreached
-            - replied
-            - negotiating
-            - confirmed
-            - rejected
-          - type: 'null'
-          title: Outreach Stage
-        priority:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Priority
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-        position:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Position
-      type: object
-      title: UpdateCreatorListMembershipRequest
     InfluencerPricingEstimateRequest:
       properties:
         creator_id:
@@ -1802,15 +1602,37 @@ components:
       - name
       title: InfluencerPricingEstimateRequest
       description: Creator profile snapshot used to estimate a collaboration price range.
-    HTTPValidationError:
+    UpdateCreatorLocationsRequest:
       properties:
-        detail:
+        creator_locations_json:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            additionalProperties: true
+            type: object
           type: array
-          title: Detail
+          title: Creator Locations Json
       type: object
-      title: HTTPValidationError
+      title: UpdateCreatorLocationsRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     UpdateCreatorListRequest:
       properties:
         name:
@@ -1843,22 +1665,80 @@ components:
           title: Metadata Json
       type: object
       title: UpdateCreatorListRequest
-    UpdateOutreachStageRequest:
+    CreateCreatorListRequest:
       properties:
-        outreach_stage:
+        name:
           type: string
-          enum:
-          - saved
-          - outreached
-          - replied
-          - negotiating
-          - confirmed
-          - rejected
-          title: Outreach Stage
+          maxLength: 255
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        list_type:
+          type: string
+          title: List Type
+          default: manual
+        campaign_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Id
+        campaign_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Type
+        metadata_json:
+          additionalProperties: true
+          type: object
+          title: Metadata Json
       type: object
       required:
-      - outreach_stage
-      title: UpdateOutreachStageRequest
+      - name
+      title: CreateCreatorListRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AddCreatorsToListRequest:
+      properties:
+        creator_ids:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Creator Ids
+        positions_by_creator_id:
+          anyOf:
+          - additionalProperties:
+              type: integer
+            type: object
+          - type: 'null'
+          title: Positions By Creator Id
+      type: object
+      required:
+      - creator_ids
+      title: AddCreatorsToListRequest
+    AddCreatorToListsRequest:
+      properties:
+        list_ids:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: List Ids
+      type: object
+      required:
+      - list_ids
+      title: AddCreatorToListsRequest
     InfluencerPricingRange:
       properties:
         currency:
@@ -1900,6 +1780,32 @@ components:
       - label
       title: InfluencerPricingRange
       description: Price range in one display currency.
+    UpdateOutreachStageRequest:
+      properties:
+        outreach_stage:
+          type: string
+          enum:
+          - saved
+          - outreached
+          - replied
+          - negotiating
+          - confirmed
+          - rejected
+          title: Outreach Stage
+      type: object
+      required:
+      - outreach_stage
+      title: UpdateOutreachStageRequest
+    UpdateCreatorContactsRequest:
+      properties:
+        contacts_json:
+          additionalProperties: true
+          type: object
+          title: Contacts Json
+      type: object
+      required:
+      - contacts_json
+      title: UpdateCreatorContactsRequest
     InfluencerDeliverablePricingEstimate:
       properties:
         deliverable_type:
@@ -2023,6 +1929,59 @@ components:
       - display_ranges
       title: InfluencerDeliverablePricingEstimate
       description: Structured price estimate for one deliverable type.
+    InfluencerPricingEstimateResponse:
+      properties:
+        market_country_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Market Country Code
+        market_country_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Market Country Name
+        estimates:
+          items:
+            $ref: '#/components/schemas/InfluencerDeliverablePricingEstimate'
+          type: array
+          title: Estimates
+      type: object
+      required:
+      - estimates
+      title: InfluencerPricingEstimateResponse
+      description: Structured influencer price estimates grouped by deliverable type.
+    UpdateCreatorListMembershipRequest:
+      properties:
+        outreach_stage:
+          anyOf:
+          - type: string
+            enum:
+            - saved
+            - outreached
+            - replied
+            - negotiating
+            - confirmed
+            - rejected
+          - type: 'null'
+          title: Outreach Stage
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+      type: object
+      title: UpdateCreatorListMembershipRequest
     DraftCreatorOutreachMessageRequest:
       properties:
         channel:
@@ -2148,6 +2107,47 @@ components:
       - channel
       - creator_name
       title: DraftCreatorOutreachMessageRequest
+    SaveCreatorOutreachDraftRequest:
+      properties:
+        channel:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Channel
+        target_label:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Target Label
+        target_value:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Target Value
+        subject:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Subject
+        message:
+          type: string
+          maxLength: 4000
+          minLength: 1
+          title: Message
+        last_prompt:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Last Prompt
+      type: object
+      required:
+      - channel
+      - target_value
+      - message
+      title: SaveCreatorOutreachDraftRequest
   securitySchemes:
     HTTPBearer:
       type: http

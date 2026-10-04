@@ -101,20 +101,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ShortenedURLCreate:
-      properties:
-        long_url:
-          type: string
-          title: Long Url
-        campaign_id:
-          type: string
-          title: Campaign Id
-      type: object
-      required:
-      - long_url
-      - campaign_id
-      title: ShortenedURLCreate
-      description: Schema for creating a shortened URL
     ValidationError:
       properties:
         loc:
@@ -167,6 +153,20 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    ShortenedURLCreate:
+      properties:
+        long_url:
+          type: string
+          title: Long Url
+        campaign_id:
+          type: string
+          title: Campaign Id
+      type: object
+      required:
+      - long_url
+      - campaign_id
+      title: ShortenedURLCreate
+      description: Schema for creating a shortened URL
   securitySchemes:
     HTTPBearer:
       type: http
