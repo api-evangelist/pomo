@@ -1,32 +1,30 @@
-# Kin Score artifact — pomo — 2026-08-25T133943
+# Kin Score artifact — pomo — 2026-09-24T090406
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: pomo
-  schema_version: 0.14.0
-  scored_at: '2026-08-25'
-  run_ts: 2026-08-25T133943
-  composite: 41.1
-  band: developing
+  schema_version: 0.22.0
+  scored_at: '2026-09-24'
+  run_ts: 2026-09-24T090406
+  composite: 56.1
+  band: strong
   facets:
-    discoverability: 75.9
-    contract_quality: 52.0
-    governance: 16.7
-    operational_transparency: 21.1
-    developer_ergonomics: 8.9
-    commercial_clarity: 69.7
-    contract_governance: 16.7
+    discoverability: 70.4
+    contract_quality: 56.1
+    contract_governance: 4.5
+    operational_transparency: 28.9
+    developer_ergonomics: 37.5
     access_clarity: 69.7
   agent_readiness:
-    score: 35.4
-    band: agent-ready
+    score: 39.3
+    band: agent-native
     dimensions:
       spec_presence: true
       agentic_access: false
-      reversibility_documented: verified
+      reversibility_documented: documented
       mcp_server: false
       auth_clarity: bearer
-      idempotency: false
+      idempotency: verified
       error_semantics: verified
       openapi_examples: partial
       rate_limit_signal: documented
@@ -45,7 +43,7 @@ kin_score:
     skills: derived
     conformance: derived
     contracts:
-      total: 1
+      total: 100
       derived: 0
       coverage: 0.0
       callable: 0.0
