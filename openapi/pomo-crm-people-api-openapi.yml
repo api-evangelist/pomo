@@ -454,6 +454,23 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    CrmSplitSourceRequest:
+      properties:
+        source_ref:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Source Ref
+      type: object
+      required:
+      - source_ref
+      title: CrmSplitSourceRequest
+      description: 'Body for ``POST /api/crm/people/{person_ref}/split``.
+
+
+        ``source_ref`` is the contributing ``{source}:{id}`` to peel out of the merged
+
+        person into its own standalone record (a persistent do-not-merge override).'
     CrmPeoplePagination:
       properties:
         limit:
@@ -486,25 +503,36 @@ components:
           default: false
       type: object
       title: CrmPeoplePagination
-    CrmPeopleFilters:
+    ValidationError:
       properties:
-        source_counts:
-          additionalProperties:
-            type: integer
-          type: object
-          title: Source Counts
-        stage_counts:
-          additionalProperties:
-            type: integer
-          type: object
-          title: Stage Counts
-        hubspot_counts:
-          additionalProperties:
-            type: integer
-          type: object
-          title: Hubspot Counts
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
-      title: CrmPeopleFilters
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     CrmPeopleListResponse:
       properties:
         access:
@@ -529,15 +557,6 @@ components:
       required:
       - access
       title: CrmPeopleListResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     CrmPersonDetailResponse:
       properties:
         access:
@@ -568,6 +587,23 @@ components:
       required:
       - access
       title: CrmPersonDetailResponse
+    CrmSetStageRequest:
+      properties:
+        stage:
+          type: string
+          enum:
+          - prospect
+          - engaged
+          - replied
+          - qualified
+          - customer
+          - archived
+          title: Stage
+      type: object
+      required:
+      - stage
+      title: CrmSetStageRequest
+      description: Body for ``PUT /api/crm/people/{person_ref}/stage`` — a manual override.
     CrmMarkContactedRequest:
       properties:
         note:
@@ -590,61 +626,25 @@ components:
         Both fields are optional — an empty body logs a manual touch with no note.
 
         ``channel`` defaults to ``manual`` (I reached out myself, off-platform).'
-    CrmSplitSourceRequest:
+    CrmPeopleFilters:
       properties:
-        source_ref:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Source Ref
+        source_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Source Counts
+        stage_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Stage Counts
+        hubspot_counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Hubspot Counts
       type: object
-      required:
-      - source_ref
-      title: CrmSplitSourceRequest
-      description: 'Body for ``POST /api/crm/people/{person_ref}/split``.
-
-
-        ``source_ref`` is the contributing ``{source}:{id}`` to peel out of the merged
-
-        person into its own standalone record (a persistent do-not-merge override).'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CrmSetStageRequest:
-      properties:
-        stage:
-          type: string
-          enum:
-          - prospect
-          - engaged
-          - replied
-          - qualified
-          - customer
-          - archived
-          title: Stage
-      type: object
-      required:
-      - stage
-      title: CrmSetStageRequest
-      description: Body for ``PUT /api/crm/people/{person_ref}/stage`` — a manual override.
+      title: CrmPeopleFilters
   securitySchemes:
     HTTPBearer:
       type: http

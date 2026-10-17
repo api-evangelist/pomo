@@ -241,55 +241,97 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    SharedFileItem:
+    Body_agentic_chat_with_files_api_chat_agentic_with_files_post:
       properties:
-        id:
+        message:
           type: string
-          title: Id
-        filename:
-          type: string
-          title: Filename
-        file_type:
-          type: string
-          title: File Type
-        file_size:
-          type: integer
-          title: File Size
-        file_url:
-          type: string
-          title: File Url
-        summary_preview:
+          title: Message
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        organization_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Organization Id
+        conversation_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Summary Preview
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        owner_email:
+          title: Conversation Id
+        workflow_stage:
           anyOf:
           - type: string
           - type: 'null'
-          title: Owner Email
-        is_owner:
-          type: boolean
-          title: Is Owner
-          default: false
-        is_shared:
-          type: boolean
-          title: Is Shared
-          default: true
+          title: Workflow Stage
+        page_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Context
+        history:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: History
+          default: '[]'
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+          default: []
       type: object
       required:
-      - id
-      - filename
-      - file_type
-      - file_size
-      - file_url
-      - created_at
-      title: SharedFileItem
-      description: Schema for a shared file in the knowledge base
+      - message
+      title: Body_agentic_chat_with_files_api_chat_agentic_with_files_post
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Body_upload_to_knowledge_base_api_chat_knowledge_base_upload_post:
+      properties:
+        files:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: Files
+      type: object
+      required:
+      - files
+      title: Body_upload_to_knowledge_base_api_chat_knowledge_base_upload_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     SharedFilesResponse:
       properties:
         files:
@@ -314,15 +356,27 @@ components:
       - total_pages
       title: SharedFilesResponse
       description: Response for shared files list endpoint
-    HTTPValidationError:
+    ShareFileResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        id:
+          type: string
+          title: Id
+        filename:
+          type: string
+          title: Filename
+        is_shared:
+          type: boolean
+          title: Is Shared
+        message:
+          type: string
+          title: Message
       type: object
-      title: HTTPValidationError
+      required:
+      - id
+      - filename
+      - is_shared
+      - message
+      title: ShareFileResponse
     AgenticChatWithFilesResponse:
       properties:
         response:
@@ -381,55 +435,6 @@ components:
       - tokens_used
       - turns
       title: AgenticChatWithFilesResponse
-    Body_agentic_chat_with_files_api_chat_agentic_with_files_post:
-      properties:
-        message:
-          type: string
-          title: Message
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-        organization_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Organization Id
-        conversation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Conversation Id
-        workflow_stage:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Workflow Stage
-        page_context:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Page Context
-        history:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: History
-          default: '[]'
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-          default: []
-      type: object
-      required:
-      - message
-      title: Body_agentic_chat_with_files_api_chat_agentic_with_files_post
     KnowledgeBaseUploadResponse:
       properties:
         success:
@@ -450,60 +455,6 @@ components:
       - message
       title: KnowledgeBaseUploadResponse
       description: Response for knowledge base file upload
-    ShareFileResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        filename:
-          type: string
-          title: Filename
-        is_shared:
-          type: boolean
-          title: Is Shared
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - id
-      - filename
-      - is_shared
-      - message
-      title: ShareFileResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Body_upload_to_knowledge_base_api_chat_knowledge_base_upload_post:
-      properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          title: Files
-      type: object
-      required:
-      - files
-      title: Body_upload_to_knowledge_base_api_chat_knowledge_base_upload_post
     DeleteFileResponse:
       properties:
         id:
@@ -521,6 +472,55 @@ components:
       - filename
       - message
       title: DeleteFileResponse
+    SharedFileItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        filename:
+          type: string
+          title: Filename
+        file_type:
+          type: string
+          title: File Type
+        file_size:
+          type: integer
+          title: File Size
+        file_url:
+          type: string
+          title: File Url
+        summary_preview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary Preview
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        owner_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Email
+        is_owner:
+          type: boolean
+          title: Is Owner
+          default: false
+        is_shared:
+          type: boolean
+          title: Is Shared
+          default: true
+      type: object
+      required:
+      - id
+      - filename
+      - file_type
+      - file_size
+      - file_url
+      - created_at
+      title: SharedFileItem
+      description: Schema for a shared file in the knowledge base
   securitySchemes:
     HTTPBearer:
       type: http

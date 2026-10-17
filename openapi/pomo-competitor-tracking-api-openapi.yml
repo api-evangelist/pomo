@@ -969,6 +969,115 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    MarketingProfileAxisResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        label:
+          type: string
+          title: Label
+        self_score:
+          type: integer
+          title: Self Score
+        competitor_score:
+          type: integer
+          title: Competitor Score
+        similarity:
+          type: integer
+          title: Similarity
+        gap:
+          type: integer
+          title: Gap
+        leader:
+          type: string
+          title: Leader
+      type: object
+      required:
+      - id
+      - label
+      - self_score
+      - competitor_score
+      - similarity
+      - gap
+      - leader
+      title: MarketingProfileAxisResponse
+      description: Single radar axis for the persisted marketing profile.
+    CompetitorSetupRequest:
+      properties:
+        competitor_urls:
+          items:
+            type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          type: array
+          maxItems: 10
+          title: Competitor Urls
+          description: List of competitor website URLs (max 10)
+      type: object
+      required:
+      - competitor_urls
+      title: CompetitorSetupRequest
+      description: Request to set up competitor tracking.
+    CompetitorDetailsResponse:
+      properties:
+        competitor:
+          $ref: '#/components/schemas/CompetitorInfo'
+        campaigns:
+          items:
+            $ref: '#/components/schemas/CampaignInfo'
+          type: array
+          title: Campaigns
+        last_scan:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Last Scan
+        strategy_summary:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Strategy Summary
+        swot:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Swot
+        marketing_profile:
+          anyOf:
+          - $ref: '#/components/schemas/MarketingProfileResponse'
+          - type: 'null'
+      type: object
+      required:
+      - competitor
+      - campaigns
+      title: CompetitorDetailsResponse
+      description: Detailed competitor information with campaigns.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CompetitorInfo:
       properties:
         id:
@@ -1164,6 +1273,169 @@ components:
       - status
       title: CompetitorInfo
       description: Basic competitor information.
+    CompetitorLiveStatus:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        active_campaigns_count:
+          type: integer
+          title: Active Campaigns Count
+          default: 0
+        is_scanning:
+          type: boolean
+          title: Is Scanning
+          default: false
+        last_scanned_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Scanned At
+        last_scan_started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Scan Started At
+        last_scan_completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Scan Completed At
+        setup_pending:
+          type: boolean
+          title: Setup Pending
+          default: false
+      type: object
+      required:
+      - id
+      title: CompetitorLiveStatus
+      description: Lightweight persisted live state for competitors.
+    CompetitorAdListResponse:
+      properties:
+        ads:
+          items:
+            $ref: '#/components/schemas/CompetitorAdResponse'
+          type: array
+          title: Ads
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        limit:
+          type: integer
+          title: Limit
+        total_pages:
+          type: integer
+          title: Total Pages
+        filters_applied:
+          additionalProperties: true
+          type: object
+          title: Filters Applied
+      type: object
+      required:
+      - ads
+      - total
+      - page
+      - limit
+      - total_pages
+      title: CompetitorAdListResponse
+      description: Response for competitor ad list endpoint
+    CompetitorInsightsResponse:
+      properties:
+        competitor_id:
+          type: string
+          format: uuid
+          title: Competitor Id
+        competitor_name:
+          type: string
+          title: Competitor Name
+        headline:
+          type: string
+          title: Headline
+        subline:
+          type: string
+          title: Subline
+        summary:
+          type: string
+          title: Summary
+        key_takeaways:
+          items:
+            type: string
+          type: array
+          title: Key Takeaways
+        supporting_evidence:
+          items:
+            type: string
+          type: array
+          title: Supporting Evidence
+        generated_at:
+          type: string
+          title: Generated At
+        expires_at:
+          type: string
+          title: Expires At
+        is_cached:
+          type: boolean
+          title: Is Cached
+        model_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model Name
+        prompt_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prompt Version
+      type: object
+      required:
+      - competitor_id
+      - competitor_name
+      - headline
+      - subline
+      - summary
+      - generated_at
+      - expires_at
+      - is_cached
+      title: CompetitorInsightsResponse
+    ScanResponse:
+      properties:
+        competitor_id:
+          type: string
+          format: uuid
+          title: Competitor Id
+        competitor_name:
+          type: string
+          title: Competitor Name
+        scanned_at:
+          type: string
+          title: Scanned At
+        campaigns_found:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Campaigns Found
+        errors:
+          items:
+            type: string
+          type: array
+          title: Errors
+      type: object
+      required:
+      - competitor_id
+      - competitor_name
+      - scanned_at
+      - campaigns_found
+      - errors
+      title: ScanResponse
+      description: Response from competitor scan.
     BrandFacebookOfficialUrlResponse:
       properties:
         facebook_url:
@@ -1209,64 +1481,15 @@ components:
       - source
       title: BrandFacebookOfficialUrlResponse
       description: Facebook official URL resolution status for the active brand profile.
-    CompetitorSetupRequest:
+    HTTPValidationError:
       properties:
-        competitor_urls:
+        detail:
           items:
-            type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          maxItems: 10
-          title: Competitor Urls
-          description: List of competitor website URLs (max 10)
+          title: Detail
       type: object
-      required:
-      - competitor_urls
-      title: CompetitorSetupRequest
-      description: Request to set up competitor tracking.
-    CompetitorLiveStatus:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        active_campaigns_count:
-          type: integer
-          title: Active Campaigns Count
-          default: 0
-        is_scanning:
-          type: boolean
-          title: Is Scanning
-          default: false
-        last_scanned_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Scanned At
-        last_scan_started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Scan Started At
-        last_scan_completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Scan Completed At
-        setup_pending:
-          type: boolean
-          title: Setup Pending
-          default: false
-      type: object
-      required:
-      - id
-      title: CompetitorLiveStatus
-      description: Lightweight persisted live state for competitors.
+      title: HTTPValidationError
     CompetitorAdResponse:
       properties:
         id:
@@ -1465,110 +1688,6 @@ components:
       - detected_at
       title: CompetitorAdResponse
       description: Response schema for competitor ads with signed URL support
-    CompetitorDetailsResponse:
-      properties:
-        competitor:
-          $ref: '#/components/schemas/CompetitorInfo'
-        campaigns:
-          items:
-            $ref: '#/components/schemas/CampaignInfo'
-          type: array
-          title: Campaigns
-        last_scan:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Last Scan
-        strategy_summary:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Strategy Summary
-        swot:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Swot
-        marketing_profile:
-          anyOf:
-          - $ref: '#/components/schemas/MarketingProfileResponse'
-          - type: 'null'
-      type: object
-      required:
-      - competitor
-      - campaigns
-      title: CompetitorDetailsResponse
-      description: Detailed competitor information with campaigns.
-    CompetitorInsightsResponse:
-      properties:
-        competitor_id:
-          type: string
-          format: uuid
-          title: Competitor Id
-        competitor_name:
-          type: string
-          title: Competitor Name
-        headline:
-          type: string
-          title: Headline
-        subline:
-          type: string
-          title: Subline
-        summary:
-          type: string
-          title: Summary
-        key_takeaways:
-          items:
-            type: string
-          type: array
-          title: Key Takeaways
-        supporting_evidence:
-          items:
-            type: string
-          type: array
-          title: Supporting Evidence
-        generated_at:
-          type: string
-          title: Generated At
-        expires_at:
-          type: string
-          title: Expires At
-        is_cached:
-          type: boolean
-          title: Is Cached
-        model_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Model Name
-        prompt_version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Prompt Version
-      type: object
-      required:
-      - competitor_id
-      - competitor_name
-      - headline
-      - subline
-      - summary
-      - generated_at
-      - expires_at
-      - is_cached
-      title: CompetitorInsightsResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     MarketingProfileResponse:
       properties:
         algorithm_version:
@@ -1608,125 +1727,6 @@ components:
       - can_render
       title: MarketingProfileResponse
       description: Persisted marketing-profile snapshot returned with competitor details.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MarketingProfileAxisResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        label:
-          type: string
-          title: Label
-        self_score:
-          type: integer
-          title: Self Score
-        competitor_score:
-          type: integer
-          title: Competitor Score
-        similarity:
-          type: integer
-          title: Similarity
-        gap:
-          type: integer
-          title: Gap
-        leader:
-          type: string
-          title: Leader
-      type: object
-      required:
-      - id
-      - label
-      - self_score
-      - competitor_score
-      - similarity
-      - gap
-      - leader
-      title: MarketingProfileAxisResponse
-      description: Single radar axis for the persisted marketing profile.
-    ScanResponse:
-      properties:
-        competitor_id:
-          type: string
-          format: uuid
-          title: Competitor Id
-        competitor_name:
-          type: string
-          title: Competitor Name
-        scanned_at:
-          type: string
-          title: Scanned At
-        campaigns_found:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Campaigns Found
-        errors:
-          items:
-            type: string
-          type: array
-          title: Errors
-      type: object
-      required:
-      - competitor_id
-      - competitor_name
-      - scanned_at
-      - campaigns_found
-      - errors
-      title: ScanResponse
-      description: Response from competitor scan.
-    CompetitorAdListResponse:
-      properties:
-        ads:
-          items:
-            $ref: '#/components/schemas/CompetitorAdResponse'
-          type: array
-          title: Ads
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        limit:
-          type: integer
-          title: Limit
-        total_pages:
-          type: integer
-          title: Total Pages
-        filters_applied:
-          additionalProperties: true
-          type: object
-          title: Filters Applied
-      type: object
-      required:
-      - ads
-      - total
-      - page
-      - limit
-      - total_pages
-      title: CompetitorAdListResponse
-      description: Response for competitor ad list endpoint
     CampaignInfo:
       properties:
         id:

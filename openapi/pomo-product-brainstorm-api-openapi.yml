@@ -169,6 +169,106 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProductIdeaBrainstormRequest:
+      properties:
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        company_profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Company Profile Id
+        user_input:
+          type: string
+          title: User Input
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+      type: object
+      required:
+      - user_input
+      title: ProductIdeaBrainstormRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProductIdeaResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        product_offering_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Offering Id
+        session_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Title
+        user_input:
+          type: string
+          title: User Input
+        product_ideas:
+          items:
+            $ref: '#/components/schemas/ProductIdea'
+          type: array
+          title: Product Ideas
+        context_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Context Data
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - session_title
+      - user_input
+      - product_ideas
+      - context_data
+      - created_at
+      title: ProductIdeaResponse
     ProductIdea:
       properties:
         name:
@@ -224,106 +324,6 @@ components:
       - potential_challenges
       - success_metrics
       title: ProductIdea
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ProductIdeaResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
-        user_input:
-          type: string
-          title: User Input
-        product_ideas:
-          items:
-            $ref: '#/components/schemas/ProductIdea'
-          type: array
-          title: Product Ideas
-        context_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Context Data
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - session_title
-      - user_input
-      - product_ideas
-      - context_data
-      - created_at
-      title: ProductIdeaResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ProductIdeaBrainstormRequest:
-      properties:
-        product_offering_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Offering Id
-        company_profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Company Profile Id
-        user_input:
-          type: string
-          title: User Input
-        session_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Title
-      type: object
-      required:
-      - user_input
-      title: ProductIdeaBrainstormRequest
   securitySchemes:
     HTTPBearer:
       type: http

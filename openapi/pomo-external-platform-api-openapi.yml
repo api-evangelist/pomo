@@ -4722,173 +4722,218 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    SlackLinkResponse:
+    MetaCampaignResumeRequest:
       properties:
-        linked:
-          type: boolean
-          title: Linked
-        slack_team_id:
+        platform_type:
           type: string
-          title: Slack Team Id
-        slack_user_id:
+          title: Platform Type
+          description: 'Type of ad platform: meta_feed or meta_stories_reels'
+        ad_id:
           type: string
-          title: Slack User Id
+          title: Ad Id
+          description: ID of the specific ad to act on (DB UUID or Meta ad id)
+        ad_account_id:
+          type: string
+          title: Ad Account Id
+          description: Meta Ad Account ID
       type: object
       required:
-      - linked
-      - slack_team_id
-      - slack_user_id
-      title: SlackLinkResponse
-    TikTokAdStatusResponse:
+      - platform_type
+      - ad_id
+      - ad_account_id
+      title: MetaCampaignResumeRequest
+      description: Request model for resuming a Meta campaign (no action field).
+    DeletePostRequest:
       properties:
-        success:
-          type: boolean
-          title: Success
-        message:
+        post_id:
           type: string
-          title: Message
-        status:
-          type: string
-          title: Status
-          description: The new status of the ad (active/paused)
-      type: object
-      required:
-      - success
-      - message
-      - status
-      title: TikTokAdStatusResponse
-      description: Response model for ad status update operations
-    DataSourceOrdersResponse:
-      properties:
-        orders:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Orders
-          description: List of orders
-        has_more:
-          type: boolean
-          title: Has More
-          description: Whether more orders are available
-          default: false
-        cursor:
+          title: Post Id
+        auth_method:
           anyOf:
           - type: string
           - type: 'null'
-          title: Cursor
-          description: Cursor for pagination
+          title: Auth Method
+          description: 'Bound auth method: instagram or facebook'
       type: object
-      title: DataSourceOrdersResponse
-      description: 'Response for orders list endpoint.
-
-
-        Used by: GET /shopify/orders'
-    AmazonAdGroupRequest:
+      required:
+      - post_id
+      title: DeletePostRequest
+      description: Request model for deleting an Instagram post.
+    LinkedInLeadFormConfig:
       properties:
-        profile_id:
+        name:
           type: string
-          title: Profile Id
-        campaign_id:
+          maxLength: 256
+          title: Name
+        headline:
           type: string
-          title: Campaign Id
+          maxLength: 60
+          title: Headline
+        description:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          title: Description
+          default: ''
+        privacy_policy_url:
+          type: string
+          maxLength: 2000
+          title: Privacy Policy Url
+        thank_you_message:
+          type: string
+          maxLength: 300
+          title: Thank You Message
+        fields:
+          items:
+            type: string
+            enum:
+            - FIRST_NAME
+            - LAST_NAME
+            - EMAIL
+            - WORK_EMAIL
+            - PHONE_NUMBER
+            - WORK_PHONE_NUMBER
+            - JOB_TITLE
+            - COMPANY_NAME
+            - COMPANY_SIZE
+            - INDUSTRY
+            - CITY
+            - STATE
+            - COUNTRY
+          type: array
+          title: Fields
+      type: object
+      required:
+      - name
+      - headline
+      - privacy_policy_url
+      - thank_you_message
+      - fields
+      title: LinkedInLeadFormConfig
+    MetaAuthResponseModel:
+      properties:
+        auth_url:
+          type: string
+          title: Auth Url
+        auth_type:
+          type: string
+          title: Auth Type
+      type: object
+      required:
+      - auth_url
+      - auth_type
+      title: MetaAuthResponseModel
+    TikTokAdPauseRequest:
+      properties:
+        ad_id:
+          type: string
+          title: Ad Id
+          description: The database UUID of the ad to pause
+        advertiser_id:
+          type: string
+          title: Advertiser Id
+          description: The TikTok advertiser ID
+      type: object
+      required:
+      - ad_id
+      - advertiser_id
+      title: TikTokAdPauseRequest
+      description: Request model for pausing a TikTok ad
+    GoogleAdCampaignRequest:
+      properties:
+        account_id:
+          type: string
+          title: Account Id
         name:
           type: string
           title: Name
-        default_bid:
-          type: number
-          title: Default Bid
-          default: 1.0
+        budget_amount_micros:
+          type: integer
+          title: Budget Amount Micros
+        start_date:
+          type: string
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
       type: object
       required:
-      - profile_id
-      - campaign_id
+      - account_id
       - name
-      title: AmazonAdGroupRequest
-    FacebookPostCampaignRequest:
+      - budget_amount_micros
+      - start_date
+      title: GoogleAdCampaignRequest
+    AmazonCampaignActionRequest:
       properties:
-        campaign_id:
+        platform_type:
           type: string
-          title: Campaign Id
-          description: ID of campaign to publish
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Idea number for campaign row
-        page_id:
+          title: Platform Type
+          description: 'Type of ad platform: amazon_sponsored_products, amazon_sponsored_brands, or amazon_sponsored_display'
+        ad_id:
           type: string
-          title: Page Id
-          description: Facebook page ID to publish to
-        page_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Page Name
-          description: Facebook page name for posting identity display
-        variation:
-          type: integer
-          title: Variation
-          description: Variation number (default 0)
-          default: 0
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      - page_id
-      title: FacebookPostCampaignRequest
-    MetaAccountsResponseModel:
-      properties:
-        accounts:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Accounts
-        pages:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Pages
-        selected_ad_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Selected Ad Account Id
-        activation_state:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Activation State
-        active_account:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Active Account
-      type: object
-      required:
-      - accounts
-      title: MetaAccountsResponseModel
-    AmazonProductAdRequest:
-      properties:
+          title: Ad Id
+          description: ID of the specific ad to act on
         profile_id:
           type: string
           title: Profile Id
-        ad_group_id:
+          description: Amazon advertising profile ID
+        action:
           type: string
-          title: Ad Group Id
-        asin:
-          type: string
-          title: Asin
+          title: Action
+          description: 'Action to perform: pause or delete'
       type: object
       required:
+      - platform_type
+      - ad_id
       - profile_id
-      - ad_group_id
-      - asin
-      title: AmazonProductAdRequest
+      - action
+      title: AmazonCampaignActionRequest
+      description: Request model for pausing/deleting an Amazon campaign.
+    BatchPostMetricsRequest:
+      properties:
+        instagram_account_id:
+          type: string
+          title: Instagram Account Id
+        post_ids:
+          items:
+            type: string
+          type: array
+          title: Post Ids
+      type: object
+      required:
+      - instagram_account_id
+      - post_ids
+      title: BatchPostMetricsRequest
+      description: Request model for getting metrics for multiple Instagram posts.
+    InstagramActivateIdentityRequest:
+      properties:
+        instagram_account_id:
+          type: string
+          title: Instagram Account Id
+          description: Instagram account ID to use for social publishing
+        auth_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Auth Method
+          description: 'Selected auth method: instagram or facebook'
+      type: object
+      required:
+      - instagram_account_id
+      title: InstagramActivateIdentityRequest
+    ShopifyConnectStartRequestModel:
+      properties:
+        mode:
+          type: string
+          title: Mode
+          description: '''connect'' binds to the current profile; ''create'' makes a new profile from the store'
+          default: create
+      type: object
+      title: ShopifyConnectStartRequestModel
+      description: Pomo-initiated on-ramp request.
     KlaviyoStatusResponse:
       properties:
         connected:
@@ -4917,210 +4962,79 @@ components:
       - connected
       title: KlaviyoStatusResponse
       description: Response model for Klaviyo connection status.
-    GoogleSyncPreviewRequest:
+    AppHomeStatusResponse:
       properties:
-        platform_type:
-          type: string
-          title: Platform Type
-          description: google_search, google_display, or google_video
-        ad_id:
-          type: string
-          title: Ad Id
-          description: ID of the specific ad to sync
-        google_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Google Account Id
-          description: Google Ads account ID (optional override)
-        force_sync_fields:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Force Sync Fields
-          description: Optional fields to reconcile remotely even when the local diff is empty.
-        pending_update:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Pending Update
-          description: Pending Pomo edit payload to preview without saving it.
-      type: object
-      required:
-      - platform_type
-      - ad_id
-      title: GoogleSyncPreviewRequest
-      description: Request model for previewing a sync and billing impact.
-    ShopifyInstallResolveRequestModel:
-      properties:
-        claim_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Claim Handle
-          description: Optional legacy URL claim; when present it must match the httpOnly claim cookie
-        intent_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Intent Token
-          description: Pomo on-ramp intent token
-        chosen_organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Chosen Organization Id
-          description: Org selected for the multi-org case
-        chosen_company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Chosen Company Profile Id
-          description: Existing matched profile selected to connect
-        chosen_create_new:
+        bound:
           type: boolean
-          title: Chosen Create New
-          description: User opted to start a new brand profile instead of a match
+          title: Bound
+          description: Whether the shop is bound to an active Pomo profile
+        shop_domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shop Domain
+          description: The shop's myshopify.com domain from the session token
+        shop_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shop Name
+          description: Human-readable shop name, if known
+        company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Id
+          description: Bound company profile id (string UUID, sanitized)
+        company_profile_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Profile Name
+          description: Bound company profile name
+        connection_health:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Connection Health
+          description: '''healthy'' | ''warning'' | ''critical'' | ''unknown'' | null'
+        initial_sync_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Initial Sync Status
+          description: '''pending'' | ''running'' | ''completed'' | ''failed'' | ''skipped'' | null'
+        last_sync_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Sync At
+          description: Last successful sync timestamp
+        onboarding_complete:
+          type: boolean
+          title: Onboarding Complete
+          description: Whether the bound profile has finished onboarding
           default: false
-      type: object
-      title: ShopifyInstallResolveRequestModel
-    DataSourceDisconnectResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-          description: Whether disconnect was successful
-        message:
+        pomo_url:
           type: string
-          title: Message
-          description: Result message
+          title: Pomo Url
+          description: Deep-link into the full Pomo app
       type: object
       required:
-      - success
-      - message
-      title: DataSourceDisconnectResponse
-      description: 'Standard response for disconnect endpoint.
+      - bound
+      - pomo_url
+      title: AppHomeStatusResponse
+      description: 'Status of an embedded shop as seen from the App Home.
 
 
-        Used by: DELETE /{platform}/disconnect or POST /{platform}/disconnect'
-      example:
-        message: Shopify account disconnected successfully
-        success: true
-    GoogleAnalyticsProperty:
-      properties:
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-          description: Google Analytics account ID
-        account_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Name
-          description: Google Analytics account display name
-        property_id:
-          type: string
-          title: Property Id
-          description: GA4 numeric property ID
-        property_resource_name:
-          type: string
-          title: Property Resource Name
-          description: 'GA4 property resource name: properties/{id}'
-        property_name:
-          type: string
-          title: Property Name
-          description: GA4 property display name
-        property_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Property Type
-          description: GA4 property type
-      type: object
-      required:
-      - property_id
-      - property_resource_name
-      - property_name
-      title: GoogleAnalyticsProperty
-    KlaviyoAccountsResponse:
-      properties:
-        accounts:
-          items:
-            $ref: '#/components/schemas/KlaviyoList'
-          type: array
-          title: Accounts
-      type: object
-      required:
-      - accounts
-      title: KlaviyoAccountsResponse
-      description: Response model for Klaviyo lists/segments.
-    KlaviyoAuthResponse:
-      properties:
-        auth_url:
-          type: string
-          title: Auth Url
-      type: object
-      required:
-      - auth_url
-      title: KlaviyoAuthResponse
-      description: Response model for Klaviyo auth URL.
-    AppHomeSyncResponse:
-      properties:
-        sync_status:
-          type: string
-          title: Sync Status
-          description: Result of trigger_initial_sync()
-        message:
-          type: string
-          title: Message
-          description: Human-readable status message
-      type: object
-      required:
-      - sync_status
-      - message
-      title: AppHomeSyncResponse
-      description: Result of a catalog re-sync triggered from the App Home.
-    MetaCampaignActionRequest:
-      properties:
-        platform_type:
-          type: string
-          title: Platform Type
-          description: 'Type of ad platform: meta_feed or meta_stories_reels'
-        ad_id:
-          type: string
-          title: Ad Id
-          description: ID of the specific ad to act on
-        ad_account_id:
-          type: string
-          title: Ad Account Id
-          description: Meta Ad Account ID
-        action:
-          type: string
-          title: Action
-          description: 'Action to perform: pause or delete'
-      type: object
-      required:
-      - platform_type
-      - ad_id
-      - ad_account_id
-      - action
-      title: MetaCampaignActionRequest
-      description: Request model for pausing/deleting a Meta campaign.
-    TikTokActivateAccountRequest:
-      properties:
-        advertiser_id:
-          type: string
-          title: Advertiser Id
-          description: TikTok advertiser ID to activate for future launches
-      type: object
-      required:
-      - advertiser_id
-      title: TikTokActivateAccountRequest
+        ``bound`` is the primary discriminator: when false the shop has no active
+
+        Pomo binding and every profile-related field is null, but ``shop_domain`` is
+
+        still populated from the verified session token so the UI can address the
+
+        store.'
     TikTokSocialPostCampaignRequest:
       properties:
         campaign_id:
@@ -5146,111 +5060,31 @@ components:
       - idea_number
       - settings
       title: TikTokSocialPostCampaignRequest
-    MetaSyncPreviewRequest:
+    TikTokSyncAdRequest:
       properties:
-        platform_type:
-          type: string
-          title: Platform Type
-          description: meta_feed or meta_stories_reels
         ad_id:
           type: string
           title: Ad Id
-          description: ID of the specific ad to sync (UUID string)
-        ad_account_id:
+          description: Normalized platform ad UUID
+        advertiser_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Ad Account Id
-          description: Meta Ad Account ID (optional override)
-        force_sync_fields:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Force Sync Fields
-          description: Optional field allowlist for pending edits that should be previewed.
+          title: Advertiser Id
+          description: TikTok advertiser ID
         pending_update:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
           title: Pending Update
-          description: Pending Pomo edit payload to preview without saving it.
+          description: Pending Pomo edit payload to apply only after sync succeeds.
       type: object
       required:
-      - platform_type
       - ad_id
-      title: MetaSyncPreviewRequest
-      description: Request model for previewing a Meta sync and billing impact.
-    SlackLinkRequest:
-      properties:
-        slack_user_id:
-          type: string
-          maxLength: 64
-          minLength: 2
-          title: Slack User Id
-        slack_team_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Slack Team Id
-        slack_user_name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Slack User Name
-      type: object
-      required:
-      - slack_user_id
-      title: SlackLinkRequest
-    AmazonCampaignActionRequest:
-      properties:
-        platform_type:
-          type: string
-          title: Platform Type
-          description: 'Type of ad platform: amazon_sponsored_products, amazon_sponsored_brands, or amazon_sponsored_display'
-        ad_id:
-          type: string
-          title: Ad Id
-          description: ID of the specific ad to act on
-        profile_id:
-          type: string
-          title: Profile Id
-          description: Amazon advertising profile ID
-        action:
-          type: string
-          title: Action
-          description: 'Action to perform: pause or delete'
-      type: object
-      required:
-      - platform_type
-      - ad_id
-      - profile_id
-      - action
-      title: AmazonCampaignActionRequest
-      description: Request model for pausing/deleting an Amazon campaign.
-    SlackSettingsUpdateRequest:
-      properties:
-        default_channel_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Default Channel Id
-        allowlist_patterns:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Allowlist Patterns
-          description: Optional Slack email allowlist patterns (e.g. *@machflow.ai, user@domain.com, @domain.com)
-      type: object
-      title: SlackSettingsUpdateRequest
-    GoogleCampaignActionRequest:
+      title: TikTokSyncAdRequest
+      description: Request model for syncing saved Pomo changes to a TikTok ad baseline.
+    GoogleLaunchAdCampaignRequest:
       properties:
         platform_type:
           type: string
@@ -5259,306 +5093,49 @@ components:
         ad_id:
           type: string
           title: Ad Id
-          description: Normalized platform ad ID to act on
+          description: Normalized platform ad ID to launch
         google_account_id:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Google Account Id
-          description: Google Ads account ID
-        action:
-          type: string
-          title: Action
-          description: 'Action to perform: pause or delete'
-      type: object
-      required:
-      - platform_type
-      - ad_id
-      - google_account_id
-      - action
-      title: GoogleCampaignActionRequest
-      description: Request model for pausing/deleting a Google campaign.
-    SlackCampaignCardRequest:
-      properties:
-        channel_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Channel Id
-        thread_ts:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Thread Ts
-        dedupe_key:
-          anyOf:
-          - type: string
-            maxLength: 191
-          - type: 'null'
-          title: Dedupe Key
-        campaign_info:
-          additionalProperties: true
-          type: object
-          title: Campaign Info
-          description: Generic campaign payload used to build Slack Block Kit cards.
-      type: object
-      title: SlackCampaignCardRequest
-    TikTokSocialPublishSettings:
-      properties:
-        privacy_level:
-          type: string
-          title: Privacy Level
-          description: TikTok privacy_level from creator_info.privacy_level_options
-        allow_comment:
-          type: boolean
-          title: Allow Comment
-          default: false
-        allow_duet:
-          type: boolean
-          title: Allow Duet
-          default: false
-        allow_stitch:
-          type: boolean
-          title: Allow Stitch
-          default: false
-        commercial_content_disclosure:
-          type: boolean
-          title: Commercial Content Disclosure
-          default: false
-        brand_content_toggle:
-          type: boolean
-          title: Brand Content Toggle
-          default: false
-        brand_organic_toggle:
-          type: boolean
-          title: Brand Organic Toggle
-          default: false
-        is_aigc:
-          type: boolean
-          title: Is Aigc
-          default: true
-        video_cover_timestamp_ms:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Video Cover Timestamp Ms
-        photo_cover_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Photo Cover Index
-          default: 0
-        auto_add_music:
+          description: Legacy Google Ads account ID; launches use the active account
+        bid_only:
           anyOf:
           - type: boolean
           - type: 'null'
-          title: Auto Add Music
+          title: Bid Only
+          description: Whether to use 'Observation' (True) or 'Targeting' (False) for audiences
           default: true
-      type: object
-      required:
-      - privacy_level
-      title: TikTokSocialPublishSettings
-    LinkedInPostCampaignRequest:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: ID of the campaign to post
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Idea number within the campaign
-        author_urn:
+        youtube_logo_image_url:
           anyOf:
           - type: string
           - type: 'null'
-          title: Author Urn
-          description: Selected LinkedIn author URN
-        variation:
-          type: integer
-          title: Variation
-          description: Variation number (0 for original, 1+ for variations)
-          default: 0
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      title: LinkedInPostCampaignRequest
-    LinkedInSyncPreviewRequest:
-      properties:
-        platform_type:
-          type: string
-          title: Platform Type
-        ad_id:
-          type: string
-          title: Ad Id
-        ad_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Account Id
-        pending_update:
+          title: Youtube Logo Image Url
+          description: Optional square logo GCS URL for YouTube/Google Video
+        google_lead_form_config:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
-          title: Pending Update
+          title: Google Lead Form Config
+          description: Google Lead Form configuration
       type: object
       required:
       - platform_type
       - ad_id
-      title: LinkedInSyncPreviewRequest
-    LinkedInCampaignActionRequest:
+      title: GoogleLaunchAdCampaignRequest
+      description: Request model for launching an online ad campaign to Google Ads.
+    GoogleAnalyticsPropertySelectRequest:
       properties:
-        platform_type:
+        property_resource_name:
           type: string
-          title: Platform Type
-        ad_id:
-          type: string
-          title: Ad Id
-        ad_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Account Id
-        action:
-          type: string
-          title: Action
+          title: Property Resource Name
+          description: GA4 property resource name, e.g. properties/123456
       type: object
       required:
-      - platform_type
-      - ad_id
-      - action
-      title: LinkedInCampaignActionRequest
-    PostResponseModel:
-      properties:
-        id:
-          type: string
-          title: Id
-      type: object
-      required:
-      - id
-      title: PostResponseModel
-      description: Response model for created Instagram post.
-    AmazonAccountsResponseModel:
-      properties:
-        accounts:
-          items:
-            additionalProperties:
-              anyOf:
-              - type: string
-              - type: integer
-            type: object
-          type: array
-          title: Accounts
-      type: object
-      required:
-      - accounts
-      title: AmazonAccountsResponseModel
-    MetaSelectAdAccountRequest:
-      properties:
-        ad_account_id:
-          type: string
-          title: Ad Account Id
-          description: Meta Ad Account ID
-        page_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Page Id
-          description: Facebook Page ID to use as the ad identity
-        instagram_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Account Id
-          description: Optional Instagram business account ID linked to the Page
-      type: object
-      required:
-      - ad_account_id
-      title: MetaSelectAdAccountRequest
-    ShopifyShopResponseModel:
-      properties:
-        connected:
-          type: boolean
-          title: Connected
-          description: Whether the platform is connected
-        account:
-          anyOf:
-          - $ref: '#/components/schemas/DataSourceAccountInfo'
-          - type: 'null'
-          description: Account details if connected
-        shop:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Shop
-          description: Shop details
-      type: object
-      required:
-      - connected
-      title: ShopifyShopResponseModel
-      description: Response model for shop information.
-    InstagramAuthResponseModel:
-      properties:
-        auth_url:
-          type: string
-          title: Auth Url
-      type: object
-      required:
-      - auth_url
-      title: InstagramAuthResponseModel
-      description: Response model for Instagram authorization URL.
-    FacebookSocialActivateRequest:
-      properties:
-        page_id:
-          type: string
-          title: Page Id
-          description: Facebook Page ID to use for social publishing
-      type: object
-      required:
-      - page_id
-      title: FacebookSocialActivateRequest
-    TikTokAccountsResponseModel:
-      properties:
-        accounts:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Accounts
-        activation_state:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Activation State
-        active_account:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Active Account
-      type: object
-      required:
-      - accounts
-      title: TikTokAccountsResponseModel
-    InstagramActivateIdentityRequest:
-      properties:
-        instagram_account_id:
-          type: string
-          title: Instagram Account Id
-          description: Instagram account ID to use for social publishing
-        auth_method:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Auth Method
-          description: 'Selected auth method: instagram or facebook'
-      type: object
-      required:
-      - instagram_account_id
-      title: InstagramActivateIdentityRequest
+      - property_resource_name
+      title: GoogleAnalyticsPropertySelectRequest
     InstagramPostCampaignRequest:
       properties:
         campaign_id:
@@ -5602,268 +5179,29 @@ components:
       - idea_number
       - instagram_account_id
       title: InstagramPostCampaignRequest
-    DataSourceTransactionsResponse:
+    DataSourceDisconnectResponse:
       properties:
-        transactions:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Transactions
-          description: List of transactions
-        has_more:
+        success:
           type: boolean
-          title: Has More
-          description: Whether more transactions are available
-          default: false
-        cursor:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cursor
-          description: Cursor for pagination
+          title: Success
+          description: Whether disconnect was successful
+        message:
+          type: string
+          title: Message
+          description: Result message
       type: object
-      title: DataSourceTransactionsResponse
-      description: 'Response for transactions list endpoint.
+      required:
+      - success
+      - message
+      title: DataSourceDisconnectResponse
+      description: 'Standard response for disconnect endpoint.
 
 
-        Used by: GET /stripe/transactions, GET /square/payments'
-    TikTokLaunchVideoAdRequest:
-      properties:
-        ad_id:
-          type: string
-          title: Ad Id
-        advertiser_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Advertiser Id
-        ad_text_override:
-          anyOf:
-          - type: string
-            maxLength: 100
-          - type: 'null'
-          title: Ad Text Override
-          description: 'Optional override for ad_text (TikTok requirement: max 100 chars)'
-        display_name_override:
-          anyOf:
-          - type: string
-            maxLength: 40
-          - type: 'null'
-          title: Display Name Override
-          description: 'Optional override for display_name (TikTok requirement: max 40 chars)'
-        ad_name_override:
-          anyOf:
-          - type: string
-            maxLength: 512
-          - type: 'null'
-          title: Ad Name Override
-          description: 'Optional override for ad_name (TikTok requirement: max 512 chars)'
-      type: object
-      required:
-      - ad_id
-      title: TikTokLaunchVideoAdRequest
-      description: Request model for launching a TikTok video ad with optional text field overrides
-    ShopifyStatusResponseModel:
-      properties:
-        connected:
-          type: boolean
-          title: Connected
-          description: Whether the platform is connected
-        healthy:
-          type: boolean
-          title: Healthy
-          description: Whether the token is healthy (passed API check)
-          default: false
-        health_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Health Message
-          description: Health check result message
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-          description: Platform-specific account identifier
-        account_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Name
-          description: Display name for the account
-        token_expires_soon:
-          type: boolean
-          title: Token Expires Soon
-          description: Whether token expires within buffer period
-          default: false
-        last_health_check:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Health Check
-          description: ISO timestamp of last health check
-        shop_domain:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Shop Domain
-          description: Shopify store domain
-        shop_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Shop Name
-          description: Shop name
-      type: object
-      required:
-      - connected
-      title: ShopifyStatusResponseModel
-      description: Response model for connection status with health check.
+        Used by: DELETE /{platform}/disconnect or POST /{platform}/disconnect'
       example:
-        account_id: shop_12345
-        account_name: My Store
-        connected: true
-        health_message: Token is valid
-        healthy: true
-        last_health_check: '2024-01-15T10:30:00Z'
-        token_expires_soon: false
-    SlackChannelsListResponse:
-      properties:
-        channels:
-          items:
-            $ref: '#/components/schemas/SlackChannelResponse'
-          type: array
-          title: Channels
-      type: object
-      title: SlackChannelsListResponse
-    LinkedInActivateAccountRequest:
-      properties:
-        account_id:
-          type: string
-          title: Account Id
-        organization_urn:
-          type: string
-          title: Organization Urn
-      type: object
-      required:
-      - account_id
-      - organization_urn
-      title: LinkedInActivateAccountRequest
-    BatchPostMetricsRequest:
-      properties:
-        instagram_account_id:
-          type: string
-          title: Instagram Account Id
-        post_ids:
-          items:
-            type: string
-          type: array
-          title: Post Ids
-      type: object
-      required:
-      - instagram_account_id
-      - post_ids
-      title: BatchPostMetricsRequest
-      description: Request model for getting metrics for multiple Instagram posts.
-    CreatePostRequest:
-      properties:
-        instagram_account_id:
-          type: string
-          title: Instagram Account Id
-        image_url:
-          type: string
-          title: Image Url
-        caption:
-          type: string
-          title: Caption
-        hashtags:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Hashtags
-      type: object
-      required:
-      - instagram_account_id
-      - image_url
-      - caption
-      title: CreatePostRequest
-      description: Request model for creating an Instagram post.
-    StripeStatusResponseModel:
-      properties:
-        connected:
-          type: boolean
-          title: Connected
-          description: Whether the platform is connected
-        healthy:
-          type: boolean
-          title: Healthy
-          description: Whether the token is healthy (passed API check)
-          default: false
-        health_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Health Message
-          description: Health check result message
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-          description: Platform-specific account identifier
-        account_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Name
-          description: Display name for the account
-        token_expires_soon:
-          type: boolean
-          title: Token Expires Soon
-          description: Whether token expires within buffer period
-          default: false
-        last_health_check:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Health Check
-          description: ISO timestamp of last health check
-        business_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Business Name
-          description: Business name
-        livemode:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Livemode
-          description: Whether Stripe is in live mode
-        charges_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Charges Enabled
-          description: Whether charges are enabled
-      type: object
-      required:
-      - connected
-      title: StripeStatusResponseModel
-      description: Response model for connection status with health check.
-      example:
-        account_id: shop_12345
-        account_name: My Store
-        connected: true
-        health_message: Token is valid
-        healthy: true
-        last_health_check: '2024-01-15T10:30:00Z'
-        token_expires_soon: false
-    AmazonAuthResponseModel:
+        message: Shopify account disconnected successfully
+        success: true
+    TikTokAuthResponseModel:
       properties:
         auth_url:
           type: string
@@ -5871,40 +5209,363 @@ components:
       type: object
       required:
       - auth_url
-      title: AmazonAuthResponseModel
-    TikTokSyncAdRequest:
+      title: TikTokAuthResponseModel
+    LinkedInCampaignPostRequest:
       properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: ID of the campaign post
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Idea number within the campaign
+        variation:
+          type: integer
+          title: Variation
+          description: Variation number (0 for original, 1+ for variations)
+          default: 0
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      title: LinkedInCampaignPostRequest
+    HubSpotAuthResponse:
+      properties:
+        auth_url:
+          type: string
+          title: Auth Url
+      type: object
+      required:
+      - auth_url
+      title: HubSpotAuthResponse
+      description: Response model for the HubSpot auth URL.
+    GoogleSyncPreviewRequest:
+      properties:
+        platform_type:
+          type: string
+          title: Platform Type
+          description: google_search, google_display, or google_video
         ad_id:
           type: string
           title: Ad Id
-          description: Normalized platform ad UUID
-        advertiser_id:
+          description: ID of the specific ad to sync
+        google_account_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Advertiser Id
-          description: TikTok advertiser ID
+          title: Google Account Id
+          description: Google Ads account ID (optional override)
+        force_sync_fields:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Force Sync Fields
+          description: Optional fields to reconcile remotely even when the local diff is empty.
         pending_update:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
           title: Pending Update
-          description: Pending Pomo edit payload to apply only after sync succeeds.
+          description: Pending Pomo edit payload to preview without saving it.
       type: object
       required:
+      - platform_type
       - ad_id
-      title: TikTokSyncAdRequest
-      description: Request model for syncing saved Pomo changes to a TikTok ad baseline.
-    HTTPValidationError:
+      title: GoogleSyncPreviewRequest
+      description: Request model for previewing a sync and billing impact.
+    KlaviyoList:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        created:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created
+        updated:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated
+        profile_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Profile Count
+        list_type:
+          type: string
+          title: List Type
+          default: list
       type: object
-      title: HTTPValidationError
+      required:
+      - id
+      - name
+      title: KlaviyoList
+      description: Klaviyo list/segment model.
+    TikTokSocialPublishSettingsRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+        idea_number:
+          type: integer
+          title: Idea Number
+        variation:
+          type: integer
+          title: Variation
+          default: 0
+        settings:
+          $ref: '#/components/schemas/TikTokSocialPublishSettings'
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - settings
+      title: TikTokSocialPublishSettingsRequest
+    MetaLaunchAdCampaignRequest:
+      properties:
+        platform_type:
+          type: string
+          title: Platform Type
+          description: 'Type of ad platform: meta_feed or meta_stories_reels'
+        ad_id:
+          title: Ad Id
+          description: ID of the specific ad to launch (UUID string)
+        ad_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Account Id
+          description: Legacy Meta Ad Account ID; launches use the active account
+        page_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Id
+          description: Facebook Page ID
+        instagram_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Account Id
+          description: Instagram Account ID
+        placements:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Placements
+          description: 'Placements override: instagram_stories, instagram_reels'
+        meta_lead_form_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta Lead Form Config
+          description: Meta Instant Form configuration
+      type: object
+      required:
+      - platform_type
+      - ad_id
+      title: MetaLaunchAdCampaignRequest
+      description: Request model for launching a Meta ad campaign
+    GoogleAnalyticsPropertiesResponse:
+      properties:
+        connected:
+          type: boolean
+          title: Connected
+        properties:
+          items:
+            $ref: '#/components/schemas/GoogleAnalyticsProperty'
+          type: array
+          title: Properties
+        selected_property_resource_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selected Property Resource Name
+      type: object
+      required:
+      - connected
+      title: GoogleAnalyticsPropertiesResponse
+    AppHomeBeginInstallResponse:
+      properties:
+        authorize_url:
+          type: string
+          title: Authorize Url
+          description: Shopify OAuth authorize URL for this shop
+      type: object
+      required:
+      - authorize_url
+      title: AppHomeBeginInstallResponse
+      description: Shopify OAuth authorize URL for (re)running the install handshake.
+    GoogleAccountsResponseModel:
+      properties:
+        accounts:
+          items:
+            additionalProperties:
+              anyOf:
+              - type: string
+              - type: integer
+            type: object
+          type: array
+          title: Accounts
+        activation_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Activation State
+        active_account:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Active Account
+      type: object
+      required:
+      - accounts
+      title: GoogleAccountsResponseModel
+    GoogleAnalyticsPropertySelectResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        property:
+          $ref: '#/components/schemas/GoogleAnalyticsProperty'
+        initial_sync:
+          type: string
+          title: Initial Sync
+      type: object
+      required:
+      - success
+      - property
+      - initial_sync
+      title: GoogleAnalyticsPropertySelectResponse
+    GoogleAdGroupRequest:
+      properties:
+        account_id:
+          type: string
+          title: Account Id
+        campaign_id:
+          type: string
+          title: Campaign Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - account_id
+      - campaign_id
+      - name
+      title: GoogleAdGroupRequest
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
+    PostResponseModel:
+      properties:
+        id:
+          type: string
+          title: Id
+      type: object
+      required:
+      - id
+      title: PostResponseModel
+      description: Response model for created Instagram post.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GoogleAuthResponseModel:
+      properties:
+        auth_url:
+          type: string
+          title: Auth Url
+      type: object
+      required:
+      - auth_url
+      title: GoogleAuthResponseModel
+    SlackSettingsUpdateRequest:
+      properties:
+        default_channel_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Default Channel Id
+        allowlist_patterns:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowlist Patterns
+          description: Optional Slack email allowlist patterns (e.g. *@machflow.ai, user@domain.com, @domain.com)
+      type: object
+      title: SlackSettingsUpdateRequest
+    TikTokActivateAccountRequest:
+      properties:
+        advertiser_id:
+          type: string
+          title: Advertiser Id
+          description: TikTok advertiser ID to activate for future launches
+      type: object
+      required:
+      - advertiser_id
+      title: TikTokActivateAccountRequest
     DataSourceLocation:
       properties:
         id:
@@ -5947,176 +5608,41 @@ components:
 
 
         Used by: Square, Shopify (locations)'
-    DeletePostRequest:
+    AmazonAdGroupRequest:
       properties:
-        post_id:
+        profile_id:
           type: string
-          title: Post Id
-        auth_method:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Auth Method
-          description: 'Bound auth method: instagram or facebook'
-      type: object
-      required:
-      - post_id
-      title: DeletePostRequest
-      description: Request model for deleting an Instagram post.
-    LinkedInCampaignPostRequest:
-      properties:
+          title: Profile Id
         campaign_id:
           type: string
           title: Campaign Id
-          description: ID of the campaign post
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Idea number within the campaign
-        variation:
-          type: integer
-          title: Variation
-          description: Variation number (0 for original, 1+ for variations)
-          default: 0
+        name:
+          type: string
+          title: Name
+        default_bid:
+          type: number
+          title: Default Bid
+          default: 1.0
       type: object
       required:
+      - profile_id
       - campaign_id
-      - idea_number
-      title: LinkedInCampaignPostRequest
-    LinkedInLaunchVideoAdRequest:
+      - name
+      title: AmazonAdGroupRequest
+    LinkedInActivateAccountRequest:
       properties:
-        ad_id:
+        account_id:
           type: string
-          title: Ad Id
-        ad_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Account Id
+          title: Account Id
         organization_urn:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Organization Urn
-        targeting_discrimination_notice_acknowledged:
-          type: boolean
-          title: Targeting Discrimination Notice Acknowledged
-          default: false
-        political_intent_confirmed:
-          type: boolean
-          title: Political Intent Confirmed
-          default: false
-        linkedin_lead_form_config:
-          anyOf:
-          - $ref: '#/components/schemas/LinkedInLeadFormConfig'
-          - type: 'null'
       type: object
       required:
-      - ad_id
-      title: LinkedInLaunchVideoAdRequest
-    GoogleSyncAdCampaignRequest:
-      properties:
-        platform_type:
-          type: string
-          title: Platform Type
-          description: google_search, google_display, or google_video
-        ad_id:
-          type: string
-          title: Ad Id
-          description: ID of the specific ad to sync
-        google_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Google Account Id
-          description: Google Ads account ID (optional override)
-        force_sync_fields:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Force Sync Fields
-          description: Optional fields to reconcile remotely even when the local diff is empty.
-        pending_update:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Pending Update
-          description: Pending Pomo edit payload to apply only after remote sync succeeds.
-      type: object
-      required:
-      - platform_type
-      - ad_id
-      title: GoogleSyncAdCampaignRequest
-      description: Request model for syncing an online ad campaign to Google Ads.
-    HubSpotHealthResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - status
-      title: HubSpotHealthResponse
-      description: Response model for the HubSpot connection health status.
-    LinkedInLaunchImageAdRequest:
-      properties:
-        ad_id:
-          type: string
-          title: Ad Id
-        ad_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Account Id
-        organization_urn:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Urn
-        targeting_discrimination_notice_acknowledged:
-          type: boolean
-          title: Targeting Discrimination Notice Acknowledged
-          default: false
-        political_intent_confirmed:
-          type: boolean
-          title: Political Intent Confirmed
-          default: false
-        linkedin_lead_form_config:
-          anyOf:
-          - $ref: '#/components/schemas/LinkedInLeadFormConfig'
-          - type: 'null'
-      type: object
-      required:
-      - ad_id
-      title: LinkedInLaunchImageAdRequest
-    TikTokSyncPreviewRequest:
-      properties:
-        ad_id:
-          type: string
-          title: Ad Id
-          description: Normalized platform ad UUID
-        advertiser_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Advertiser Id
-          description: TikTok advertiser ID
-        pending_update:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Pending Update
-          description: Pending Pomo edit payload to preview without saving it.
-      type: object
-      required:
-      - ad_id
-      title: TikTokSyncPreviewRequest
-      description: Request model for previewing a TikTok normalized sync.
-    SquareStatusResponseModel:
+      - account_id
+      - organization_urn
+      title: LinkedInActivateAccountRequest
+    QuickBooksStatusResponseModel:
       properties:
         connected:
           type: boolean
@@ -6156,51 +5682,23 @@ components:
           - type: 'null'
           title: Last Health Check
           description: ISO timestamp of last health check
-        merchant_id:
+        realm_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Merchant Id
-          description: Square merchant ID
-        business_name:
+          title: Realm Id
+          description: QuickBooks company realm ID
+        company_name:
           anyOf:
           - type: string
           - type: 'null'
-          title: Business Name
-          description: Business name
-        primary_location_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Primary Location Id
-          description: Primary location ID
-        locations_count:
-          type: integer
-          title: Locations Count
-          description: Number of locations
-          default: 0
-        granted_scopes:
-          items:
-            type: string
-          type: array
-          title: Granted Scopes
-          description: Granted Square OAuth scopes
-        has_write_access:
-          type: boolean
-          title: Has Write Access
-          description: Whether the current integration includes Square write scopes
-          default: false
-        write_access_missing_scopes:
-          items:
-            type: string
-          type: array
-          title: Write Access Missing Scopes
-          description: Missing standard Square write scopes required for sandbox seeding
+          title: Company Name
+          description: Company name from QBO CompanyInfo
       type: object
       required:
       - connected
-      title: SquareStatusResponseModel
-      description: Response model for Square connection status with health check.
+      title: QuickBooksStatusResponseModel
+      description: Connection status with optional health check.
       example:
         account_id: shop_12345
         account_name: My Store
@@ -6306,127 +5804,239 @@ components:
         healthy: true
         last_health_check: '2024-01-15T10:30:00Z'
         token_expires_soon: false
-    AppHomeStatusResponse:
+    InitialSyncStatusResponse:
       properties:
-        bound:
-          type: boolean
-          title: Bound
-          description: Whether the shop is bound to an active Pomo profile
-        shop_domain:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Shop Domain
-          description: The shop's myshopify.com domain from the session token
-        shop_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Shop Name
-          description: Human-readable shop name, if known
-        company_profile_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Id
-          description: Bound company profile id (string UUID, sanitized)
-        company_profile_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Name
-          description: Bound company profile name
-        connection_health:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Connection Health
-          description: '''healthy'' | ''warning'' | ''critical'' | ''unknown'' | null'
-        initial_sync_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Initial Sync Status
-          description: '''pending'' | ''running'' | ''completed'' | ''failed'' | ''skipped'' | null'
-        last_sync_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Sync At
-          description: Last successful sync timestamp
-        onboarding_complete:
-          type: boolean
-          title: Onboarding Complete
-          description: Whether the bound profile has finished onboarding
-          default: false
-        pomo_url:
+        status:
           type: string
-          title: Pomo Url
-          description: Deep-link into the full Pomo app
+          title: Status
+          description: 'Current sync status: pending, running, completed, failed, skipped, not_started'
+        run_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run Id
+          description: Databricks job run ID
+        triggered_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Triggered At
+          description: When the sync was triggered (ISO format)
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+          description: Error message if sync failed
+        run_page_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run Page Url
+          description: URL to view the Databricks job run
       type: object
       required:
-      - bound
-      - pomo_url
-      title: AppHomeStatusResponse
-      description: 'Status of an embedded shop as seen from the App Home.
+      - status
+      title: InitialSyncStatusResponse
+      description: 'Standard response for initial data-source sync status.
 
 
-        ``bound`` is the primary discriminator: when false the shop has no active
-
-        Pomo binding and every profile-related field is null, but ``shop_domain`` is
-
-        still populated from the verified session token so the UI can address the
-
-        store.'
-    MetaCampaignResumeRequest:
+        Used by: GET /{platform}/initial-sync-status'
+    LinkedInPostCampaignRequest:
       properties:
-        platform_type:
+        campaign_id:
           type: string
-          title: Platform Type
-          description: 'Type of ad platform: meta_feed or meta_stories_reels'
+          title: Campaign Id
+          description: ID of the campaign to post
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Idea number within the campaign
+        author_urn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author Urn
+          description: Selected LinkedIn author URN
+        variation:
+          type: integer
+          title: Variation
+          description: Variation number (0 for original, 1+ for variations)
+          default: 0
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      title: LinkedInPostCampaignRequest
+    SquareStatusResponseModel:
+      properties:
+        connected:
+          type: boolean
+          title: Connected
+          description: Whether the platform is connected
+        healthy:
+          type: boolean
+          title: Healthy
+          description: Whether the token is healthy (passed API check)
+          default: false
+        health_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Health Message
+          description: Health check result message
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: Platform-specific account identifier
+        account_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Name
+          description: Display name for the account
+        token_expires_soon:
+          type: boolean
+          title: Token Expires Soon
+          description: Whether token expires within buffer period
+          default: false
+        last_health_check:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Health Check
+          description: ISO timestamp of last health check
+        merchant_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Merchant Id
+          description: Square merchant ID
+        business_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Name
+          description: Business name
+        primary_location_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Primary Location Id
+          description: Primary location ID
+        locations_count:
+          type: integer
+          title: Locations Count
+          description: Number of locations
+          default: 0
+        granted_scopes:
+          items:
+            type: string
+          type: array
+          title: Granted Scopes
+          description: Granted Square OAuth scopes
+        has_write_access:
+          type: boolean
+          title: Has Write Access
+          description: Whether the current integration includes Square write scopes
+          default: false
+        write_access_missing_scopes:
+          items:
+            type: string
+          type: array
+          title: Write Access Missing Scopes
+          description: Missing standard Square write scopes required for sandbox seeding
+      type: object
+      required:
+      - connected
+      title: SquareStatusResponseModel
+      description: Response model for Square connection status with health check.
+      example:
+        account_id: shop_12345
+        account_name: My Store
+        connected: true
+        health_message: Token is valid
+        healthy: true
+        last_health_check: '2024-01-15T10:30:00Z'
+        token_expires_soon: false
+    DataSourceAccountResponse:
+      properties:
+        connected:
+          type: boolean
+          title: Connected
+          description: Whether the platform is connected
+        account:
+          anyOf:
+          - $ref: '#/components/schemas/DataSourceAccountInfo'
+          - type: 'null'
+          description: Account details if connected
+      type: object
+      required:
+      - connected
+      title: DataSourceAccountResponse
+      description: 'Response for account information endpoint.
+
+
+        Used by: GET /{platform}/account'
+    HubSpotStatusResponse:
+      properties:
+        connected:
+          type: boolean
+          title: Connected
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+        account_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Name
+        portal_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Portal Id
+      type: object
+      required:
+      - connected
+      title: HubSpotStatusResponse
+      description: Response model for the HubSpot connection status.
+    LinkedInLaunchImageAdRequest:
+      properties:
         ad_id:
           type: string
           title: Ad Id
-          description: ID of the specific ad to act on (DB UUID or Meta ad id)
         ad_account_id:
-          type: string
-          title: Ad Account Id
-          description: Meta Ad Account ID
-      type: object
-      required:
-      - platform_type
-      - ad_id
-      - ad_account_id
-      title: MetaCampaignResumeRequest
-      description: Request model for resuming a Meta campaign (no action field).
-    GoogleAdCampaignRequest:
-      properties:
-        account_id:
-          type: string
-          title: Account Id
-        name:
-          type: string
-          title: Name
-        budget_amount_micros:
-          type: integer
-          title: Budget Amount Micros
-        start_date:
-          type: string
-          title: Start Date
-        end_date:
           anyOf:
           - type: string
           - type: 'null'
-          title: End Date
+          title: Ad Account Id
+        organization_urn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Urn
+        targeting_discrimination_notice_acknowledged:
+          type: boolean
+          title: Targeting Discrimination Notice Acknowledged
+          default: false
+        political_intent_confirmed:
+          type: boolean
+          title: Political Intent Confirmed
+          default: false
+        linkedin_lead_form_config:
+          anyOf:
+          - $ref: '#/components/schemas/LinkedInLeadFormConfig'
+          - type: 'null'
       type: object
       required:
-      - account_id
-      - name
-      - budget_amount_micros
-      - start_date
-      title: GoogleAdCampaignRequest
-    GoogleAccountsResponseModel:
+      - ad_id
+      title: LinkedInLaunchImageAdRequest
+    AmazonAccountsResponseModel:
       properties:
         accounts:
           items:
@@ -6437,22 +6047,102 @@ components:
             type: object
           type: array
           title: Accounts
-        activation_state:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Activation State
-        active_account:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Active Account
       type: object
       required:
       - accounts
-      title: GoogleAccountsResponseModel
-    HubSpotAuthResponse:
+      title: AmazonAccountsResponseModel
+    LinkedInCampaignActionRequest:
+      properties:
+        platform_type:
+          type: string
+          title: Platform Type
+        ad_id:
+          type: string
+          title: Ad Id
+        ad_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Account Id
+        action:
+          type: string
+          title: Action
+      type: object
+      required:
+      - platform_type
+      - ad_id
+      - action
+      title: LinkedInCampaignActionRequest
+    TikTokSocialPublishSettings:
+      properties:
+        privacy_level:
+          type: string
+          title: Privacy Level
+          description: TikTok privacy_level from creator_info.privacy_level_options
+        allow_comment:
+          type: boolean
+          title: Allow Comment
+          default: false
+        allow_duet:
+          type: boolean
+          title: Allow Duet
+          default: false
+        allow_stitch:
+          type: boolean
+          title: Allow Stitch
+          default: false
+        commercial_content_disclosure:
+          type: boolean
+          title: Commercial Content Disclosure
+          default: false
+        brand_content_toggle:
+          type: boolean
+          title: Brand Content Toggle
+          default: false
+        brand_organic_toggle:
+          type: boolean
+          title: Brand Organic Toggle
+          default: false
+        is_aigc:
+          type: boolean
+          title: Is Aigc
+          default: true
+        video_cover_timestamp_ms:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Video Cover Timestamp Ms
+        photo_cover_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Photo Cover Index
+          default: 0
+        auto_add_music:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Auto Add Music
+          default: true
+      type: object
+      required:
+      - privacy_level
+      title: TikTokSocialPublishSettings
+    DataSourceAuthResponse:
+      properties:
+        auth_url:
+          type: string
+          title: Auth Url
+          description: OAuth authorization URL to redirect user to
+      type: object
+      required:
+      - auth_url
+      title: DataSourceAuthResponse
+      description: 'Standard response for OAuth authorization URL endpoint.
+
+
+        Used by: GET /{platform}/auth'
+    KlaviyoAuthResponse:
       properties:
         auth_url:
           type: string
@@ -6460,123 +6150,174 @@ components:
       type: object
       required:
       - auth_url
-      title: HubSpotAuthResponse
-      description: Response model for the HubSpot auth URL.
-    GoogleAdGroupRequest:
+      title: KlaviyoAuthResponse
+      description: Response model for Klaviyo auth URL.
+    DataSourceOrdersResponse:
+      properties:
+        orders:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Orders
+          description: List of orders
+        has_more:
+          type: boolean
+          title: Has More
+          description: Whether more orders are available
+          default: false
+        cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cursor
+          description: Cursor for pagination
+      type: object
+      title: DataSourceOrdersResponse
+      description: 'Response for orders list endpoint.
+
+
+        Used by: GET /shopify/orders'
+    GoogleCreateAdFromCampaignRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: ID of the campaign to create ad from
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Idea number within the campaign
+        google_account_id:
+          type: string
+          title: Google Account Id
+          description: Google Ads account ID to create the ad in
+        variation:
+          type: integer
+          title: Variation
+          description: Variation number (0 for original, 1+ for variations)
+          default: 0
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - google_account_id
+      title: GoogleCreateAdFromCampaignRequest
+    AmazonProductAdRequest:
+      properties:
+        profile_id:
+          type: string
+          title: Profile Id
+        ad_group_id:
+          type: string
+          title: Ad Group Id
+        asin:
+          type: string
+          title: Asin
+      type: object
+      required:
+      - profile_id
+      - ad_group_id
+      - asin
+      title: AmazonProductAdRequest
+    routes__external_platform__google_action__GoogleDisplayAdRequest:
       properties:
         account_id:
           type: string
           title: Account Id
-        campaign_id:
+          description: Google Ads account ID
+        ad_group_id:
           type: string
-          title: Campaign Id
-        name:
+          title: Ad Group Id
+          description: Ad group ID to create the ad in
+        headline:
           type: string
-          title: Name
+          title: Headline
+          description: Headline text for the ad
+        long_headline:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Long Headline
+          description: Long headline for responsive display ads (max 90 characters)
+        description:
+          type: string
+          title: Description
+          description: Description text for the ad
+        business_name:
+          type: string
+          title: Business Name
+          description: Business name for the ad
+        image_url:
+          type: string
+          title: Image Url
+          description: URL of an image to use for the ad
+        final_url:
+          type: string
+          title: Final Url
+          description: Landing page URL for the ad
       type: object
       required:
       - account_id
-      - campaign_id
-      - name
-      title: GoogleAdGroupRequest
-    GoogleAnalyticsPropertiesResponse:
-      properties:
-        connected:
-          type: boolean
-          title: Connected
-        properties:
-          items:
-            $ref: '#/components/schemas/GoogleAnalyticsProperty'
-          type: array
-          title: Properties
-        selected_property_resource_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Selected Property Resource Name
-      type: object
-      required:
-      - connected
-      title: GoogleAnalyticsPropertiesResponse
-    DeletePostResponseModel:
-      properties:
-        success:
-          type: boolean
-          title: Success
-      type: object
-      required:
-      - success
-      title: DeletePostResponseModel
-      description: Response model for Instagram post deletion.
-    LinkedInLeadFormConfig:
-      properties:
-        name:
-          type: string
-          maxLength: 256
-          title: Name
-        headline:
-          type: string
-          maxLength: 60
-          title: Headline
-        description:
-          anyOf:
-          - type: string
-            maxLength: 160
-          - type: 'null'
-          title: Description
-          default: ''
-        privacy_policy_url:
-          type: string
-          maxLength: 2000
-          title: Privacy Policy Url
-        thank_you_message:
-          type: string
-          maxLength: 300
-          title: Thank You Message
-        fields:
-          items:
-            type: string
-            enum:
-            - FIRST_NAME
-            - LAST_NAME
-            - EMAIL
-            - WORK_EMAIL
-            - PHONE_NUMBER
-            - WORK_PHONE_NUMBER
-            - JOB_TITLE
-            - COMPANY_NAME
-            - COMPANY_SIZE
-            - INDUSTRY
-            - CITY
-            - STATE
-            - COUNTRY
-          type: array
-          title: Fields
-      type: object
-      required:
-      - name
+      - ad_group_id
       - headline
-      - privacy_policy_url
-      - thank_you_message
-      - fields
-      title: LinkedInLeadFormConfig
-    GoogleAnalyticsPropertySelectResponse:
+      - description
+      - business_name
+      - image_url
+      - final_url
+      title: GoogleDisplayAdRequest
+      description: Request model for creating a Google Display ad.
+    TikTokLaunchVideoAdRequest:
       properties:
-        success:
-          type: boolean
-          title: Success
-        property:
-          $ref: '#/components/schemas/GoogleAnalyticsProperty'
-        initial_sync:
+        ad_id:
           type: string
-          title: Initial Sync
+          title: Ad Id
+        advertiser_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Advertiser Id
+        ad_text_override:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Ad Text Override
+          description: 'Optional override for ad_text (TikTok requirement: max 100 chars)'
+        display_name_override:
+          anyOf:
+          - type: string
+            maxLength: 40
+          - type: 'null'
+          title: Display Name Override
+          description: 'Optional override for display_name (TikTok requirement: max 40 chars)'
+        ad_name_override:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Ad Name Override
+          description: 'Optional override for ad_name (TikTok requirement: max 512 chars)'
       type: object
       required:
-      - success
-      - property
-      - initial_sync
-      title: GoogleAnalyticsPropertySelectResponse
-    LinkedInSyncAdCampaignRequest:
+      - ad_id
+      title: TikTokLaunchVideoAdRequest
+      description: Request model for launching a TikTok video ad with optional text field overrides
+    DataSourceLocationsResponse:
+      properties:
+        accounts:
+          items:
+            $ref: '#/components/schemas/DataSourceLocation'
+          type: array
+          title: Accounts
+          description: List of locations/accounts
+      type: object
+      title: DataSourceLocationsResponse
+      description: 'Response for locations/accounts list endpoint.
+
+
+        Used by: GET /{platform}/accounts or GET /{platform}/locations'
+    LinkedInSyncPreviewRequest:
       properties:
         platform_type:
           type: string
@@ -6599,7 +6340,109 @@ components:
       required:
       - platform_type
       - ad_id
-      title: LinkedInSyncAdCampaignRequest
+      title: LinkedInSyncPreviewRequest
+    KlaviyoHealthResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - status
+      title: KlaviyoHealthResponse
+      description: Response model for connection health status.
+    GoogleActivateAccountRequest:
+      properties:
+        account_id:
+          type: string
+          title: Account Id
+          description: Google Ads account ID to activate for future launches
+      type: object
+      required:
+      - account_id
+      title: GoogleActivateAccountRequest
+    SlackTestMessageRequest:
+      properties:
+        channel_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Channel Id
+        text:
+          anyOf:
+          - type: string
+            maxLength: 2500
+          - type: 'null'
+          title: Text
+          description: Optional test message body
+      type: object
+      title: SlackTestMessageRequest
+    ShopifyStatusResponseModel:
+      properties:
+        connected:
+          type: boolean
+          title: Connected
+          description: Whether the platform is connected
+        healthy:
+          type: boolean
+          title: Healthy
+          description: Whether the token is healthy (passed API check)
+          default: false
+        health_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Health Message
+          description: Health check result message
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: Platform-specific account identifier
+        account_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Name
+          description: Display name for the account
+        token_expires_soon:
+          type: boolean
+          title: Token Expires Soon
+          description: Whether token expires within buffer period
+          default: false
+        last_health_check:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Health Check
+          description: ISO timestamp of last health check
+        shop_domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shop Domain
+          description: Shopify store domain
+        shop_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shop Name
+          description: Shop name
+      type: object
+      required:
+      - connected
+      title: ShopifyStatusResponseModel
+      description: Response model for connection status with health check.
+      example:
+        account_id: shop_12345
+        account_name: My Store
+        connected: true
+        health_message: Token is valid
+        healthy: true
+        last_health_check: '2024-01-15T10:30:00Z'
+        token_expires_soon: false
     GoogleAnalyticsStatusResponseModel:
       properties:
         connected:
@@ -6703,40 +6546,7 @@ components:
         healthy: true
         last_health_check: '2024-01-15T10:30:00Z'
         token_expires_soon: false
-    KlaviyoList:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        created:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created
-        updated:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated
-        profile_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Profile Count
-        list_type:
-          type: string
-          title: List Type
-          default: list
-      type: object
-      required:
-      - id
-      - name
-      title: KlaviyoList
-      description: Klaviyo list/segment model.
-    KlaviyoHealthResponse:
+    HubSpotHealthResponse:
       properties:
         status:
           type: string
@@ -6744,131 +6554,9 @@ components:
       type: object
       required:
       - status
-      title: KlaviyoHealthResponse
-      description: Response model for connection health status.
-    TikTokSocialPublishSettingsRequest:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-        idea_number:
-          type: integer
-          title: Idea Number
-        variation:
-          type: integer
-          title: Variation
-          default: 0
-        settings:
-          $ref: '#/components/schemas/TikTokSocialPublishSettings'
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      - settings
-      title: TikTokSocialPublishSettingsRequest
-    TikTokAdPauseRequest:
-      properties:
-        ad_id:
-          type: string
-          title: Ad Id
-          description: The database UUID of the ad to pause
-        advertiser_id:
-          type: string
-          title: Advertiser Id
-          description: The TikTok advertiser ID
-      type: object
-      required:
-      - ad_id
-      - advertiser_id
-      title: TikTokAdPauseRequest
-      description: Request model for pausing a TikTok ad
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
-    HubSpotStatusResponse:
-      properties:
-        connected:
-          type: boolean
-          title: Connected
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-        account_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Name
-        portal_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Portal Id
-      type: object
-      required:
-      - connected
-      title: HubSpotStatusResponse
-      description: Response model for the HubSpot connection status.
-    AmazonKeywordsRequest:
-      properties:
-        profile_id:
-          type: string
-          title: Profile Id
-        ad_group_id:
-          type: string
-          title: Ad Group Id
-        keywords:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Keywords
-      type: object
-      required:
-      - profile_id
-      - ad_group_id
-      - keywords
-      title: AmazonKeywordsRequest
-    GoogleAnalyticsPropertySelectRequest:
-      properties:
-        property_resource_name:
-          type: string
-          title: Property Resource Name
-          description: GA4 property resource name, e.g. properties/123456
-      type: object
-      required:
-      - property_resource_name
-      title: GoogleAnalyticsPropertySelectRequest
-    GoogleAuthResponseModel:
+      title: HubSpotHealthResponse
+      description: Response model for the HubSpot connection health status.
+    AmazonAuthResponseModel:
       properties:
         auth_url:
           type: string
@@ -6876,204 +6564,50 @@ components:
       type: object
       required:
       - auth_url
-      title: GoogleAuthResponseModel
-    GoogleActivateAccountRequest:
+      title: AmazonAuthResponseModel
+    SlackCampaignCardRequest:
       properties:
-        account_id:
-          type: string
-          title: Account Id
-          description: Google Ads account ID to activate for future launches
+        channel_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Channel Id
+        thread_ts:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Thread Ts
+        dedupe_key:
+          anyOf:
+          - type: string
+            maxLength: 191
+          - type: 'null'
+          title: Dedupe Key
+        campaign_info:
+          additionalProperties: true
+          type: object
+          title: Campaign Info
+          description: Generic campaign payload used to build Slack Block Kit cards.
       type: object
-      required:
-      - account_id
-      title: GoogleActivateAccountRequest
-    MetaLaunchAdCampaignRequest:
+      title: SlackCampaignCardRequest
+    GoogleSyncAdCampaignRequest:
       properties:
         platform_type:
           type: string
           title: Platform Type
-          description: 'Type of ad platform: meta_feed or meta_stories_reels'
-        ad_id:
-          title: Ad Id
-          description: ID of the specific ad to launch (UUID string)
-        ad_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Account Id
-          description: Legacy Meta Ad Account ID; launches use the active account
-        page_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Page Id
-          description: Facebook Page ID
-        instagram_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instagram Account Id
-          description: Instagram Account ID
-        placements:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Placements
-          description: 'Placements override: instagram_stories, instagram_reels'
-        meta_lead_form_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Meta Lead Form Config
-          description: Meta Instant Form configuration
-      type: object
-      required:
-      - platform_type
-      - ad_id
-      title: MetaLaunchAdCampaignRequest
-      description: Request model for launching a Meta ad campaign
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    DataSourceAccountResponse:
-      properties:
-        connected:
-          type: boolean
-          title: Connected
-          description: Whether the platform is connected
-        account:
-          anyOf:
-          - $ref: '#/components/schemas/DataSourceAccountInfo'
-          - type: 'null'
-          description: Account details if connected
-      type: object
-      required:
-      - connected
-      title: DataSourceAccountResponse
-      description: 'Response for account information endpoint.
-
-
-        Used by: GET /{platform}/account'
-    PostMetricsRequest:
-      properties:
-        post_id:
-          type: string
-          title: Post Id
-        metrics:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Metrics
-      type: object
-      required:
-      - post_id
-      title: PostMetricsRequest
-      description: Request model for getting Instagram post metrics.
-    DataSourceAuthResponse:
-      properties:
-        auth_url:
-          type: string
-          title: Auth Url
-          description: OAuth authorization URL to redirect user to
-      type: object
-      required:
-      - auth_url
-      title: DataSourceAuthResponse
-      description: 'Standard response for OAuth authorization URL endpoint.
-
-
-        Used by: GET /{platform}/auth'
-    LinkedInCampaignResumeRequest:
-      properties:
-        platform_type:
-          type: string
-          title: Platform Type
+          description: google_search, google_display, or google_video
         ad_id:
           type: string
           title: Ad Id
-        ad_account_id:
+          description: ID of the specific ad to sync
+        google_account_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Ad Account Id
-      type: object
-      required:
-      - platform_type
-      - ad_id
-      title: LinkedInCampaignResumeRequest
-    SlackChannelResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        is_private:
-          type: boolean
-          title: Is Private
-          default: false
-        is_member:
-          type: boolean
-          title: Is Member
-          default: false
-      type: object
-      required:
-      - id
-      - name
-      title: SlackChannelResponse
-    MetaAuthResponseModel:
-      properties:
-        auth_url:
-          type: string
-          title: Auth Url
-        auth_type:
-          type: string
-          title: Auth Type
-      type: object
-      required:
-      - auth_url
-      - auth_type
-      title: MetaAuthResponseModel
-    MetaSyncAdCampaignRequest:
-      properties:
-        platform_type:
-          type: string
-          title: Platform Type
-          description: meta_feed or meta_stories_reels
-        ad_id:
-          type: string
-          title: Ad Id
-          description: ID of the specific ad to sync (UUID string)
-        ad_account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Account Id
-          description: Meta Ad Account ID (optional override)
+          title: Google Account Id
+          description: Google Ads account ID (optional override)
         force_sync_fields:
           anyOf:
           - items:
@@ -7081,7 +6615,7 @@ components:
             type: array
           - type: 'null'
           title: Force Sync Fields
-          description: Optional field allowlist for pending edits that should be synced.
+          description: Optional fields to reconcile remotely even when the local diff is empty.
         pending_update:
           anyOf:
           - additionalProperties: true
@@ -7093,204 +6627,79 @@ components:
       required:
       - platform_type
       - ad_id
-      title: MetaSyncAdCampaignRequest
-      description: Request model for syncing an online ad campaign to Meta.
-    TikTokAdResumeRequest:
+      title: GoogleSyncAdCampaignRequest
+      description: Request model for syncing an online ad campaign to Google Ads.
+    StripeStatusResponseModel:
       properties:
-        ad_id:
-          type: string
-          title: Ad Id
-          description: The database UUID of the ad to resume
-        advertiser_id:
-          type: string
-          title: Advertiser Id
-          description: The TikTok advertiser ID
-      type: object
-      required:
-      - ad_id
-      - advertiser_id
-      title: TikTokAdResumeRequest
-      description: Request model for resuming a TikTok ad
-    TikTokAuthResponseModel:
-      properties:
-        auth_url:
-          type: string
-          title: Auth Url
-      type: object
-      required:
-      - auth_url
-      title: TikTokAuthResponseModel
-    SlackTestMessageRequest:
-      properties:
-        channel_id:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Channel Id
-        text:
-          anyOf:
-          - type: string
-            maxLength: 2500
-          - type: 'null'
-          title: Text
-          description: Optional test message body
-      type: object
-      title: SlackTestMessageRequest
-    GoogleCreateAdFromCampaignRequest:
-      properties:
-        campaign_id:
-          type: string
-          title: Campaign Id
-          description: ID of the campaign to create ad from
-        idea_number:
-          type: integer
-          title: Idea Number
-          description: Idea number within the campaign
-        google_account_id:
-          type: string
-          title: Google Account Id
-          description: Google Ads account ID to create the ad in
-        variation:
-          type: integer
-          title: Variation
-          description: Variation number (0 for original, 1+ for variations)
-          default: 0
-      type: object
-      required:
-      - campaign_id
-      - idea_number
-      - google_account_id
-      title: GoogleCreateAdFromCampaignRequest
-    AmazonCampaignRequest:
-      properties:
-        profile_id:
-          type: string
-          title: Profile Id
-        name:
-          type: string
-          title: Name
-        campaign_type:
-          type: string
-          title: Campaign Type
-          default: sponsoredProducts
-        targeting_type:
-          type: string
-          title: Targeting Type
-          default: manual
-        daily_budget:
-          type: number
-          title: Daily Budget
-          default: 10.0
-        start_date:
+        connected:
+          type: boolean
+          title: Connected
+          description: Whether the platform is connected
+        healthy:
+          type: boolean
+          title: Healthy
+          description: Whether the token is healthy (passed API check)
+          default: false
+        health_message:
           anyOf:
           - type: string
           - type: 'null'
-          title: Start Date
-        end_date:
+          title: Health Message
+          description: Health check result message
+        account_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: End Date
-      type: object
-      required:
-      - profile_id
-      - name
-      title: AmazonCampaignRequest
-    DataSourceLocationsResponse:
-      properties:
-        accounts:
-          items:
-            $ref: '#/components/schemas/DataSourceLocation'
-          type: array
-          title: Accounts
-          description: List of locations/accounts
-      type: object
-      title: DataSourceLocationsResponse
-      description: 'Response for locations/accounts list endpoint.
-
-
-        Used by: GET /{platform}/accounts or GET /{platform}/locations'
-    GoogleLaunchAdCampaignRequest:
-      properties:
-        platform_type:
-          type: string
-          title: Platform Type
-          description: 'Type of ad platform: google_display or google_search'
-        ad_id:
-          type: string
-          title: Ad Id
-          description: Normalized platform ad ID to launch
-        google_account_id:
+          title: Account Id
+          description: Platform-specific account identifier
+        account_name:
           anyOf:
           - type: string
           - type: 'null'
-          title: Google Account Id
-          description: Legacy Google Ads account ID; launches use the active account
-        bid_only:
+          title: Account Name
+          description: Display name for the account
+        token_expires_soon:
+          type: boolean
+          title: Token Expires Soon
+          description: Whether token expires within buffer period
+          default: false
+        last_health_check:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Health Check
+          description: ISO timestamp of last health check
+        business_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Name
+          description: Business name
+        livemode:
           anyOf:
           - type: boolean
           - type: 'null'
-          title: Bid Only
-          description: Whether to use 'Observation' (True) or 'Targeting' (False) for audiences
-          default: true
-        youtube_logo_image_url:
+          title: Livemode
+          description: Whether Stripe is in live mode
+        charges_enabled:
           anyOf:
-          - type: string
+          - type: boolean
           - type: 'null'
-          title: Youtube Logo Image Url
-          description: Optional square logo GCS URL for YouTube/Google Video
-        google_lead_form_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Google Lead Form Config
-          description: Google Lead Form configuration
+          title: Charges Enabled
+          description: Whether charges are enabled
       type: object
       required:
-      - platform_type
-      - ad_id
-      title: GoogleLaunchAdCampaignRequest
-      description: Request model for launching an online ad campaign to Google Ads.
-    InitialSyncStatusResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-          description: 'Current sync status: pending, running, completed, failed, skipped, not_started'
-        run_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Run Id
-          description: Databricks job run ID
-        triggered_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Triggered At
-          description: When the sync was triggered (ISO format)
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-          description: Error message if sync failed
-        run_page_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Run Page Url
-          description: URL to view the Databricks job run
-      type: object
-      required:
-      - status
-      title: InitialSyncStatusResponse
-      description: 'Standard response for initial data-source sync status.
-
-
-        Used by: GET /{platform}/initial-sync-status'
+      - connected
+      title: StripeStatusResponseModel
+      description: Response model for connection status with health check.
+      example:
+        account_id: shop_12345
+        account_name: My Store
+        connected: true
+        health_message: Token is valid
+        healthy: true
+        last_health_check: '2024-01-15T10:30:00Z'
+        token_expires_soon: false
     DataSourceAccountInfo:
       properties:
         id:
@@ -7335,139 +6744,730 @@ components:
 
 
         Used by: GET /{platform}/account or embedded in other responses'
-    AppHomeBeginInstallResponse:
+    AppHomeSyncResponse:
       properties:
-        authorize_url:
+        sync_status:
           type: string
-          title: Authorize Url
-          description: Shopify OAuth authorize URL for this shop
+          title: Sync Status
+          description: Result of trigger_initial_sync()
+        message:
+          type: string
+          title: Message
+          description: Human-readable status message
       type: object
       required:
-      - authorize_url
-      title: AppHomeBeginInstallResponse
-      description: Shopify OAuth authorize URL for (re)running the install handshake.
-    ShopifyConnectStartRequestModel:
+      - sync_status
+      - message
+      title: AppHomeSyncResponse
+      description: Result of a catalog re-sync triggered from the App Home.
+    GoogleCampaignActionRequest:
       properties:
-        mode:
+        platform_type:
           type: string
-          title: Mode
-          description: '''connect'' binds to the current profile; ''create'' makes a new profile from the store'
-          default: create
+          title: Platform Type
+          description: 'Type of ad platform: google_display or google_search'
+        ad_id:
+          type: string
+          title: Ad Id
+          description: Normalized platform ad ID to act on
+        google_account_id:
+          type: string
+          title: Google Account Id
+          description: Google Ads account ID
+        action:
+          type: string
+          title: Action
+          description: 'Action to perform: pause or delete'
       type: object
-      title: ShopifyConnectStartRequestModel
-      description: Pomo-initiated on-ramp request.
-    QuickBooksStatusResponseModel:
+      required:
+      - platform_type
+      - ad_id
+      - google_account_id
+      - action
+      title: GoogleCampaignActionRequest
+      description: Request model for pausing/deleting a Google campaign.
+    TikTokAccountsResponseModel:
+      properties:
+        accounts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Accounts
+        activation_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Activation State
+        active_account:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Active Account
+      type: object
+      required:
+      - accounts
+      title: TikTokAccountsResponseModel
+    MetaSyncAdCampaignRequest:
+      properties:
+        platform_type:
+          type: string
+          title: Platform Type
+          description: meta_feed or meta_stories_reels
+        ad_id:
+          type: string
+          title: Ad Id
+          description: ID of the specific ad to sync (UUID string)
+        ad_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Account Id
+          description: Meta Ad Account ID (optional override)
+        force_sync_fields:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Force Sync Fields
+          description: Optional field allowlist for pending edits that should be synced.
+        pending_update:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Pending Update
+          description: Pending Pomo edit payload to apply only after remote sync succeeds.
+      type: object
+      required:
+      - platform_type
+      - ad_id
+      title: MetaSyncAdCampaignRequest
+      description: Request model for syncing an online ad campaign to Meta.
+    PostMetricsRequest:
+      properties:
+        post_id:
+          type: string
+          title: Post Id
+        metrics:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Metrics
+      type: object
+      required:
+      - post_id
+      title: PostMetricsRequest
+      description: Request model for getting Instagram post metrics.
+    SlackLinkRequest:
+      properties:
+        slack_user_id:
+          type: string
+          maxLength: 64
+          minLength: 2
+          title: Slack User Id
+        slack_team_id:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Slack Team Id
+        slack_user_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Slack User Name
+      type: object
+      required:
+      - slack_user_id
+      title: SlackLinkRequest
+    LinkedInCampaignResumeRequest:
+      properties:
+        platform_type:
+          type: string
+          title: Platform Type
+        ad_id:
+          type: string
+          title: Ad Id
+        ad_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Account Id
+      type: object
+      required:
+      - platform_type
+      - ad_id
+      title: LinkedInCampaignResumeRequest
+    ShopifyInstallResolveRequestModel:
+      properties:
+        claim_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Claim Handle
+          description: Optional legacy URL claim; when present it must match the httpOnly claim cookie
+        intent_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intent Token
+          description: Pomo on-ramp intent token
+        chosen_organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chosen Organization Id
+          description: Org selected for the multi-org case
+        chosen_company_profile_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chosen Company Profile Id
+          description: Existing matched profile selected to connect
+        chosen_create_new:
+          type: boolean
+          title: Chosen Create New
+          description: User opted to start a new brand profile instead of a match
+          default: false
+      type: object
+      title: ShopifyInstallResolveRequestModel
+    LinkedInLaunchVideoAdRequest:
+      properties:
+        ad_id:
+          type: string
+          title: Ad Id
+        ad_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Account Id
+        organization_urn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Urn
+        targeting_discrimination_notice_acknowledged:
+          type: boolean
+          title: Targeting Discrimination Notice Acknowledged
+          default: false
+        political_intent_confirmed:
+          type: boolean
+          title: Political Intent Confirmed
+          default: false
+        linkedin_lead_form_config:
+          anyOf:
+          - $ref: '#/components/schemas/LinkedInLeadFormConfig'
+          - type: 'null'
+      type: object
+      required:
+      - ad_id
+      title: LinkedInLaunchVideoAdRequest
+    CreatePostRequest:
+      properties:
+        instagram_account_id:
+          type: string
+          title: Instagram Account Id
+        image_url:
+          type: string
+          title: Image Url
+        caption:
+          type: string
+          title: Caption
+        hashtags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Hashtags
+      type: object
+      required:
+      - instagram_account_id
+      - image_url
+      - caption
+      title: CreatePostRequest
+      description: Request model for creating an Instagram post.
+    DataSourceTransactionsResponse:
+      properties:
+        transactions:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Transactions
+          description: List of transactions
+        has_more:
+          type: boolean
+          title: Has More
+          description: Whether more transactions are available
+          default: false
+        cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cursor
+          description: Cursor for pagination
+      type: object
+      title: DataSourceTransactionsResponse
+      description: 'Response for transactions list endpoint.
+
+
+        Used by: GET /stripe/transactions, GET /square/payments'
+    ShopifyShopResponseModel:
       properties:
         connected:
           type: boolean
           title: Connected
           description: Whether the platform is connected
-        healthy:
-          type: boolean
-          title: Healthy
-          description: Whether the token is healthy (passed API check)
-          default: false
-        health_message:
+        account:
+          anyOf:
+          - $ref: '#/components/schemas/DataSourceAccountInfo'
+          - type: 'null'
+          description: Account details if connected
+        shop:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Shop
+          description: Shop details
+      type: object
+      required:
+      - connected
+      title: ShopifyShopResponseModel
+      description: Response model for shop information.
+    TikTokAdResumeRequest:
+      properties:
+        ad_id:
+          type: string
+          title: Ad Id
+          description: The database UUID of the ad to resume
+        advertiser_id:
+          type: string
+          title: Advertiser Id
+          description: The TikTok advertiser ID
+      type: object
+      required:
+      - ad_id
+      - advertiser_id
+      title: TikTokAdResumeRequest
+      description: Request model for resuming a TikTok ad
+    MetaSelectAdAccountRequest:
+      properties:
+        ad_account_id:
+          type: string
+          title: Ad Account Id
+          description: Meta Ad Account ID
+        page_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Health Message
-          description: Health check result message
+          title: Page Id
+          description: Facebook Page ID to use as the ad identity
+        instagram_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instagram Account Id
+          description: Optional Instagram business account ID linked to the Page
+      type: object
+      required:
+      - ad_account_id
+      title: MetaSelectAdAccountRequest
+    TikTokAdStatusResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+        status:
+          type: string
+          title: Status
+          description: The new status of the ad (active/paused)
+      type: object
+      required:
+      - success
+      - message
+      - status
+      title: TikTokAdStatusResponse
+      description: Response model for ad status update operations
+    AmazonKeywordsRequest:
+      properties:
+        profile_id:
+          type: string
+          title: Profile Id
+        ad_group_id:
+          type: string
+          title: Ad Group Id
+        keywords:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Keywords
+      type: object
+      required:
+      - profile_id
+      - ad_group_id
+      - keywords
+      title: AmazonKeywordsRequest
+    TikTokSyncPreviewRequest:
+      properties:
+        ad_id:
+          type: string
+          title: Ad Id
+          description: Normalized platform ad UUID
+        advertiser_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Advertiser Id
+          description: TikTok advertiser ID
+        pending_update:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Pending Update
+          description: Pending Pomo edit payload to preview without saving it.
+      type: object
+      required:
+      - ad_id
+      title: TikTokSyncPreviewRequest
+      description: Request model for previewing a TikTok normalized sync.
+    SlackLinkResponse:
+      properties:
+        linked:
+          type: boolean
+          title: Linked
+        slack_team_id:
+          type: string
+          title: Slack Team Id
+        slack_user_id:
+          type: string
+          title: Slack User Id
+      type: object
+      required:
+      - linked
+      - slack_team_id
+      - slack_user_id
+      title: SlackLinkResponse
+    FacebookPostCampaignRequest:
+      properties:
+        campaign_id:
+          type: string
+          title: Campaign Id
+          description: ID of campaign to publish
+        idea_number:
+          type: integer
+          title: Idea Number
+          description: Idea number for campaign row
+        page_id:
+          type: string
+          title: Page Id
+          description: Facebook page ID to publish to
+        page_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Page Name
+          description: Facebook page name for posting identity display
+        variation:
+          type: integer
+          title: Variation
+          description: Variation number (default 0)
+          default: 0
+      type: object
+      required:
+      - campaign_id
+      - idea_number
+      - page_id
+      title: FacebookPostCampaignRequest
+    SlackChannelResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        is_private:
+          type: boolean
+          title: Is Private
+          default: false
+        is_member:
+          type: boolean
+          title: Is Member
+          default: false
+      type: object
+      required:
+      - id
+      - name
+      title: SlackChannelResponse
+    GoogleAnalyticsProperty:
+      properties:
         account_id:
           anyOf:
           - type: string
           - type: 'null'
           title: Account Id
-          description: Platform-specific account identifier
+          description: Google Analytics account ID
         account_name:
           anyOf:
           - type: string
           - type: 'null'
           title: Account Name
-          description: Display name for the account
-        token_expires_soon:
-          type: boolean
-          title: Token Expires Soon
-          description: Whether token expires within buffer period
-          default: false
-        last_health_check:
+          description: Google Analytics account display name
+        property_id:
+          type: string
+          title: Property Id
+          description: GA4 numeric property ID
+        property_resource_name:
+          type: string
+          title: Property Resource Name
+          description: 'GA4 property resource name: properties/{id}'
+        property_name:
+          type: string
+          title: Property Name
+          description: GA4 property display name
+        property_type:
           anyOf:
           - type: string
           - type: 'null'
-          title: Last Health Check
-          description: ISO timestamp of last health check
-        realm_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Realm Id
-          description: QuickBooks company realm ID
-        company_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Name
-          description: Company name from QBO CompanyInfo
+          title: Property Type
+          description: GA4 property type
       type: object
       required:
-      - connected
-      title: QuickBooksStatusResponseModel
-      description: Connection status with optional health check.
-      example:
-        account_id: shop_12345
-        account_name: My Store
-        connected: true
-        health_message: Token is valid
-        healthy: true
-        last_health_check: '2024-01-15T10:30:00Z'
-        token_expires_soon: false
-    routes__external_platform__google_action__GoogleDisplayAdRequest:
+      - property_id
+      - property_resource_name
+      - property_name
+      title: GoogleAnalyticsProperty
+    DeletePostResponseModel:
       properties:
-        account_id:
-          type: string
-          title: Account Id
-          description: Google Ads account ID
-        ad_group_id:
-          type: string
-          title: Ad Group Id
-          description: Ad group ID to create the ad in
-        headline:
-          type: string
-          title: Headline
-          description: Headline text for the ad
-        long_headline:
+        success:
+          type: boolean
+          title: Success
+      type: object
+      required:
+      - success
+      title: DeletePostResponseModel
+      description: Response model for Instagram post deletion.
+    MetaAccountsResponseModel:
+      properties:
+        accounts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Accounts
+        pages:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Pages
+        selected_ad_account_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Long Headline
-          description: Long headline for responsive display ads (max 90 characters)
-        description:
-          type: string
-          title: Description
-          description: Description text for the ad
-        business_name:
-          type: string
-          title: Business Name
-          description: Business name for the ad
-        image_url:
-          type: string
-          title: Image Url
-          description: URL of an image to use for the ad
-        final_url:
-          type: string
-          title: Final Url
-          description: Landing page URL for the ad
+          title: Selected Ad Account Id
+        activation_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Activation State
+        active_account:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Active Account
       type: object
       required:
-      - account_id
-      - ad_group_id
-      - headline
-      - description
-      - business_name
-      - image_url
-      - final_url
-      title: GoogleDisplayAdRequest
-      description: Request model for creating a Google Display ad.
+      - accounts
+      title: MetaAccountsResponseModel
+    LinkedInSyncAdCampaignRequest:
+      properties:
+        platform_type:
+          type: string
+          title: Platform Type
+        ad_id:
+          type: string
+          title: Ad Id
+        ad_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Account Id
+        pending_update:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Pending Update
+      type: object
+      required:
+      - platform_type
+      - ad_id
+      title: LinkedInSyncAdCampaignRequest
+    MetaSyncPreviewRequest:
+      properties:
+        platform_type:
+          type: string
+          title: Platform Type
+          description: meta_feed or meta_stories_reels
+        ad_id:
+          type: string
+          title: Ad Id
+          description: ID of the specific ad to sync (UUID string)
+        ad_account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Account Id
+          description: Meta Ad Account ID (optional override)
+        force_sync_fields:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Force Sync Fields
+          description: Optional field allowlist for pending edits that should be previewed.
+        pending_update:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Pending Update
+          description: Pending Pomo edit payload to preview without saving it.
+      type: object
+      required:
+      - platform_type
+      - ad_id
+      title: MetaSyncPreviewRequest
+      description: Request model for previewing a Meta sync and billing impact.
+    SlackChannelsListResponse:
+      properties:
+        channels:
+          items:
+            $ref: '#/components/schemas/SlackChannelResponse'
+          type: array
+          title: Channels
+      type: object
+      title: SlackChannelsListResponse
+    KlaviyoAccountsResponse:
+      properties:
+        accounts:
+          items:
+            $ref: '#/components/schemas/KlaviyoList'
+          type: array
+          title: Accounts
+      type: object
+      required:
+      - accounts
+      title: KlaviyoAccountsResponse
+      description: Response model for Klaviyo lists/segments.
+    MetaCampaignActionRequest:
+      properties:
+        platform_type:
+          type: string
+          title: Platform Type
+          description: 'Type of ad platform: meta_feed or meta_stories_reels'
+        ad_id:
+          type: string
+          title: Ad Id
+          description: ID of the specific ad to act on
+        ad_account_id:
+          type: string
+          title: Ad Account Id
+          description: Meta Ad Account ID
+        action:
+          type: string
+          title: Action
+          description: 'Action to perform: pause or delete'
+      type: object
+      required:
+      - platform_type
+      - ad_id
+      - ad_account_id
+      - action
+      title: MetaCampaignActionRequest
+      description: Request model for pausing/deleting a Meta campaign.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FacebookSocialActivateRequest:
+      properties:
+        page_id:
+          type: string
+          title: Page Id
+          description: Facebook Page ID to use for social publishing
+      type: object
+      required:
+      - page_id
+      title: FacebookSocialActivateRequest
+    AmazonCampaignRequest:
+      properties:
+        profile_id:
+          type: string
+          title: Profile Id
+        name:
+          type: string
+          title: Name
+        campaign_type:
+          type: string
+          title: Campaign Type
+          default: sponsoredProducts
+        targeting_type:
+          type: string
+          title: Targeting Type
+          default: manual
+        daily_budget:
+          type: number
+          title: Daily Budget
+          default: 10.0
+        start_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
+      type: object
+      required:
+      - profile_id
+      - name
+      title: AmazonCampaignRequest
+    InstagramAuthResponseModel:
+      properties:
+        auth_url:
+          type: string
+          title: Auth Url
+      type: object
+      required:
+      - auth_url
+      title: InstagramAuthResponseModel
+      description: Response model for Instagram authorization URL.
   securitySchemes:
     HTTPBearer:
       type: http

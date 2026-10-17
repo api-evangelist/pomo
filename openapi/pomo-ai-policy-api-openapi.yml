@@ -521,29 +521,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AiPolicyDraftUpdateRequest:
-      properties:
-        text:
-          type: string
-          title: Text
-          description: Updated draft policy text
-      type: object
-      required:
-      - text
-      title: AiPolicyDraftUpdateRequest
-    AiPolicySettingsUpdateRequest:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-        enabled_surfaces:
-          anyOf:
-          - $ref: '#/components/schemas/AiPolicyEnabledSurfaces'
-          - type: 'null'
-      type: object
-      required:
-      - enabled
-      title: AiPolicySettingsUpdateRequest
     AiPolicyVersion:
       properties:
         id:
@@ -580,53 +557,6 @@ components:
       - id
       - text
       title: AiPolicyVersion
-    AiPolicyViolationEvent:
-      properties:
-        id:
-          type: string
-          title: Id
-        created_at:
-          type: string
-          title: Created At
-        user_id:
-          type: string
-          title: User Id
-        user_email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Email
-        endpoint:
-          type: string
-          title: Endpoint
-        event_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Event Name
-        event_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Event Metadata
-      type: object
-      required:
-      - id
-      - created_at
-      - user_id
-      - endpoint
-      title: AiPolicyViolationEvent
-    AiPolicyGenerateVersionNameResponse:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Generated policy version name
-      type: object
-      required:
-      - name
-      title: AiPolicyGenerateVersionNameResponse
     AiPolicyDraft:
       properties:
         text:
@@ -654,6 +584,44 @@ components:
           description: User ID who last edited the draft
       type: object
       title: AiPolicyDraft
+    AiPolicyGenerateVersionNameRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: Policy text used to generate a short version name
+        max_length:
+          type: integer
+          maximum: 80.0
+          minimum: 16.0
+          title: Max Length
+          description: Maximum output length for the generated version name
+          default: 48
+      type: object
+      required:
+      - text
+      title: AiPolicyGenerateVersionNameRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     AiPolicyEnabledSurfaces:
       properties:
         chat:
@@ -674,15 +642,6 @@ components:
           default: true
       type: object
       title: AiPolicyEnabledSurfaces
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     AiPolicyStateResponse:
       properties:
         policy_purpose:
@@ -729,6 +688,44 @@ components:
       - enabled
       - mode
       title: AiPolicyStateResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AiPolicyGenerateVersionNameResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Generated policy version name
+      type: object
+      required:
+      - name
+      title: AiPolicyGenerateVersionNameResponse
+    AiPolicySaveVersionRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        activate:
+          type: boolean
+          title: Activate
+          default: false
+        text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text
+          description: Optional editor text to save as a version without requiring a separate draft save first
+      type: object
+      title: AiPolicySaveVersionRequest
     AiPolicyContextWarningResponse:
       properties:
         found:
@@ -757,6 +754,56 @@ components:
 
 
         This is intended for inline warnings in campaign details pages (ads/social) and similar surfaces.'
+    AiPolicySettingsUpdateRequest:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        enabled_surfaces:
+          anyOf:
+          - $ref: '#/components/schemas/AiPolicyEnabledSurfaces'
+          - type: 'null'
+      type: object
+      required:
+      - enabled
+      title: AiPolicySettingsUpdateRequest
+    AiPolicyViolationEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+        created_at:
+          type: string
+          title: Created At
+        user_id:
+          type: string
+          title: User Id
+        user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Email
+        endpoint:
+          type: string
+          title: Endpoint
+        event_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Name
+        event_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event Metadata
+      type: object
+      required:
+      - id
+      - created_at
+      - user_id
+      - endpoint
+      title: AiPolicyViolationEvent
     AiPolicyActivateVersionRequest:
       properties:
         version_id:
@@ -779,63 +826,16 @@ components:
         - `version_id`: activate a single version
 
         - `version_ids`: activate a policy set (multiple versions), in the provided order'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AiPolicyGenerateVersionNameRequest:
+    AiPolicyDraftUpdateRequest:
       properties:
         text:
           type: string
           title: Text
-          description: Policy text used to generate a short version name
-        max_length:
-          type: integer
-          maximum: 80.0
-          minimum: 16.0
-          title: Max Length
-          description: Maximum output length for the generated version name
-          default: 48
+          description: Updated draft policy text
       type: object
       required:
       - text
-      title: AiPolicyGenerateVersionNameRequest
-    AiPolicySaveVersionRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        activate:
-          type: boolean
-          title: Activate
-          default: false
-        text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Text
-          description: Optional editor text to save as a version without requiring a separate draft save first
-      type: object
-      title: AiPolicySaveVersionRequest
+      title: AiPolicyDraftUpdateRequest
   securitySchemes:
     HTTPBearer:
       type: http

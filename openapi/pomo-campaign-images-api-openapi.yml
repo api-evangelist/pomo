@@ -177,129 +177,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    JobResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-          description: Unique job identifier
-        status:
-          type: string
-          title: Status
-          description: Initial job status (typically 'running')
-        stream_url:
-          type: string
-          title: Stream Url
-          description: SSE endpoint for real-time progress
-        poll_url:
-          type: string
-          title: Poll Url
-          description: HTTP endpoint for polling status
-      type: object
-      required:
-      - job_id
-      - status
-      - stream_url
-      - poll_url
-      title: JobResponse
-      description: Response after submitting a job
-      example:
-        job_id: 987fcdeb-51a2-43f7-9876-543210987654
-        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
-        status: running
-        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
-    ImageSelectionResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        campaign_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: string
-          title: Campaign Id
-        campaign_type:
-          type: string
-          title: Campaign Type
-        selected_image_url:
-          type: string
-          title: Selected Image Url
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - success
-      - campaign_id
-      - campaign_type
-      - selected_image_url
-      - message
-      title: ImageSelectionResponse
-      description: Response schema for image selection
-    EditImageJobRequest:
-      properties:
-        image_url:
-          type: string
-          title: Image Url
-        edit_prompt:
-          type: string
-          title: Edit Prompt
-        num_variations:
-          type: integer
-          maximum: 3.0
-          minimum: 1.0
-          title: Num Variations
-          default: 3
-        product_image_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Image Url
-        logo_image_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Logo Image Url
-        campaign_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Campaign Id
-        campaign_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Campaign Type
-        ad_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Id
-        idea_number:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Idea Number
-        use_company_style:
-          type: boolean
-          title: Use Company Style
-          default: false
-      type: object
-      required:
-      - image_url
-      - edit_prompt
-      title: EditImageJobRequest
-      description: Request body for starting an async campaign image edit job
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     VideoSelectionResponse:
       properties:
         success:
@@ -338,6 +215,65 @@ components:
       - message
       title: VideoSelectionResponse
       description: Response schema for video selection.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ImageSelectionResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        campaign_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: string
+          title: Campaign Id
+        campaign_type:
+          type: string
+          title: Campaign Type
+        selected_image_url:
+          type: string
+          title: Selected Image Url
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - campaign_id
+      - campaign_type
+      - selected_image_url
+      - message
+      title: ImageSelectionResponse
+      description: Response schema for image selection
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     VideoSelectionRequest:
       properties:
         campaign_id:
@@ -445,27 +381,91 @@ components:
       - selected_image_url
       title: ImageSelectionRequest
       description: Request schema for selecting an image variation for a campaign
-    ValidationError:
+    EditImageJobRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        image_url:
           type: string
-          title: Message
-        type:
+          title: Image Url
+        edit_prompt:
           type: string
-          title: Error Type
+          title: Edit Prompt
+        num_variations:
+          type: integer
+          maximum: 3.0
+          minimum: 1.0
+          title: Num Variations
+          default: 3
+        product_image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Image Url
+        logo_image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Image Url
+        campaign_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Id
+        campaign_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Campaign Type
+        ad_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Id
+        idea_number:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Idea Number
+        use_company_style:
+          type: boolean
+          title: Use Company Style
+          default: false
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - image_url
+      - edit_prompt
+      title: EditImageJobRequest
+      description: Request body for starting an async campaign image edit job
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+          description: Unique job identifier
+        status:
+          type: string
+          title: Status
+          description: Initial job status (typically 'running')
+        stream_url:
+          type: string
+          title: Stream Url
+          description: SSE endpoint for real-time progress
+        poll_url:
+          type: string
+          title: Poll Url
+          description: HTTP endpoint for polling status
+      type: object
+      required:
+      - job_id
+      - status
+      - stream_url
+      - poll_url
+      title: JobResponse
+      description: Response after submitting a job
+      example:
+        job_id: 987fcdeb-51a2-43f7-9876-543210987654
+        poll_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654
+        status: running
+        stream_url: /api/chat/agentic/jobs/987fcdeb-51a2-43f7-9876-543210987654/stream
   securitySchemes:
     HTTPBearer:
       type: http

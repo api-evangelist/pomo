@@ -255,6 +255,48 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    CreditBalanceResponse:
+      properties:
+        balance:
+          type: number
+          title: Balance
+        currency:
+          type: string
+          title: Currency
+          default: USD
+        last_updated:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Updated
+      type: object
+      required:
+      - balance
+      - last_updated
+      title: CreditBalanceResponse
+      description: Current credit balance response.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     TransactionHistoryResponse:
       properties:
         transactions:
@@ -278,63 +320,6 @@ components:
       - offset
       title: TransactionHistoryResponse
       description: Credit transaction history response.
-    CreditReleaseRequest:
-      properties:
-        hold_id:
-          type: string
-          title: Hold Id
-        reason:
-          type: string
-          title: Reason
-      type: object
-      required:
-      - hold_id
-      - reason
-      title: CreditReleaseRequest
-      description: Request to release a credit hold.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CreditPurchaseResponse:
-      properties:
-        client_secret:
-          type: string
-          title: Client Secret
-        payment_intent_id:
-          type: string
-          title: Payment Intent Id
-        amount:
-          type: number
-          title: Amount
-        currency:
-          type: string
-          title: Currency
-          default: USD
-      type: object
-      required:
-      - client_secret
-      - payment_intent_id
-      - amount
-      title: CreditPurchaseResponse
-      description: Response with Stripe payment intent details.
     CreditHoldRequest:
       properties:
         organization_id:
@@ -359,6 +344,20 @@ components:
       - description
       title: CreditHoldRequest
       description: Request to create a credit hold.
+    CreditReleaseRequest:
+      properties:
+        hold_id:
+          type: string
+          title: Hold Id
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - hold_id
+      - reason
+      title: CreditReleaseRequest
+      description: Request to release a credit hold.
     HTTPValidationError:
       properties:
         detail:
@@ -368,6 +367,29 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    CreditHoldResponse:
+      properties:
+        hold_id:
+          type: string
+          title: Hold Id
+        amount:
+          type: number
+          title: Amount
+        expires_at:
+          type: string
+          format: date-time
+          title: Expires At
+        status:
+          type: string
+          title: Status
+          default: success
+      type: object
+      required:
+      - hold_id
+      - amount
+      - expires_at
+      title: CreditHoldResponse
+      description: Response from credit hold creation.
     CreditCaptureRequest:
       properties:
         hold_id:
@@ -402,29 +424,57 @@ components:
       - amount
       title: CreditPurchaseRequest
       description: Request to purchase credits.
-    CreditHoldResponse:
+    CalculateChargeRequest:
       properties:
-        hold_id:
+        organization_id:
           type: string
-          title: Hold Id
+          title: Organization Id
+        daily_budget:
+          type: number
+          title: Daily Budget
+        campaign_days:
+          type: integer
+          title: Campaign Days
+        currency:
+          type: string
+          title: Currency
+          description: Currency code for display (e.g., USD, INR)
+        ad_account_currency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad Account Currency
+          description: Currency code used by the selected ad account
+      type: object
+      required:
+      - organization_id
+      - daily_budget
+      - campaign_days
+      - currency
+      title: CalculateChargeRequest
+      description: Request to calculate charge for ad campaign.
+    CreditPurchaseResponse:
+      properties:
+        client_secret:
+          type: string
+          title: Client Secret
+        payment_intent_id:
+          type: string
+          title: Payment Intent Id
         amount:
           type: number
           title: Amount
-        expires_at:
+        currency:
           type: string
-          format: date-time
-          title: Expires At
-        status:
-          type: string
-          title: Status
-          default: success
+          title: Currency
+          default: USD
       type: object
       required:
-      - hold_id
+      - client_secret
+      - payment_intent_id
       - amount
-      - expires_at
-      title: CreditHoldResponse
-      description: Response from credit hold creation.
+      title: CreditPurchaseResponse
+      description: Response with Stripe payment intent details.
     CalculateChargeResponse:
       properties:
         ad_spend:
@@ -471,56 +521,6 @@ components:
       - fx_rate_to_usd
       title: CalculateChargeResponse
       description: Response with calculated charges.
-    CreditBalanceResponse:
-      properties:
-        balance:
-          type: number
-          title: Balance
-        currency:
-          type: string
-          title: Currency
-          default: USD
-        last_updated:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Updated
-      type: object
-      required:
-      - balance
-      - last_updated
-      title: CreditBalanceResponse
-      description: Current credit balance response.
-    CalculateChargeRequest:
-      properties:
-        organization_id:
-          type: string
-          title: Organization Id
-        daily_budget:
-          type: number
-          title: Daily Budget
-        campaign_days:
-          type: integer
-          title: Campaign Days
-        currency:
-          type: string
-          title: Currency
-          description: Currency code for display (e.g., USD, INR)
-        ad_account_currency:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ad Account Currency
-          description: Currency code used by the selected ad account
-      type: object
-      required:
-      - organization_id
-      - daily_budget
-      - campaign_days
-      - currency
-      title: CalculateChargeRequest
-      description: Request to calculate charge for ad campaign.
   securitySchemes:
     HTTPBearer:
       type: http

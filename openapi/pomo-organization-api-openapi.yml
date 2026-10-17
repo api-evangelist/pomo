@@ -993,67 +993,85 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    OrganizationRoleEnum:
-      type: string
-      enum:
-      - owner
-      - admin
-      - member
-      title: OrganizationRoleEnum
-      description: Organization-level role options.
-    InviteDomainRestrictionResponse:
+    OrganizationInviteLinkRequest:
       properties:
-        enabled:
-          type: boolean
-          title: Enabled
-        allowed_domains:
-          items:
-            type: string
-          type: array
-          title: Allowed Domains
-          default: []
-        non_matching_member_count:
-          type: integer
-          title: Non Matching Member Count
-          default: 0
-        total_members:
-          type: integer
-          title: Total Members
-          default: 0
-      type: object
-      required:
-      - enabled
-      title: InviteDomainRestrictionResponse
-      description: Response payload for invite domain restrictions.
-    OrganizationInviteProfileAccessResponse:
-      properties:
-        company_profile_id:
-          type: string
-          format: uuid
-          title: Company Profile Id
-        company_profile_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Company Profile Name
         role:
-          type: string
-          title: Role
+          $ref: '#/components/schemas/OrganizationRoleEnum'
+          default: member
+        company_profile_access:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/OrganizationInviteProfileAccessRequest'
+            type: array
+          - type: 'null'
+          title: Company Profile Access
+        expires_in_days:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Expires In Days
+      type: object
+      title: OrganizationInviteLinkRequest
+      description: Request payload for creating an open invite link.
+    OrganizationInviteLinkResponse:
+      properties:
+        invite:
+          $ref: '#/components/schemas/OrganizationInviteResponse'
       type: object
       required:
-      - company_profile_id
-      - role
-      title: OrganizationInviteProfileAccessResponse
-      description: Response model for invite profile access summary.
-    HTTPValidationError:
+      - invite
+      title: OrganizationInviteLinkResponse
+      description: Response payload for open invite link creation.
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SendOrganizationInviteEmailResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - message
+      title: SendOrganizationInviteEmailResponse
+      description: Response returned after attempting to send an invite email.
+    OrganizationInviteFailure:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - email
+      - reason
+      title: OrganizationInviteFailure
+      description: Error details for failed invite operations.
     TransferOwnershipRequest:
       properties:
         new_owner_user_id:
@@ -1071,7 +1089,45 @@ components:
       - confirmation
       title: TransferOwnershipRequest
       description: Request to transfer organization ownership.
-    SendOrganizationInviteEmailResponse:
+    ProjectRoleEnum:
+      type: string
+      enum:
+      - admin
+      - contributor
+      - observer
+      title: ProjectRoleEnum
+      description: Project-level role options (for company profiles).
+    OrganizationRoleUpdateRequest:
+      properties:
+        role:
+          $ref: '#/components/schemas/OrganizationRoleEnum'
+          description: New role to assign
+      type: object
+      required:
+      - role
+      title: OrganizationRoleUpdateRequest
+      description: Request to update a user's organization role.
+    JoinOrganizationResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+        organization_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Id
+      type: object
+      required:
+      - success
+      - message
+      - organization_id
+      title: JoinOrganizationResponse
+      description: Response model for organization join operation.
+    OrganizationInviteActionResponse:
       properties:
         success:
           type: boolean
@@ -1083,8 +1139,8 @@ components:
       required:
       - success
       - message
-      title: SendOrganizationInviteEmailResponse
-      description: Response returned after attempting to send an invite email.
+      title: OrganizationInviteActionResponse
+      description: Response for invite resend/revoke actions.
     OrganizationListItemResponse:
       properties:
         id:
@@ -1141,67 +1197,26 @@ components:
       - updated_at
       title: OrganizationListItemResponse
       description: Response model for organization list item (lightweight, no full member list).
-    OrganizationResponse:
+    OrganizationInviteProfileAccessResponse:
       properties:
-        id:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        company_profile_name:
           anyOf:
           - type: string
           - type: 'null'
-          title: Id
-        name:
-          type: string
-          title: Name
-        invite_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Invite Token
-        members:
-          items:
-            $ref: '#/components/schemas/OrganizationMemberResponse'
-          type: array
-          title: Members
-        member_count:
-          type: integer
-          title: Member Count
-        created_at:
-          type: string
-          title: Created At
-        updated_at:
-          type: string
-          title: Updated At
-      type: object
-      required:
-      - id
-      - name
-      - invite_token
-      - members
-      - member_count
-      - created_at
-      - updated_at
-      title: OrganizationResponse
-      description: Response model for organization details with all members.
-    OrganizationRoleUpdateRequest:
-      properties:
+          title: Company Profile Name
         role:
-          $ref: '#/components/schemas/OrganizationRoleEnum'
-          description: New role to assign
-      type: object
-      required:
-      - role
-      title: OrganizationRoleUpdateRequest
-      description: Request to update a user's organization role.
-    SendOrganizationInviteEmailRequest:
-      properties:
-        email:
           type: string
-          format: email
-          title: Email
+          title: Role
       type: object
       required:
-      - email
-      title: SendOrganizationInviteEmailRequest
-      description: Request payload for sending an invite email to a prospective member.
+      - company_profile_id
+      - role
+      title: OrganizationInviteProfileAccessResponse
+      description: Response model for invite profile access summary.
     CreateOrganizationInvitesResponse:
       properties:
         invites:
@@ -1220,6 +1235,206 @@ components:
       - invites
       title: CreateOrganizationInvitesResponse
       description: Response payload for invite creation.
+    OrganizationInviteListResponse:
+      properties:
+        invites:
+          items:
+            $ref: '#/components/schemas/OrganizationInviteResponse'
+          type: array
+          title: Invites
+      type: object
+      required:
+      - invites
+      title: OrganizationInviteListResponse
+      description: Response payload for listing invites.
+    InviteDomainRestrictionRequest:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          title: Allowed Domains
+          default: []
+      type: object
+      required:
+      - enabled
+      title: InviteDomainRestrictionRequest
+      description: Request payload for invite domain restrictions.
+    InviteDomainRestrictionResponse:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          title: Allowed Domains
+          default: []
+        non_matching_member_count:
+          type: integer
+          title: Non Matching Member Count
+          default: 0
+        total_members:
+          type: integer
+          title: Total Members
+          default: 0
+      type: object
+      required:
+      - enabled
+      title: InviteDomainRestrictionResponse
+      description: Response payload for invite domain restrictions.
+    GenerateInviteTokenResponse:
+      properties:
+        invite_token:
+          type: string
+          title: Invite Token
+      type: object
+      required:
+      - invite_token
+      title: GenerateInviteTokenResponse
+      description: Response model for invite token generation.
+    MemberStatusUpdateRequest:
+      properties:
+        status:
+          type: string
+          title: Status
+          description: 'New status: ''active'' or ''suspended'''
+      type: object
+      required:
+      - status
+      title: MemberStatusUpdateRequest
+      description: Request to update a member's status (suspend/activate).
+    OrganizationInviteProfileAccessRequest:
+      properties:
+        company_profile_id:
+          type: string
+          format: uuid
+          title: Company Profile Id
+        role:
+          $ref: '#/components/schemas/ProjectRoleEnum'
+      type: object
+      required:
+      - company_profile_id
+      - role
+      title: OrganizationInviteProfileAccessRequest
+      description: Request payload for default company profile access on invite acceptance.
+    UserPermissionSummary:
+      properties:
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        user_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Name
+        user_email:
+          type: string
+          title: User Email
+        organization_role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Organization Role
+        has_approval_access:
+          type: boolean
+          title: Has Approval Access
+          default: false
+        accessible_projects:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Accessible Projects
+          description: List of projects user has access to with their roles
+      type: object
+      required:
+      - user_id
+      - user_email
+      title: UserPermissionSummary
+      description: Summary of a user's permissions in the organization.
+    JoinOrganizationRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+        tos_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tos Hash
+        tos_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tos Version
+      type: object
+      required:
+      - token
+      title: JoinOrganizationRequest
+      description: Request model for joining an organization.
+    OrganizationBillingMetadataResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        name:
+          type: string
+          title: Name
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+        gstin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gstin
+        gstin_company_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gstin Company Name
+        stripe_tax_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stripe Tax Id
+      type: object
+      required:
+      - id
+      - name
+      title: OrganizationBillingMetadataResponse
+      description: Recovery-safe organization billing fields required by checkout flows.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SendOrganizationInviteEmailRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+      type: object
+      required:
+      - email
+      title: SendOrganizationInviteEmailRequest
+      description: Request payload for sending an invite email to a prospective member.
     OrganizationInviteResponse:
       properties:
         id:
@@ -1294,199 +1509,42 @@ components:
       - created_at
       title: OrganizationInviteResponse
       description: Response model for a single organization invite.
-    OrganizationBillingMetadataResponse:
+    CreateOrganizationInvitesRequest:
       properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        name:
-          type: string
-          title: Name
-        country:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Country
-        gstin:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gstin
-        gstin_company_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gstin Company Name
-        stripe_tax_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stripe Tax Id
-      type: object
-      required:
-      - id
-      - name
-      title: OrganizationBillingMetadataResponse
-      description: Recovery-safe organization billing fields required by checkout flows.
-    ProjectRoleEnum:
-      type: string
-      enum:
-      - admin
-      - contributor
-      - observer
-      title: ProjectRoleEnum
-      description: Project-level role options (for company profiles).
-    OrganizationInviteActionResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - success
-      - message
-      title: OrganizationInviteActionResponse
-      description: Response for invite resend/revoke actions.
-    GenerateInviteTokenResponse:
-      properties:
-        invite_token:
-          type: string
-          title: Invite Token
-      type: object
-      required:
-      - invite_token
-      title: GenerateInviteTokenResponse
-      description: Response model for invite token generation.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    InviteDomainRestrictionRequest:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-        allowed_domains:
+        emails:
           items:
             type: string
+            format: email
           type: array
-          title: Allowed Domains
-          default: []
-      type: object
-      required:
-      - enabled
-      title: InviteDomainRestrictionRequest
-      description: Request payload for invite domain restrictions.
-    JoinOrganizationRequest:
-      properties:
-        token:
-          type: string
-          title: Token
-        tos_hash:
+          title: Emails
+        role:
+          $ref: '#/components/schemas/OrganizationRoleEnum'
+          default: member
+        company_profile_access:
           anyOf:
-          - type: string
+          - items:
+              $ref: '#/components/schemas/OrganizationInviteProfileAccessRequest'
+            type: array
           - type: 'null'
-          title: Tos Hash
-        tos_version:
+          title: Company Profile Access
+        expires_in_days:
           anyOf:
-          - type: string
+          - type: integer
           - type: 'null'
-          title: Tos Version
+          title: Expires In Days
       type: object
       required:
-      - token
-      title: JoinOrganizationRequest
-      description: Request model for joining an organization.
-    OrganizationInviteLinkResponse:
-      properties:
-        invite:
-          $ref: '#/components/schemas/OrganizationInviteResponse'
-      type: object
-      required:
-      - invite
-      title: OrganizationInviteLinkResponse
-      description: Response payload for open invite link creation.
-    OrganizationInviteFailure:
-      properties:
-        email:
-          type: string
-          format: email
-          title: Email
-        reason:
-          type: string
-          title: Reason
-      type: object
-      required:
-      - email
-      - reason
-      title: OrganizationInviteFailure
-      description: Error details for failed invite operations.
-    JoinOrganizationResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        message:
-          type: string
-          title: Message
-        organization_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Organization Id
-      type: object
-      required:
-      - success
-      - message
-      - organization_id
-      title: JoinOrganizationResponse
-      description: Response model for organization join operation.
-    OrganizationInviteInfoResponse:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        name:
-          type: string
-          title: Name
-        member_count:
-          type: integer
-          title: Member Count
-        valid:
-          type: boolean
-          title: Valid
-      type: object
-      required:
-      - id
-      - name
-      - member_count
-      - valid
-      title: OrganizationInviteInfoResponse
-      description: Response model for organization invitation preview (public endpoint).
+      - emails
+      title: CreateOrganizationInvitesRequest
+      description: Request payload for creating email-based invites.
+    OrganizationRoleEnum:
+      type: string
+      enum:
+      - owner
+      - admin
+      - member
+      title: OrganizationRoleEnum
+      description: Organization-level role options.
     OrganizationMemberResponse:
       properties:
         id:
@@ -1526,128 +1584,70 @@ components:
       - joined_at
       title: OrganizationMemberResponse
       description: Response model for organization member information.
-    OrganizationInviteProfileAccessRequest:
+    OrganizationResponse:
       properties:
-        company_profile_id:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        name:
           type: string
-          format: uuid
-          title: Company Profile Id
-        role:
-          $ref: '#/components/schemas/ProjectRoleEnum'
-      type: object
-      required:
-      - company_profile_id
-      - role
-      title: OrganizationInviteProfileAccessRequest
-      description: Request payload for default company profile access on invite acceptance.
-    OrganizationInviteListResponse:
-      properties:
-        invites:
+          title: Name
+        invite_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invite Token
+        members:
           items:
-            $ref: '#/components/schemas/OrganizationInviteResponse'
+            $ref: '#/components/schemas/OrganizationMemberResponse'
           type: array
-          title: Invites
-      type: object
-      required:
-      - invites
-      title: OrganizationInviteListResponse
-      description: Response payload for listing invites.
-    MemberStatusUpdateRequest:
-      properties:
-        status:
+          title: Members
+        member_count:
+          type: integer
+          title: Member Count
+        created_at:
           type: string
-          title: Status
-          description: 'New status: ''active'' or ''suspended'''
-      type: object
-      required:
-      - status
-      title: MemberStatusUpdateRequest
-      description: Request to update a member's status (suspend/activate).
-    CreateOrganizationInvitesRequest:
-      properties:
-        emails:
-          items:
-            type: string
-            format: email
-          type: array
-          title: Emails
-        role:
-          $ref: '#/components/schemas/OrganizationRoleEnum'
-          default: member
-        company_profile_access:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/OrganizationInviteProfileAccessRequest'
-            type: array
-          - type: 'null'
-          title: Company Profile Access
-        expires_in_days:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Expires In Days
-      type: object
-      required:
-      - emails
-      title: CreateOrganizationInvitesRequest
-      description: Request payload for creating email-based invites.
-    OrganizationInviteLinkRequest:
-      properties:
-        role:
-          $ref: '#/components/schemas/OrganizationRoleEnum'
-          default: member
-        company_profile_access:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/OrganizationInviteProfileAccessRequest'
-            type: array
-          - type: 'null'
-          title: Company Profile Access
-        expires_in_days:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Expires In Days
-      type: object
-      title: OrganizationInviteLinkRequest
-      description: Request payload for creating an open invite link.
-    UserPermissionSummary:
-      properties:
-        user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Id
-        user_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Name
-        user_email:
+          title: Created At
+        updated_at:
           type: string
-          title: User Email
-        organization_role:
+          title: Updated At
+      type: object
+      required:
+      - id
+      - name
+      - invite_token
+      - members
+      - member_count
+      - created_at
+      - updated_at
+      title: OrganizationResponse
+      description: Response model for organization details with all members.
+    OrganizationInviteInfoResponse:
+      properties:
+        id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Organization Role
-        has_approval_access:
+          title: Id
+        name:
+          type: string
+          title: Name
+        member_count:
+          type: integer
+          title: Member Count
+        valid:
           type: boolean
-          title: Has Approval Access
-          default: false
-        accessible_projects:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Accessible Projects
-          description: List of projects user has access to with their roles
+          title: Valid
       type: object
       required:
-      - user_id
-      - user_email
-      title: UserPermissionSummary
-      description: Summary of a user's permissions in the organization.
+      - id
+      - name
+      - member_count
+      - valid
+      title: OrganizationInviteInfoResponse
+      description: Response model for organization invitation preview (public endpoint).
   securitySchemes:
     HTTPBearer:
       type: http

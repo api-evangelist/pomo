@@ -303,6 +303,38 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ABGroupMetricsResponse:
+      properties:
+        summary:
+          $ref: '#/components/schemas/ABGroupMetricsSummary'
+        trends:
+          items:
+            $ref: '#/components/schemas/ABGroupMetricsTrend'
+          type: array
+          title: Trends
+        variants:
+          additionalProperties:
+            $ref: '#/components/schemas/ABGroupMetricsSummary'
+          type: object
+          title: Variants
+        per_variant_trends:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/ABGroupMetricsTrend'
+            type: array
+          type: object
+          title: Per Variant Trends
+        variant_labels:
+          additionalProperties:
+            type: string
+          type: object
+          title: Variant Labels
+      type: object
+      required:
+      - summary
+      - trends
+      - variants
+      title: ABGroupMetricsResponse
     ABGroupResponse:
       properties:
         id:
@@ -346,6 +378,115 @@ components:
       - ads_type
       - member_count
       title: ABGroupResponse
+    ABGroupMetricsTrend:
+      properties:
+        date:
+          type: string
+          title: Date
+        impressions:
+          type: integer
+          title: Impressions
+        clicks:
+          type: integer
+          title: Clicks
+        cost_micros:
+          type: integer
+          title: Cost Micros
+      type: object
+      required:
+      - date
+      - impressions
+      - clicks
+      - cost_micros
+      title: ABGroupMetricsTrend
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ABGroupMemberResponse:
+      properties:
+        ad_id:
+          type: string
+          format: uuid
+          title: Ad Id
+        position:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Position
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      type: object
+      required:
+      - ad_id
+      title: ABGroupMemberResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ABGroupReorderMembersRequest:
+      properties:
+        ordered_ad_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Ordered Ad Ids
+      type: object
+      required:
+      - ordered_ad_ids
+      title: ABGroupReorderMembersRequest
+    ABGroupUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: draft|active|paused|ended
+        settings:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings
+      type: object
+      title: ABGroupUpdateRequest
     ABGroupMetricsSummary:
       properties:
         impressions:
@@ -382,31 +523,6 @@ components:
           default: 0.0
       type: object
       title: ABGroupMetricsSummary
-    ABGroupMemberResponse:
-      properties:
-        ad_id:
-          type: string
-          format: uuid
-          title: Ad Id
-        position:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Position
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-      type: object
-      required:
-      - ad_id
-      title: ABGroupMemberResponse
     ABGroupAddMembersRequest:
       properties:
         ad_ids:
@@ -419,6 +535,35 @@ components:
       required:
       - ad_ids
       title: ABGroupAddMembersRequest
+    ABGroupCreateRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+        ads_type:
+          type: string
+          title: Ads Type
+          description: Canonical ads type key, e.g., google_display
+        ad_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Ad Ids
+          description: Initial member Ad IDs for the given type
+        settings:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Settings
+      type: object
+      required:
+      - name
+      - ads_type
+      title: ABGroupCreateRequest
     ABGroupDetailResponse:
       properties:
         id:
@@ -468,151 +613,6 @@ components:
       - member_count
       - members
       title: ABGroupDetailResponse
-    ABGroupReorderMembersRequest:
-      properties:
-        ordered_ad_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          title: Ordered Ad Ids
-      type: object
-      required:
-      - ordered_ad_ids
-      title: ABGroupReorderMembersRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ABGroupUpdateRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-          description: draft|active|paused|ended
-        settings:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Settings
-      type: object
-      title: ABGroupUpdateRequest
-    ABGroupMetricsResponse:
-      properties:
-        summary:
-          $ref: '#/components/schemas/ABGroupMetricsSummary'
-        trends:
-          items:
-            $ref: '#/components/schemas/ABGroupMetricsTrend'
-          type: array
-          title: Trends
-        variants:
-          additionalProperties:
-            $ref: '#/components/schemas/ABGroupMetricsSummary'
-          type: object
-          title: Variants
-        per_variant_trends:
-          additionalProperties:
-            items:
-              $ref: '#/components/schemas/ABGroupMetricsTrend'
-            type: array
-          type: object
-          title: Per Variant Trends
-        variant_labels:
-          additionalProperties:
-            type: string
-          type: object
-          title: Variant Labels
-      type: object
-      required:
-      - summary
-      - trends
-      - variants
-      title: ABGroupMetricsResponse
-    ABGroupMetricsTrend:
-      properties:
-        date:
-          type: string
-          title: Date
-        impressions:
-          type: integer
-          title: Impressions
-        clicks:
-          type: integer
-          title: Clicks
-        cost_micros:
-          type: integer
-          title: Cost Micros
-      type: object
-      required:
-      - date
-      - impressions
-      - clicks
-      - cost_micros
-      title: ABGroupMetricsTrend
-    ABGroupCreateRequest:
-      properties:
-        name:
-          type: string
-          title: Name
-        ads_type:
-          type: string
-          title: Ads Type
-          description: Canonical ads type key, e.g., google_display
-        ad_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Ad Ids
-          description: Initial member Ad IDs for the given type
-        settings:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Settings
-      type: object
-      required:
-      - name
-      - ads_type
-      title: ABGroupCreateRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

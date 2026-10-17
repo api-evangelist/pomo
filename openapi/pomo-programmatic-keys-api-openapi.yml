@@ -115,18 +115,38 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ApiKeyCreateResponse:
+    ApiKeyUsageResponse:
       properties:
-        api_key:
-          type: string
-          title: Api Key
-        key:
-          $ref: '#/components/schemas/ApiKeyListItem'
+        events:
+          items:
+            $ref: '#/components/schemas/ApiKeyUsageEvent'
+          type: array
+          title: Events
       type: object
       required:
-      - api_key
-      - key
-      title: ApiKeyCreateResponse
+      - events
+      title: ApiKeyUsageResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ApiKeyListItem:
       properties:
         id:
@@ -172,6 +192,15 @@ components:
       - status
       - created_at
       title: ApiKeyListItem
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ApiKeyUsageEvent:
       properties:
         id:
@@ -207,38 +236,29 @@ components:
       - action
       - timestamp
       title: ApiKeyUsageEvent
-    HTTPValidationError:
+    ApiKeyListResponse:
       properties:
-        detail:
+        keys:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/ApiKeyListItem'
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ApiKeyUsageResponse:
-      properties:
-        events:
-          items:
-            $ref: '#/components/schemas/ApiKeyUsageEvent'
-          type: array
-          title: Events
+          title: Keys
       type: object
       required:
-      - events
-      title: ApiKeyUsageResponse
-    ApiKeyRevokeResponse:
+      - keys
+      title: ApiKeyListResponse
+    ApiKeyCreateResponse:
       properties:
-        success:
-          type: boolean
-          title: Success
+        api_key:
+          type: string
+          title: Api Key
         key:
           $ref: '#/components/schemas/ApiKeyListItem'
       type: object
       required:
-      - success
+      - api_key
       - key
-      title: ApiKeyRevokeResponse
+      title: ApiKeyCreateResponse
     ApiKeyCreateRequest:
       properties:
         name:
@@ -263,38 +283,18 @@ components:
       required:
       - name
       title: ApiKeyCreateRequest
-    ApiKeyListResponse:
+    ApiKeyRevokeResponse:
       properties:
-        keys:
-          items:
-            $ref: '#/components/schemas/ApiKeyListItem'
-          type: array
-          title: Keys
+        success:
+          type: boolean
+          title: Success
+        key:
+          $ref: '#/components/schemas/ApiKeyListItem'
       type: object
       required:
-      - keys
-      title: ApiKeyListResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - success
+      - key
+      title: ApiKeyRevokeResponse
   securitySchemes:
     HTTPBearer:
       type: http

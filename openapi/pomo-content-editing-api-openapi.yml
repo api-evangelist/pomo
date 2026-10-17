@@ -137,29 +137,26 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ContentEditResponse:
+    ImageVariation:
       properties:
-        edited_image_urls:
-          items:
-            type: string
-          type: array
-          title: Edited Image Urls
-          default: []
-        original_image_url:
+        url:
           type: string
-          title: Original Image Url
-        variations:
+          title: Url
+        index:
+          type: integer
+          title: Index
+        metadata:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/ImageVariation'
-            type: array
+          - additionalProperties: true
+            type: object
           - type: 'null'
-          title: Variations
+          title: Metadata
       type: object
       required:
-      - original_image_url
-      title: ContentEditResponse
-      description: Response model for edited image content
+      - url
+      - index
+      title: ImageVariation
+      description: Information about an image variation
     CreativeIdeasResponse:
       properties:
         creative_ideas:
@@ -172,6 +169,36 @@ components:
       - creative_ideas
       title: CreativeIdeasResponse
       description: Response model for the generate-ideas endpoint
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     Body_edit_image_api_content_editing_edit_image_post:
       properties:
         image:
@@ -206,26 +233,6 @@ components:
       - image
       - prompt
       title: Body_edit_image_api_content_editing_edit_image_post
-    ImageVariation:
-      properties:
-        url:
-          type: string
-          title: Url
-        index:
-          type: integer
-          title: Index
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - url
-      - index
-      title: ImageVariation
-      description: Information about an image variation
     ImageGenerationResponse:
       properties:
         image_urls:
@@ -259,6 +266,29 @@ components:
       - created_at
       title: ImageGenerationResponse
       description: Response model for generated images
+    ContentEditResponse:
+      properties:
+        edited_image_urls:
+          items:
+            type: string
+          type: array
+          title: Edited Image Urls
+          default: []
+        original_image_url:
+          type: string
+          title: Original Image Url
+        variations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ImageVariation'
+            type: array
+          - type: 'null'
+          title: Variations
+      type: object
+      required:
+      - original_image_url
+      title: ContentEditResponse
+      description: Response model for edited image content
     Body_generate_image_api_content_editing_generate_image_post:
       properties:
         prompt:
@@ -291,36 +321,6 @@ components:
       required:
       - prompt
       title: Body_generate_image_api_content_editing_generate_image_post
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

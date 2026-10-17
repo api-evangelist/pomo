@@ -89,27 +89,25 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    ValidationError:
+    ReplaceImageRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        url:
           type: string
-          title: Message
-        type:
+          title: Url
+        image_data:
           type: string
-          title: Error Type
+          title: Image Data
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - url
+      - image_data
+      title: ReplaceImageRequest
+      description: Request model for replacing an image.
     Body_replace_image_upload_api_images_replace_upload_post:
       properties:
         url:
@@ -138,25 +136,27 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ReplaceImageRequest:
+    ValidationError:
       properties:
-        url:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Url
-        image_data:
+          title: Message
+        type:
           type: string
-          title: Image Data
-        content_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Content Type
+          title: Error Type
       type: object
       required:
-      - url
-      - image_data
-      title: ReplaceImageRequest
-      description: Request model for replacing an image.
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

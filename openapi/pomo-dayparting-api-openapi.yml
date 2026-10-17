@@ -190,6 +190,104 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PlatformDaypartingConfig:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        timezone:
+          type: string
+          title: Timezone
+        schedule:
+          items:
+            $ref: '#/components/schemas/DaypartingSlot'
+          type: array
+          title: Schedule
+        bid_adjustments:
+          anyOf:
+          - additionalProperties:
+              type: number
+            type: object
+          - type: 'null'
+          title: Bid Adjustments
+      type: object
+      required:
+      - enabled
+      - timezone
+      - schedule
+      title: PlatformDaypartingConfig
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DaypartingSlot:
+      properties:
+        day:
+          type: string
+          title: Day
+          description: Day of week (MONDAY, TUESDAY, etc.)
+        start_hour:
+          type: integer
+          maximum: 23.0
+          minimum: 0.0
+          title: Start Hour
+        start_minute:
+          type: integer
+          maximum: 59.0
+          minimum: 0.0
+          title: Start Minute
+        end_hour:
+          type: integer
+          maximum: 23.0
+          minimum: 0.0
+          title: End Hour
+        end_minute:
+          type: integer
+          maximum: 59.0
+          minimum: 0.0
+          title: End Minute
+        bid_modifier:
+          anyOf:
+          - type: number
+            maximum: 10.0
+            minimum: 0.1
+          - type: 'null'
+          title: Bid Modifier
+          default: 1.0
+      type: object
+      required:
+      - day
+      - start_hour
+      - start_minute
+      - end_hour
+      - end_minute
+      title: DaypartingSlot
     CampaignDaypartingRequest:
       properties:
         campaign_id:
@@ -243,104 +341,6 @@ components:
       - missing_rules
       - health_score
       title: DaypartingHealthResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PlatformDaypartingConfig:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-        timezone:
-          type: string
-          title: Timezone
-        schedule:
-          items:
-            $ref: '#/components/schemas/DaypartingSlot'
-          type: array
-          title: Schedule
-        bid_adjustments:
-          anyOf:
-          - additionalProperties:
-              type: number
-            type: object
-          - type: 'null'
-          title: Bid Adjustments
-      type: object
-      required:
-      - enabled
-      - timezone
-      - schedule
-      title: PlatformDaypartingConfig
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    DaypartingSlot:
-      properties:
-        day:
-          type: string
-          title: Day
-          description: Day of week (MONDAY, TUESDAY, etc.)
-        start_hour:
-          type: integer
-          maximum: 23.0
-          minimum: 0.0
-          title: Start Hour
-        start_minute:
-          type: integer
-          maximum: 59.0
-          minimum: 0.0
-          title: Start Minute
-        end_hour:
-          type: integer
-          maximum: 23.0
-          minimum: 0.0
-          title: End Hour
-        end_minute:
-          type: integer
-          maximum: 59.0
-          minimum: 0.0
-          title: End Minute
-        bid_modifier:
-          anyOf:
-          - type: number
-            maximum: 10.0
-            minimum: 0.1
-          - type: 'null'
-          title: Bid Modifier
-          default: 1.0
-      type: object
-      required:
-      - day
-      - start_hour
-      - start_minute
-      - end_hour
-      - end_minute
-      title: DaypartingSlot
   securitySchemes:
     HTTPBearer:
       type: http

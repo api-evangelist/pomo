@@ -35,31 +35,76 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    BudgetEstimateResponse:
+    ValidationError:
       properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BudgetEstimateRequest:
+      properties:
+        goal:
+          type: string
+          title: Goal
+          description: User's marketing goal
         currency:
           type: string
           title: Currency
-          description: ISO currency code (e.g., TWD, USD)
-        budget_recommendation:
-          $ref: '#/components/schemas/BudgetRecommendationRange'
-          description: Recommended budget range
-        duration_days:
-          type: integer
-          title: Duration Days
-          description: Recommended duration in days
-        reasoning:
-          type: string
-          title: Reasoning
-          description: Concise explanation for recommendation
+          description: Currency code (e.g., USD)
+        locations:
+          items:
+            $ref: '#/components/schemas/LocationItem'
+          type: array
+          title: Locations
+          description: List of target locations
+        product_offering_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Offering Id
+          description: Optional product offering identifier
+        start_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Date
+          description: Optional start date in ISO format (YYYY-MM-DD)
+        end_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
+          description: Optional end date in ISO format (YYYY-MM-DD)
       type: object
       required:
+      - goal
       - currency
-      - budget_recommendation
-      - duration_days
-      - reasoning
-      title: BudgetEstimateResponse
-      description: Structured response for budget estimate.
+      title: BudgetEstimateRequest
+      description: Input payload for budget estimation.
     LocationItem:
       properties:
         level:
@@ -194,55 +239,31 @@ components:
       - name
       title: LocationItem
       description: Canonical location input for multi-geo campaigns with one shared budget.
-    HTTPValidationError:
+    BudgetEstimateResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    BudgetEstimateRequest:
-      properties:
-        goal:
-          type: string
-          title: Goal
-          description: User's marketing goal
         currency:
           type: string
           title: Currency
-          description: Currency code (e.g., USD)
-        locations:
-          items:
-            $ref: '#/components/schemas/LocationItem'
-          type: array
-          title: Locations
-          description: List of target locations
-        product_offering_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Offering Id
-          description: Optional product offering identifier
-        start_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Start Date
-          description: Optional start date in ISO format (YYYY-MM-DD)
-        end_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: End Date
-          description: Optional end date in ISO format (YYYY-MM-DD)
+          description: ISO currency code (e.g., TWD, USD)
+        budget_recommendation:
+          $ref: '#/components/schemas/BudgetRecommendationRange'
+          description: Recommended budget range
+        duration_days:
+          type: integer
+          title: Duration Days
+          description: Recommended duration in days
+        reasoning:
+          type: string
+          title: Reasoning
+          description: Concise explanation for recommendation
       type: object
       required:
-      - goal
       - currency
-      title: BudgetEstimateRequest
-      description: Input payload for budget estimation.
+      - budget_recommendation
+      - duration_days
+      - reasoning
+      title: BudgetEstimateResponse
+      description: Structured response for budget estimate.
     BudgetRecommendationRange:
       properties:
         min_value:
@@ -264,27 +285,6 @@ components:
       - suggested_value
       title: BudgetRecommendationRange
       description: Recommended daily budget range.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

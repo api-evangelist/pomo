@@ -162,18 +162,27 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    UserPreferencesPartial:
+    ValidationError:
       properties:
-        preferences:
-          additionalProperties: true
-          type: object
-          title: Preferences
-          description: User preferences as key-value pairs
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
-      title: UserPreferencesPartial
-      description: 'Response schema that returns only the preferences object without metadata.
-
-        Useful for lightweight responses.'
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     UserPreferencesUpdate:
       properties:
         preferences:
@@ -186,6 +195,75 @@ components:
       - preferences
       title: UserPreferencesUpdate
       description: "Schema for updating user preferences.\nAccepts a dictionary of preferences to merge with existing preferences.\n\nExample:\n{\n  \"tutorial_completed\": true,\n  \"daily_digest_theme\": \"dark\",\n  \"onboarding_dismissed\": true\n}"
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UserPreferencesPartial:
+      properties:
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          description: User preferences as key-value pairs
+      type: object
+      title: UserPreferencesPartial
+      description: 'Response schema that returns only the preferences object without metadata.
+
+        Useful for lightweight responses.'
+    ReleaseAnnouncementClaimResponse:
+      properties:
+        claimed:
+          type: boolean
+          title: Claimed
+        spotlight_release_id:
+          type: string
+          title: Spotlight Release Id
+        covered_release_ids:
+          items:
+            type: string
+          type: array
+          title: Covered Release Ids
+        claimed_at:
+          type: string
+          format: date-time
+          title: Claimed At
+      type: object
+      required:
+      - claimed
+      - spotlight_release_id
+      - covered_release_ids
+      - claimed_at
+      title: ReleaseAnnouncementClaimResponse
+      description: Result of atomically claiming a release-announcement spotlight.
+    ReleaseAnnouncementClaimRequest:
+      properties:
+        spotlight_release_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Spotlight Release Id
+          description: Stable ID of the release shown as the digest spotlight
+        release_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 50
+          minItems: 1
+          title: Release Ids
+          description: Stable IDs covered by the announcement digest
+      additionalProperties: false
+      type: object
+      required:
+      - spotlight_release_id
+      - release_ids
+      title: ReleaseAnnouncementClaimRequest
+      description: Claim one release-announcement spotlight and its visible digest.
     UserPreferencesResponse:
       properties:
         id:
@@ -219,84 +297,6 @@ components:
       description: 'Response schema for user preferences.
 
         Returns the complete preferences object with metadata.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ReleaseAnnouncementClaimRequest:
-      properties:
-        spotlight_release_id:
-          type: string
-          maxLength: 128
-          minLength: 1
-          title: Spotlight Release Id
-          description: Stable ID of the release shown as the digest spotlight
-        release_ids:
-          items:
-            type: string
-          type: array
-          maxItems: 50
-          minItems: 1
-          title: Release Ids
-          description: Stable IDs covered by the announcement digest
-      additionalProperties: false
-      type: object
-      required:
-      - spotlight_release_id
-      - release_ids
-      title: ReleaseAnnouncementClaimRequest
-      description: Claim one release-announcement spotlight and its visible digest.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ReleaseAnnouncementClaimResponse:
-      properties:
-        claimed:
-          type: boolean
-          title: Claimed
-        spotlight_release_id:
-          type: string
-          title: Spotlight Release Id
-        covered_release_ids:
-          items:
-            type: string
-          type: array
-          title: Covered Release Ids
-        claimed_at:
-          type: string
-          format: date-time
-          title: Claimed At
-      type: object
-      required:
-      - claimed
-      - spotlight_release_id
-      - covered_release_ids
-      - claimed_at
-      title: ReleaseAnnouncementClaimResponse
-      description: Result of atomically claiming a release-announcement spotlight.
   securitySchemes:
     HTTPBearer:
       type: http
